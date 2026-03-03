@@ -279,9 +279,10 @@
 
   #detail.open { transform: translateX(0); }
 
-  #detail-back, #detail-close {
+  #detail-close {
     position: absolute;
     top: 12px;
+    right: 12px;
     background: none;
     border: none;
     color: var(--text-dim);
@@ -289,14 +290,23 @@
     font-size: 18px;
     line-height: 1;
     padding: 4px;
-    transition: color 0.15s, opacity 0.15s;
+    transition: color 0.15s;
   }
+  #detail-close:hover { color: var(--text-bright); }
 
-  #detail-back { left: 12px; opacity: 0.3; pointer-events: none; }
-  #detail-back.enabled { opacity: 1; pointer-events: auto; }
-  #detail-close { right: 12px; }
-
-  #detail-back:hover, #detail-close:hover { color: var(--text-bright); }
+  #detail-back {
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--text-dim);
+    cursor: default;
+    opacity: 0.3;
+    pointer-events: none;
+    transition: color 0.15s, opacity 0.15s;
+    user-select: none;
+  }
+  #detail-back.enabled { opacity: 1; pointer-events: auto; cursor: pointer; }
+  #detail-back.enabled:hover { color: var(--text-bright); }
+  #detail-back .back-arrow { font-size: 14px; }
 
   .detail-header {
     padding: 20px 20px 16px;
@@ -520,10 +530,10 @@
   .edge-group-header:hover { color: var(--text-bright); }
 
   .edge-group-header .group-arrow {
-    font-size: 8px;
+    font-size: 14px;
     color: var(--text-dim);
     transition: transform 0.2s;
-    width: 10px;
+    width: 16px;
     text-align: center;
   }
 
@@ -604,7 +614,7 @@
 </div>
 
 <div id="detail">
-  <button id="detail-back" title="Go back">←</button>
+  <div id="detail-back" title="Go back"><span class="back-arrow">←</span> Back</div>
   <button id="detail-close">×</button>
   <div id="detail-content"></div>
 </div>
