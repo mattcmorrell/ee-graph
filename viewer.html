@@ -279,9 +279,9 @@
 
   #detail.open { transform: translateX(0); }
 
-  #detail-close {
+  #detail-back, #detail-close {
     position: absolute;
-    top: 12px; right: 12px;
+    top: 12px;
     background: none;
     border: none;
     color: var(--text-dim);
@@ -289,10 +289,14 @@
     font-size: 18px;
     line-height: 1;
     padding: 4px;
-    transition: color 0.15s;
+    transition: color 0.15s, opacity 0.15s;
   }
 
-  #detail-close:hover { color: var(--text-bright); }
+  #detail-back { left: 12px; opacity: 0.3; pointer-events: none; }
+  #detail-back.enabled { opacity: 1; pointer-events: auto; }
+  #detail-close { right: 12px; }
+
+  #detail-back:hover, #detail-close:hover { color: var(--text-bright); }
 
   .detail-header {
     padding: 20px 20px 16px;
@@ -600,6 +604,7 @@
 </div>
 
 <div id="detail">
+  <button id="detail-back" title="Go back">←</button>
   <button id="detail-close">×</button>
   <div id="detail-content"></div>
 </div>
@@ -1121,8 +1126,13 @@ function getNodeSub(node) {
   // ── Selection ──
   let selectedNode = null;
   let currentDepth = 1;
+  const selectionHistory = []; // stack of {type, id, depth} or {type, key, val}
 
-  function selectNode(d, depth) {
+  function selectNode(d, depth, skipHistory) {
+    // Push previous state to history (unless going back or changing depth)
+    if (!skipHistory && selectedNode && selectedNode.id !== d.id) {
+      selectionHistory.push({ type: 'node', id: selectedNode.id, depth: currentDepth });
+    }
     selectedNode = d;
     if (depth !== undefined) currentDepth = depth;
 
@@ -1167,11 +1177,25 @@ function getNodeSub(node) {
       (e.source.id || e.source) === d.id || (e.target.id || e.target) === d.id
     );
     showDetail(d, connectedEdges);
+    updateBackBtn();
+  }
+
+  function goBack() {
+    if (!selectionHistory.length) return;
+    const prev = selectionHistory.pop();
+    if (prev.type === 'node') {
+      const node = nodes.find(n => n.id === prev.id);
+      if (node) selectNode(node, prev.depth, true);
+    } else if (prev.type === 'facet') {
+      showFacet(prev.key, prev.val, true);
+    }
   }
 
   function clearSelection() {
     selectedNode = null;
     currentDepth = 1;
+    selectionHistory.length = 0;
+    updateBackBtn();
     nodeElements.selectAll('circle:nth-child(2)').attr('opacity', 0.85).attr('stroke', 'none').attr('stroke-width', 0);
     nodeElements.select('text').attr('opacity', 0.7);
     linkElements.attr('stroke-opacity', 0.4);
@@ -1182,7 +1206,11 @@ function getNodeSub(node) {
   }
 
   // ── Facet filter — highlight all nodes sharing a property value ──
-  function showFacet(key, val) {
+  function showFacet(key, val, skipHistory) {
+    // Push previous state to history
+    if (!skipHistory && selectedNode) {
+      selectionHistory.push({ type: 'node', id: selectedNode.id, depth: currentDepth });
+    }
     selectedNode = null;
     const matching = nodes.filter(n => String(n.properties[key]) === val);
     const matchIds = new Set(matching.map(n => n.id));
@@ -1225,10 +1253,12 @@ function getNodeSub(node) {
     // Click handlers for result nodes
     content.querySelectorAll('[data-node-id]').forEach(el => {
       el.addEventListener('click', () => {
+        selectionHistory.push({ type: 'facet', key, val });
         const targetNode = nodes.find(n => n.id === el.dataset.nodeId);
-        if (targetNode) selectNode(targetNode);
+        if (targetNode) selectNode(targetNode, undefined, true);
       });
     });
+    updateBackBtn();
   }
 
   // ── Detail panel ──
@@ -1361,6 +1391,12 @@ function getNodeSub(node) {
   }
 
   document.getElementById('detail-close').addEventListener('click', clearSelection);
+  const backBtn = document.getElementById('detail-back');
+  backBtn.addEventListener('click', goBack);
+
+  function updateBackBtn() {
+    backBtn.classList.toggle('enabled', selectionHistory.length > 0);
+  }
 
   // ── Visibility update ──
   function updateVisibility() {
@@ -1430,6 +1466,7 @@ function getNodeSub(node) {
     // Don't intercept when typing in search
     if (e.target === searchInput) return;
     if (e.key === 'Escape') clearSelection();
+    if (e.key === 'Backspace') goBack();
     if (e.key === 'f' || e.key === 'F') fitGraph();
   });
 
