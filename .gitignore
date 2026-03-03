@@ -2,9 +2,8 @@ node_modules/
 .DS_Store
 .env
 
-# Decision journal (local dev tools)
+# Decision journal — viewer is generated, decisions are personal
 decision-journal.html
-decision-journal-server.js
 product-decisions.json
 
 # Playwright screenshots
