@@ -22,35 +22,7 @@
     --accent: #5b8af0;
     --accent-dim: rgba(91, 138, 240, 0.15);
 
-    /* Node type palette — muted, distinguishable */
-    --node-person: #5b8af0;
-    --node-candidate: #a78bfa;
-    --node-team: #34d399;
-    --node-skill: #f59e0b;
-    --node-project: #f472b6;
-    --node-certification: #fb923c;
-    --node-position: #6ee7b7;
-    --node-equipment: #94a3b8;
-    --node-document: #a1a1aa;
-    --node-benefits: #2dd4bf;
-    --node-comp: #4ade80;
-    --node-location: #38bdf8;
-    --node-jurisdiction: #818cf8;
-    --node-policy: #c084fc;
-    --node-life_event: #fb7185;
-    --node-review: #e879f9;
-    --node-recognition: #fbbf24;
-    --node-interview: #a78bfa;
-
-    /* Edge type palette */
-    --edge-reports_to: #3b5998;
-    --edge-member_of: #2d8a5e;
-    --edge-collaborates_with: #d97706;
-    --edge-mentors: #8b5cf6;
-    --edge-works_on: #ec4899;
-    --edge-has_skill: #d97706;
-    --edge-recognized: #f59e0b;
-    --edge-default: #334155;
+    /* Node/edge colors are now generated in JS — see TYPE_COLORS, EDGE_STYLES */
   }
 
   body {
@@ -160,8 +132,21 @@
   .search-item .name { color: var(--text-bright); }
   .search-item .meta { color: var(--text-dim); font-size: 11px; margin-left: auto; }
 
-  #stats {
+  #fit-btn {
     margin-left: auto;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-dim);
+    font-size: 14px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  #fit-btn:hover { color: var(--text-bright); border-color: var(--accent); }
+
+  #stats {
     font-size: 12px;
     color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace;
@@ -361,6 +346,18 @@
 
   .detail-prop .key { color: var(--text-dim); }
   .detail-prop .val { color: var(--text); text-align: right; max-width: 60%; }
+  .detail-prop .val-link {
+    cursor: pointer;
+    color: var(--accent);
+    transition: color 0.15s;
+  }
+  .detail-prop .val-link:hover { color: var(--text-bright); text-decoration: underline; }
+  .detail-prop .val-filter {
+    cursor: pointer;
+    color: var(--accent);
+    transition: color 0.15s;
+  }
+  .detail-prop .val-filter:hover { color: var(--text-bright); text-decoration: underline; }
 
   .detail-edge {
     padding: 6px 0;
@@ -590,6 +587,7 @@
     <input type="text" id="search" placeholder="Search nodes…" autocomplete="off">
     <div id="search-results"></div>
   </div>
+  <button id="fit-btn" title="Fit graph to view (F)">⊞</button>
   <div id="stats"></div>
 </div>
 
@@ -654,15 +652,15 @@ const EDGE_STYLES = {
 
 function getNodeLabel(node) {
   const p = node.properties;
-  return p.name || p.title || p.planName || p.planType || p.type || p.eventType || p.state || node.id;
+  return p.name || p.title || p.label || p.displayName || p.planName || p.planType
+    || p.type || p.eventType || p.message || p.state || node.id;
 }
 
 function getNodeSub(node) {
   const p = node.properties;
-  if (node.type === 'person' || node.type === 'candidate') return p.role || p.department || '';
-  if (node.type === 'team') return p.department || '';
-  if (node.type === 'project') return p.status || '';
-  if (node.type === 'skill') return p.category || '';
+  // Generic fallback chain — first truthy value wins
+  const candidates = [p.role, p.department, p.status, p.category, p.type, p.description];
+  for (const c of candidates) { if (c) return c; }
   return '';
 }
 
@@ -673,8 +671,8 @@ function getNodeSub(node) {
     fetch('data/edges.json').then(r => r.json())
   ]);
 
-  const nodes = nodesData.nodes;
-  const edges = edgesData.edges;
+  const nodes = nodesData.nodes || nodesData;
+  const edges = edgesData.edges || edgesData;
 
   // Index
   const nodeMap = new Map(nodes.map(n => [n.id, n]));
@@ -687,6 +685,54 @@ function getNodeSub(node) {
   nodes.forEach(n => { nodeTypeCounts[n.type] = (nodeTypeCounts[n.type] || 0) + 1; });
   const edgeTypeCounts = {};
   validEdges.forEach(e => { edgeTypeCounts[e.type] = (edgeTypeCounts[e.type] || 0) + 1; });
+
+  // ── Auto-generate effective styles ──
+  // Golden-angle hue rotation for deterministic, evenly-spaced colors
+  function goldenColor(index, saturation = 70, lightness = 65) {
+    const hue = (index * 137.508) % 360;
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  }
+
+  // Build effectiveNodeColors: overrides first, then auto-generate
+  const effectiveNodeColors = {};
+  const sortedNodeTypes = Object.keys(nodeTypeCounts).sort();
+  sortedNodeTypes.forEach((type, i) => {
+    effectiveNodeColors[type] = TYPE_COLORS[type] || goldenColor(i);
+  });
+
+  // Build effectiveNodeRadius: overrides first, default 4, bump high-count types
+  const effectiveNodeRadius = {};
+  const maxNodeCount = Math.max(...Object.values(nodeTypeCounts));
+  sortedNodeTypes.forEach(type => {
+    if (NODE_RADIUS[type] !== undefined) {
+      effectiveNodeRadius[type] = NODE_RADIUS[type];
+    } else {
+      const freq = nodeTypeCounts[type] / maxNodeCount;
+      effectiveNodeRadius[type] = 4 + freq * 3; // 4-7 range
+    }
+  });
+
+  // Build effectiveEdgeStyles: overrides first, then auto-generate
+  const effectiveEdgeStyles = {};
+  const sortedEdgeTypes = Object.keys(edgeTypeCounts).sort();
+  const maxEdgeCount = Math.max(...Object.values(edgeTypeCounts));
+  const defaultEdgeStyle = { color: '#334155', dash: null, width: 0.5 };
+  sortedEdgeTypes.forEach((type, i) => {
+    if (EDGE_STYLES[type]) {
+      effectiveEdgeStyles[type] = EDGE_STYLES[type];
+    } else {
+      const freq = edgeTypeCounts[type] / maxEdgeCount;
+      effectiveEdgeStyles[type] = {
+        color: goldenColor(i, 40, 50), // desaturated palette
+        dash: null,
+        width: 0.5 + freq * 0.5 // 0.5-1.0 range
+      };
+    }
+  });
+
+  function getEdgeStyle(type) {
+    return effectiveEdgeStyles[type] || defaultEdgeStyle;
+  }
 
   // Stats
   document.getElementById('stats').textContent = `${nodes.length} nodes · ${validEdges.length} edges`;
@@ -715,7 +761,7 @@ function getNodeSub(node) {
   function buildFilters() {
     let html = '<div class="filter-section"><div class="filter-title">Node Types</div>';
     for (const [type, count] of Object.entries(nodeTypeCounts).sort((a,b) => b[1] - a[1])) {
-      const color = TYPE_COLORS[type] || '#666';
+      const color = effectiveNodeColors[type] || '#666';
       const active = activeNodeTypes.has(type);
       html += `<div class="filter-item ${active ? '' : 'disabled'}" data-kind="node" data-type="${type}">
         <span class="swatch" style="background:${color}"></span>
@@ -726,7 +772,7 @@ function getNodeSub(node) {
     }
     html += '</div><div class="filter-section"><div class="filter-title">Edge Types</div>';
     for (const [type, count] of Object.entries(edgeTypeCounts).sort((a,b) => b[1] - a[1])) {
-      const style = EDGE_STYLES[type] || EDGE_STYLES.reports_to;
+      const style = getEdgeStyle(type);
       const active = activeEdgeTypes.has(type);
       html += `<div class="filter-item ${active ? '' : 'disabled'}" data-kind="edge" data-type="${type}">
         <span class="swatch" style="background:${style.color}"></span>
@@ -803,8 +849,27 @@ function getNodeSub(node) {
 
   const zoom = d3.zoom()
     .scaleExtent([0.1, 8])
-    .on('zoom', (event) => container.attr('transform', event.transform));
+    .on('zoom', (event) => {
+      container.attr('transform', event.transform);
+      updateLabelVisibility(event.transform.k);
+    });
   svg.call(zoom);
+
+  // ── Zoom-dependent label visibility ──
+  // At overview zoom, only show labels on high-importance nodes.
+  // As you zoom in, progressively reveal more.
+  function updateLabelVisibility(zoomScale) {
+    nodeElements.select('text').attr('display', d => {
+      const r = effectiveNodeRadius[d.type] || 4;
+      const screenR = r * zoomScale;
+      // Always show if zoomed in enough that the node is prominent
+      if (screenR >= 8) return null;
+      // At medium zoom, show nodes with radius >= 5 (person, team, location, etc.)
+      if (screenR >= 4 && r >= 5) return null;
+      // At overview, hide small node labels
+      return 'none';
+    });
+  }
 
   // ── BFS neighborhood ──
   function getNeighborhood(nodeId, depth) {
@@ -860,26 +925,34 @@ function getNodeSub(node) {
     }
   });
 
+  // ── Data-driven force heuristics ──
+  // Compute node degree for charge scaling
+  const nodeDegree = {};
+  validEdges.forEach(e => {
+    const sid = e.source.id || e.source;
+    const tid = e.target.id || e.target;
+    nodeDegree[sid] = (nodeDegree[sid] || 0) + 1;
+    nodeDegree[tid] = (nodeDegree[tid] || 0) + 1;
+  });
+
+  // Edge frequency for link distance/strength
+  const edgeFreqMax = Math.max(...Object.values(edgeTypeCounts), 1);
+
   // ── Simulation ──
   const simulation = d3.forceSimulation(nodes)
     .force('link', d3.forceLink(validEdges).id(d => d.id).distance(d => {
-      if (d.type === 'reports_to') return 40;
-      if (d.type === 'member_of' || d.type === 'team_parent') return 30;
-      if (d.type === 'collaborates_with' || d.type === 'mentors') return 60;
-      return 70;
+      const freq = (edgeTypeCounts[d.type] || 1) / edgeFreqMax;
+      return 40 + (1 - freq) * 40; // common=40, rare=80
     }).strength(d => {
-      if (d.type === 'reports_to') return 0.5;
-      if (d.type === 'member_of') return 0.6;
-      if (d.type === 'team_parent') return 0.4;
-      return 0.15;
+      const freq = (edgeTypeCounts[d.type] || 1) / edgeFreqMax;
+      return 0.1 + freq * 0.4; // common=0.5, rare=0.1
     }))
     .force('charge', d3.forceManyBody().strength(d => {
-      if (d.type === 'team') return -120;
-      if (d.type === 'person') return -60;
-      return -30;
+      const deg = nodeDegree[d.id] || 0;
+      return -Math.min(30 + deg * 5, 150);
     }).distanceMax(300))
     .force('center', d3.forceCenter(0, 0))
-    .force('collision', d3.forceCollide().radius(d => (NODE_RADIUS[d.type] || 4) + 2))
+    .force('collision', d3.forceCollide().radius(d => (effectiveNodeRadius[d.type] || 4) + 2))
     .alphaDecay(0.02);
 
   // ── Tooltip (declared early for edge hover) ──
@@ -892,9 +965,9 @@ function getNodeSub(node) {
   const linkElements = linkG.selectAll('line')
     .data(validEdges)
     .join('line')
-    .attr('stroke', d => (EDGE_STYLES[d.type] || { color: '#334155' }).color)
-    .attr('stroke-width', d => (EDGE_STYLES[d.type] || { width: 0.5 }).width)
-    .attr('stroke-dasharray', d => (EDGE_STYLES[d.type] || { dash: null }).dash)
+    .attr('stroke', d => getEdgeStyle(d.type).color)
+    .attr('stroke-width', d => getEdgeStyle(d.type).width)
+    .attr('stroke-dasharray', d => getEdgeStyle(d.type).dash)
     .attr('stroke-opacity', 0.4);
 
   // ── Edge hover hit targets (invisible wider lines) ──
@@ -915,7 +988,7 @@ function getNodeSub(node) {
       ttName.innerHTML = `<div class="tt-edge-endpoints">${getNodeLabel(srcNode)} → ${getNodeLabel(tgtNode)}</div>`;
       tooltip.classList.add('visible');
       // Highlight the actual edge
-      linkElements.filter(e => e === d).attr('stroke-opacity', 1).attr('stroke-width', e => ((EDGE_STYLES[e.type] || { width: 0.5 }).width) * 2.5);
+      linkElements.filter(e => e === d).attr('stroke-opacity', 1).attr('stroke-width', e => getEdgeStyle(e.type).width * 2.5);
     })
     .on('mousemove', (event) => {
       tooltip.style.left = (event.clientX + 14) + 'px';
@@ -936,11 +1009,11 @@ function getNodeSub(node) {
         }
         linkElements.filter(e => e === d)
           .attr('stroke-opacity', opacity)
-          .attr('stroke-width', e => (EDGE_STYLES[e.type] || { width: 0.5 }).width);
+          .attr('stroke-width', e => getEdgeStyle(e.type).width);
       } else {
         linkElements.filter(e => e === d)
           .attr('stroke-opacity', 0.4)
-          .attr('stroke-width', e => (EDGE_STYLES[e.type] || { width: 0.5 }).width);
+          .attr('stroke-width', e => getEdgeStyle(e.type).width);
       }
     });
 
@@ -962,22 +1035,29 @@ function getNodeSub(node) {
       })
     );
 
+  // Invisible hit target — ensures small nodes are clickable over edge hit lines
   nodeElements.append('circle')
-    .attr('r', d => NODE_RADIUS[d.type] || 4)
-    .attr('fill', d => TYPE_COLORS[d.type] || '#666')
-    .attr('stroke', 'none')
-    .attr('opacity', 0.85);
+    .attr('r', d => Math.max((effectiveNodeRadius[d.type] || 4) + 4, 10))
+    .attr('fill', 'transparent')
+    .attr('pointer-events', 'all');
 
-  // Labels for people and teams
-  nodeElements.filter(d => d.type === 'person' || d.type === 'team')
+  nodeElements.append('circle')
+    .attr('r', d => effectiveNodeRadius[d.type] || 4)
+    .attr('fill', d => effectiveNodeColors[d.type] || '#666')
+    .attr('stroke', 'none')
+    .attr('opacity', 0.85)
+    .attr('pointer-events', 'none');
+
+  // Labels on all node types — font size derived from radius
+  nodeElements
     .append('text')
     .text(d => getNodeLabel(d))
-    .attr('x', d => (NODE_RADIUS[d.type] || 4) + 4)
+    .attr('x', d => (effectiveNodeRadius[d.type] || 4) + 4)
     .attr('y', 3)
-    .attr('font-size', d => d.type === 'team' ? 9 : 7.5)
+    .attr('font-size', d => Math.max(6, (effectiveNodeRadius[d.type] || 4) + 2))
     .attr('font-family', 'DM Sans, sans-serif')
-    .attr('fill', d => d.type === 'team' ? '#34d399' : '#8899b0')
-    .attr('font-weight', d => d.type === 'team' ? 500 : 300)
+    .attr('fill', d => effectiveNodeColors[d.type] || '#8899b0')
+    .attr('font-weight', d => (effectiveNodeRadius[d.type] || 4) >= 6 ? 500 : 300)
     .attr('pointer-events', 'none')
     .attr('opacity', 0.7);
 
@@ -1049,8 +1129,10 @@ function getNodeSub(node) {
     const neighborhood = getNeighborhood(d.id, currentDepth);
     const { hops, edgeIds } = neighborhood;
 
-    // Opacity by hop distance
-    nodeElements.select('circle')
+    // Selection ring on selected node, clear all others
+    nodeElements.selectAll('circle:nth-child(2)')
+      .attr('stroke', n => n.id === d.id ? '#fff' : 'none')
+      .attr('stroke-width', n => n.id === d.id ? 2 : 0)
       .attr('opacity', n => {
         if (!hops.has(n.id)) return 0.08;
         const hop = hops.get(n.id);
@@ -1090,21 +1172,78 @@ function getNodeSub(node) {
   function clearSelection() {
     selectedNode = null;
     currentDepth = 1;
-    nodeElements.select('circle').attr('opacity', 0.85);
+    nodeElements.selectAll('circle:nth-child(2)').attr('opacity', 0.85).attr('stroke', 'none').attr('stroke-width', 0);
     nodeElements.select('text').attr('opacity', 0.7);
     linkElements.attr('stroke-opacity', 0.4);
     document.getElementById('detail').classList.remove('open');
+    // Re-apply zoom-based label visibility
+    const currentZoom = d3.zoomTransform(svg.node()).k;
+    updateLabelVisibility(currentZoom);
+  }
+
+  // ── Facet filter — highlight all nodes sharing a property value ──
+  function showFacet(key, val) {
+    selectedNode = null;
+    const matching = nodes.filter(n => String(n.properties[key]) === val);
+    const matchIds = new Set(matching.map(n => n.id));
+
+    // Highlight matching nodes, dim everything else
+    nodeElements.selectAll('circle:nth-child(2)')
+      .attr('stroke', n => matchIds.has(n.id) ? '#fff' : 'none')
+      .attr('stroke-width', n => matchIds.has(n.id) ? 1.5 : 0)
+      .attr('opacity', n => matchIds.has(n.id) ? 1 : 0.08);
+    nodeElements.select('text')
+      .attr('opacity', n => matchIds.has(n.id) ? 1 : 0.05);
+    linkElements.attr('stroke-opacity', e => {
+      const sid = e.source.id || e.source;
+      const tid = e.target.id || e.target;
+      return (matchIds.has(sid) && matchIds.has(tid)) ? 0.6 : 0.03;
+    });
+
+    // Show results in detail panel
+    const detail = document.getElementById('detail');
+    const content = document.getElementById('detail-content');
+    const prettyKey = key.replace(/([A-Z])/g, ' $1').toLowerCase();
+    let html = `<div class="detail-header">
+      <div class="node-type-badge" style="background:var(--accent-dim); color:var(--accent)">filter</div>
+      <div class="node-name">${val}</div>
+      <div class="node-sub">${matching.length} nodes with ${prettyKey} = ${val}</div>
+    </div>`;
+    html += `<div class="detail-section"><div class="detail-section-title">Matching Nodes (${matching.length})</div>`;
+    for (const n of matching) {
+      const color = effectiveNodeColors[n.type] || '#666';
+      html += `<div class="detail-edge" data-node-id="${n.id}">
+        <span class="edge-dir" style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></span>
+        <span class="edge-target">${getNodeLabel(n)}</span>
+        <span class="edge-type">${n.type}</span>
+      </div>`;
+    }
+    html += '</div>';
+    content.innerHTML = html;
+    detail.classList.add('open');
+
+    // Click handlers for result nodes
+    content.querySelectorAll('[data-node-id]').forEach(el => {
+      el.addEventListener('click', () => {
+        const targetNode = nodes.find(n => n.id === el.dataset.nodeId);
+        if (targetNode) selectNode(targetNode);
+      });
+    });
   }
 
   // ── Detail panel ──
   function showDetail(d, connectedEdges) {
     const detail = document.getElementById('detail');
     const content = document.getElementById('detail-content');
-    const color = TYPE_COLORS[d.type] || '#666';
+    const color = effectiveNodeColors[d.type] || '#666';
+
+    // Determine which property was used as the label to skip it in properties
+    const label = getNodeLabel(d);
+    const labelKey = Object.keys(d.properties).find(k => String(d.properties[k]) === label);
 
     let html = `<div class="detail-header">
       <div class="node-type-badge" style="background:${color}22; color:${color}">${d.type.replace(/_/g, ' ')}</div>
-      <div class="node-name">${getNodeLabel(d)}</div>
+      <div class="node-name">${label}</div>
       <div class="node-sub">${getNodeSub(d)}</div>
       <div class="depth-control">
         <span class="depth-label">Depth</span>
@@ -1114,18 +1253,32 @@ function getNodeSub(node) {
       </div>
     </div>`;
 
-    // Bio
-    if (d.properties.bio) {
-      html += `<div class="detail-section"><div class="detail-bio">${d.properties.bio}</div></div>`;
+    // Auto-detect long text fields (>80 chars) and show as bio-style
+    for (const [key, val] of Object.entries(d.properties)) {
+      if (typeof val === 'string' && val.length > 80) {
+        html += `<div class="detail-section"><div class="detail-bio">${val}</div></div>`;
+      }
     }
 
-    // Properties
-    const skipKeys = new Set(['name', 'title', 'bio', 'email']);
-    const propEntries = Object.entries(d.properties).filter(([k]) => !skipKeys.has(k));
+    // Properties — skip the label key and any long text already shown
+    const skipKeys = new Set([labelKey, 'email'].filter(Boolean));
+    const propEntries = Object.entries(d.properties).filter(
+      ([k, v]) => !skipKeys.has(k) && !(typeof v === 'string' && v.length > 80)
+    );
     if (propEntries.length) {
       html += `<div class="detail-section"><div class="detail-section-title">Properties</div>`;
       for (const [key, val] of propEntries) {
-        html += `<div class="detail-prop"><span class="key">${key.replace(/([A-Z])/g, ' $1').toLowerCase()}</span><span class="val">${val}</span></div>`;
+        const strVal = String(val);
+        // Check if the value matches a node label — navigate to it
+        const matchNode = nodes.find(n => n.id !== d.id && getNodeLabel(n) === strVal);
+        let valHtml;
+        if (matchNode) {
+          valHtml = `<span class="val val-link" data-node-id="${matchNode.id}">${val}</span>`;
+        } else {
+          // Make it a facet filter link — click to find all nodes with this key=value
+          valHtml = `<span class="val val-filter" data-filter-key="${key}" data-filter-val="${strVal.replace(/"/g, '&quot;')}">${val}</span>`;
+        }
+        html += `<div class="detail-prop"><span class="key">${key.replace(/([A-Z])/g, ' $1').toLowerCase()}</span>${valHtml}</div>`;
       }
       html += '</div>';
     }
@@ -1143,7 +1296,7 @@ function getNodeSub(node) {
 
       html += `<div class="detail-section"><div class="detail-section-title">Connections (${connectedEdges.length})</div>`;
       for (const [edgeType, edges] of sortedGroups) {
-        const style = EDGE_STYLES[edgeType] || { color: '#334155' };
+        const style = getEdgeStyle(edgeType);
         html += `<div class="edge-group">
           <div class="edge-group-header" data-group="${edgeType}">
             <span class="group-arrow">▾</span>
@@ -1190,12 +1343,19 @@ function getNodeSub(node) {
       });
     });
 
-    // Click on connected nodes
-    content.querySelectorAll('.detail-edge').forEach(el => {
+    // Click on connected nodes and linked property values
+    content.querySelectorAll('[data-node-id]').forEach(el => {
       el.addEventListener('click', () => {
         const targetId = el.dataset.nodeId;
         const targetNode = nodes.find(n => n.id === targetId);
         if (targetNode) selectNode(targetNode);
+      });
+    });
+
+    // Click on facet filter values (non-node property values)
+    content.querySelectorAll('.val-filter').forEach(el => {
+      el.addEventListener('click', () => {
+        showFacet(el.dataset.filterKey, el.dataset.filterVal);
       });
     });
   }
@@ -1231,7 +1391,7 @@ function getNodeSub(node) {
 
     searchResults.innerHTML = matches.map(n => `
       <div class="search-item" data-id="${n.id}">
-        <span class="type-dot" style="background:${TYPE_COLORS[n.type] || '#666'}"></span>
+        <span class="type-dot" style="background:${effectiveNodeColors[n.type] || '#666'}"></span>
         <span class="name">${getNodeLabel(n)}</span>
         <span class="meta">${n.type}</span>
       </div>
@@ -1261,6 +1421,20 @@ function getNodeSub(node) {
   searchInput.addEventListener('blur', () => {
     setTimeout(() => searchResults.classList.remove('visible'), 200);
   });
+
+  // ── Fit button ──
+  document.getElementById('fit-btn').addEventListener('click', fitGraph);
+
+  // ── Keyboard shortcuts ──
+  document.addEventListener('keydown', (e) => {
+    // Don't intercept when typing in search
+    if (e.target === searchInput) return;
+    if (e.key === 'Escape') clearSelection();
+    if (e.key === 'f' || e.key === 'F') fitGraph();
+  });
+
+  // ── Initialize label visibility at current zoom ──
+  updateLabelVisibility(1);
 
   // ── Done loading ──
   setTimeout(() => document.getElementById('loading').classList.add('hidden'), 600);
