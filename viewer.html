@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Graph — Viewer</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0c10;
+    --surface: #12151c;
+    --surface-2: #1a1e28;
+    --surface-3: #222838;
+    --border: #2a3040;
+    --text: #c8cdd8;
+    --text-dim: #6b7280;
+    --text-bright: #e8ecf4;
+    --accent: #5b8af0;
+    --accent-dim: rgba(91, 138, 240, 0.15);
+
+    /* Node type palette — muted, distinguishable */
+    --node-person: #5b8af0;
+    --node-candidate: #a78bfa;
+    --node-team: #34d399;
+    --node-skill: #f59e0b;
+    --node-project: #f472b6;
+    --node-certification: #fb923c;
+    --node-position: #6ee7b7;
+    --node-equipment: #94a3b8;
+    --node-document: #a1a1aa;
+    --node-benefits: #2dd4bf;
+    --node-comp: #4ade80;
+    --node-location: #38bdf8;
+    --node-jurisdiction: #818cf8;
+    --node-policy: #c084fc;
+    --node-life_event: #fb7185;
+    --node-review: #e879f9;
+    --node-recognition: #fbbf24;
+    --node-interview: #a78bfa;
+
+    /* Edge type palette */
+    --edge-reports_to: #3b5998;
+    --edge-member_of: #2d8a5e;
+    --edge-collaborates_with: #d97706;
+    --edge-mentors: #8b5cf6;
+    --edge-works_on: #ec4899;
+    --edge-has_skill: #d97706;
+    --edge-recognized: #f59e0b;
+    --edge-default: #334155;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ── Top bar ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    z-index: 100;
+  }
+
+  #topbar .logo {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-bright);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #topbar .logo .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  #search-wrap {
+    position: relative;
+    flex: 0 1 320px;
+  }
+
+  #search {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 12px 7px 32px;
+    color: var(--text-bright);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #search:focus { border-color: var(--accent); }
+
+  #search-wrap::before {
+    content: '⌕';
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  #search-results {
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+    z-index: 200;
+  }
+
+  #search-results.visible { display: block; }
+
+  .search-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s;
+  }
+
+  .search-item:hover { background: var(--surface-3); }
+
+  .search-item .type-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .search-item .name { color: var(--text-bright); }
+  .search-item .meta { color: var(--text-dim); font-size: 11px; margin-left: auto; }
+
+  #stats {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    white-space: nowrap;
+  }
+
+  /* ── Filter panel (left) ── */
+  #filters {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    width: 220px;
+    bottom: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px 0;
+    z-index: 90;
+    transform: translateX(0);
+    transition: transform 0.25s ease;
+  }
+
+  #filters.collapsed { transform: translateX(-220px); }
+
+  #filter-toggle {
+    position: fixed;
+    top: 64px;
+    left: 220px;
+    width: 24px;
+    height: 24px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    z-index: 91;
+    transition: left 0.25s ease;
+  }
+
+  #filter-toggle.shifted { left: 0; }
+
+  .filter-section {
+    padding: 0 16px;
+    margin-bottom: 20px;
+  }
+
+  .filter-title {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text);
+    user-select: none;
+    transition: opacity 0.2s;
+  }
+
+  .filter-item:hover { color: var(--text-bright); }
+  .filter-item.disabled { opacity: 0.35; }
+
+  .filter-item .swatch {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .filter-item .count {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  /* ── Detail panel (right) ── */
+  #detail {
+    position: fixed;
+    top: 52px;
+    right: 0;
+    width: 340px;
+    bottom: 0;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 0;
+    z-index: 90;
+    transform: translateX(340px);
+    transition: transform 0.3s ease;
+  }
+
+  #detail.open { transform: translateX(0); }
+
+  #detail-close {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 4px;
+    transition: color 0.15s;
+  }
+
+  #detail-close:hover { color: var(--text-bright); }
+
+  .detail-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-header .node-type-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+
+  .detail-header .node-name {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-bright);
+    line-height: 1.3;
+  }
+
+  .detail-header .node-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .detail-section {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-section-title {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .detail-prop {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 12px;
+  }
+
+  .detail-prop .key { color: var(--text-dim); }
+  .detail-prop .val { color: var(--text); text-align: right; max-width: 60%; }
+
+  .detail-edge {
+    padding: 6px 0;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+
+  .detail-edge:hover { color: var(--text-bright); }
+
+  .detail-edge .edge-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: var(--surface-3);
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  .detail-edge .edge-target { color: var(--text); }
+  .detail-edge .edge-dir { color: var(--text-dim); font-size: 10px; }
+
+  .detail-bio {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+    font-style: italic;
+    opacity: 0.85;
+  }
+
+  /* ── Canvas area ── */
+  #graph-container {
+    position: fixed;
+    top: 52px;
+    left: 220px;
+    right: 0;
+    bottom: 0;
+    transition: left 0.25s ease;
+  }
+
+  #graph-container.expanded { left: 0; }
+
+  svg { width: 100%; height: 100%; display: block; }
+
+  /* ── Loading ── */
+  #loading {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    transition: opacity 0.5s;
+  }
+
+  #loading.hidden { opacity: 0; pointer-events: none; }
+
+  #loading .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  #loading .label {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Tooltip ── */
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--text-bright);
+    z-index: 300;
+    opacity: 0;
+    transition: opacity 0.12s;
+    max-width: 250px;
+  }
+
+  #tooltip.visible { opacity: 1; }
+  #tooltip .tt-type { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #tooltip .tt-name { margin-top: 1px; }
+
+  /* ── Scrollbars ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--surface-3); }
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <div class="label">Loading graph…</div>
+</div>
+
+<div id="tooltip">
+  <div class="tt-type"></div>
+  <div class="tt-name"></div>
+</div>
+
+<div id="topbar">
+  <div class="logo"><div class="dot"></div> Employee Graph</div>
+  <div id="search-wrap">
+    <input type="text" id="search" placeholder="Search nodes…" autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="stats"></div>
+</div>
+
+<button id="filter-toggle" title="Toggle filters">◂</button>
+
+<div id="filters"></div>
+
+<div id="graph-container">
+  <svg id="graph-svg"></svg>
+</div>
+
+<div id="detail">
+  <button id="detail-close">×</button>
+  <div id="detail-content"></div>
+</div>
+
+<script>
+const TYPE_COLORS = {
+  person: '#5b8af0', candidate: '#a78bfa', team: '#34d399', skill: '#f59e0b',
+  project: '#f472b6', certification: '#fb923c', position: '#6ee7b7',
+  equipment: '#94a3b8', document: '#a1a1aa', benefits: '#2dd4bf',
+  comp: '#4ade80', location: '#38bdf8', jurisdiction: '#818cf8',
+  policy: '#c084fc', life_event: '#fb7185', review: '#e879f9',
+  recognition: '#fbbf24', interview: '#a78bfa'
+};
+
+const NODE_RADIUS = {
+  person: 6, candidate: 5, team: 8, skill: 4, project: 5,
+  certification: 3.5, position: 3, equipment: 3, document: 3,
+  benefits: 3.5, comp: 3, location: 5, jurisdiction: 4,
+  policy: 3.5, life_event: 4, review: 3.5, recognition: 3.5, interview: 3
+};
+
+const EDGE_STYLES = {
+  reports_to:        { color: '#3b5998', dash: null, width: 1.2 },
+  member_of:         { color: '#2d8a5e', dash: null, width: 0.8 },
+  team_parent:       { color: '#2d8a5e', dash: '4,3', width: 0.8 },
+  collaborates_with: { color: '#d97706', dash: '3,3', width: 1 },
+  mentors:           { color: '#8b5cf6', dash: '2,3', width: 1.2 },
+  works_on:          { color: '#ec4899', dash: null, width: 0.7 },
+  has_skill:         { color: '#d97706', dash: null, width: 0.5 },
+  has_certification: { color: '#fb923c', dash: null, width: 0.5 },
+  recognized:        { color: '#f59e0b', dash: '4,2', width: 1 },
+  located_at:        { color: '#38bdf8', dash: null, width: 0.5 },
+  has_benefits:      { color: '#2dd4bf', dash: null, width: 0.4 },
+  has_comp:          { color: '#4ade80', dash: null, width: 0.4 },
+  subject_to:        { color: '#818cf8', dash: null, width: 0.4 },
+  governed_by:       { color: '#c084fc', dash: null, width: 0.4 },
+  holds_position:    { color: '#6ee7b7', dash: null, width: 0.5 },
+  candidate_for:     { color: '#a78bfa', dash: '3,2', width: 0.8 },
+  interviewed_by:    { color: '#a78bfa', dash: '2,2', width: 0.7 },
+  referred_by:       { color: '#a78bfa', dash: '4,3', width: 0.8 },
+  has_interview:     { color: '#a78bfa', dash: null, width: 0.5 },
+  life_event:        { color: '#fb7185', dash: null, width: 0.8 },
+  signed:            { color: '#a1a1aa', dash: null, width: 0.4 },
+  assigned_equipment:{ color: '#94a3b8', dash: null, width: 0.4 },
+  has_review:        { color: '#e879f9', dash: null, width: 0.5 },
+  buddy_of:          { color: '#34d399', dash: '3,3', width: 1 },
+  converted_from:    { color: '#a78bfa', dash: '5,3', width: 0.8 },
+  onboarding_step:   { color: '#5b8af0', dash: '2,2', width: 0.6 }
+};
+
+function getNodeLabel(node) {
+  const p = node.properties;
+  return p.name || p.title || p.planName || p.planType || p.type || p.eventType || p.state || node.id;
+}
+
+function getNodeSub(node) {
+  const p = node.properties;
+  if (node.type === 'person' || node.type === 'candidate') return p.role || p.department || '';
+  if (node.type === 'team') return p.department || '';
+  if (node.type === 'project') return p.status || '';
+  if (node.type === 'skill') return p.category || '';
+  return '';
+}
+
+// ── Main ──
+(async function() {
+  const [nodesData, edgesData] = await Promise.all([
+    fetch('data/nodes.json').then(r => r.json()),
+    fetch('data/edges.json').then(r => r.json())
+  ]);
+
+  const nodes = nodesData.nodes;
+  const edges = edgesData.edges;
+
+  // Index
+  const nodeMap = new Map(nodes.map(n => [n.id, n]));
+
+  // Filter out edges with missing nodes
+  const validEdges = edges.filter(e => nodeMap.has(e.source) && nodeMap.has(e.target));
+
+  // Count by type
+  const nodeTypeCounts = {};
+  nodes.forEach(n => { nodeTypeCounts[n.type] = (nodeTypeCounts[n.type] || 0) + 1; });
+  const edgeTypeCounts = {};
+  validEdges.forEach(e => { edgeTypeCounts[e.type] = (edgeTypeCounts[e.type] || 0) + 1; });
+
+  // Stats
+  document.getElementById('stats').textContent = `${nodes.length} nodes · ${validEdges.length} edges`;
+
+  // ── Filters ──
+  const filtersEl = document.getElementById('filters');
+  const activeNodeTypes = new Set(Object.keys(nodeTypeCounts));
+  const activeEdgeTypes = new Set(Object.keys(edgeTypeCounts));
+
+  function buildFilters() {
+    let html = '<div class="filter-section"><div class="filter-title">Node Types</div>';
+    for (const [type, count] of Object.entries(nodeTypeCounts).sort((a,b) => b[1] - a[1])) {
+      const color = TYPE_COLORS[type] || '#666';
+      const active = activeNodeTypes.has(type);
+      html += `<div class="filter-item ${active ? '' : 'disabled'}" data-kind="node" data-type="${type}">
+        <span class="swatch" style="background:${color}"></span>
+        <span>${type.replace(/_/g, ' ')}</span>
+        <span class="count">${count}</span>
+      </div>`;
+    }
+    html += '</div><div class="filter-section"><div class="filter-title">Edge Types</div>';
+    for (const [type, count] of Object.entries(edgeTypeCounts).sort((a,b) => b[1] - a[1])) {
+      const style = EDGE_STYLES[type] || EDGE_STYLES.reports_to;
+      const active = activeEdgeTypes.has(type);
+      html += `<div class="filter-item ${active ? '' : 'disabled'}" data-kind="edge" data-type="${type}">
+        <span class="swatch" style="background:${style.color}"></span>
+        <span>${type.replace(/_/g, ' ')}</span>
+        <span class="count">${count}</span>
+      </div>`;
+    }
+    html += '</div>';
+    filtersEl.innerHTML = html;
+
+    filtersEl.querySelectorAll('.filter-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const kind = el.dataset.kind;
+        const type = el.dataset.type;
+        const set = kind === 'node' ? activeNodeTypes : activeEdgeTypes;
+        if (set.has(type)) { set.delete(type); el.classList.add('disabled'); }
+        else { set.add(type); el.classList.remove('disabled'); }
+        updateVisibility();
+      });
+    });
+  }
+
+  buildFilters();
+
+  // ── Filter toggle ──
+  const filterToggle = document.getElementById('filter-toggle');
+  const graphContainer = document.getElementById('graph-container');
+  let filtersVisible = true;
+  filterToggle.addEventListener('click', () => {
+    filtersVisible = !filtersVisible;
+    filtersEl.classList.toggle('collapsed', !filtersVisible);
+    filterToggle.classList.toggle('shifted', !filtersVisible);
+    graphContainer.classList.toggle('expanded', !filtersVisible);
+    filterToggle.textContent = filtersVisible ? '◂' : '▸';
+  });
+
+  // ── D3 Setup ──
+  const svg = d3.select('#graph-svg');
+  const container = svg.append('g');
+
+  const zoom = d3.zoom()
+    .scaleExtent([0.1, 8])
+    .on('zoom', (event) => container.attr('transform', event.transform));
+  svg.call(zoom);
+
+  // ── Simulation ──
+  const simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(validEdges).id(d => d.id).distance(d => {
+      if (d.type === 'reports_to') return 40;
+      if (d.type === 'member_of' || d.type === 'team_parent') return 50;
+      if (d.type === 'collaborates_with' || d.type === 'mentors') return 60;
+      return 70;
+    }).strength(d => {
+      if (d.type === 'reports_to') return 0.5;
+      if (d.type === 'member_of') return 0.3;
+      return 0.15;
+    }))
+    .force('charge', d3.forceManyBody().strength(d => d.type === 'person' ? -80 : -30).distanceMax(300))
+    .force('center', d3.forceCenter(0, 0))
+    .force('collision', d3.forceCollide().radius(d => (NODE_RADIUS[d.type] || 4) + 2))
+    .alphaDecay(0.02);
+
+  // ── Draw edges ──
+  const linkG = container.append('g').attr('class', 'links');
+  const linkElements = linkG.selectAll('line')
+    .data(validEdges)
+    .join('line')
+    .attr('stroke', d => (EDGE_STYLES[d.type] || { color: '#334155' }).color)
+    .attr('stroke-width', d => (EDGE_STYLES[d.type] || { width: 0.5 }).width)
+    .attr('stroke-dasharray', d => (EDGE_STYLES[d.type] || { dash: null }).dash)
+    .attr('stroke-opacity', 0.4);
+
+  // ── Draw nodes ──
+  const nodeG = container.append('g').attr('class', 'nodes');
+  const nodeElements = nodeG.selectAll('g')
+    .data(nodes)
+    .join('g')
+    .attr('cursor', 'pointer')
+    .call(d3.drag()
+      .on('start', (event, d) => {
+        if (!event.active) simulation.alphaTarget(0.1).restart();
+        d.fx = d.x; d.fy = d.y;
+      })
+      .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y; })
+      .on('end', (event, d) => {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null; d.fy = null;
+      })
+    );
+
+  nodeElements.append('circle')
+    .attr('r', d => NODE_RADIUS[d.type] || 4)
+    .attr('fill', d => TYPE_COLORS[d.type] || '#666')
+    .attr('stroke', 'none')
+    .attr('opacity', 0.85);
+
+  // Labels for people and teams
+  nodeElements.filter(d => d.type === 'person' || d.type === 'team')
+    .append('text')
+    .text(d => getNodeLabel(d))
+    .attr('x', d => (NODE_RADIUS[d.type] || 4) + 4)
+    .attr('y', 3)
+    .attr('font-size', d => d.type === 'team' ? 9 : 7.5)
+    .attr('font-family', 'DM Sans, sans-serif')
+    .attr('fill', d => d.type === 'team' ? '#34d399' : '#8899b0')
+    .attr('font-weight', d => d.type === 'team' ? 500 : 300)
+    .attr('pointer-events', 'none')
+    .attr('opacity', 0.7);
+
+  // ── Tooltip ──
+  const tooltip = document.getElementById('tooltip');
+  const ttType = tooltip.querySelector('.tt-type');
+  const ttName = tooltip.querySelector('.tt-name');
+
+  nodeElements
+    .on('mouseenter', (event, d) => {
+      ttType.textContent = d.type.replace(/_/g, ' ');
+      ttName.textContent = getNodeLabel(d);
+      tooltip.classList.add('visible');
+    })
+    .on('mousemove', (event) => {
+      tooltip.style.left = (event.clientX + 14) + 'px';
+      tooltip.style.top = (event.clientY - 10) + 'px';
+    })
+    .on('mouseleave', () => {
+      tooltip.classList.remove('visible');
+    })
+    .on('click', (event, d) => {
+      event.stopPropagation();
+      selectNode(d);
+    });
+
+  svg.on('click', () => clearSelection());
+
+  // ── Tick ──
+  simulation.on('tick', () => {
+    linkElements
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+
+    nodeElements.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  // ── Fit after settling ──
+  simulation.on('end', fitGraph);
+  setTimeout(fitGraph, 3000);
+
+  function fitGraph() {
+    const bounds = container.node().getBBox();
+    if (!bounds.width) return;
+    const svgEl = document.getElementById('graph-svg');
+    const w = svgEl.clientWidth;
+    const h = svgEl.clientHeight;
+    const scale = Math.min(w / (bounds.width + 60), h / (bounds.height + 60), 1.5) * 0.85;
+    const tx = w / 2 - (bounds.x + bounds.width / 2) * scale;
+    const ty = h / 2 - (bounds.y + bounds.height / 2) * scale;
+    svg.transition().duration(800).call(
+      zoom.transform,
+      d3.zoomIdentity.translate(tx, ty).scale(scale)
+    );
+  }
+
+  // ── Selection ──
+  let selectedNode = null;
+
+  function selectNode(d) {
+    selectedNode = d;
+
+    const connectedEdges = validEdges.filter(e =>
+      (e.source.id || e.source) === d.id || (e.target.id || e.target) === d.id
+    );
+    const connectedNodeIds = new Set([d.id]);
+    connectedEdges.forEach(e => {
+      connectedNodeIds.add(e.source.id || e.source);
+      connectedNodeIds.add(e.target.id || e.target);
+    });
+
+    nodeElements.select('circle')
+      .attr('opacity', n => connectedNodeIds.has(n.id) ? 1 : 0.08);
+    nodeElements.select('text')
+      .attr('opacity', n => connectedNodeIds.has(n.id) ? 1 : 0.05);
+    linkElements
+      .attr('stroke-opacity', e => {
+        const sid = e.source.id || e.source;
+        const tid = e.target.id || e.target;
+        return (sid === d.id || tid === d.id) ? 0.8 : 0.03;
+      });
+
+    showDetail(d, connectedEdges);
+  }
+
+  function clearSelection() {
+    selectedNode = null;
+    nodeElements.select('circle').attr('opacity', 0.85);
+    nodeElements.select('text').attr('opacity', 0.7);
+    linkElements.attr('stroke-opacity', 0.4);
+    document.getElementById('detail').classList.remove('open');
+  }
+
+  // ── Detail panel ──
+  function showDetail(d, connectedEdges) {
+    const detail = document.getElementById('detail');
+    const content = document.getElementById('detail-content');
+    const color = TYPE_COLORS[d.type] || '#666';
+
+    let html = `<div class="detail-header">
+      <div class="node-type-badge" style="background:${color}22; color:${color}">${d.type.replace(/_/g, ' ')}</div>
+      <div class="node-name">${getNodeLabel(d)}</div>
+      <div class="node-sub">${getNodeSub(d)}</div>
+    </div>`;
+
+    // Bio
+    if (d.properties.bio) {
+      html += `<div class="detail-section"><div class="detail-bio">${d.properties.bio}</div></div>`;
+    }
+
+    // Properties
+    const skipKeys = new Set(['name', 'title', 'bio', 'email']);
+    const propEntries = Object.entries(d.properties).filter(([k]) => !skipKeys.has(k));
+    if (propEntries.length) {
+      html += `<div class="detail-section"><div class="detail-section-title">Properties</div>`;
+      for (const [key, val] of propEntries) {
+        html += `<div class="detail-prop"><span class="key">${key.replace(/([A-Z])/g, ' $1').toLowerCase()}</span><span class="val">${val}</span></div>`;
+      }
+      html += '</div>';
+    }
+
+    // Connections
+    if (connectedEdges.length) {
+      html += `<div class="detail-section"><div class="detail-section-title">Connections (${connectedEdges.length})</div>`;
+      for (const e of connectedEdges) {
+        const isSource = (e.source.id || e.source) === d.id;
+        const otherId = isSource ? (e.target.id || e.target) : (e.source.id || e.source);
+        const other = nodeMap.get(otherId);
+        if (!other) continue;
+        const dir = isSource ? '→' : '←';
+        html += `<div class="detail-edge" data-node-id="${otherId}">
+          <span class="edge-dir">${dir}</span>
+          <span class="edge-type">${e.type.replace(/_/g, ' ')}</span>
+          <span class="edge-target">${getNodeLabel(other)}</span>
+        </div>`;
+      }
+      html += '</div>';
+    }
+
+    content.innerHTML = html;
+    detail.classList.add('open');
+
+    // Click on connected nodes
+    content.querySelectorAll('.detail-edge').forEach(el => {
+      el.addEventListener('click', () => {
+        const targetId = el.dataset.nodeId;
+        const targetNode = nodes.find(n => n.id === targetId);
+        if (targetNode) selectNode(targetNode);
+      });
+    });
+  }
+
+  document.getElementById('detail-close').addEventListener('click', clearSelection);
+
+  // ── Visibility update ──
+  function updateVisibility() {
+    nodeElements.attr('display', d => activeNodeTypes.has(d.type) ? null : 'none');
+    linkElements.attr('display', d => {
+      const sNode = nodeMap.get(d.source.id || d.source);
+      const tNode = nodeMap.get(d.target.id || d.target);
+      if (!sNode || !tNode) return 'none';
+      if (!activeNodeTypes.has(sNode.type) || !activeNodeTypes.has(tNode.type)) return 'none';
+      if (!activeEdgeTypes.has(d.type)) return 'none';
+      return null;
+    });
+  }
+
+  // ── Search ──
+  const searchInput = document.getElementById('search');
+  const searchResults = document.getElementById('search-results');
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    if (!q) { searchResults.classList.remove('visible'); return; }
+
+    const matches = nodes
+      .filter(n => getNodeLabel(n).toLowerCase().includes(q) || n.type.includes(q))
+      .slice(0, 15);
+
+    if (!matches.length) { searchResults.classList.remove('visible'); return; }
+
+    searchResults.innerHTML = matches.map(n => `
+      <div class="search-item" data-id="${n.id}">
+        <span class="type-dot" style="background:${TYPE_COLORS[n.type] || '#666'}"></span>
+        <span class="name">${getNodeLabel(n)}</span>
+        <span class="meta">${n.type}</span>
+      </div>
+    `).join('');
+    searchResults.classList.add('visible');
+
+    searchResults.querySelectorAll('.search-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const node = nodes.find(n => n.id === el.dataset.id);
+        if (node) {
+          selectNode(node);
+          // Pan to node
+          const svgEl = document.getElementById('graph-svg');
+          const w = svgEl.clientWidth;
+          const h = svgEl.clientHeight;
+          svg.transition().duration(600).call(
+            zoom.transform,
+            d3.zoomIdentity.translate(w/2 - node.x * 1.5, h/2 - node.y * 1.5).scale(1.5)
+          );
+        }
+        searchInput.value = '';
+        searchResults.classList.remove('visible');
+      });
+    });
+  });
+
+  searchInput.addEventListener('blur', () => {
+    setTimeout(() => searchResults.classList.remove('visible'), 200);
+  });
+
+  // ── Done loading ──
+  setTimeout(() => document.getElementById('loading').classList.add('hidden'), 600);
+
+})();
+</script>
+</body>
+</html>
