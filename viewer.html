@@ -251,6 +251,31 @@
     color: var(--text-dim);
   }
 
+  .filter-item .solo-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--text-dim);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: 0 4px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+    line-height: 16px;
+    flex-shrink: 0;
+  }
+
+  .filter-item:hover .solo-btn { opacity: 0.6; }
+  .filter-item .solo-btn:hover { opacity: 1; color: var(--accent); border-color: var(--accent); }
+  .filter-item .solo-btn.active {
+    opacity: 1;
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
   /* ── Detail panel (right) ── */
   #detail {
     position: fixed;
@@ -291,7 +316,7 @@
 
   .detail-header .node-type-badge {
     display: inline-block;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -301,14 +326,14 @@
   }
 
   .detail-header .node-name {
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 500;
     color: var(--text-bright);
     line-height: 1.3;
   }
 
   .detail-header .node-sub {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-dim);
     margin-top: 2px;
   }
@@ -319,7 +344,7 @@
   }
 
   .detail-section-title {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -330,8 +355,8 @@
   .detail-prop {
     display: flex;
     justify-content: space-between;
-    padding: 4px 0;
-    font-size: 12px;
+    padding: 5px 0;
+    font-size: 14px;
   }
 
   .detail-prop .key { color: var(--text-dim); }
@@ -339,7 +364,7 @@
 
   .detail-edge {
     padding: 6px 0;
-    font-size: 12px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -351,7 +376,7 @@
 
   .detail-edge .edge-type {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 11px;
     padding: 1px 5px;
     border-radius: 3px;
     background: var(--surface-3);
@@ -363,7 +388,7 @@
   .detail-edge .edge-dir { color: var(--text-dim); font-size: 10px; }
 
   .detail-bio {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text);
     line-height: 1.5;
     font-style: italic;
@@ -435,6 +460,111 @@
   #tooltip .tt-type { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
   #tooltip .tt-name { margin-top: 1px; }
 
+  /* ── Depth control ── */
+  .depth-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .depth-control .depth-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+  }
+
+  .depth-btn {
+    width: 28px;
+    height: 22px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface-2);
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .depth-btn:hover { border-color: var(--accent); color: var(--text); }
+  .depth-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── Edge groups (collapsible connections) ── */
+  .edge-group {
+    margin-bottom: 4px;
+  }
+
+  .edge-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text);
+    user-select: none;
+    transition: color 0.15s;
+  }
+
+  .edge-group-header:hover { color: var(--text-bright); }
+
+  .edge-group-header .group-arrow {
+    font-size: 8px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    width: 10px;
+    text-align: center;
+  }
+
+  .edge-group-header .group-arrow.collapsed { transform: rotate(-90deg); }
+
+  .edge-group-header .group-swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .edge-group-header .group-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .edge-group-header .group-count {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .edge-group-items {
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    max-height: 500px;
+    padding-left: 18px;
+  }
+
+  .edge-group-items.collapsed {
+    max-height: 0;
+  }
+
+  /* ── Edge tooltip extras ── */
+  #tooltip .tt-edge-endpoints {
+    font-size: 11px;
+    color: var(--text);
+    margin-top: 2px;
+  }
+
   /* ── Scrollbars ── */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -455,7 +585,7 @@
 </div>
 
 <div id="topbar">
-  <div class="logo"><div class="dot"></div> Employee Graph</div>
+  <div class="logo"><div class="dot"></div> Employee Graph Viewer</div>
   <div id="search-wrap">
     <input type="text" id="search" placeholder="Search nodes…" autocomplete="off">
     <div id="search-results"></div>
@@ -565,6 +695,22 @@ function getNodeSub(node) {
   const filtersEl = document.getElementById('filters');
   const activeNodeTypes = new Set(Object.keys(nodeTypeCounts));
   const activeEdgeTypes = new Set(Object.keys(edgeTypeCounts));
+  const allNodeTypes = Object.keys(nodeTypeCounts);
+  const allEdgeTypes = Object.keys(edgeTypeCounts);
+  let soloedNodeType = null;
+  let soloedEdgeType = null;
+
+  function syncFilterUI() {
+    filtersEl.querySelectorAll('.filter-item').forEach(el => {
+      const kind = el.dataset.kind;
+      const type = el.dataset.type;
+      const set = kind === 'node' ? activeNodeTypes : activeEdgeTypes;
+      const soloed = kind === 'node' ? soloedNodeType : soloedEdgeType;
+      el.classList.toggle('disabled', !set.has(type));
+      const soloBtn = el.querySelector('.solo-btn');
+      if (soloBtn) soloBtn.classList.toggle('active', soloed === type);
+    });
+  }
 
   function buildFilters() {
     let html = '<div class="filter-section"><div class="filter-title">Node Types</div>';
@@ -575,6 +721,7 @@ function getNodeSub(node) {
         <span class="swatch" style="background:${color}"></span>
         <span>${type.replace(/_/g, ' ')}</span>
         <span class="count">${count}</span>
+        <button class="solo-btn" data-kind="node" data-type="${type}" title="Solo — show only this type">S</button>
       </div>`;
     }
     html += '</div><div class="filter-section"><div class="filter-title">Edge Types</div>';
@@ -585,18 +732,52 @@ function getNodeSub(node) {
         <span class="swatch" style="background:${style.color}"></span>
         <span>${type.replace(/_/g, ' ')}</span>
         <span class="count">${count}</span>
+        <button class="solo-btn" data-kind="edge" data-type="${type}" title="Solo — show only this type">S</button>
       </div>`;
     }
     html += '</div>';
     filtersEl.innerHTML = html;
 
+    // Toggle click (on the row, excluding the solo button)
     filtersEl.querySelectorAll('.filter-item').forEach(el => {
-      el.addEventListener('click', () => {
+      el.addEventListener('click', (e) => {
+        if (e.target.closest('.solo-btn')) return; // handled separately
         const kind = el.dataset.kind;
         const type = el.dataset.type;
         const set = kind === 'node' ? activeNodeTypes : activeEdgeTypes;
-        if (set.has(type)) { set.delete(type); el.classList.add('disabled'); }
-        else { set.add(type); el.classList.remove('disabled'); }
+        // If currently soloed, clear solo first
+        if (kind === 'node' && soloedNodeType) { soloedNodeType = null; }
+        if (kind === 'edge' && soloedEdgeType) { soloedEdgeType = null; }
+        if (set.has(type)) { set.delete(type); }
+        else { set.add(type); }
+        syncFilterUI();
+        updateVisibility();
+      });
+    });
+
+    // Solo click
+    filtersEl.querySelectorAll('.solo-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const kind = btn.dataset.kind;
+        const type = btn.dataset.type;
+        const set = kind === 'node' ? activeNodeTypes : activeEdgeTypes;
+        const allTypes = kind === 'node' ? allNodeTypes : allEdgeTypes;
+        const currentSolo = kind === 'node' ? soloedNodeType : soloedEdgeType;
+
+        if (currentSolo === type) {
+          // Un-solo: restore all
+          allTypes.forEach(t => set.add(t));
+          if (kind === 'node') soloedNodeType = null;
+          else soloedEdgeType = null;
+        } else {
+          // Solo: show only this type
+          set.clear();
+          set.add(type);
+          if (kind === 'node') soloedNodeType = type;
+          else soloedEdgeType = type;
+        }
+        syncFilterUI();
         updateVisibility();
       });
     });
@@ -625,22 +806,86 @@ function getNodeSub(node) {
     .on('zoom', (event) => container.attr('transform', event.transform));
   svg.call(zoom);
 
+  // ── BFS neighborhood ──
+  function getNeighborhood(nodeId, depth) {
+    const hops = new Map(); // nodeId -> hop distance
+    const edgeIds = new Set();
+    hops.set(nodeId, 0);
+    let frontier = [nodeId];
+
+    for (let hop = 1; hop <= depth; hop++) {
+      const nextFrontier = [];
+      for (const nid of frontier) {
+        for (const e of validEdges) {
+          const sid = e.source.id || e.source;
+          const tid = e.target.id || e.target;
+          if (sid === nid && !hops.has(tid)) {
+            hops.set(tid, hop);
+            nextFrontier.push(tid);
+            edgeIds.add(e);
+          } else if (tid === nid && !hops.has(sid)) {
+            hops.set(sid, hop);
+            nextFrontier.push(sid);
+            edgeIds.add(e);
+          }
+          // Also include edges between already-found nodes
+          if (hops.has(sid) && hops.has(tid)) {
+            edgeIds.add(e);
+          }
+        }
+      }
+      frontier = nextFrontier;
+    }
+    return { hops, edgeIds };
+  }
+
+  // ── Build adjacency for edge lookup ──
+  const edgeIndex = new Map(); // nodeId -> [edges]
+  validEdges.forEach(e => {
+    const sid = e.source.id || e.source;
+    const tid = e.target.id || e.target;
+    if (!edgeIndex.has(sid)) edgeIndex.set(sid, []);
+    if (!edgeIndex.has(tid)) edgeIndex.set(tid, []);
+    edgeIndex.get(sid).push(e);
+    edgeIndex.get(tid).push(e);
+  });
+
+  // ── Team clustering: build team map ──
+  const teamMap = new Map(); // nodeId -> teamId
+  validEdges.forEach(e => {
+    if (e.type === 'member_of') {
+      const personId = e.source.id || e.source;
+      const teamId = e.target.id || e.target;
+      teamMap.set(personId, teamId);
+    }
+  });
+
   // ── Simulation ──
   const simulation = d3.forceSimulation(nodes)
     .force('link', d3.forceLink(validEdges).id(d => d.id).distance(d => {
       if (d.type === 'reports_to') return 40;
-      if (d.type === 'member_of' || d.type === 'team_parent') return 50;
+      if (d.type === 'member_of' || d.type === 'team_parent') return 30;
       if (d.type === 'collaborates_with' || d.type === 'mentors') return 60;
       return 70;
     }).strength(d => {
       if (d.type === 'reports_to') return 0.5;
-      if (d.type === 'member_of') return 0.3;
+      if (d.type === 'member_of') return 0.6;
+      if (d.type === 'team_parent') return 0.4;
       return 0.15;
     }))
-    .force('charge', d3.forceManyBody().strength(d => d.type === 'person' ? -80 : -30).distanceMax(300))
+    .force('charge', d3.forceManyBody().strength(d => {
+      if (d.type === 'team') return -120;
+      if (d.type === 'person') return -60;
+      return -30;
+    }).distanceMax(300))
     .force('center', d3.forceCenter(0, 0))
     .force('collision', d3.forceCollide().radius(d => (NODE_RADIUS[d.type] || 4) + 2))
     .alphaDecay(0.02);
+
+  // ── Tooltip (declared early for edge hover) ──
+  const tooltip = document.getElementById('tooltip');
+  const ttType = tooltip.querySelector('.tt-type');
+  const ttName = tooltip.querySelector('.tt-name');
 
   // ── Draw edges ──
   const linkG = container.append('g').attr('class', 'links');
@@ -652,7 +897,54 @@ function getNodeSub(node) {
     .attr('stroke-dasharray', d => (EDGE_STYLES[d.type] || { dash: null }).dash)
     .attr('stroke-opacity', 0.4);
 
-  // ── Draw nodes ──
+  // ── Edge hover hit targets (invisible wider lines) ──
+  const linkHitG = container.append('g').attr('class', 'link-hits');
+  const linkHitElements = linkHitG.selectAll('line')
+    .data(validEdges)
+    .join('line')
+    .attr('stroke', 'transparent')
+    .attr('stroke-width', 12)
+    .attr('pointer-events', 'stroke')
+    .attr('cursor', 'pointer');
+
+  linkHitElements
+    .on('mouseenter', (event, d) => {
+      const srcNode = typeof d.source === 'object' ? d.source : nodeMap.get(d.source);
+      const tgtNode = typeof d.target === 'object' ? d.target : nodeMap.get(d.target);
+      ttType.textContent = d.type.replace(/_/g, ' ');
+      ttName.innerHTML = `<div class="tt-edge-endpoints">${getNodeLabel(srcNode)} → ${getNodeLabel(tgtNode)}</div>`;
+      tooltip.classList.add('visible');
+      // Highlight the actual edge
+      linkElements.filter(e => e === d).attr('stroke-opacity', 1).attr('stroke-width', e => ((EDGE_STYLES[e.type] || { width: 0.5 }).width) * 2.5);
+    })
+    .on('mousemove', (event) => {
+      tooltip.style.left = (event.clientX + 14) + 'px';
+      tooltip.style.top = (event.clientY - 10) + 'px';
+    })
+    .on('mouseleave', (event, d) => {
+      tooltip.classList.remove('visible');
+      // Restore edge style based on current selection state
+      if (selectedNode) {
+        const neighborhood = getNeighborhood(selectedNode.id, currentDepth);
+        const inNeighborhood = neighborhood.edgeIds.has(d);
+        const sid = d.source.id || d.source;
+        const tid = d.target.id || d.target;
+        const maxHop = Math.max(neighborhood.hops.get(sid) || 99, neighborhood.hops.get(tid) || 99);
+        let opacity = 0.03;
+        if (inNeighborhood) {
+          opacity = maxHop <= 1 ? 0.8 : maxHop === 2 ? 0.45 : 0.25;
+        }
+        linkElements.filter(e => e === d)
+          .attr('stroke-opacity', opacity)
+          .attr('stroke-width', e => (EDGE_STYLES[e.type] || { width: 0.5 }).width);
+      } else {
+        linkElements.filter(e => e === d)
+          .attr('stroke-opacity', 0.4)
+          .attr('stroke-width', e => (EDGE_STYLES[e.type] || { width: 0.5 }).width);
+      }
+    });
+
+  // ── Draw nodes (must be last so they're on top for pointer events) ──
   const nodeG = container.append('g').attr('class', 'nodes');
   const nodeElements = nodeG.selectAll('g')
     .data(nodes)
@@ -689,11 +981,7 @@ function getNodeSub(node) {
     .attr('pointer-events', 'none')
     .attr('opacity', 0.7);
 
-  // ── Tooltip ──
-  const tooltip = document.getElementById('tooltip');
-  const ttType = tooltip.querySelector('.tt-type');
-  const ttName = tooltip.querySelector('.tt-name');
-
+  // ── Node tooltip + click handlers ──
   nodeElements
     .on('mouseenter', (event, d) => {
       ttType.textContent = d.type.replace(/_/g, ' ');
@@ -717,6 +1005,12 @@ function getNodeSub(node) {
   // ── Tick ──
   simulation.on('tick', () => {
     linkElements
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+
+    linkHitElements
       .attr('x1', d => d.source.x)
       .attr('y1', d => d.source.y)
       .attr('x2', d => d.target.x)
@@ -746,35 +1040,56 @@ function getNodeSub(node) {
 
   // ── Selection ──
   let selectedNode = null;
+  let currentDepth = 1;
 
-  function selectNode(d) {
+  function selectNode(d, depth) {
     selectedNode = d;
+    if (depth !== undefined) currentDepth = depth;
 
+    const neighborhood = getNeighborhood(d.id, currentDepth);
+    const { hops, edgeIds } = neighborhood;
+
+    // Opacity by hop distance
+    nodeElements.select('circle')
+      .attr('opacity', n => {
+        if (!hops.has(n.id)) return 0.08;
+        const hop = hops.get(n.id);
+        if (hop === 0) return 1;
+        if (hop === 1) return 0.95;
+        if (hop === 2) return 0.55;
+        return 0.35;
+      });
+    nodeElements.select('text')
+      .attr('opacity', n => {
+        if (!hops.has(n.id)) return 0.05;
+        const hop = hops.get(n.id);
+        if (hop === 0) return 1;
+        if (hop === 1) return 0.9;
+        if (hop === 2) return 0.5;
+        return 0.3;
+      });
+    linkElements
+      .attr('stroke-opacity', e => {
+        if (!edgeIds.has(e)) return 0.03;
+        // Determine the max hop of connected nodes
+        const sid = e.source.id || e.source;
+        const tid = e.target.id || e.target;
+        const maxHop = Math.max(hops.get(sid) || 0, hops.get(tid) || 0);
+        if (maxHop <= 1) return 0.8;
+        if (maxHop === 2) return 0.45;
+        return 0.25;
+      });
+
+    // Direct connections for the detail panel (always 1-hop)
     const connectedEdges = validEdges.filter(e =>
       (e.source.id || e.source) === d.id || (e.target.id || e.target) === d.id
     );
-    const connectedNodeIds = new Set([d.id]);
-    connectedEdges.forEach(e => {
-      connectedNodeIds.add(e.source.id || e.source);
-      connectedNodeIds.add(e.target.id || e.target);
-    });
-
-    nodeElements.select('circle')
-      .attr('opacity', n => connectedNodeIds.has(n.id) ? 1 : 0.08);
-    nodeElements.select('text')
-      .attr('opacity', n => connectedNodeIds.has(n.id) ? 1 : 0.05);
-    linkElements
-      .attr('stroke-opacity', e => {
-        const sid = e.source.id || e.source;
-        const tid = e.target.id || e.target;
-        return (sid === d.id || tid === d.id) ? 0.8 : 0.03;
-      });
-
     showDetail(d, connectedEdges);
   }
 
   function clearSelection() {
     selectedNode = null;
+    currentDepth = 1;
     nodeElements.select('circle').attr('opacity', 0.85);
     nodeElements.select('text').attr('opacity', 0.7);
     linkElements.attr('stroke-opacity', 0.4);
@@ -791,6 +1106,12 @@ function getNodeSub(node) {
       <div class="node-type-badge" style="background:${color}22; color:${color}">${d.type.replace(/_/g, ' ')}</div>
       <div class="node-name">${getNodeLabel(d)}</div>
       <div class="node-sub">${getNodeSub(d)}</div>
+      <div class="depth-control">
+        <span class="depth-label">Depth</span>
+        <button class="depth-btn ${currentDepth === 1 ? 'active' : ''}" data-depth="1">1</button>
+        <button class="depth-btn ${currentDepth === 2 ? 'active' : ''}" data-depth="2">2</button>
+        <button class="depth-btn ${currentDepth === 3 ? 'active' : ''}" data-depth="3">3</button>
+      </div>
     </div>`;
 
     // Bio
@@ -809,26 +1130,65 @@ function getNodeSub(node) {
       html += '</div>';
     }
 
-    // Connections
+    // Grouped connections
     if (connectedEdges.length) {
-      html += `<div class="detail-section"><div class="detail-section-title">Connections (${connectedEdges.length})</div>`;
+      // Group by edge type
+      const groups = {};
       for (const e of connectedEdges) {
-        const isSource = (e.source.id || e.source) === d.id;
-        const otherId = isSource ? (e.target.id || e.target) : (e.source.id || e.source);
-        const other = nodeMap.get(otherId);
-        if (!other) continue;
-        const dir = isSource ? '→' : '←';
-        html += `<div class="detail-edge" data-node-id="${otherId}">
-          <span class="edge-dir">${dir}</span>
-          <span class="edge-type">${e.type.replace(/_/g, ' ')}</span>
-          <span class="edge-target">${getNodeLabel(other)}</span>
-        </div>`;
+        if (!groups[e.type]) groups[e.type] = [];
+        groups[e.type].push(e);
+      }
+      // Sort by count descending
+      const sortedGroups = Object.entries(groups).sort((a, b) => b[1].length - a[1].length);
+
+      html += `<div class="detail-section"><div class="detail-section-title">Connections (${connectedEdges.length})</div>`;
+      for (const [edgeType, edges] of sortedGroups) {
+        const style = EDGE_STYLES[edgeType] || { color: '#334155' };
+        html += `<div class="edge-group">
+          <div class="edge-group-header" data-group="${edgeType}">
+            <span class="group-arrow">▾</span>
+            <span class="group-swatch" style="background:${style.color}"></span>
+            <span class="group-type">${edgeType.replace(/_/g, ' ')}</span>
+            <span class="group-count">${edges.length}</span>
+          </div>
+          <div class="edge-group-items" data-group="${edgeType}">`;
+        for (const e of edges) {
+          const isSource = (e.source.id || e.source) === d.id;
+          const otherId = isSource ? (e.target.id || e.target) : (e.source.id || e.source);
+          const other = nodeMap.get(otherId);
+          if (!other) continue;
+          const dir = isSource ? '→' : '←';
+          html += `<div class="detail-edge" data-node-id="${otherId}">
+            <span class="edge-dir">${dir}</span>
+            <span class="edge-target">${getNodeLabel(other)}</span>
+          </div>`;
+        }
+        html += '</div></div>';
       }
       html += '</div>';
     }
 
     content.innerHTML = html;
     detail.classList.add('open');
+
+    // Depth button handlers
+    content.querySelectorAll('.depth-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newDepth = parseInt(btn.dataset.depth);
+        selectNode(d, newDepth);
+      });
+    });
+
+    // Group collapse/expand handlers
+    content.querySelectorAll('.edge-group-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const group = header.dataset.group;
+        const items = content.querySelector(`.edge-group-items[data-group="${group}"]`);
+        const arrow = header.querySelector('.group-arrow');
+        items.classList.toggle('collapsed');
+        arrow.classList.toggle('collapsed');
+      });
+    });
 
     // Click on connected nodes
     content.querySelectorAll('.detail-edge').forEach(el => {
