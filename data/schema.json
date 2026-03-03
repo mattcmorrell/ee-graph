@@ -1,0 +1,484 @@
+{
+  "version": "1.0.0",
+  "description": "Employee Graph schema for AI-native HRIS prototype. Defines all node types, edge types, and their properties.",
+  "currentDate": "2026-02-06",
+  "company": {
+    "name": "Acme Co",
+    "headcount": 148,
+    "departments": 6,
+    "primaryOffice": "Austin, TX"
+  },
+  "nodeTypes": {
+    "person": {
+      "description": "Core employee node — anyone currently employed or recently employed",
+      "properties": {
+        "id": { "type": "string", "required": true, "description": "Unique identifier, e.g. person-001" },
+        "name": { "type": "string", "required": true },
+        "email": { "type": "string", "required": true },
+        "role": { "type": "string", "required": true, "description": "Current job title" },
+        "level": { "type": "string", "required": false, "description": "Level code, e.g. IC-2, IC-4, M-1, VP" },
+        "department": { "type": "string", "required": true },
+        "startDate": { "type": "string", "format": "date", "required": true },
+        "endDate": { "type": "string", "format": "date", "required": false },
+        "status": { "type": "string", "enum": ["active", "onboarding", "preparing", "on_leave", "terminated"], "required": true },
+        "location": { "type": "string", "required": false },
+        "phone": { "type": "string", "required": false },
+        "pronouns": { "type": "string", "required": false },
+        "bio": { "type": "string", "required": false },
+        "avatarUrl": { "type": "string", "required": false }
+      }
+    },
+    "candidate": {
+      "description": "Pre-hire node — persists through conversion to person",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "email": { "type": "string", "required": true },
+        "appliedRole": { "type": "string", "required": true },
+        "source": { "type": "string", "required": false, "description": "Application source: referral, linkedin, website, etc." },
+        "appliedDate": { "type": "string", "format": "date", "required": true },
+        "status": { "type": "string", "enum": ["applied", "screening", "phone_screen", "interviewing", "onsite", "offer", "accepted", "rejected", "withdrawn", "unresponsive"], "required": true },
+        "expectedComp": { "type": "number", "required": false },
+        "resumeUrl": { "type": "string", "required": false },
+        "notes": { "type": "string", "required": false }
+      }
+    },
+    "interview": {
+      "description": "Interview event with feedback and scoring",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["phone_screen", "technical", "behavioral", "design_exercise", "portfolio_review", "panel", "final_round", "reference_check"], "required": true },
+        "date": { "type": "string", "format": "date", "required": true },
+        "score": { "type": "string", "enum": ["strong_hire", "hire", "lean_hire", "lean_no_hire", "no_hire"], "required": false },
+        "feedback": { "type": "string", "required": false },
+        "recommendation": { "type": "string", "required": false },
+        "duration": { "type": "number", "required": false, "description": "Duration in minutes" }
+      }
+    },
+    "position": {
+      "description": "Role definition — unique role/level/department combination",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "title": { "type": "string", "required": true },
+        "level": { "type": "string", "required": true },
+        "department": { "type": "string", "required": true },
+        "salaryBandMin": { "type": "number", "required": false },
+        "salaryBandMax": { "type": "number", "required": false },
+        "isOpen": { "type": "boolean", "required": false },
+        "headcount": { "type": "number", "required": false, "description": "Number of positions at this role" }
+      }
+    },
+    "team": {
+      "description": "Organizational unit",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "department": { "type": "string", "required": true },
+        "description": { "type": "string", "required": false },
+        "headcount": { "type": "number", "required": false }
+      }
+    },
+    "location": {
+      "description": "Physical office or remote designation",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "address": { "type": "string", "required": false },
+        "city": { "type": "string", "required": true },
+        "state": { "type": "string", "required": true },
+        "zip": { "type": "string", "required": false },
+        "country": { "type": "string", "required": true, "default": "US" },
+        "type": { "type": "string", "enum": ["office", "remote", "hybrid"], "required": true }
+      }
+    },
+    "document": {
+      "description": "Legal and compliance documents",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["offer_letter", "i9", "w4", "handbook_acknowledgment", "performance_review", "nda", "ip_assignment", "benefits_enrollment", "policy_acknowledgment"], "required": true },
+        "title": { "type": "string", "required": true },
+        "status": { "type": "string", "enum": ["draft", "sent", "signed", "expired", "queued"], "required": true },
+        "createdDate": { "type": "string", "format": "date", "required": true },
+        "signedDate": { "type": "string", "format": "date", "required": false }
+      }
+    },
+    "benefits": {
+      "description": "Benefits plan options",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["medical", "dental", "vision", "401k", "hsa", "life_insurance", "disability"], "required": true },
+        "provider": { "type": "string", "required": true },
+        "tier": { "type": "string", "enum": ["individual", "individual_plus_spouse", "individual_plus_children", "family"], "required": false },
+        "monthlyPremiumEmployee": { "type": "number", "required": false },
+        "monthlyPremiumEmployer": { "type": "number", "required": false },
+        "description": { "type": "string", "required": false }
+      }
+    },
+    "comp": {
+      "description": "Compensation record — salary, bonus, equity",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["salary", "bonus", "equity", "adjustment"], "required": true },
+        "amount": { "type": "number", "required": true },
+        "currency": { "type": "string", "default": "USD" },
+        "effectiveDate": { "type": "string", "format": "date", "required": true },
+        "endDate": { "type": "string", "format": "date", "required": false },
+        "notes": { "type": "string", "required": false }
+      }
+    },
+    "policy": {
+      "description": "Company policies, handbook sections, compliance rules",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["leave", "benefits", "expense", "compliance", "handbook", "code_of_conduct", "safety", "remote_work"], "required": true },
+        "section": { "type": "string", "required": false, "description": "Handbook section reference, e.g. §4.3" },
+        "effectiveDate": { "type": "string", "format": "date", "required": true },
+        "summary": { "type": "string", "required": false }
+      }
+    },
+    "equipment": {
+      "description": "Physical equipment and corporate assets",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["laptop", "monitor", "badge", "corporate_card", "phone", "headset", "desk"], "required": true },
+        "name": { "type": "string", "required": true },
+        "serialNumber": { "type": "string", "required": false },
+        "status": { "type": "string", "enum": ["requested", "ordered", "shipped", "delivered", "active", "returned", "decommissioned"], "required": true },
+        "requestDate": { "type": "string", "format": "date", "required": false },
+        "deliveryDate": { "type": "string", "format": "date", "required": false }
+      }
+    },
+    "life_event": {
+      "description": "Significant life events that trigger policy cascades",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["pregnancy", "birth", "adoption", "marriage", "divorce", "relocation", "bereavement", "medical_leave", "disability"], "required": true },
+        "status": { "type": "string", "enum": ["reported", "planning", "active", "completed"], "required": true },
+        "reportedDate": { "type": "string", "format": "date", "required": true },
+        "expectedDate": { "type": "string", "format": "date", "required": false },
+        "details": { "type": "string", "required": false }
+      }
+    },
+    "review": {
+      "description": "Performance and milestone reviews",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["annual", "semi_annual", "quarterly", "90_day", "30_day", "pip", "promotion"], "required": true },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "in_progress", "completed", "acknowledged"], "required": true },
+        "scheduledDate": { "type": "string", "format": "date", "required": false },
+        "completedDate": { "type": "string", "format": "date", "required": false },
+        "rating": { "type": "string", "enum": ["exceeds", "meets", "developing", "below"], "required": false },
+        "summary": { "type": "string", "required": false }
+      }
+    },
+    "certification": {
+      "description": "Professional certifications and compliance training",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["professional", "compliance", "tool", "safety"], "required": true },
+        "provider": { "type": "string", "required": false },
+        "requiredBy": { "type": "string", "format": "date", "required": false },
+        "renewalPeriod": { "type": "string", "required": false, "description": "e.g. annual, biennial" }
+      }
+    },
+    "project": {
+      "description": "Active work assignments and initiatives",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "description": { "type": "string", "required": false },
+        "status": { "type": "string", "enum": ["planning", "active", "on_hold", "completed", "cancelled"], "required": true },
+        "startDate": { "type": "string", "format": "date", "required": false },
+        "targetEndDate": { "type": "string", "format": "date", "required": false },
+        "priority": { "type": "string", "enum": ["critical", "high", "medium", "low"], "required": false }
+      }
+    },
+    "skill": {
+      "description": "Technical and professional skills",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "category": { "type": "string", "enum": ["language", "framework", "infrastructure", "tool", "methodology", "domain", "soft_skill", "design", "management"], "required": true },
+        "description": { "type": "string", "required": false }
+      }
+    },
+    "recognition": {
+      "description": "Recognition events — peer and manager",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["peer", "manager", "company", "frontline"], "required": true },
+        "trigger": { "type": "string", "required": false, "description": "What prompted the recognition: collaboration, milestone, workload_absorption, mentoring, etc." },
+        "message": { "type": "string", "required": true },
+        "signalSource": { "type": "string", "enum": ["organic", "graph_prompted", "scheduled"], "required": false },
+        "points": { "type": "number", "required": false },
+        "channel": { "type": "string", "enum": ["dm", "team_channel", "sms", "email", "all_hands"], "required": false },
+        "date": { "type": "string", "format": "date", "required": true }
+      }
+    },
+    "jurisdiction": {
+      "description": "Tax and compliance jurisdictions",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["federal", "state", "local", "international"], "required": true },
+        "hasIncomeTax": { "type": "boolean", "required": false },
+        "notes": { "type": "string", "required": false }
+      }
+    }
+  },
+  "edgeTypes": {
+    "reports_to": {
+      "description": "Direct reporting relationship",
+      "source": "person",
+      "target": "person",
+      "metadata": {
+        "startDate": "date",
+        "endDate": "date (optional, null if current)",
+        "isPrimary": "boolean"
+      }
+    },
+    "member_of": {
+      "description": "Person belongs to a team",
+      "source": "person",
+      "target": "team",
+      "metadata": {
+        "role": "string (individual_contributor, lead, manager)",
+        "startDate": "date"
+      }
+    },
+    "has_skill": {
+      "description": "Person possesses a skill",
+      "source": "person",
+      "target": "skill",
+      "metadata": {
+        "proficiency": "string (beginner, intermediate, advanced, expert)",
+        "acquiredDate": "date",
+        "endorsements": "number"
+      }
+    },
+    "has_certification": {
+      "description": "Person holds a certification",
+      "source": "person",
+      "target": "certification",
+      "metadata": {
+        "earnedDate": "date",
+        "expiryDate": "date (optional)",
+        "status": "string (active, expired, in_progress)"
+      }
+    },
+    "works_on": {
+      "description": "Person is assigned to a project",
+      "source": "person",
+      "target": "project",
+      "metadata": {
+        "role": "string (lead, contributor, reviewer, consultant)",
+        "startDate": "date",
+        "endDate": "date (optional)",
+        "allocation": "number (percentage)"
+      }
+    },
+    "collaborates_with": {
+      "description": "Collaboration between two people (bidirectional)",
+      "source": "person",
+      "target": "person",
+      "metadata": {
+        "frequency": "string (daily, weekly, sporadic)",
+        "context": "string (project, mentoring, cross_team, ad_hoc)",
+        "strength": "number (1-10)"
+      }
+    },
+    "mentors": {
+      "description": "Mentoring relationship",
+      "source": "person",
+      "target": "person",
+      "metadata": {
+        "startDate": "date",
+        "focus": "string",
+        "status": "string (active, completed)"
+      }
+    },
+    "recognized": {
+      "description": "Recognition given from one person to another",
+      "source": "person",
+      "target": "person",
+      "metadata": {
+        "recognitionId": "string (links to recognition node)",
+        "type": "string (peer, manager, company, frontline)",
+        "trigger": "string",
+        "message": "string",
+        "signalSource": "string (organic, graph_prompted)",
+        "points": "number",
+        "channel": "string"
+      }
+    },
+    "located_at": {
+      "description": "Person's work location",
+      "source": "person",
+      "target": "location",
+      "metadata": {
+        "type": "string (primary, secondary)",
+        "startDate": "date"
+      }
+    },
+    "has_benefits": {
+      "description": "Person enrolled in benefits plan",
+      "source": "person",
+      "target": "benefits",
+      "metadata": {
+        "enrollmentDate": "date",
+        "tier": "string",
+        "status": "string (enrolled, pending, waived)",
+        "dependents": "array of strings"
+      }
+    },
+    "has_comp": {
+      "description": "Person has compensation record",
+      "source": "person",
+      "target": "comp",
+      "metadata": {
+        "effectiveDate": "date",
+        "approvedBy": "string (person id)"
+      }
+    },
+    "subject_to": {
+      "description": "Person is subject to a jurisdiction's rules",
+      "source": "person",
+      "target": "jurisdiction",
+      "metadata": {
+        "reason": "string (residence, work_location)",
+        "effectiveDate": "date"
+      }
+    },
+    "governed_by": {
+      "description": "Jurisdiction governs a policy",
+      "source": "jurisdiction",
+      "target": "policy",
+      "metadata": {
+        "effectiveDate": "date",
+        "type": "string (requires, enables, restricts)"
+      }
+    },
+    "holds_position": {
+      "description": "Person holds a position",
+      "source": "person",
+      "target": "position",
+      "metadata": {
+        "startDate": "date",
+        "endDate": "date (optional)",
+        "status": "string (current, previous)"
+      }
+    },
+    "candidate_for": {
+      "description": "Candidate applied for a position",
+      "source": "candidate",
+      "target": "position",
+      "metadata": {
+        "appliedDate": "date",
+        "stage": "string",
+        "priority": "string"
+      }
+    },
+    "interviewed_by": {
+      "description": "Candidate was interviewed by a person",
+      "source": "candidate",
+      "target": "person",
+      "metadata": {
+        "interviewId": "string",
+        "date": "date",
+        "type": "string",
+        "score": "string",
+        "feedback": "string"
+      }
+    },
+    "referred_by": {
+      "description": "Candidate was referred by an employee",
+      "source": "candidate",
+      "target": "person",
+      "metadata": {
+        "date": "date",
+        "relationship": "string"
+      }
+    },
+    "life_event": {
+      "description": "Person has a life event",
+      "source": "person",
+      "target": "life_event",
+      "metadata": {
+        "reportedDate": "date",
+        "status": "string"
+      }
+    },
+    "signed": {
+      "description": "Person signed a document",
+      "source": "person",
+      "target": "document",
+      "metadata": {
+        "signedDate": "date",
+        "status": "string (signed, pending, queued)"
+      }
+    },
+    "assigned_equipment": {
+      "description": "Equipment assigned to a person",
+      "source": "person",
+      "target": "equipment",
+      "metadata": {
+        "assignedDate": "date",
+        "status": "string",
+        "returnDate": "date (optional)"
+      }
+    },
+    "has_review": {
+      "description": "Person has a performance review",
+      "source": "person",
+      "target": "review",
+      "metadata": {
+        "reviewerId": "string",
+        "period": "string"
+      }
+    },
+    "onboarding_step": {
+      "description": "Tracks onboarding completion for a person",
+      "source": "person",
+      "target": "document|equipment|certification|benefits",
+      "metadata": {
+        "category": "string (employment, location, benefits, documents, equipment, software, financial, people, training)",
+        "status": "string (complete, in_progress, pending, blocked)",
+        "completedDate": "date (optional)"
+      }
+    },
+    "buddy_of": {
+      "description": "Buddy assignment for onboarding",
+      "source": "person",
+      "target": "person",
+      "metadata": {
+        "assignedDate": "date",
+        "status": "string (active, completed, pending)",
+        "npsScore": "number (optional)"
+      }
+    },
+    "has_interview": {
+      "description": "Candidate has an interview event",
+      "source": "candidate",
+      "target": "interview",
+      "metadata": {}
+    },
+    "team_parent": {
+      "description": "Team belongs to a parent team/department",
+      "source": "team",
+      "target": "team",
+      "metadata": {}
+    },
+    "converted_from": {
+      "description": "Person was converted from a candidate",
+      "source": "person",
+      "target": "candidate",
+      "metadata": {
+        "conversionDate": "date",
+        "edgesCarried": "number"
+      }
+    }
+  }
+}
