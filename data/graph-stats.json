@@ -1,11 +1,11 @@
 {
   "generatedAt": "2026-03-04",
   "company": "Acme Co",
-  "totalNodes": 448,
-  "totalEdges": 482,
+  "totalNodes": 507,
+  "totalEdges": 596,
   "dateRange": {
     "earliest": "2019-03-15",
-    "latest": "2026-06-02"
+    "latest": "2026-08-20"
   },
   "nodesByType": {
     "person": 144,
@@ -17,9 +17,9 @@
     "certification": 10,
     "project": 14,
     "equipment": 8,
-    "document": 14,
+    "document": 17,
     "benefits": 8,
-    "comp": 23,
+    "comp": 33,
     "location": 2,
     "jurisdiction": 2,
     "policy": 11,
@@ -31,7 +31,13 @@
     "payroll_run": 3,
     "survey_response": 20,
     "expense": 10,
-    "contractor": 4
+    "contractor": 4,
+    "dependent": 27,
+    "garnishment": 3,
+    "cobra_event": 2,
+    "leave_designation": 4,
+    "background_check": 8,
+    "investigation": 2
   },
   "edgesByType": {
     "reports_to": 94,
@@ -45,7 +51,7 @@
     "recognized": 8,
     "located_at": 5,
     "has_benefits": 9,
-    "has_comp": 17,
+    "has_comp": 27,
     "subject_to": 4,
     "governed_by": 4,
     "holds_position": 10,
@@ -54,7 +60,7 @@
     "referred_by": 1,
     "has_interview": 16,
     "life_event": 1,
-    "signed": 14,
+    "signed": 17,
     "assigned_equipment": 8,
     "has_review": 6,
     "buddy_of": 1,
@@ -68,7 +74,14 @@
     "responded_to": 20,
     "submitted_expense": 10,
     "contracts_for": 4,
-    "manages_contractor": 4
+    "manages_contractor": 4,
+    "has_dependent": 27,
+    "dependent_covered_by": 54,
+    "has_garnishment": 3,
+    "has_cobra_event": 2,
+    "has_leave_designation": 4,
+    "has_background_check": 8,
+    "investigation_subject": 3
   },
   "keyMetrics": {
     "namedCharacters": 41,
@@ -79,6 +92,14 @@
     "activeOnboardings": 4,
     "atsCandidates": 8,
     "contractors": 4,
-    "complianceTrainingCompletion": "142/148"
+    "complianceTrainingCompletion": "142/148",
+    "dependents": 27,
+    "activeGarnishments": 3,
+    "cobraEvents": 2,
+    "activeLeaveDesignations": 3,
+    "pendingBackgroundChecks": 1,
+    "openInvestigations": 1,
+    "equityGrants": 10,
+    "i9ExpiringNext90Days": 2
   }
 }

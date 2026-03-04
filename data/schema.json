@@ -25,7 +25,12 @@
         "phone": { "type": "string", "required": false },
         "pronouns": { "type": "string", "required": false },
         "bio": { "type": "string", "required": false },
-        "avatarUrl": { "type": "string", "required": false }
+        "avatarUrl": { "type": "string", "required": false },
+        "flsaClassification": { "type": "string", "enum": ["exempt", "nonexempt"], "required": false, "description": "FLSA overtime eligibility — #1 litigation risk for SMBs" },
+        "eeoCategory": { "type": "string", "enum": ["executive", "first_mid_officials", "professionals", "technicians", "sales_workers", "admin_support", "craft_workers", "operatives", "laborers", "service_workers"], "required": false },
+        "gender": { "type": "string", "enum": ["male", "female", "nonbinary", "prefer_not_to_say"], "required": false },
+        "race": { "type": "string", "enum": ["white", "black", "hispanic", "asian", "native_american", "pacific_islander", "two_or_more", "prefer_not_to_say"], "required": false },
+        "veteranStatus": { "type": "string", "enum": ["veteran", "not_veteran", "prefer_not_to_say"], "required": false }
       }
     },
     "candidate": {
@@ -96,11 +101,13 @@
       "description": "Legal and compliance documents",
       "properties": {
         "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["offer_letter", "i9", "w4", "handbook_acknowledgment", "performance_review", "nda", "ip_assignment", "benefits_enrollment", "policy_acknowledgment"], "required": true },
+        "type": { "type": "string", "enum": ["offer_letter", "i9", "w4", "handbook_acknowledgment", "performance_review", "nda", "ip_assignment", "benefits_enrollment", "policy_acknowledgment", "w2", "1099_nec", "1094_c", "1095_c", "separation_agreement", "background_check_consent"], "required": true },
         "title": { "type": "string", "required": true },
         "status": { "type": "string", "enum": ["draft", "sent", "signed", "expired", "queued"], "required": true },
         "createdDate": { "type": "string", "format": "date", "required": true },
-        "signedDate": { "type": "string", "format": "date", "required": false }
+        "signedDate": { "type": "string", "format": "date", "required": false },
+        "authorizationExpiryDate": { "type": "string", "format": "date", "required": false, "description": "For I-9: work authorization expiration date requiring re-verification" },
+        "documentSubtype": { "type": "string", "required": false, "description": "For I-9: list_a, list_b, list_c. For tax: w2, 1099_nec, 1094_c, 1095_c" }
       }
     },
     "benefits": {
@@ -125,7 +132,11 @@
         "currency": { "type": "string", "default": "USD" },
         "effectiveDate": { "type": "string", "format": "date", "required": true },
         "endDate": { "type": "string", "format": "date", "required": false },
-        "notes": { "type": "string", "required": false }
+        "notes": { "type": "string", "required": false },
+        "vestingSchedule": { "type": "string", "required": false, "description": "For equity: e.g. '4yr/1yr cliff' or 'immediate'" },
+        "totalShares": { "type": "number", "required": false, "description": "For equity: total shares/units granted" },
+        "vestedShares": { "type": "number", "required": false, "description": "For equity: shares vested to date" },
+        "cliffDate": { "type": "string", "format": "date", "required": false, "description": "For equity: cliff vesting date" }
       }
     },
     "policy": {
@@ -287,6 +298,89 @@
         "status": { "type": "string", "enum": ["submitted", "approved", "denied", "reimbursed"], "required": true },
         "description": { "type": "string", "required": false },
         "receiptUrl": { "type": "string", "required": false }
+      }
+    },
+    "dependent": {
+      "description": "Dependent of an employee — drives benefits eligibility, QLE cascades, FMLA",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "relationship": { "type": "string", "enum": ["spouse", "child", "domestic_partner", "other"], "required": true },
+        "dateOfBirth": { "type": "string", "format": "date", "required": true },
+        "coverageStatus": { "type": "string", "enum": ["covered", "waived", "aged_out", "removed"], "required": true },
+        "ageOutDate": { "type": "string", "format": "date", "required": false, "description": "Date dependent ages off plan (age 26 for children)" }
+      }
+    },
+    "garnishment": {
+      "description": "Court-ordered wage garnishment — hard compliance deadlines",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["child_support", "tax_levy_federal", "tax_levy_state", "creditor", "student_loan", "bankruptcy"], "required": true },
+        "amount": { "type": "number", "required": true, "description": "Fixed dollar amount or percentage of disposable income" },
+        "amountType": { "type": "string", "enum": ["fixed", "percentage"], "required": true },
+        "issuingAuthority": { "type": "string", "required": true },
+        "caseNumber": { "type": "string", "required": false },
+        "receivedDate": { "type": "string", "format": "date", "required": true },
+        "effectiveDate": { "type": "string", "format": "date", "required": true },
+        "endDate": { "type": "string", "format": "date", "required": false },
+        "status": { "type": "string", "enum": ["active", "completed", "suspended"], "required": true },
+        "priority": { "type": "number", "required": false, "description": "Priority order when multiple garnishments exist" }
+      }
+    },
+    "cobra_event": {
+      "description": "COBRA qualifying event — federally mandated 14-day notice deadline",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "qualifyingEvent": { "type": "string", "enum": ["termination", "hours_reduction", "divorce", "dependent_age_out", "death", "medicare_entitlement"], "required": true },
+        "eventDate": { "type": "string", "format": "date", "required": true },
+        "noticeDeadline": { "type": "string", "format": "date", "required": true, "description": "14 days from qualifying event" },
+        "electionDeadline": { "type": "string", "format": "date", "required": true, "description": "60 days from notice" },
+        "status": { "type": "string", "enum": ["pending_notice", "notice_sent", "elected", "waived", "lapsed"], "required": true },
+        "monthlyPremium": { "type": "number", "required": false, "description": "102% of plan cost" },
+        "coverageEndDate": { "type": "string", "format": "date", "required": false }
+      }
+    },
+    "leave_designation": {
+      "description": "Formal leave designation — FMLA, state equivalents, ADA accommodation",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["fmla", "state_family_leave", "state_medical_leave", "ada_accommodation", "userra", "pwfa", "personal", "workers_comp"], "required": true },
+        "status": { "type": "string", "enum": ["requested", "designated", "active", "intermittent", "completed", "denied"], "required": true },
+        "requestDate": { "type": "string", "format": "date", "required": true },
+        "designationDeadline": { "type": "string", "format": "date", "required": false, "description": "5 business days from request for FMLA" },
+        "startDate": { "type": "string", "format": "date", "required": false },
+        "endDate": { "type": "string", "format": "date", "required": false },
+        "entitlementHours": { "type": "number", "required": false, "description": "Total hours entitled (480 for standard FMLA)" },
+        "usedHours": { "type": "number", "required": false },
+        "isIntermittent": { "type": "boolean", "required": false },
+        "concurrentWith": { "type": "array", "required": false, "description": "IDs of concurrent leave designations (FMLA + state leave running simultaneously)" },
+        "notes": { "type": "string", "required": false }
+      }
+    },
+    "background_check": {
+      "description": "Pre-hire or post-hire background check",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["criminal", "employment_verification", "education_verification", "credit", "drug_screen", "mvr", "professional_license", "reference_check"], "required": true },
+        "provider": { "type": "string", "required": false },
+        "initiatedDate": { "type": "string", "format": "date", "required": true },
+        "completedDate": { "type": "string", "format": "date", "required": false },
+        "status": { "type": "string", "enum": ["pending", "in_progress", "completed", "adverse_action", "cleared"], "required": true },
+        "result": { "type": "string", "enum": ["clear", "flagged", "adverse", "pending"], "required": false },
+        "notes": { "type": "string", "required": false }
+      }
+    },
+    "investigation": {
+      "description": "HR investigation — complaints, harassment, discrimination, misconduct",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["harassment", "discrimination", "misconduct", "policy_violation", "safety", "retaliation", "theft", "other"], "required": true },
+        "status": { "type": "string", "enum": ["reported", "under_investigation", "resolved", "closed_no_action", "escalated"], "required": true },
+        "reportedDate": { "type": "string", "format": "date", "required": true },
+        "resolvedDate": { "type": "string", "format": "date", "required": false },
+        "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"], "required": true },
+        "outcome": { "type": "string", "required": false },
+        "isAnonymous": { "type": "boolean", "required": false }
       }
     },
     "contractor": {
@@ -628,6 +722,53 @@
       "target": "contractor",
       "metadata": {
         "startDate": "date"
+      }
+    },
+    "has_dependent": {
+      "description": "Person has a dependent",
+      "source": "person",
+      "target": "dependent",
+      "metadata": {}
+    },
+    "dependent_covered_by": {
+      "description": "Dependent is covered by a benefits plan",
+      "source": "dependent",
+      "target": "benefits",
+      "metadata": {
+        "enrollmentDate": "date",
+        "status": "string (covered, removed, aged_out)"
+      }
+    },
+    "has_garnishment": {
+      "description": "Person has an active wage garnishment",
+      "source": "person",
+      "target": "garnishment",
+      "metadata": {}
+    },
+    "has_cobra_event": {
+      "description": "Person has a COBRA qualifying event",
+      "source": "person",
+      "target": "cobra_event",
+      "metadata": {}
+    },
+    "has_leave_designation": {
+      "description": "Person has a formal leave designation",
+      "source": "person",
+      "target": "leave_designation",
+      "metadata": {}
+    },
+    "has_background_check": {
+      "description": "Candidate or person has a background check",
+      "source": "candidate|person",
+      "target": "background_check",
+      "metadata": {}
+    },
+    "investigation_subject": {
+      "description": "Person is the subject of an HR investigation",
+      "source": "person",
+      "target": "investigation",
+      "metadata": {
+        "role": "string (subject, complainant, witness)"
       }
     }
   }

@@ -35,9 +35,9 @@ Traditional HRIS workflows are **linear and siloed** (one module, one checklist)
 ## Reference Docs
 - `KNOWLEDGE.md` — Full product vision, walkthrough details, all 9 feature specs from the original walkthrough, sample personas, competitive positioning, design principles. **This is the bible.** Read it first when resuming.
 - `data/` — Graph data layer:
-  - `schema.json` — 25 node types, 35 edge types with full property definitions
-  - `nodes.json` — 448 nodes (144 people incl 41 named + 103 generated, 8 candidates, 16 interviews, 43 positions, 40 skills, 14 projects, 13 teams, 25 time_off, 15 requests, 3 payroll_runs, 20 survey_responses, 10 expenses, 4 contractors, etc.)
-  - `edges.json` — 482 edges (94 reports_to, 46 member_of, 30 has_skill, 25 has_time_off, 23 works_on, 20 included_in/responded_to, 17 collaborates_with, 15 requested_by/approves/entitled_to, 10 submitted_expense, plus all others)
+  - `schema.json` — 30 node types, 43 edge types with full property definitions
+  - `nodes.json` — 507 nodes (144 people with FLSA/EEO demographics, 27 dependents, 33 comp records incl 10 equity grants, 8 background checks, 4 leave designations, 3 garnishments, 2 COBRA events, 2 investigations, plus all prior types)
+  - `edges.json` — 596 edges (54 dependent_covered_by, 27 has_dependent, plus all prior edge types)
   - `graph-stats.json` — Summary counts
   - `README.md` — Schema docs
   - All 41 named characters match walkthrough exactly. Dates internally consistent. Salary bands realistic for Austin TX SMB. Temporal richness built in.
@@ -52,7 +52,7 @@ Traditional HRIS workflows are **linear and siloed** (one module, one checklist)
 ## What's Done
 - Explored full product walkthrough (all 9 sections, every detail captured)
 - Captured comprehensive knowledge base (KNOWLEDGE.md — ~800 lines)
-- Built graph data layer (data/ — 448 nodes, 482 edges, 25 node types, 35 edge types)
+- Built graph data layer (data/ — 507 nodes, 596 edges, 30 node types, 43 edge types)
 - Built interactive graph viewer (viewer.html — D3 force-directed, search, filters, detail panel, clickable properties, selection history with back button)
 - Brainstormed demo ideas, narrowed to cascade/workflow direction
 - Set up decision journal with 5 decisions, 8 solutions explored, 4 open questions

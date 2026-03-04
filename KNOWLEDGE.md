@@ -842,3 +842,28 @@ These capabilities are impossible or impractical in traditional HRIS:
 | **Contractor of Record** | **Yes** — added | `contractor` nodes + `contracts_for` + `manages_contractor` edges. Graph advantage: contractor ↔ project ↔ team traversal, compliance cascades for contractor jurisdictions. |
 | **IT Device Management** | **Yes** — already covered | `equipment` nodes + `assigned_equipment` edges already in schema. Covers laptops, monitors, peripherals. Graph advantage: offboarding cascades (return equipment), cost tracking per person/team. |
 | **Employer of Record (EOR)** | **No** — exclude | EOR is a *service relationship* with a third-party provider (like Remote), not employee data. The graph already handles what EOR affects: jurisdiction, compliance, contractor management. Adding EOR would model the vendor relationship, not the employee graph. |
+| **Background Checks** | **Yes** — added | `background_check` nodes + `has_background_check` edges. BHR adding this soon. Graph advantage: link check results to candidate pipeline, flag adverse actions in hiring cascade. |
+
+### Compliance Layer (added after HRIS market / JTBD / HR services analysis)
+
+Evaluated graph against HRIS market (9 platforms), HR admin jobs-to-be-done, and HR services companies (PEOs, EORs, payroll bureaus, benefits TPAs, background check providers, workers comp, compliance services). Added:
+
+| Addition | Type | Why |
+|----------|------|-----|
+| **Dependents** | 27 nodes, `has_dependent` + `dependent_covered_by` edges | Drive benefits eligibility, QLE cascades, age-out compliance. Were hidden as string arrays — now first-class. |
+| **FLSA classification** | Property on all 144 person nodes | #1 SMB litigation risk. Exempt vs nonexempt drives overtime, meal breaks. |
+| **EEO demographics** | Properties on all 144 person nodes (gender, race, eeoCategory, veteranStatus) | Required for EEO-1 filing at 50+ employees. Enables pay equity analysis. |
+| **Garnishments** | 3 nodes, `has_garnishment` edges | Court-ordered, hard deadlines, priority rules. High compliance risk. |
+| **COBRA events** | 2 nodes, `has_cobra_event` edges | Federally mandated 14-day notice on every termination. |
+| **Leave designations** | 4 nodes, `has_leave_designation` edges | FMLA, state leave, concurrent tracking. 5-day designation deadline. |
+| **Background checks** | 8 nodes, `has_background_check` edges | BHR adding this. Criminal, employment verification, adverse action tracking. |
+| **HR investigations** | 2 nodes, `investigation_subject` edges | BHR has only free-text Notes. Graph formalizes complainant/subject/status/outcome. |
+| **Equity grants** | 10 comp nodes with vesting properties | BHR tracks in total comp. Graph adds vesting schedule, cliff dates, vested shares. |
+| **I-9 auth expiry** | Properties on document nodes | Civil/criminal fines if re-verification missed. 2 employees expiring within 90 days. |
+| **Tax document types** | Expanded document type enum | W-2, 1099-NEC, 1094-C, 1095-C hosting (BHR does this via payroll). |
+
+### BHR Partnership: VirgilHR (Compliance Intelligence)
+
+BHR bundles VirgilHR for compliance guidance. VirgilHR is a *knowledge/guidance* tool (chatbot, handbook builder, multistate law comparison, legal alerts, resource library), not a data system. No employee data flows between BHR and VirgilHR — it's SSO-only.
+
+**Graph-relevant insight**: What VirgilHR does manually (look up state-specific rules, compare jurisdictions), the graph does structurally via `jurisdiction → policy` traversal. The graph's compliance cascade capability is the automated version of what VirgilHR helps HR admins do by hand.
