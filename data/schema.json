@@ -30,7 +30,11 @@
         "eeoCategory": { "type": "string", "enum": ["executive", "first_mid_officials", "professionals", "technicians", "sales_workers", "admin_support", "craft_workers", "operatives", "laborers", "service_workers"], "required": false },
         "gender": { "type": "string", "enum": ["male", "female", "nonbinary", "prefer_not_to_say"], "required": false },
         "race": { "type": "string", "enum": ["white", "black", "hispanic", "asian", "native_american", "pacific_islander", "two_or_more", "prefer_not_to_say"], "required": false },
-        "veteranStatus": { "type": "string", "enum": ["veteran", "not_veteran", "prefer_not_to_say"], "required": false }
+        "veteranStatus": { "type": "string", "enum": ["veteran", "not_veteran", "prefer_not_to_say"], "required": false },
+        "division": { "type": "string", "required": false, "description": "Organizational division — usage varies by company (superset of dept, subset, or unrelated). Flat label for filtering/grouping." },
+        "employmentType": { "type": "string", "enum": ["full_time", "part_time"], "required": false, "description": "Employment type" },
+        "payType": { "type": "string", "enum": ["salary", "hourly"], "required": false, "description": "Compensation structure" },
+        "payPeriod": { "type": "string", "enum": ["weekly", "biweekly", "semimonthly", "monthly"], "required": false, "description": "Pay frequency" }
       }
     },
     "candidate": {
@@ -85,11 +89,12 @@
       }
     },
     "team": {
-      "description": "Organizational unit",
+      "description": "Organizational unit — includes department teams, scrum teams, initiative teams, and working groups",
       "properties": {
         "id": { "type": "string", "required": true },
         "name": { "type": "string", "required": true },
-        "department": { "type": "string", "required": true },
+        "department": { "type": "string", "required": false, "description": "Owning department. Null for cross-functional teams." },
+        "teamType": { "type": "string", "enum": ["department", "scrum", "initiative", "working_group"], "required": true, "description": "Department = org chart unit. Scrum = sprint delivery team. Initiative = cross-dept time-bounded effort. Working group = standing cross-functional group." },
         "description": { "type": "string", "required": false },
         "headcount": { "type": "number", "required": false }
       }
@@ -207,7 +212,7 @@
       }
     },
     "project": {
-      "description": "Active work assignments and initiatives",
+      "description": "Active work assignments and initiatives. Requires integration (Jira, Linear, Asana) — not HR-owned data.",
       "properties": {
         "id": { "type": "string", "required": true },
         "name": { "type": "string", "required": true },
@@ -451,7 +456,7 @@
       }
     },
     "works_on": {
-      "description": "Person is assigned to a project",
+      "description": "Person is assigned to a project. Requires integration (Jira, Linear, Asana).",
       "source": "person",
       "target": "project",
       "metadata": {
@@ -459,16 +464,6 @@
         "startDate": "date",
         "endDate": "date (optional)",
         "allocation": "number (percentage)"
-      }
-    },
-    "collaborates_with": {
-      "description": "Collaboration between two people (bidirectional)",
-      "source": "person",
-      "target": "person",
-      "metadata": {
-        "frequency": "string (daily, weekly, sporadic)",
-        "context": "string (project, mentoring, cross_team, ad_hoc)",
-        "strength": "number (1-10)"
       }
     },
     "mentors": {

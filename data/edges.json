@@ -2295,214 +2295,6 @@
       }
     },
     {
-      "id": "e-cw-001",
-      "source": "person-006",
-      "target": "person-008",
-      "type": "collaborates_with",
-      "timestamp": "2025-09-15T00:00:00Z",
-      "metadata": {
-        "frequency": "daily",
-        "context": "project",
-        "strength": 8
-      }
-    },
-    {
-      "id": "e-cw-002",
-      "source": "person-006",
-      "target": "person-009",
-      "type": "collaborates_with",
-      "timestamp": "2025-10-01T00:00:00Z",
-      "metadata": {
-        "frequency": "weekly",
-        "context": "mentoring",
-        "strength": 7
-      }
-    },
-    {
-      "id": "e-cw-003",
-      "source": "person-007",
-      "target": "person-030",
-      "type": "collaborates_with",
-      "timestamp": "2026-01-20T00:00:00Z",
-      "metadata": {
-        "frequency": "daily",
-        "context": "cross_team",
-        "strength": 8
-      }
-    },
-    {
-      "id": "e-cw-004",
-      "source": "person-007",
-      "target": "person-031",
-      "type": "collaborates_with",
-      "timestamp": "2026-01-22T00:00:00Z",
-      "metadata": {
-        "frequency": "weekly",
-        "context": "cross_team",
-        "strength": 6
-      }
-    },
-    {
-      "id": "e-cw-005",
-      "source": "person-007",
-      "target": "person-055",
-      "type": "collaborates_with",
-      "timestamp": "2026-01-25T00:00:00Z",
-      "metadata": {
-        "frequency": "weekly",
-        "context": "cross_team",
-        "strength": 5
-      }
-    },
-    {
-      "id": "e-cw-006",
-      "source": "person-008",
-      "target": "person-068",
-      "type": "collaborates_with",
-      "timestamp": "2025-11-01T00:00:00Z",
-      "metadata": {
-        "frequency": "sporadic",
-        "context": "project",
-        "strength": 4
-      }
-    },
-    {
-      "id": "e-cw-007",
-      "source": "person-008",
-      "target": "person-084",
-      "type": "collaborates_with",
-      "timestamp": "2026-01-10T00:00:00Z",
-      "metadata": {
-        "frequency": "sporadic",
-        "context": "project",
-        "strength": 4
-      }
-    },
-    {
-      "id": "e-cw-008",
-      "source": "person-008",
-      "target": "person-011",
-      "type": "collaborates_with",
-      "timestamp": "2025-10-20T00:00:00Z",
-      "metadata": {
-        "frequency": "sporadic",
-        "context": "project",
-        "strength": 3
-      }
-    },
-    {
-      "id": "e-cw-009",
-      "source": "person-008",
-      "target": "person-119",
-      "type": "collaborates_with",
-      "timestamp": "2026-01-15T00:00:00Z",
-      "metadata": {
-        "frequency": "sporadic",
-        "context": "project",
-        "strength": 3
-      }
-    },
-    {
-      "id": "e-cw-010",
-      "source": "person-008",
-      "target": "person-027",
-      "type": "collaborates_with",
-      "timestamp": "2026-01-20T00:00:00Z",
-      "metadata": {
-        "frequency": "sporadic",
-        "context": "project",
-        "strength": 3
-      }
-    },
-    {
-      "id": "e-cw-011",
-      "source": "person-008",
-      "target": "person-061",
-      "type": "collaborates_with",
-      "timestamp": "2025-12-15T00:00:00Z",
-      "metadata": {
-        "frequency": "sporadic",
-        "context": "project",
-        "strength": 3
-      }
-    },
-    {
-      "id": "e-cw-012",
-      "source": "person-010",
-      "target": "person-027",
-      "type": "collaborates_with",
-      "timestamp": "2025-12-01T00:00:00Z",
-      "metadata": {
-        "frequency": "weekly",
-        "context": "project",
-        "strength": 5
-      }
-    },
-    {
-      "id": "e-cw-013",
-      "source": "person-006",
-      "target": "person-011",
-      "type": "collaborates_with",
-      "timestamp": "2025-04-20T00:00:00Z",
-      "metadata": {
-        "frequency": "daily",
-        "context": "project",
-        "strength": 7
-      }
-    },
-    {
-      "id": "e-cw-014",
-      "source": "person-006",
-      "target": "person-019",
-      "type": "collaborates_with",
-      "timestamp": "2025-09-15T00:00:00Z",
-      "metadata": {
-        "frequency": "weekly",
-        "context": "project",
-        "strength": 6
-      }
-    },
-    {
-      "id": "e-cw-015",
-      "source": "person-019",
-      "target": "person-024",
-      "type": "collaborates_with",
-      "timestamp": "2025-10-01T00:00:00Z",
-      "metadata": {
-        "frequency": "weekly",
-        "context": "project",
-        "strength": 6
-      }
-    },
-    {
-      "id": "e-cw-016",
-      "source": "person-008",
-      "target": "person-006",
-      "type": "collaborates_with",
-      "timestamp": "2025-06-01T00:00:00Z",
-      "metadata": {
-        "frequency": "daily",
-        "context": "project",
-        "strength": 9,
-        "_historical": true,
-        "_note": "Before Sept: deep collaboration on K8s. Raj and Mike were daily collaborators."
-      }
-    },
-    {
-      "id": "e-cw-017",
-      "source": "person-008",
-      "target": "person-003",
-      "type": "collaborates_with",
-      "timestamp": "2025-06-01T00:00:00Z",
-      "metadata": {
-        "frequency": "daily",
-        "context": "project",
-        "strength": 8,
-        "_historical": true,
-        "_note": "Before workload shift: Raj collaborated deeply with Lisa on platform strategy"
-      }
-    },
-    {
       "id": "e-me-001",
       "source": "person-006",
       "target": "person-009",
@@ -6372,6 +6164,447 @@
       "metadata": {
         "signedDate": "2023-02-13",
         "status": "signed"
+      }
+    },
+    {
+      "source": "person-019",
+      "target": "team-014",
+      "type": "member_of",
+      "metadata": {
+        "role": "lead",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-024",
+      "target": "team-014",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-025",
+      "target": "team-014",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-026",
+      "target": "team-014",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-031",
+      "target": "team-014",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-028",
+      "target": "team-014",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-079",
+      "target": "team-014",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-008",
+      "target": "team-015",
+      "type": "member_of",
+      "metadata": {
+        "role": "lead",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-006",
+      "target": "team-015",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-007",
+      "target": "team-015",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-009",
+      "target": "team-015",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-084",
+      "target": "team-015",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-029",
+      "target": "team-015",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-032",
+      "target": "team-015",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-027",
+      "target": "team-016",
+      "type": "member_of",
+      "metadata": {
+        "role": "lead",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-061",
+      "target": "team-016",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-062",
+      "target": "team-016",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-060",
+      "target": "team-016",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-030",
+      "target": "team-016",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-064",
+      "target": "team-016",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-080",
+      "target": "team-016",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-003",
+      "target": "team-017",
+      "type": "member_of",
+      "metadata": {
+        "role": "lead",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-119",
+      "target": "team-017",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-068",
+      "target": "team-017",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-022",
+      "target": "team-017",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-058",
+      "target": "team-017",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-023",
+      "target": "team-017",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-042",
+      "target": "team-017",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-078",
+      "target": "team-017",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-004",
+      "target": "team-018",
+      "type": "member_of",
+      "metadata": {
+        "role": "lead",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-041",
+      "target": "team-018",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-074",
+      "target": "team-018",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-056",
+      "target": "team-018",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-053",
+      "target": "team-018",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-054",
+      "target": "team-018",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-101",
+      "target": "team-018",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-005",
+      "target": "team-018",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-003",
+      "target": "team-019",
+      "type": "member_of",
+      "metadata": {
+        "role": "lead",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-008",
+      "target": "team-019",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-019",
+      "target": "team-019",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-066",
+      "target": "team-019",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-043",
+      "target": "team-019",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-119",
+      "target": "team-019",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-036",
+      "target": "team-020",
+      "type": "member_of",
+      "metadata": {
+        "role": "lead",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-114",
+      "target": "team-020",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-030",
+      "target": "team-020",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-035",
+      "target": "team-020",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-013",
+      "target": "team-020",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
+      }
+    },
+    {
+      "source": "person-069",
+      "target": "team-020",
+      "type": "member_of",
+      "metadata": {
+        "role": "individual_contributor",
+        "startDate": "2025-09-01"
       }
     }
   ]

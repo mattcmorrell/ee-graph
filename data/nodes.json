@@ -18,7 +18,11 @@
         "eeoCategory": "executive",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "veteran"
+        "veteranStatus": "veteran",
+        "division": "Executive",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -39,7 +43,11 @@
         "eeoCategory": "executive",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -60,7 +68,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -81,7 +93,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -102,7 +118,11 @@
         "eeoCategory": "executive",
         "gender": "female",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -123,7 +143,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -144,7 +168,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -165,7 +193,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "veteran"
+        "veteranStatus": "veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -186,7 +218,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -207,7 +243,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -228,7 +268,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -249,7 +293,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -270,7 +318,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -291,7 +343,11 @@
         "eeoCategory": "admin_support",
         "gender": "nonbinary",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "part_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -312,7 +368,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -333,7 +393,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -354,7 +418,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "part_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -375,7 +443,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "part_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -396,7 +468,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -417,7 +493,11 @@
         "eeoCategory": "executive",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -438,7 +518,11 @@
         "eeoCategory": "executive",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -459,7 +543,11 @@
         "eeoCategory": "executive",
         "gender": "female",
         "race": "two_or_more",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -480,7 +568,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "female",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -501,7 +593,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -522,7 +618,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "two_or_more",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -543,7 +643,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "two_or_more",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -564,7 +668,11 @@
         "eeoCategory": "professionals",
         "gender": "nonbinary",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -585,7 +693,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -606,7 +718,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -627,7 +743,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "prefer_not_to_say",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -648,7 +768,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -669,7 +793,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "veteran"
+        "veteranStatus": "veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -690,7 +818,11 @@
         "eeoCategory": "sales_workers",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -711,7 +843,11 @@
         "eeoCategory": "sales_workers",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -732,7 +868,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -753,7 +893,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -774,7 +918,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "part_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -795,7 +943,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "part_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -816,7 +968,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -837,7 +993,11 @@
         "eeoCategory": "sales_workers",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -858,7 +1018,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -877,7 +1041,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -896,7 +1064,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -915,7 +1087,11 @@
         "eeoCategory": "admin_support",
         "gender": "nonbinary",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -934,7 +1110,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -953,7 +1133,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -972,7 +1156,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -991,7 +1179,11 @@
         "eeoCategory": "sales_workers",
         "gender": "male",
         "race": "two_or_more",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1010,7 +1202,11 @@
         "eeoCategory": "sales_workers",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1029,7 +1225,11 @@
         "eeoCategory": "sales_workers",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1048,7 +1248,11 @@
         "eeoCategory": "sales_workers",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1067,7 +1271,11 @@
         "eeoCategory": "sales_workers",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1086,7 +1294,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1105,7 +1317,11 @@
         "eeoCategory": "sales_workers",
         "gender": "female",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1124,7 +1340,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1143,7 +1363,11 @@
         "eeoCategory": "professionals",
         "gender": "prefer_not_to_say",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1162,7 +1386,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1181,7 +1409,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1200,7 +1432,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1219,7 +1455,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "two_or_more",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1238,7 +1478,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1257,7 +1501,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1276,7 +1524,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1295,7 +1547,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1314,7 +1570,11 @@
         "eeoCategory": "professionals",
         "gender": "nonbinary",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1333,7 +1593,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1352,7 +1616,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1371,7 +1639,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "veteran"
+        "veteranStatus": "veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1390,7 +1662,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1410,7 +1686,11 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "endDate": "2025-12-20"
+        "endDate": "2025-12-20",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1429,7 +1709,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1448,7 +1732,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1467,7 +1755,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1486,7 +1778,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1505,7 +1801,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1524,7 +1824,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "prefer_not_to_say",
-        "veteranStatus": "veteran"
+        "veteranStatus": "veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1543,7 +1847,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1562,7 +1870,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1581,7 +1893,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1600,7 +1916,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1619,7 +1939,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1638,7 +1962,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "prefer_not_to_say",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1657,7 +1985,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1676,7 +2008,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1695,7 +2031,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1714,7 +2054,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1733,7 +2077,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1752,7 +2100,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1771,7 +2123,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1790,7 +2146,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1809,7 +2169,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1828,7 +2192,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1847,7 +2215,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1866,7 +2238,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1885,7 +2261,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1904,7 +2284,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1923,7 +2307,11 @@
         "eeoCategory": "admin_support",
         "gender": "nonbinary",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -1942,7 +2330,11 @@
         "eeoCategory": "sales_workers",
         "gender": "male",
         "race": "prefer_not_to_say",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1961,7 +2353,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1980,7 +2376,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -1999,7 +2399,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "female",
         "race": "black",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2018,7 +2422,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2037,7 +2445,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2056,7 +2468,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "prefer_not_to_say",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2075,7 +2491,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2094,7 +2514,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -2113,7 +2537,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -2132,7 +2560,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2151,7 +2583,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2170,7 +2606,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2189,7 +2629,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -2209,7 +2653,11 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "endDate": "2026-01-10"
+        "endDate": "2026-01-10",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2228,7 +2676,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2247,7 +2699,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2266,7 +2722,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2285,7 +2745,11 @@
         "eeoCategory": "professionals",
         "gender": "prefer_not_to_say",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2304,7 +2768,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "prefer_not_to_say",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2323,7 +2791,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2342,7 +2814,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2361,7 +2837,11 @@
         "eeoCategory": "professionals",
         "gender": "prefer_not_to_say",
         "race": "asian",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2380,7 +2860,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -2399,7 +2883,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -2418,7 +2906,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2437,7 +2929,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "two_or_more",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2456,7 +2952,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2475,7 +2975,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -2494,7 +2998,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2513,7 +3021,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2532,7 +3044,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2551,7 +3067,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "prefer_not_to_say",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -2570,7 +3090,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2589,7 +3113,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2608,7 +3136,11 @@
         "eeoCategory": "admin_support",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -2627,7 +3159,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "prefer_not_to_say",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2646,7 +3182,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "prefer_not_to_say",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2665,7 +3205,11 @@
         "eeoCategory": "first_mid_officials",
         "gender": "female",
         "race": "asian",
-        "veteranStatus": "prefer_not_to_say"
+        "veteranStatus": "prefer_not_to_say",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2684,7 +3228,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "hispanic",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2703,7 +3251,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "two_or_more",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2722,7 +3274,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "prefer_not_to_say",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2741,7 +3297,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2760,7 +3320,11 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2779,7 +3343,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -2798,7 +3366,11 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Revenue",
+        "employmentType": "full_time",
+        "payType": "hourly",
+        "payPeriod": "biweekly"
       }
     },
     {
@@ -2817,7 +3389,11 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "division": "Product & Technology",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly"
       }
     },
     {
@@ -3308,7 +3884,8 @@
         "name": "Platform",
         "department": "Engineering",
         "description": "Infrastructure, deployment, and platform services. Kubernetes, CI/CD, observability.",
-        "headcount": 8
+        "headcount": 8,
+        "teamType": "department"
       }
     },
     {
@@ -3318,7 +3895,8 @@
         "name": "Product Engineering",
         "department": "Engineering",
         "description": "Core product development. Features, APIs, frontend.",
-        "headcount": 12
+        "headcount": 12,
+        "teamType": "department"
       }
     },
     {
@@ -3328,7 +3906,8 @@
         "name": "Quality",
         "department": "Engineering",
         "description": "QA, testing, automation, release quality.",
-        "headcount": 8
+        "headcount": 8,
+        "teamType": "department"
       }
     },
     {
@@ -3338,7 +3917,8 @@
         "name": "Customer Support",
         "department": "Customer Support",
         "description": "Tier 1/2 support, customer success, support tooling.",
-        "headcount": 14
+        "headcount": 14,
+        "teamType": "department"
       }
     },
     {
@@ -3348,7 +3928,8 @@
         "name": "Sales",
         "department": "Sales",
         "description": "Account executives, SDRs, sales engineering.",
-        "headcount": 10
+        "headcount": 10,
+        "teamType": "department"
       }
     },
     {
@@ -3358,7 +3939,8 @@
         "name": "Design",
         "department": "Design",
         "description": "Product design, UX research, visual design, content design.",
-        "headcount": 6
+        "headcount": 6,
+        "teamType": "department"
       }
     },
     {
@@ -3368,7 +3950,8 @@
         "name": "Operations",
         "department": "Operations",
         "description": "HR, finance, payroll, office management, recruiting.",
-        "headcount": 4
+        "headcount": 4,
+        "teamType": "department"
       }
     },
     {
@@ -3378,7 +3961,8 @@
         "name": "Executive",
         "department": "Executive",
         "description": "CEO and executive leadership.",
-        "headcount": 1
+        "headcount": 1,
+        "teamType": "department"
       }
     },
     {
@@ -3388,7 +3972,8 @@
         "name": "Engineering",
         "department": "Engineering",
         "description": "All engineering \u2014 Platform, Product Engineering, and Quality.",
-        "headcount": 28
+        "headcount": 28,
+        "teamType": "department"
       }
     },
     {
@@ -3398,7 +3983,8 @@
         "name": "SDR Team",
         "department": "Sales",
         "description": "Sales development representatives.",
-        "headcount": 4
+        "headcount": 4,
+        "teamType": "department"
       }
     },
     {
@@ -3408,7 +3994,8 @@
         "name": "Support Tier 1",
         "department": "Customer Support",
         "description": "First-line customer support agents.",
-        "headcount": 8
+        "headcount": 8,
+        "teamType": "department"
       }
     },
     {
@@ -3418,7 +4005,8 @@
         "name": "Support Tier 2",
         "department": "Customer Support",
         "description": "Escalation specialists and senior support.",
-        "headcount": 4
+        "headcount": 4,
+        "teamType": "department"
       }
     },
     {
@@ -3428,7 +4016,8 @@
         "name": "Customer Success",
         "department": "Customer Support",
         "description": "Customer success managers.",
-        "headcount": 4
+        "headcount": 4,
+        "teamType": "department"
       }
     },
     {
@@ -7970,6 +8559,83 @@
         "signedDate": "2023-02-13",
         "documentSubtype": "list_a",
         "authorizationExpiryDate": "2026-08-20"
+      }
+    },
+    {
+      "id": "team-014",
+      "type": "team",
+      "properties": {
+        "name": "Atlas",
+        "department": null,
+        "teamType": "scrum",
+        "description": "Core product scrum team \u2014 payments, billing, subscription features",
+        "headcount": 7
+      }
+    },
+    {
+      "id": "team-015",
+      "type": "team",
+      "properties": {
+        "name": "Horizon",
+        "department": null,
+        "teamType": "scrum",
+        "description": "Platform scrum team \u2014 infrastructure, developer experience, reliability",
+        "headcount": 7
+      }
+    },
+    {
+      "id": "team-016",
+      "type": "team",
+      "properties": {
+        "name": "Forge",
+        "department": null,
+        "teamType": "scrum",
+        "description": "Growth scrum team \u2014 onboarding, activation, self-serve",
+        "headcount": 7
+      }
+    },
+    {
+      "id": "team-017",
+      "type": "team",
+      "properties": {
+        "name": "SOC 2 Compliance",
+        "department": null,
+        "teamType": "initiative",
+        "description": "Cross-functional initiative to achieve SOC 2 Type II certification",
+        "headcount": 8
+      }
+    },
+    {
+      "id": "team-018",
+      "type": "team",
+      "properties": {
+        "name": "Enterprise Launch",
+        "department": null,
+        "teamType": "initiative",
+        "description": "Cross-functional initiative to launch enterprise tier \u2014 pricing, features, support",
+        "headcount": 8
+      }
+    },
+    {
+      "id": "team-019",
+      "type": "team",
+      "properties": {
+        "name": "Security Champions",
+        "department": null,
+        "teamType": "working_group",
+        "description": "Standing working group \u2014 security awareness, incident response, secure coding practices",
+        "headcount": 6
+      }
+    },
+    {
+      "id": "team-020",
+      "type": "team",
+      "properties": {
+        "name": "Culture & Onboarding",
+        "department": null,
+        "teamType": "working_group",
+        "description": "Standing working group \u2014 new hire experience, culture initiatives, mentorship programs",
+        "headcount": 6
       }
     }
   ]
