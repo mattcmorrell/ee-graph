@@ -24,6 +24,7 @@
 16. [Design Principles and Patterns](#design-principles-and-patterns)
 17. [Sample Data / Personas](#sample-data--personas)
 18. [Competitive Positioning](#competitive-positioning)
+19. [BHR Parity Analysis](#bhr-parity-analysis)
 
 ---
 
@@ -780,3 +781,64 @@ Traditional HRIS platforms (BambooHR, Gusto, Rippling, etc.) that are:
 - **ATS tools** (Greenhouse, Lever): Candidate data dies at the ATS boundary; here it flows into the employee graph
 - **Performance tools**: Can't see the full context of someone's work, collaboration, skills growth
 - **Benefits portals**: Require employees to navigate complex systems; here one sentence triggers a full cascade
+
+---
+
+## BHR Parity Analysis
+
+Mapped all 35 BHR chatbot tools (from `AI-AGENT-INTENT.md` on `ee-backfill-demo` branch) against our graph data. **Parity achieved** — graph covers everything BHR offers plus graph-native advantages.
+
+### BHR Tool Coverage
+
+| Category | BHR Tool | Graph Coverage | Notes |
+|----------|----------|---------------|-------|
+| **Employee Data** | get_employee_info | person nodes | All fields mapped |
+| | get_employee_directory | person + team + reports_to | Graph traversal gives richer results |
+| | get_org_chart | reports_to + member_of + team_parent | Native graph operation |
+| | search_employees | All node/edge types | Graph enables multi-hop search |
+| **Time & Attendance** | get_time_off_balances | time_off + entitled_to | Balances + accrual policies |
+| | request_time_off | request + requested_by + approves | Full approval chain as edges |
+| | get_time_off_requests | request nodes | With status tracking |
+| | get_whos_out | time_off + has_time_off | **Graph advantage**: cross-reference with project coverage |
+| **Benefits & Comp** | get_benefits_info | benefits + has_benefits | |
+| | get_compensation_info | comp + has_comp | |
+| | get_payroll_summary | payroll_run + included_in | Run-level aggregation |
+| **Hiring** | get_job_openings | position nodes (status=open) | |
+| | get_candidates | candidate + candidate_for | With stageHistory enrichment |
+| | get_interview_schedule | interview + has_interview + interviewed_by | |
+| | get_hiring_pipeline | candidate + position + interview | **Graph advantage**: referral chains, interviewer load |
+| **Performance** | get_performance_reviews | review + has_review | |
+| | get_goals | person properties | |
+| | get_training_status | certification + has_certification | **Graph advantage**: skill gap analysis via traversal |
+| **Surveys** | get_survey_results | survey_response + responded_to | eNPS, satisfaction, wellbeing |
+| **Expenses** | get_expense_reports | expense + submitted_expense | |
+| **Contractors** | get_contractor_info | contractor + contracts_for + manages_contractor | |
+
+### Intentional Exclusions (BHR features NOT in graph)
+
+| BHR Feature | Why Excluded |
+|-------------|-------------|
+| Notifications/alerts | Delivery infrastructure, not data. Graph *triggers* notifications via cascade discovery. |
+| Admin configuration | System settings (permissions, field config). Not employee data. |
+| Document templates | Application assets, not graph nodes. Signed documents ARE in the graph. |
+| Employee Community | Social feature (posts/comments). Could add later but low graph-advantage. |
+
+### Graph-Native Advantages (things BHR can't do)
+
+These capabilities are impossible or impractical in traditional HRIS:
+1. **Cascade discovery** — One event (resignation, relocation) ripples across the entire graph
+2. **Org impact analysis** — "Who's affected if Raj leaves?" requires multi-hop traversal
+3. **Flight risk detection** — Collaboration + mentoring + recognition edges reveal isolation
+4. **Compliance cascades** — Jurisdiction → policy traversal automates state-specific rules
+5. **Skill gap analysis** — Team → member → has_skill traversal finds coverage holes
+6. **Onboarding as graph construction** — Progress = edge count, visible and measurable
+7. **Cross-domain correlation** — Time-off patterns + survey scores + review ratings in one model
+
+### Future BHR Features — Evaluation
+
+| Feature | In Graph? | Justification |
+|---------|-----------|---------------|
+| **Expense Management** | **Yes** — added | `expense` nodes + `submitted_expense` edges. Graph advantage: correlate expenses with projects, team budgets, travel patterns. |
+| **Contractor of Record** | **Yes** — added | `contractor` nodes + `contracts_for` + `manages_contractor` edges. Graph advantage: contractor ↔ project ↔ team traversal, compliance cascades for contractor jurisdictions. |
+| **IT Device Management** | **Yes** — already covered | `equipment` nodes + `assigned_equipment` edges already in schema. Covers laptops, monitors, peripherals. Graph advantage: offboarding cascades (return equipment), cost tracking per person/team. |
+| **Employer of Record (EOR)** | **No** — exclude | EOR is a *service relationship* with a third-party provider (like Remote), not employee data. The graph already handles what EOR affects: jurisdiction, compliance, contractor management. Adding EOR would model the vendor relationship, not the employee graph. |

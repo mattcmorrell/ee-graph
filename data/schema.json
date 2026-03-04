@@ -40,7 +40,8 @@
         "status": { "type": "string", "enum": ["applied", "screening", "phone_screen", "interviewing", "onsite", "offer", "accepted", "rejected", "withdrawn", "unresponsive"], "required": true },
         "expectedComp": { "type": "number", "required": false },
         "resumeUrl": { "type": "string", "required": false },
-        "notes": { "type": "string", "required": false }
+        "notes": { "type": "string", "required": false },
+        "stageHistory": { "type": "array", "required": false, "description": "Array of {stage, enteredDate, exitedDate} for pipeline velocity tracking" }
       }
     },
     "interview": {
@@ -226,6 +227,82 @@
         "type": { "type": "string", "enum": ["federal", "state", "local", "international"], "required": true },
         "hasIncomeTax": { "type": "boolean", "required": false },
         "notes": { "type": "string", "required": false }
+      }
+    },
+    "time_off": {
+      "description": "Time-off requests and leave records",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["vacation", "sick", "personal", "parental", "bereavement", "jury_duty", "unpaid"], "required": true },
+        "startDate": { "type": "string", "format": "date", "required": true },
+        "endDate": { "type": "string", "format": "date", "required": true },
+        "hours": { "type": "number", "required": false },
+        "status": { "type": "string", "enum": ["requested", "approved", "denied", "taken", "cancelled"], "required": true },
+        "notes": { "type": "string", "required": false }
+      }
+    },
+    "request": {
+      "description": "Approval requests — time-off, expense, comp change, equipment, etc.",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "type": { "type": "string", "enum": ["time_off", "expense", "comp_change", "equipment", "document", "role_change", "offboarding"], "required": true },
+        "status": { "type": "string", "enum": ["pending", "approved", "denied", "withdrawn"], "required": true },
+        "submittedDate": { "type": "string", "format": "date", "required": true },
+        "decidedDate": { "type": "string", "format": "date", "required": false },
+        "details": { "type": "string", "required": false },
+        "amount": { "type": "number", "required": false, "description": "For expense/comp requests" }
+      }
+    },
+    "payroll_run": {
+      "description": "Payroll processing period",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "period": { "type": "string", "required": true, "description": "e.g. 2026-01-16 to 2026-01-31" },
+        "runDate": { "type": "string", "format": "date", "required": true },
+        "status": { "type": "string", "enum": ["draft", "submitted", "completed", "void"], "required": true },
+        "grossTotal": { "type": "number", "required": false },
+        "netTotal": { "type": "number", "required": false },
+        "exceptionsCount": { "type": "number", "required": false }
+      }
+    },
+    "survey_response": {
+      "description": "Employee satisfaction and wellbeing survey responses",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "surveyType": { "type": "string", "enum": ["enps", "satisfaction", "wellbeing", "pulse", "exit"], "required": true },
+        "date": { "type": "string", "format": "date", "required": true },
+        "score": { "type": "number", "required": false, "description": "0-10 for eNPS, 1-5 for satisfaction" },
+        "sentiment": { "type": "string", "enum": ["promoter", "neutral", "detractor"], "required": false },
+        "comment": { "type": "string", "required": false }
+      }
+    },
+    "expense": {
+      "description": "Expense reports and reimbursements",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "category": { "type": "string", "enum": ["travel", "meals", "office_supplies", "software", "equipment", "training", "other"], "required": true },
+        "amount": { "type": "number", "required": true },
+        "currency": { "type": "string", "default": "USD" },
+        "date": { "type": "string", "format": "date", "required": true },
+        "status": { "type": "string", "enum": ["submitted", "approved", "denied", "reimbursed"], "required": true },
+        "description": { "type": "string", "required": false },
+        "receiptUrl": { "type": "string", "required": false }
+      }
+    },
+    "contractor": {
+      "description": "External contractor or contingent worker",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "email": { "type": "string", "required": true },
+        "company": { "type": "string", "required": false },
+        "role": { "type": "string", "required": true },
+        "department": { "type": "string", "required": true },
+        "startDate": { "type": "string", "format": "date", "required": true },
+        "endDate": { "type": "string", "format": "date", "required": false },
+        "rate": { "type": "number", "required": false, "description": "Hourly or daily rate" },
+        "rateType": { "type": "string", "enum": ["hourly", "daily", "project", "monthly"], "required": false },
+        "status": { "type": "string", "enum": ["active", "completed", "terminated"], "required": true }
       }
     }
   },
@@ -478,6 +555,79 @@
       "metadata": {
         "conversionDate": "date",
         "edgesCarried": "number"
+      }
+    },
+    "has_time_off": {
+      "description": "Person has a time-off record",
+      "source": "person",
+      "target": "time_off",
+      "metadata": {
+        "approvedBy": "string (person id, optional)"
+      }
+    },
+    "entitled_to": {
+      "description": "Person is entitled to a policy based on level/tenure/jurisdiction",
+      "source": "person",
+      "target": "policy",
+      "metadata": {
+        "reason": "string (level, tenure, jurisdiction, role)",
+        "effectiveDate": "date"
+      }
+    },
+    "requested_by": {
+      "description": "Person submitted a request",
+      "source": "person",
+      "target": "request",
+      "metadata": {}
+    },
+    "approves": {
+      "description": "Person is the approver for a request",
+      "source": "person",
+      "target": "request",
+      "metadata": {
+        "decidedDate": "date (optional)",
+        "decision": "string (approved, denied, pending)"
+      }
+    },
+    "included_in": {
+      "description": "Person included in a payroll run",
+      "source": "person",
+      "target": "payroll_run",
+      "metadata": {
+        "gross": "number",
+        "net": "number",
+        "deductions": "number",
+        "adjustments": "string (optional)"
+      }
+    },
+    "responded_to": {
+      "description": "Person responded to a survey",
+      "source": "person",
+      "target": "survey_response",
+      "metadata": {}
+    },
+    "submitted_expense": {
+      "description": "Person submitted an expense",
+      "source": "person",
+      "target": "expense",
+      "metadata": {}
+    },
+    "contracts_for": {
+      "description": "Contractor works for a team or on a project",
+      "source": "contractor",
+      "target": "team|project",
+      "metadata": {
+        "startDate": "date",
+        "endDate": "date (optional)",
+        "scope": "string"
+      }
+    },
+    "manages_contractor": {
+      "description": "Person manages a contractor relationship",
+      "source": "person",
+      "target": "contractor",
+      "metadata": {
+        "startDate": "date"
       }
     }
   }

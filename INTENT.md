@@ -35,9 +35,9 @@ Traditional HRIS workflows are **linear and siloed** (one module, one checklist)
 ## Reference Docs
 - `KNOWLEDGE.md` — Full product vision, walkthrough details, all 9 feature specs from the original walkthrough, sample personas, competitive positioning, design principles. **This is the bible.** Read it first when resuming.
 - `data/` — Graph data layer:
-  - `schema.json` — 18 node types, 25+ edge types with full property definitions
-  - `nodes.json` — 252 nodes (144 people incl 41 named from walkthrough + 103 generated, 8 candidates, 16 interviews, 43 positions, 40 skills, 14 projects, 13 teams, etc.)
-  - `edges.json` — 311 edges (94 reports_to, 46 member_of, 30 has_skill, 23 works_on, 17 collaborates_with, 8 recognized, 5 mentors, plus benefits/comp/docs/equipment/jurisdiction/policy edges)
+  - `schema.json` — 25 node types, 35 edge types with full property definitions
+  - `nodes.json` — 448 nodes (144 people incl 41 named + 103 generated, 8 candidates, 16 interviews, 43 positions, 40 skills, 14 projects, 13 teams, 25 time_off, 15 requests, 3 payroll_runs, 20 survey_responses, 10 expenses, 4 contractors, etc.)
+  - `edges.json` — 482 edges (94 reports_to, 46 member_of, 30 has_skill, 25 has_time_off, 23 works_on, 20 included_in/responded_to, 17 collaborates_with, 15 requested_by/approves/entitled_to, 10 submitted_expense, plus all others)
   - `graph-stats.json` — Summary counts
   - `README.md` — Schema docs
   - All 41 named characters match walkthrough exactly. Dates internally consistent. Salary bands realistic for Austin TX SMB. Temporal richness built in.
@@ -52,11 +52,57 @@ Traditional HRIS workflows are **linear and siloed** (one module, one checklist)
 ## What's Done
 - Explored full product walkthrough (all 9 sections, every detail captured)
 - Captured comprehensive knowledge base (KNOWLEDGE.md — ~800 lines)
-- Built graph data layer (data/ — 252 nodes, 311 edges, fully interconnected)
-- Built interactive graph viewer (viewer.html — D3 force-directed, search, filters, detail panel)
+- Built graph data layer (data/ — 448 nodes, 482 edges, 25 node types, 35 edge types)
+- Built interactive graph viewer (viewer.html — D3 force-directed, search, filters, detail panel, clickable properties, selection history with back button)
 - Brainstormed demo ideas, narrowed to cascade/workflow direction
 - Set up decision journal with 5 decisions, 8 solutions explored, 4 open questions
+- Achieved BHR parity — graph covers all BHR chatbot capabilities (see below)
 - GitHub repo: https://github.com/mattcmorrell/ee-graph (public)
+
+## Graph Functions (31 total)
+
+All operations that create/maintain the graph. Each is "create node + create edge."
+
+| # | Function | BambooHR Today | Notes |
+|---|----------|---------------|-------|
+| 1 | Hire employee | Yes | |
+| 2 | Set reporting relationship | Yes | |
+| 3 | Assign to team | Yes | |
+| 4 | Create team | Yes | |
+| 5 | Nest teams | Yes | |
+| 6 | Assign position | Yes | |
+| 7 | Create position | Yes | |
+| 8 | Set work location | Yes | |
+| 9 | Terminate employee | Yes | |
+| 10 | Record skill | Yes | |
+| 11 | Earn certification | Yes | |
+| 12 | Assign to project | **No** | |
+| 13 | Complete performance review | Yes | |
+| 14 | Set compensation | Yes | |
+| 15 | Enroll in benefits | Yes | |
+| 16 | Assign jurisdiction | Yes | Person → jurisdiction based on work location. Enables tax/compliance cascades |
+| 17 | Link jurisdiction to policy | **No** | Jurisdiction → policy. The other half of compliance cascades |
+| 18 | Sign document | Yes | |
+| 19 | Record collaboration | **No** | Hard to do — requires passive signal collection (Slack, calendar, PRs). Only graph-native function |
+| 20 | Assign mentor | **No** | |
+| 21 | Recognize someone | Yes | |
+| 22 | Assign buddy | **No** | |
+| 23 | Create candidate | Yes | |
+| 24 | Apply for position | Yes | |
+| 25 | Schedule interview | Yes | |
+| 26 | Record interview feedback | Yes | |
+| 27 | Record referral | Yes | |
+| 28 | Convert candidate to employee | Yes | |
+| 29 | Assign equipment | **No** | |
+| 30 | Track onboarding step | Yes | |
+| 31 | Report life event | **No** | |
+
+**7 gaps** — functions the graph needs that Bamboo doesn't do today (#12, 17, 19, 20, 22, 29, 31).
+**#19 (collaboration)** is the only one that's hard — requires passive signal ingestion, not just a form. The other 6 are straightforward CRUD that Bamboo just hasn't built yet.
+
+## Graph / BHR Parity
+
+**Parity achieved.** Full analysis in `KNOWLEDGE.md` § BHR Parity Analysis. Graph covers all 35 BHR chatbot tools, excludes 4 non-graph features (notifications, admin config, doc templates, community), and adds 7 graph-native advantages BHR can't replicate. Future BHR features (expense, contractor, IT devices) covered; EOR excluded (vendor relationship, not employee data).
 
 ## Open Questions
 - **Tech stack for cascade explorer**: could extend viewer.html with cascade animation, or build a separate app (React/Next.js). Viewer is already working well as single-file HTML+D3.
