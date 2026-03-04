@@ -35,7 +35,7 @@ Traditional HRIS workflows are **linear and siloed** (one module, one checklist)
 ## Reference Docs
 - `KNOWLEDGE.md` — Full product vision, walkthrough details, all 9 feature specs from the original walkthrough, sample personas, competitive positioning, design principles. **This is the bible.** Read it first when resuming.
 - `data/` — Graph data layer:
-  - `schema.json` — 30 node types, 43 edge types with full property definitions
+  - `schema.json` — 30 node types, 43 edge types with full property definitions. Position nodes enriched with jobFamily, salaryBand, FLSA, EEO, jobCode, requiredSkills, requiredCertifications, travelRequirement, jobDescription.
   - `nodes.json` — 507 nodes (144 people with FLSA/EEO demographics, 27 dependents, 33 comp records incl 10 equity grants, 8 background checks, 4 leave designations, 3 garnishments, 2 COBRA events, 2 investigations, plus all prior types)
   - `edges.json` — 596 edges (54 dependent_covered_by, 27 has_dependent, plus all prior edge types)
   - `graph-stats.json` — Summary counts

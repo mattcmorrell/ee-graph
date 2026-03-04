@@ -3441,7 +3441,20 @@
         "salaryBandMin": 250000,
         "salaryBandMax": 400000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Executive",
+        "salaryBand": "C-1",
+        "flsaClassification": "exempt",
+        "eeoCategory": "executive",
+        "jobCode": "EXC-C1-001",
+        "requiredSkills": [
+          "skill-039",
+          "skill-038",
+          "skill-029"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "occasional",
+        "jobDescription": "Sets company vision, strategy, and culture while leading the executive team to drive growth and operational excellence."
       }
     },
     {
@@ -3454,7 +3467,23 @@
         "salaryBandMin": 200000,
         "salaryBandMax": 280000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Engineering",
+        "salaryBand": "VP",
+        "flsaClassification": "exempt",
+        "eeoCategory": "executive",
+        "jobCode": "ENG-VP-002",
+        "requiredSkills": [
+          "skill-039",
+          "skill-015",
+          "skill-038",
+          "skill-009"
+        ],
+        "requiredCertifications": [
+          "cert-006"
+        ],
+        "travelRequirement": "occasional",
+        "jobDescription": "Leads all engineering teams, sets technical strategy, and drives engineering culture, hiring, and delivery."
       }
     },
     {
@@ -3467,7 +3496,22 @@
         "salaryBandMin": 180000,
         "salaryBandMax": 250000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Customer Success",
+        "salaryBand": "VP",
+        "flsaClassification": "exempt",
+        "eeoCategory": "executive",
+        "jobCode": "SUP-VP-003",
+        "requiredSkills": [
+          "skill-006",
+          "skill-039",
+          "skill-031"
+        ],
+        "requiredCertifications": [
+          "cert-005"
+        ],
+        "travelRequirement": "occasional",
+        "jobDescription": "Leads the customer support organization, setting service standards and scaling support operations."
       }
     },
     {
@@ -3480,7 +3524,22 @@
         "salaryBandMin": 190000,
         "salaryBandMax": 270000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Sales",
+        "salaryBand": "VP",
+        "flsaClassification": "exempt",
+        "eeoCategory": "executive",
+        "jobCode": "SAL-VP-004",
+        "requiredSkills": [
+          "skill-019",
+          "skill-039",
+          "skill-038"
+        ],
+        "requiredCertifications": [
+          "cert-007"
+        ],
+        "travelRequirement": "occasional",
+        "jobDescription": "Leads the sales team, sets revenue targets, and drives go-to-market strategy and pipeline execution."
       }
     },
     {
@@ -3493,7 +3552,23 @@
         "salaryBandMin": 185000,
         "salaryBandMax": 260000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Design",
+        "salaryBand": "VP",
+        "flsaClassification": "exempt",
+        "eeoCategory": "executive",
+        "jobCode": "DES-VP-005",
+        "requiredSkills": [
+          "skill-017",
+          "skill-005",
+          "skill-039",
+          "skill-033"
+        ],
+        "requiredCertifications": [
+          "cert-010"
+        ],
+        "travelRequirement": "occasional",
+        "jobDescription": "Leads the design organization, establishing design principles and ensuring cohesive product experiences."
       }
     },
     {
@@ -3506,7 +3581,23 @@
         "salaryBandMin": 175000,
         "salaryBandMax": 240000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Operations",
+        "salaryBand": "VP",
+        "flsaClassification": "exempt",
+        "eeoCategory": "executive",
+        "jobCode": "OPS-VP-006",
+        "requiredSkills": [
+          "skill-039",
+          "skill-038",
+          "skill-029"
+        ],
+        "requiredCertifications": [
+          "cert-003",
+          "cert-004"
+        ],
+        "travelRequirement": "occasional",
+        "jobDescription": "Oversees HR, finance, and operational functions to support company scaling."
       }
     },
     {
@@ -3519,7 +3610,24 @@
         "salaryBandMin": 160000,
         "salaryBandMax": 210000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Engineering",
+        "salaryBand": "M-1",
+        "flsaClassification": "exempt",
+        "eeoCategory": "first_mid_officials",
+        "jobCode": "ENG-M1-007",
+        "requiredSkills": [
+          "skill-001",
+          "skill-009",
+          "skill-010",
+          "skill-023"
+        ],
+        "requiredCertifications": [
+          "cert-001",
+          "cert-006"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Leads the platform engineering team, owning Kubernetes infrastructure and cloud architecture decisions."
       }
     },
     {
@@ -3532,7 +3640,21 @@
         "salaryBandMin": 160000,
         "salaryBandMax": 210000,
         "isOpen": true,
-        "headcount": 2
+        "headcount": 2,
+        "jobFamily": "Engineering",
+        "salaryBand": "M-1",
+        "flsaClassification": "exempt",
+        "eeoCategory": "first_mid_officials",
+        "jobCode": "ENG-M1-008",
+        "requiredSkills": [
+          "skill-039",
+          "skill-038",
+          "skill-011",
+          "skill-014"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Manages a team of engineers, driving delivery, career growth, and technical quality."
       }
     },
     {
@@ -3545,7 +3667,21 @@
         "salaryBandMin": 145000,
         "salaryBandMax": 190000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Engineering",
+        "salaryBand": "M-1",
+        "flsaClassification": "exempt",
+        "eeoCategory": "first_mid_officials",
+        "jobCode": "ENG-M1-009",
+        "requiredSkills": [
+          "skill-040",
+          "skill-039",
+          "skill-011",
+          "skill-020"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Leads the quality assurance team, defining test strategy and ensuring product reliability."
       }
     },
     {
@@ -3558,7 +3694,23 @@
         "salaryBandMin": 150000,
         "salaryBandMax": 195000,
         "isOpen": true,
-        "headcount": 2
+        "headcount": 2,
+        "jobFamily": "Engineering",
+        "salaryBand": "IC-4",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "ENG-IC4-010",
+        "requiredSkills": [
+          "skill-002",
+          "skill-008",
+          "skill-014",
+          "skill-015"
+        ],
+        "requiredCertifications": [
+          "cert-002"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Owns complex technical problems, mentors junior engineers, and drives cross-team technical initiatives."
       }
     },
     {
@@ -3571,7 +3723,21 @@
         "salaryBandMin": 120000,
         "salaryBandMax": 160000,
         "isOpen": false,
-        "headcount": 15
+        "headcount": 15,
+        "jobFamily": "Engineering",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "ENG-IC3-011",
+        "requiredSkills": [
+          "skill-002",
+          "skill-004",
+          "skill-014",
+          "skill-008"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Designs, builds, and maintains product features and services as part of an engineering team."
       }
     },
     {
@@ -3584,7 +3750,21 @@
         "salaryBandMin": 95000,
         "salaryBandMax": 130000,
         "isOpen": false,
-        "headcount": 20
+        "headcount": 20,
+        "jobFamily": "Engineering",
+        "salaryBand": "IC-2",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "ENG-IC2-012",
+        "requiredSkills": [
+          "skill-002",
+          "skill-004",
+          "skill-014",
+          "skill-008"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Designs, builds, and maintains product features and services as part of an engineering team."
       }
     },
     {
@@ -3597,7 +3777,23 @@
         "salaryBandMin": 130000,
         "salaryBandMax": 170000,
         "isOpen": false,
-        "headcount": 3
+        "headcount": 3,
+        "jobFamily": "Engineering",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "ENG-IC3-013",
+        "requiredSkills": [
+          "skill-001",
+          "skill-009",
+          "skill-010",
+          "skill-023"
+        ],
+        "requiredCertifications": [
+          "cert-001"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Builds and maintains cloud infrastructure, Kubernetes clusters, and internal developer tooling."
       }
     },
     {
@@ -3610,7 +3806,21 @@
         "salaryBandMin": 125000,
         "salaryBandMax": 165000,
         "isOpen": false,
-        "headcount": 2
+        "headcount": 2,
+        "jobFamily": "Engineering",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "ENG-IC3-014",
+        "requiredSkills": [
+          "skill-003",
+          "skill-004",
+          "skill-024",
+          "skill-005"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Builds and maintains the product UI with a focus on component libraries and user-facing features."
       }
     },
     {
@@ -3623,7 +3833,24 @@
         "salaryBandMin": 130000,
         "salaryBandMax": 170000,
         "isOpen": false,
-        "headcount": 2
+        "headcount": 2,
+        "jobFamily": "Engineering",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "ENG-IC3-015",
+        "requiredSkills": [
+          "skill-001",
+          "skill-010",
+          "skill-011",
+          "skill-023"
+        ],
+        "requiredCertifications": [
+          "cert-009",
+          "cert-006"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Manages CI/CD pipelines, deployment tooling, and infrastructure automation."
       }
     },
     {
@@ -3636,7 +3863,20 @@
         "salaryBandMin": 90000,
         "salaryBandMax": 125000,
         "isOpen": false,
-        "headcount": 6
+        "headcount": 6,
+        "jobFamily": "Engineering",
+        "salaryBand": "IC-2",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "ENG-IC2-016",
+        "requiredSkills": [
+          "skill-040",
+          "skill-020",
+          "skill-011"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Writes and executes test cases, identifies bugs, and supports release quality gates."
       }
     },
     {
@@ -3649,7 +3889,21 @@
         "salaryBandMin": 110000,
         "salaryBandMax": 150000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Engineering",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "ENG-IC3-017",
+        "requiredSkills": [
+          "skill-040",
+          "skill-007",
+          "skill-011",
+          "skill-020"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Builds automated test suites to improve coverage and increase release confidence."
       }
     },
     {
@@ -3662,7 +3916,22 @@
         "salaryBandMin": 85000,
         "salaryBandMax": 110000,
         "isOpen": false,
-        "headcount": 2
+        "headcount": 2,
+        "jobFamily": "Customer Success",
+        "salaryBand": "IC-4",
+        "flsaClassification": "exempt",
+        "eeoCategory": "first_mid_officials",
+        "jobCode": "SUP-IC4-018",
+        "requiredSkills": [
+          "skill-006",
+          "skill-031",
+          "skill-039"
+        ],
+        "requiredCertifications": [
+          "cert-005"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Leads a support team pod, handles escalations, and drives ticket resolution quality."
       }
     },
     {
@@ -3675,7 +3944,20 @@
         "salaryBandMin": 55000,
         "salaryBandMax": 75000,
         "isOpen": false,
-        "headcount": 8
+        "headcount": 8,
+        "jobFamily": "Customer Success",
+        "salaryBand": "IC-2",
+        "flsaClassification": "exempt",
+        "eeoCategory": "admin_support",
+        "jobCode": "SUP-IC2-019",
+        "requiredSkills": [
+          "skill-006",
+          "skill-031",
+          "skill-020"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Handles customer support tickets and provides technical troubleshooting assistance."
       }
     },
     {
@@ -3688,7 +3970,20 @@
         "salaryBandMin": 65000,
         "salaryBandMax": 85000,
         "isOpen": false,
-        "headcount": 4
+        "headcount": 4,
+        "jobFamily": "Customer Success",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "admin_support",
+        "jobCode": "SUP-IC3-020",
+        "requiredSkills": [
+          "skill-006",
+          "skill-031",
+          "skill-020"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Handles customer support tickets and provides technical troubleshooting assistance."
       }
     },
     {
@@ -3701,7 +3996,19 @@
         "salaryBandMin": 42000,
         "salaryBandMax": 58000,
         "isOpen": false,
-        "headcount": 10
+        "headcount": 10,
+        "jobFamily": "Customer Success",
+        "salaryBand": "IC-1",
+        "flsaClassification": "nonexempt",
+        "eeoCategory": "admin_support",
+        "jobCode": "SUP-IC1-021",
+        "requiredSkills": [
+          "skill-006",
+          "skill-031"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Responds to inbound customer inquiries and resolves common issues via chat and email."
       }
     },
     {
@@ -3714,7 +4021,20 @@
         "salaryBandMin": 65000,
         "salaryBandMax": 88000,
         "isOpen": false,
-        "headcount": 4
+        "headcount": 4,
+        "jobFamily": "Customer Success",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "admin_support",
+        "jobCode": "SUP-IC3-022",
+        "requiredSkills": [
+          "skill-006",
+          "skill-031",
+          "skill-032"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Handles escalated technical support cases requiring deeper product knowledge."
       }
     },
     {
@@ -3727,7 +4047,21 @@
         "salaryBandMin": 75000,
         "salaryBandMax": 100000,
         "isOpen": true,
-        "headcount": 4
+        "headcount": 4,
+        "jobFamily": "Customer Success",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "SUP-IC3-023",
+        "requiredSkills": [
+          "skill-006",
+          "skill-031",
+          "skill-019",
+          "skill-020"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "occasional",
+        "jobDescription": "Manages a portfolio of customer accounts, driving adoption, retention, and expansion."
       }
     },
     {
@@ -3740,7 +4074,22 @@
         "salaryBandMin": 90000,
         "salaryBandMax": 130000,
         "isOpen": true,
-        "headcount": 4
+        "headcount": 4,
+        "jobFamily": "Sales",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "sales_workers",
+        "jobCode": "SAL-IC3-024",
+        "requiredSkills": [
+          "skill-019",
+          "skill-031",
+          "skill-020"
+        ],
+        "requiredCertifications": [
+          "cert-007"
+        ],
+        "travelRequirement": "occasional",
+        "jobDescription": "Manages full-cycle sales for assigned accounts, from outbound prospecting through close."
       }
     },
     {
@@ -3753,7 +4102,20 @@
         "salaryBandMin": 95000,
         "salaryBandMax": 125000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Sales",
+        "salaryBand": "M-1",
+        "flsaClassification": "exempt",
+        "eeoCategory": "first_mid_officials",
+        "jobCode": "SAL-M1-025",
+        "requiredSkills": [
+          "skill-019",
+          "skill-039",
+          "skill-031"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "occasional",
+        "jobDescription": "Manages the SDR team, sets pipeline targets, and coaches outbound prospecting strategies."
       }
     },
     {
@@ -3766,7 +4128,20 @@
         "salaryBandMin": 55000,
         "salaryBandMax": 75000,
         "isOpen": false,
-        "headcount": 4
+        "headcount": 4,
+        "jobFamily": "Sales",
+        "salaryBand": "IC-2",
+        "flsaClassification": "exempt",
+        "eeoCategory": "sales_workers",
+        "jobCode": "SAL-IC2-026",
+        "requiredSkills": [
+          "skill-019",
+          "skill-031",
+          "skill-020"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "occasional",
+        "jobDescription": "Executes outbound prospecting campaigns to generate qualified leads for the sales team."
       }
     },
     {
@@ -3779,7 +4154,21 @@
         "salaryBandMin": 120000,
         "salaryBandMax": 160000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Engineering",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "SAL-IC3-027",
+        "requiredSkills": [
+          "skill-019",
+          "skill-014",
+          "skill-013",
+          "skill-026"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Provides technical expertise during the sales cycle by delivering product demos and proof-of-concepts."
       }
     },
     {
@@ -3792,7 +4181,23 @@
         "salaryBandMin": 150000,
         "salaryBandMax": 195000,
         "isOpen": true,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Sales",
+        "salaryBand": "IC-4",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "SAL-IC4-028",
+        "requiredSkills": [
+          "skill-009",
+          "skill-014",
+          "skill-015",
+          "skill-013"
+        ],
+        "requiredCertifications": [
+          "cert-006"
+        ],
+        "travelRequirement": "occasional",
+        "jobDescription": "Designs technical solutions for enterprise prospects and supports complex pre-sales engagements."
       }
     },
     {
@@ -3805,7 +4210,23 @@
         "salaryBandMin": 130000,
         "salaryBandMax": 175000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Design",
+        "salaryBand": "IC-4",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "DES-IC4-029",
+        "requiredSkills": [
+          "skill-017",
+          "skill-033",
+          "skill-034",
+          "skill-005"
+        ],
+        "requiredCertifications": [
+          "cert-010"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Leads design for core product areas, setting quality standards and mentoring other designers."
       }
     },
     {
@@ -3818,7 +4239,21 @@
         "salaryBandMin": 105000,
         "salaryBandMax": 145000,
         "isOpen": true,
-        "headcount": 2
+        "headcount": 2,
+        "jobFamily": "Design",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "DES-IC3-030",
+        "requiredSkills": [
+          "skill-017",
+          "skill-033",
+          "skill-035",
+          "skill-018"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Designs end-to-end product experiences from research and wireframes through final visual specs."
       }
     },
     {
@@ -3831,7 +4266,20 @@
         "salaryBandMin": 100000,
         "salaryBandMax": 140000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Design",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "DES-IC3-031",
+        "requiredSkills": [
+          "skill-018",
+          "skill-017",
+          "skill-035"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Plans and conducts user research studies to inform product and design decisions."
       }
     },
     {
@@ -3844,7 +4292,23 @@
         "salaryBandMin": 95000,
         "salaryBandMax": 130000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "HR",
+        "salaryBand": "IC-4",
+        "flsaClassification": "exempt",
+        "eeoCategory": "first_mid_officials",
+        "jobCode": "OPS-IC4-032",
+        "requiredSkills": [
+          "skill-029",
+          "skill-031",
+          "skill-038"
+        ],
+        "requiredCertifications": [
+          "cert-003",
+          "cert-004"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Manages HR operations including recruiting coordination, employee relations, and compliance."
       }
     },
     {
@@ -3857,7 +4321,23 @@
         "salaryBandMin": 65000,
         "salaryBandMax": 90000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Operations",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "admin_support",
+        "jobCode": "OPS-IC3-033",
+        "requiredSkills": [
+          "skill-030",
+          "skill-029",
+          "skill-038"
+        ],
+        "requiredCertifications": [
+          "cert-003",
+          "cert-004"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Manages office operations, facilities, and administrative support for the team."
       }
     },
     {
@@ -3870,7 +4350,23 @@
         "salaryBandMin": 110000,
         "salaryBandMax": 150000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Finance",
+        "salaryBand": "IC-4",
+        "flsaClassification": "exempt",
+        "eeoCategory": "first_mid_officials",
+        "jobCode": "OPS-IC4-034",
+        "requiredSkills": [
+          "skill-029",
+          "skill-038",
+          "skill-020"
+        ],
+        "requiredCertifications": [
+          "cert-003",
+          "cert-004"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Oversees financial reporting, budgeting, and accounting operations."
       }
     },
     {
@@ -3883,7 +4379,23 @@
         "salaryBandMin": 60000,
         "salaryBandMax": 85000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Finance",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "admin_support",
+        "jobCode": "OPS-IC3-035",
+        "requiredSkills": [
+          "skill-029",
+          "skill-038",
+          "skill-020"
+        ],
+        "requiredCertifications": [
+          "cert-003",
+          "cert-004"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Processes payroll, manages compensation records, and ensures payroll compliance."
       }
     },
     {
@@ -3896,7 +4408,23 @@
         "salaryBandMin": 70000,
         "salaryBandMax": 100000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "HR",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "OPS-IC3-036",
+        "requiredSkills": [
+          "skill-020",
+          "skill-029",
+          "skill-031"
+        ],
+        "requiredCertifications": [
+          "cert-003",
+          "cert-004"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Sources, screens, and coordinates hiring across departments to fill open roles."
       }
     },
     {
@@ -3909,7 +4437,20 @@
         "salaryBandMin": 80000,
         "salaryBandMax": 110000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Design",
+        "salaryBand": "IC-2",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "DES-IC2-037",
+        "requiredSkills": [
+          "skill-034",
+          "skill-017",
+          "skill-024"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Creates marketing and product visuals including illustrations, icons, and brand assets."
       }
     },
     {
@@ -3922,7 +4463,20 @@
         "salaryBandMin": 95000,
         "salaryBandMax": 130000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Design",
+        "salaryBand": "IC-3",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "jobCode": "DES-IC3-038",
+        "requiredSkills": [
+          "skill-026",
+          "skill-017",
+          "skill-033"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Writes product UI copy and in-app documentation to ensure clear and consistent communication."
       }
     },
     {
@@ -3935,7 +4489,19 @@
         "salaryBandMin": 45000,
         "salaryBandMax": 55000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Design",
+        "salaryBand": "IC-1",
+        "flsaClassification": "nonexempt",
+        "eeoCategory": "professionals",
+        "jobCode": "DES-IC1-039",
+        "requiredSkills": [
+          "skill-017",
+          "skill-035"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Supports the design team with visual assets and UI components as part of a structured internship."
       }
     },
     {
@@ -3948,7 +4514,22 @@
         "salaryBandMin": 85000,
         "salaryBandMax": 110000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Customer Success",
+        "salaryBand": "IC-4",
+        "flsaClassification": "exempt",
+        "eeoCategory": "first_mid_officials",
+        "jobCode": "SUP-IC4-040",
+        "requiredSkills": [
+          "skill-006",
+          "skill-031",
+          "skill-039"
+        ],
+        "requiredCertifications": [
+          "cert-005"
+        ],
+        "travelRequirement": "none",
+        "jobDescription": "Leads a support team, manages scheduling, and handles complex customer escalations."
       }
     },
     {
@@ -3961,7 +4542,20 @@
         "salaryBandMin": 45000,
         "salaryBandMax": 60000,
         "isOpen": false,
-        "headcount": 2
+        "headcount": 2,
+        "jobFamily": "Sales",
+        "salaryBand": "IC-1",
+        "flsaClassification": "exempt",
+        "eeoCategory": "sales_workers",
+        "jobCode": "SAL-IC1-041",
+        "requiredSkills": [
+          "skill-019",
+          "skill-031",
+          "skill-020"
+        ],
+        "requiredCertifications": [],
+        "travelRequirement": "occasional",
+        "jobDescription": "Executes outbound prospecting campaigns to generate qualified leads for the sales team."
       }
     },
     {
@@ -3974,7 +4568,22 @@
         "salaryBandMin": 110000,
         "salaryBandMax": 155000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Sales",
+        "salaryBand": "IC-4",
+        "flsaClassification": "exempt",
+        "eeoCategory": "sales_workers",
+        "jobCode": "SAL-IC4-042",
+        "requiredSkills": [
+          "skill-019",
+          "skill-031",
+          "skill-020"
+        ],
+        "requiredCertifications": [
+          "cert-007"
+        ],
+        "travelRequirement": "occasional",
+        "jobDescription": "Manages full-cycle sales for assigned accounts, from outbound prospecting through close."
       }
     },
     {
@@ -3987,7 +4596,22 @@
         "salaryBandMin": 70000,
         "salaryBandMax": 100000,
         "isOpen": false,
-        "headcount": 1
+        "headcount": 1,
+        "jobFamily": "Sales",
+        "salaryBand": "IC-2",
+        "flsaClassification": "exempt",
+        "eeoCategory": "sales_workers",
+        "jobCode": "SAL-IC2-043",
+        "requiredSkills": [
+          "skill-019",
+          "skill-031",
+          "skill-020"
+        ],
+        "requiredCertifications": [
+          "cert-007"
+        ],
+        "travelRequirement": "occasional",
+        "jobDescription": "Manages full-cycle sales for assigned accounts, from outbound prospecting through close."
       }
     },
     {

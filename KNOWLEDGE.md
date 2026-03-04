@@ -833,6 +833,12 @@ These capabilities are impossible or impractical in traditional HRIS:
 5. **Skill gap analysis** — Team → member → has_skill traversal finds coverage holes
 6. **Onboarding as graph construction** — Progress = edge count, visible and measurable
 7. **Cross-domain correlation** — Time-off patterns + survey scores + review ratings in one model
+8. **Required certifications per job** — BHR tracks training *completion* but NOT which certifications a job *requires*. The graph links `position.requiredCertifications` → certification nodes, enabling automatic gap detection on backfill ("Raj left — who else has CKA + AWS certs?")
+9. **Backfill skill matching** — `position.requiredSkills` → skill nodes enables "find internal candidates who already have 3/4 required skills" — impossible in BHR
+
+### BHR Custom Fields & Tables
+
+BHR allows customers to add custom fields and custom tables to employee records (e.g., t-shirt size, union status, dietary restrictions, parking spot, emergency contact details). These are freeform and vary by customer. The graph handles this differently: rather than generic custom fields, graph-relevant data becomes **first-class nodes and edges** (dependents, garnishments, leave designations), while truly arbitrary data (t-shirt size) stays as properties. The graph's advantage is that structured nodes participate in traversal and cascade discovery — a custom text field in BHR cannot.
 
 ### Future BHR Features — Evaluation
 
