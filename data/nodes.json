@@ -3447,14 +3447,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "executive",
         "jobCode": "EXC-C1-001",
-        "requiredSkills": [
-          "skill-039",
-          "skill-038",
-          "skill-029"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "occasional",
-        "jobDescription": "Sets company vision, strategy, and culture while leading the executive team to drive growth and operational excellence."
+        "jobDescription": "Sets company vision, strategy, and culture while leading the executive team to drive growth and operational excellence.",
+        "careerTrack": "executive",
+        "competencies": [
+          "skill-039",
+          "skill-038",
+          "skill-029",
+          "strategic thinking",
+          "leadership",
+          "decision making"
+        ]
       }
     },
     {
@@ -3473,17 +3477,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "executive",
         "jobCode": "ENG-VP-002",
-        "requiredSkills": [
-          "skill-039",
-          "skill-015",
-          "skill-038",
-          "skill-009"
-        ],
         "requiredCertifications": [
           "cert-006"
         ],
         "travelRequirement": "occasional",
-        "jobDescription": "Leads all engineering teams, sets technical strategy, and drives engineering culture, hiring, and delivery."
+        "jobDescription": "Leads all engineering teams, sets technical strategy, and drives engineering culture, hiring, and delivery.",
+        "careerTrack": "executive",
+        "competencies": [
+          "skill-039",
+          "skill-015",
+          "skill-038",
+          "skill-009",
+          "strategic thinking",
+          "leadership",
+          "decision making"
+        ]
       }
     },
     {
@@ -3502,16 +3510,20 @@
         "flsaClassification": "exempt",
         "eeoCategory": "executive",
         "jobCode": "SUP-VP-003",
-        "requiredSkills": [
-          "skill-006",
-          "skill-039",
-          "skill-031"
-        ],
         "requiredCertifications": [
           "cert-005"
         ],
         "travelRequirement": "occasional",
-        "jobDescription": "Leads the customer support organization, setting service standards and scaling support operations."
+        "jobDescription": "Leads the customer support organization, setting service standards and scaling support operations.",
+        "careerTrack": "executive",
+        "competencies": [
+          "skill-006",
+          "skill-039",
+          "skill-031",
+          "strategic thinking",
+          "leadership",
+          "stakeholder management"
+        ]
       }
     },
     {
@@ -3530,16 +3542,20 @@
         "flsaClassification": "exempt",
         "eeoCategory": "executive",
         "jobCode": "SAL-VP-004",
-        "requiredSkills": [
-          "skill-019",
-          "skill-039",
-          "skill-038"
-        ],
         "requiredCertifications": [
           "cert-007"
         ],
         "travelRequirement": "occasional",
-        "jobDescription": "Leads the sales team, sets revenue targets, and drives go-to-market strategy and pipeline execution."
+        "jobDescription": "Leads the sales team, sets revenue targets, and drives go-to-market strategy and pipeline execution.",
+        "careerTrack": "executive",
+        "competencies": [
+          "skill-019",
+          "skill-039",
+          "skill-038",
+          "strategic thinking",
+          "leadership",
+          "decision making"
+        ]
       }
     },
     {
@@ -3558,17 +3574,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "executive",
         "jobCode": "DES-VP-005",
-        "requiredSkills": [
-          "skill-017",
-          "skill-005",
-          "skill-039",
-          "skill-033"
-        ],
         "requiredCertifications": [
           "cert-010"
         ],
         "travelRequirement": "occasional",
-        "jobDescription": "Leads the design organization, establishing design principles and ensuring cohesive product experiences."
+        "jobDescription": "Leads the design organization, establishing design principles and ensuring cohesive product experiences.",
+        "careerTrack": "executive",
+        "competencies": [
+          "skill-017",
+          "skill-005",
+          "skill-039",
+          "skill-033",
+          "strategic thinking",
+          "leadership",
+          "innovation"
+        ]
       }
     },
     {
@@ -3587,17 +3607,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "executive",
         "jobCode": "OPS-VP-006",
-        "requiredSkills": [
-          "skill-039",
-          "skill-038",
-          "skill-029"
-        ],
         "requiredCertifications": [
           "cert-003",
           "cert-004"
         ],
         "travelRequirement": "occasional",
-        "jobDescription": "Oversees HR, finance, and operational functions to support company scaling."
+        "jobDescription": "Oversees HR, finance, and operational functions to support company scaling.",
+        "careerTrack": "executive",
+        "competencies": [
+          "skill-039",
+          "skill-038",
+          "skill-029",
+          "strategic thinking",
+          "leadership",
+          "decision making"
+        ]
       }
     },
     {
@@ -3616,18 +3640,22 @@
         "flsaClassification": "exempt",
         "eeoCategory": "first_mid_officials",
         "jobCode": "ENG-M1-007",
-        "requiredSkills": [
-          "skill-001",
-          "skill-009",
-          "skill-010",
-          "skill-023"
-        ],
         "requiredCertifications": [
           "cert-001",
           "cert-006"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Leads the platform engineering team, owning Kubernetes infrastructure and cloud architecture decisions."
+        "jobDescription": "Leads the platform engineering team, owning Kubernetes infrastructure and cloud architecture decisions.",
+        "careerTrack": "management",
+        "competencies": [
+          "skill-001",
+          "skill-009",
+          "skill-010",
+          "skill-023",
+          "leadership",
+          "mentoring",
+          "decision making"
+        ]
       }
     },
     {
@@ -3646,15 +3674,19 @@
         "flsaClassification": "exempt",
         "eeoCategory": "first_mid_officials",
         "jobCode": "ENG-M1-008",
-        "requiredSkills": [
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Manages a team of engineers, driving delivery, career growth, and technical quality.",
+        "careerTrack": "management",
+        "competencies": [
           "skill-039",
           "skill-038",
           "skill-011",
-          "skill-014"
-        ],
-        "requiredCertifications": [],
-        "travelRequirement": "none",
-        "jobDescription": "Manages a team of engineers, driving delivery, career growth, and technical quality."
+          "skill-014",
+          "leadership",
+          "mentoring",
+          "decision making"
+        ]
       }
     },
     {
@@ -3673,15 +3705,19 @@
         "flsaClassification": "exempt",
         "eeoCategory": "first_mid_officials",
         "jobCode": "ENG-M1-009",
-        "requiredSkills": [
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Leads the quality assurance team, defining test strategy and ensuring product reliability.",
+        "careerTrack": "management",
+        "competencies": [
           "skill-040",
           "skill-039",
           "skill-011",
-          "skill-020"
-        ],
-        "requiredCertifications": [],
-        "travelRequirement": "none",
-        "jobDescription": "Leads the quality assurance team, defining test strategy and ensuring product reliability."
+          "skill-020",
+          "leadership",
+          "mentoring",
+          "attention to detail"
+        ]
       }
     },
     {
@@ -3700,17 +3736,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "ENG-IC4-010",
-        "requiredSkills": [
-          "skill-002",
-          "skill-008",
-          "skill-014",
-          "skill-015"
-        ],
         "requiredCertifications": [
           "cert-002"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Owns complex technical problems, mentors junior engineers, and drives cross-team technical initiatives."
+        "jobDescription": "Owns complex technical problems, mentors junior engineers, and drives cross-team technical initiatives.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-002",
+          "skill-008",
+          "skill-014",
+          "skill-015",
+          "technical excellence",
+          "problem solving",
+          "collaboration"
+        ]
       }
     },
     {
@@ -3729,15 +3769,19 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "ENG-IC3-011",
-        "requiredSkills": [
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Designs, builds, and maintains product features and services as part of an engineering team.",
+        "careerTrack": "professional",
+        "competencies": [
           "skill-002",
           "skill-004",
           "skill-014",
-          "skill-008"
-        ],
-        "requiredCertifications": [],
-        "travelRequirement": "none",
-        "jobDescription": "Designs, builds, and maintains product features and services as part of an engineering team."
+          "skill-008",
+          "technical excellence",
+          "problem solving",
+          "collaboration"
+        ]
       }
     },
     {
@@ -3756,15 +3800,19 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "ENG-IC2-012",
-        "requiredSkills": [
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Designs, builds, and maintains product features and services as part of an engineering team.",
+        "careerTrack": "professional",
+        "competencies": [
           "skill-002",
           "skill-004",
           "skill-014",
-          "skill-008"
-        ],
-        "requiredCertifications": [],
-        "travelRequirement": "none",
-        "jobDescription": "Designs, builds, and maintains product features and services as part of an engineering team."
+          "skill-008",
+          "technical excellence",
+          "problem solving",
+          "collaboration"
+        ]
       }
     },
     {
@@ -3783,17 +3831,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "ENG-IC3-013",
-        "requiredSkills": [
-          "skill-001",
-          "skill-009",
-          "skill-010",
-          "skill-023"
-        ],
         "requiredCertifications": [
           "cert-001"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Builds and maintains cloud infrastructure, Kubernetes clusters, and internal developer tooling."
+        "jobDescription": "Builds and maintains cloud infrastructure, Kubernetes clusters, and internal developer tooling.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-001",
+          "skill-009",
+          "skill-010",
+          "skill-023",
+          "technical excellence",
+          "problem solving",
+          "collaboration"
+        ]
       }
     },
     {
@@ -3812,15 +3864,19 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "ENG-IC3-014",
-        "requiredSkills": [
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Builds and maintains the product UI with a focus on component libraries and user-facing features.",
+        "careerTrack": "professional",
+        "competencies": [
           "skill-003",
           "skill-004",
           "skill-024",
-          "skill-005"
-        ],
-        "requiredCertifications": [],
-        "travelRequirement": "none",
-        "jobDescription": "Builds and maintains the product UI with a focus on component libraries and user-facing features."
+          "skill-005",
+          "technical excellence",
+          "collaboration",
+          "attention to detail"
+        ]
       }
     },
     {
@@ -3839,18 +3895,22 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "ENG-IC3-015",
-        "requiredSkills": [
-          "skill-001",
-          "skill-010",
-          "skill-011",
-          "skill-023"
-        ],
         "requiredCertifications": [
           "cert-009",
           "cert-006"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Manages CI/CD pipelines, deployment tooling, and infrastructure automation."
+        "jobDescription": "Manages CI/CD pipelines, deployment tooling, and infrastructure automation.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-001",
+          "skill-010",
+          "skill-011",
+          "skill-023",
+          "technical excellence",
+          "problem solving",
+          "adaptability"
+        ]
       }
     },
     {
@@ -3869,14 +3929,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "ENG-IC2-016",
-        "requiredSkills": [
-          "skill-040",
-          "skill-020",
-          "skill-011"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "none",
-        "jobDescription": "Writes and executes test cases, identifies bugs, and supports release quality gates."
+        "jobDescription": "Writes and executes test cases, identifies bugs, and supports release quality gates.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-040",
+          "skill-020",
+          "skill-011",
+          "technical excellence",
+          "attention to detail",
+          "problem solving"
+        ]
       }
     },
     {
@@ -3895,15 +3959,19 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "ENG-IC3-017",
-        "requiredSkills": [
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Builds automated test suites to improve coverage and increase release confidence.",
+        "careerTrack": "professional",
+        "competencies": [
           "skill-040",
           "skill-007",
           "skill-011",
-          "skill-020"
-        ],
-        "requiredCertifications": [],
-        "travelRequirement": "none",
-        "jobDescription": "Builds automated test suites to improve coverage and increase release confidence."
+          "skill-020",
+          "technical excellence",
+          "attention to detail",
+          "problem solving"
+        ]
       }
     },
     {
@@ -3922,16 +3990,20 @@
         "flsaClassification": "exempt",
         "eeoCategory": "first_mid_officials",
         "jobCode": "SUP-IC4-018",
-        "requiredSkills": [
-          "skill-006",
-          "skill-031",
-          "skill-039"
-        ],
         "requiredCertifications": [
           "cert-005"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Leads a support team pod, handles escalations, and drives ticket resolution quality."
+        "jobDescription": "Leads a support team pod, handles escalations, and drives ticket resolution quality.",
+        "careerTrack": "support",
+        "competencies": [
+          "skill-006",
+          "skill-031",
+          "skill-039",
+          "customer focus",
+          "problem solving",
+          "communication"
+        ]
       }
     },
     {
@@ -3950,14 +4022,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "admin_support",
         "jobCode": "SUP-IC2-019",
-        "requiredSkills": [
-          "skill-006",
-          "skill-031",
-          "skill-020"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "none",
-        "jobDescription": "Handles customer support tickets and provides technical troubleshooting assistance."
+        "jobDescription": "Handles customer support tickets and provides technical troubleshooting assistance.",
+        "careerTrack": "support",
+        "competencies": [
+          "skill-006",
+          "skill-031",
+          "skill-020",
+          "customer focus",
+          "problem solving",
+          "communication"
+        ]
       }
     },
     {
@@ -3976,14 +4052,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "admin_support",
         "jobCode": "SUP-IC3-020",
-        "requiredSkills": [
-          "skill-006",
-          "skill-031",
-          "skill-020"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "none",
-        "jobDescription": "Handles customer support tickets and provides technical troubleshooting assistance."
+        "jobDescription": "Handles customer support tickets and provides technical troubleshooting assistance.",
+        "careerTrack": "support",
+        "competencies": [
+          "skill-006",
+          "skill-031",
+          "skill-020",
+          "customer focus",
+          "problem solving",
+          "communication"
+        ]
       }
     },
     {
@@ -4002,13 +4082,17 @@
         "flsaClassification": "nonexempt",
         "eeoCategory": "admin_support",
         "jobCode": "SUP-IC1-021",
-        "requiredSkills": [
-          "skill-006",
-          "skill-031"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "none",
-        "jobDescription": "Responds to inbound customer inquiries and resolves common issues via chat and email."
+        "jobDescription": "Responds to inbound customer inquiries and resolves common issues via chat and email.",
+        "careerTrack": "support",
+        "competencies": [
+          "skill-006",
+          "skill-031",
+          "customer focus",
+          "communication",
+          "adaptability"
+        ]
       }
     },
     {
@@ -4027,14 +4111,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "admin_support",
         "jobCode": "SUP-IC3-022",
-        "requiredSkills": [
-          "skill-006",
-          "skill-031",
-          "skill-032"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "none",
-        "jobDescription": "Handles escalated technical support cases requiring deeper product knowledge."
+        "jobDescription": "Handles escalated technical support cases requiring deeper product knowledge.",
+        "careerTrack": "support",
+        "competencies": [
+          "skill-006",
+          "skill-031",
+          "skill-032",
+          "customer focus",
+          "problem solving",
+          "communication"
+        ]
       }
     },
     {
@@ -4053,15 +4141,19 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "SUP-IC3-023",
-        "requiredSkills": [
+        "requiredCertifications": [],
+        "travelRequirement": "occasional",
+        "jobDescription": "Manages a portfolio of customer accounts, driving adoption, retention, and expansion.",
+        "careerTrack": "professional",
+        "competencies": [
           "skill-006",
           "skill-031",
           "skill-019",
-          "skill-020"
-        ],
-        "requiredCertifications": [],
-        "travelRequirement": "occasional",
-        "jobDescription": "Manages a portfolio of customer accounts, driving adoption, retention, and expansion."
+          "skill-020",
+          "customer focus",
+          "communication",
+          "stakeholder management"
+        ]
       }
     },
     {
@@ -4080,16 +4172,20 @@
         "flsaClassification": "exempt",
         "eeoCategory": "sales_workers",
         "jobCode": "SAL-IC3-024",
-        "requiredSkills": [
-          "skill-019",
-          "skill-031",
-          "skill-020"
-        ],
         "requiredCertifications": [
           "cert-007"
         ],
         "travelRequirement": "occasional",
-        "jobDescription": "Manages full-cycle sales for assigned accounts, from outbound prospecting through close."
+        "jobDescription": "Manages full-cycle sales for assigned accounts, from outbound prospecting through close.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-019",
+          "skill-031",
+          "skill-020",
+          "communication",
+          "customer focus",
+          "stakeholder management"
+        ]
       }
     },
     {
@@ -4108,14 +4204,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "first_mid_officials",
         "jobCode": "SAL-M1-025",
-        "requiredSkills": [
-          "skill-019",
-          "skill-039",
-          "skill-031"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "occasional",
-        "jobDescription": "Manages the SDR team, sets pipeline targets, and coaches outbound prospecting strategies."
+        "jobDescription": "Manages the SDR team, sets pipeline targets, and coaches outbound prospecting strategies.",
+        "careerTrack": "management",
+        "competencies": [
+          "skill-019",
+          "skill-039",
+          "skill-031",
+          "leadership",
+          "mentoring",
+          "decision making"
+        ]
       }
     },
     {
@@ -4134,14 +4234,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "sales_workers",
         "jobCode": "SAL-IC2-026",
-        "requiredSkills": [
-          "skill-019",
-          "skill-031",
-          "skill-020"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "occasional",
-        "jobDescription": "Executes outbound prospecting campaigns to generate qualified leads for the sales team."
+        "jobDescription": "Executes outbound prospecting campaigns to generate qualified leads for the sales team.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-019",
+          "skill-031",
+          "skill-020",
+          "communication",
+          "customer focus",
+          "adaptability"
+        ]
       }
     },
     {
@@ -4160,15 +4264,19 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "SAL-IC3-027",
-        "requiredSkills": [
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Provides technical expertise during the sales cycle by delivering product demos and proof-of-concepts.",
+        "careerTrack": "professional",
+        "competencies": [
           "skill-019",
           "skill-014",
           "skill-013",
-          "skill-026"
-        ],
-        "requiredCertifications": [],
-        "travelRequirement": "none",
-        "jobDescription": "Provides technical expertise during the sales cycle by delivering product demos and proof-of-concepts."
+          "skill-026",
+          "communication",
+          "technical excellence",
+          "customer focus"
+        ]
       }
     },
     {
@@ -4187,17 +4295,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "SAL-IC4-028",
-        "requiredSkills": [
-          "skill-009",
-          "skill-014",
-          "skill-015",
-          "skill-013"
-        ],
         "requiredCertifications": [
           "cert-006"
         ],
         "travelRequirement": "occasional",
-        "jobDescription": "Designs technical solutions for enterprise prospects and supports complex pre-sales engagements."
+        "jobDescription": "Designs technical solutions for enterprise prospects and supports complex pre-sales engagements.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-009",
+          "skill-014",
+          "skill-015",
+          "skill-013",
+          "technical excellence",
+          "stakeholder management",
+          "communication"
+        ]
       }
     },
     {
@@ -4216,17 +4328,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "DES-IC4-029",
-        "requiredSkills": [
-          "skill-017",
-          "skill-033",
-          "skill-034",
-          "skill-005"
-        ],
         "requiredCertifications": [
           "cert-010"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Leads design for core product areas, setting quality standards and mentoring other designers."
+        "jobDescription": "Leads design for core product areas, setting quality standards and mentoring other designers.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-017",
+          "skill-033",
+          "skill-034",
+          "skill-005",
+          "innovation",
+          "collaboration",
+          "attention to detail"
+        ]
       }
     },
     {
@@ -4245,15 +4361,19 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "DES-IC3-030",
-        "requiredSkills": [
+        "requiredCertifications": [],
+        "travelRequirement": "none",
+        "jobDescription": "Designs end-to-end product experiences from research and wireframes through final visual specs.",
+        "careerTrack": "professional",
+        "competencies": [
           "skill-017",
           "skill-033",
           "skill-035",
-          "skill-018"
-        ],
-        "requiredCertifications": [],
-        "travelRequirement": "none",
-        "jobDescription": "Designs end-to-end product experiences from research and wireframes through final visual specs."
+          "skill-018",
+          "innovation",
+          "collaboration",
+          "attention to detail"
+        ]
       }
     },
     {
@@ -4272,14 +4392,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "DES-IC3-031",
-        "requiredSkills": [
-          "skill-018",
-          "skill-017",
-          "skill-035"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "none",
-        "jobDescription": "Plans and conducts user research studies to inform product and design decisions."
+        "jobDescription": "Plans and conducts user research studies to inform product and design decisions.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-018",
+          "skill-017",
+          "skill-035",
+          "innovation",
+          "attention to detail",
+          "collaboration"
+        ]
       }
     },
     {
@@ -4298,17 +4422,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "first_mid_officials",
         "jobCode": "OPS-IC4-032",
-        "requiredSkills": [
-          "skill-029",
-          "skill-031",
-          "skill-038"
-        ],
         "requiredCertifications": [
           "cert-003",
           "cert-004"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Manages HR operations including recruiting coordination, employee relations, and compliance."
+        "jobDescription": "Manages HR operations including recruiting coordination, employee relations, and compliance.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-029",
+          "skill-031",
+          "skill-038",
+          "communication",
+          "conflict resolution",
+          "attention to detail"
+        ]
       }
     },
     {
@@ -4327,17 +4455,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "admin_support",
         "jobCode": "OPS-IC3-033",
-        "requiredSkills": [
-          "skill-030",
-          "skill-029",
-          "skill-038"
-        ],
         "requiredCertifications": [
           "cert-003",
           "cert-004"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Manages office operations, facilities, and administrative support for the team."
+        "jobDescription": "Manages office operations, facilities, and administrative support for the team.",
+        "careerTrack": "support",
+        "competencies": [
+          "skill-030",
+          "skill-029",
+          "skill-038",
+          "communication",
+          "attention to detail",
+          "adaptability"
+        ]
       }
     },
     {
@@ -4356,17 +4488,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "first_mid_officials",
         "jobCode": "OPS-IC4-034",
-        "requiredSkills": [
-          "skill-029",
-          "skill-038",
-          "skill-020"
-        ],
         "requiredCertifications": [
           "cert-003",
           "cert-004"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Oversees financial reporting, budgeting, and accounting operations."
+        "jobDescription": "Oversees financial reporting, budgeting, and accounting operations.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-029",
+          "skill-038",
+          "skill-020",
+          "attention to detail",
+          "problem solving",
+          "decision making"
+        ]
       }
     },
     {
@@ -4385,17 +4521,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "admin_support",
         "jobCode": "OPS-IC3-035",
-        "requiredSkills": [
-          "skill-029",
-          "skill-038",
-          "skill-020"
-        ],
         "requiredCertifications": [
           "cert-003",
           "cert-004"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Processes payroll, manages compensation records, and ensures payroll compliance."
+        "jobDescription": "Processes payroll, manages compensation records, and ensures payroll compliance.",
+        "careerTrack": "support",
+        "competencies": [
+          "skill-029",
+          "skill-038",
+          "skill-020",
+          "attention to detail",
+          "problem solving",
+          "communication"
+        ]
       }
     },
     {
@@ -4414,17 +4554,21 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "OPS-IC3-036",
-        "requiredSkills": [
-          "skill-020",
-          "skill-029",
-          "skill-031"
-        ],
         "requiredCertifications": [
           "cert-003",
           "cert-004"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Sources, screens, and coordinates hiring across departments to fill open roles."
+        "jobDescription": "Sources, screens, and coordinates hiring across departments to fill open roles.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-020",
+          "skill-029",
+          "skill-031",
+          "communication",
+          "stakeholder management",
+          "attention to detail"
+        ]
       }
     },
     {
@@ -4443,14 +4587,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "DES-IC2-037",
-        "requiredSkills": [
-          "skill-034",
-          "skill-017",
-          "skill-024"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "none",
-        "jobDescription": "Creates marketing and product visuals including illustrations, icons, and brand assets."
+        "jobDescription": "Creates marketing and product visuals including illustrations, icons, and brand assets.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-034",
+          "skill-017",
+          "skill-024",
+          "innovation",
+          "attention to detail",
+          "collaboration"
+        ]
       }
     },
     {
@@ -4469,14 +4617,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "professionals",
         "jobCode": "DES-IC3-038",
-        "requiredSkills": [
-          "skill-026",
-          "skill-017",
-          "skill-033"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "none",
-        "jobDescription": "Writes product UI copy and in-app documentation to ensure clear and consistent communication."
+        "jobDescription": "Writes product UI copy and in-app documentation to ensure clear and consistent communication.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-026",
+          "skill-017",
+          "skill-033",
+          "innovation",
+          "attention to detail",
+          "collaboration"
+        ]
       }
     },
     {
@@ -4495,13 +4647,17 @@
         "flsaClassification": "nonexempt",
         "eeoCategory": "professionals",
         "jobCode": "DES-IC1-039",
-        "requiredSkills": [
-          "skill-017",
-          "skill-035"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "none",
-        "jobDescription": "Supports the design team with visual assets and UI components as part of a structured internship."
+        "jobDescription": "Supports the design team with visual assets and UI components as part of a structured internship.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-017",
+          "skill-035",
+          "innovation",
+          "collaboration",
+          "adaptability"
+        ]
       }
     },
     {
@@ -4520,16 +4676,20 @@
         "flsaClassification": "exempt",
         "eeoCategory": "first_mid_officials",
         "jobCode": "SUP-IC4-040",
-        "requiredSkills": [
-          "skill-006",
-          "skill-031",
-          "skill-039"
-        ],
         "requiredCertifications": [
           "cert-005"
         ],
         "travelRequirement": "none",
-        "jobDescription": "Leads a support team, manages scheduling, and handles complex customer escalations."
+        "jobDescription": "Leads a support team, manages scheduling, and handles complex customer escalations.",
+        "careerTrack": "support",
+        "competencies": [
+          "skill-006",
+          "skill-031",
+          "skill-039",
+          "customer focus",
+          "problem solving",
+          "communication"
+        ]
       }
     },
     {
@@ -4548,14 +4708,18 @@
         "flsaClassification": "exempt",
         "eeoCategory": "sales_workers",
         "jobCode": "SAL-IC1-041",
-        "requiredSkills": [
-          "skill-019",
-          "skill-031",
-          "skill-020"
-        ],
         "requiredCertifications": [],
         "travelRequirement": "occasional",
-        "jobDescription": "Executes outbound prospecting campaigns to generate qualified leads for the sales team."
+        "jobDescription": "Executes outbound prospecting campaigns to generate qualified leads for the sales team.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-019",
+          "skill-031",
+          "skill-020",
+          "communication",
+          "customer focus",
+          "adaptability"
+        ]
       }
     },
     {
@@ -4574,16 +4738,20 @@
         "flsaClassification": "exempt",
         "eeoCategory": "sales_workers",
         "jobCode": "SAL-IC4-042",
-        "requiredSkills": [
-          "skill-019",
-          "skill-031",
-          "skill-020"
-        ],
         "requiredCertifications": [
           "cert-007"
         ],
         "travelRequirement": "occasional",
-        "jobDescription": "Manages full-cycle sales for assigned accounts, from outbound prospecting through close."
+        "jobDescription": "Manages full-cycle sales for assigned accounts, from outbound prospecting through close.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-019",
+          "skill-031",
+          "skill-020",
+          "communication",
+          "customer focus",
+          "stakeholder management"
+        ]
       }
     },
     {
@@ -4602,16 +4770,20 @@
         "flsaClassification": "exempt",
         "eeoCategory": "sales_workers",
         "jobCode": "SAL-IC2-043",
-        "requiredSkills": [
-          "skill-019",
-          "skill-031",
-          "skill-020"
-        ],
         "requiredCertifications": [
           "cert-007"
         ],
         "travelRequirement": "occasional",
-        "jobDescription": "Manages full-cycle sales for assigned accounts, from outbound prospecting through close."
+        "jobDescription": "Manages full-cycle sales for assigned accounts, from outbound prospecting through close.",
+        "careerTrack": "professional",
+        "competencies": [
+          "skill-019",
+          "skill-031",
+          "skill-020",
+          "communication",
+          "customer focus",
+          "stakeholder management"
+        ]
       }
     },
     {
