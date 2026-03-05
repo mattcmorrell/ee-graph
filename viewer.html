@@ -309,6 +309,24 @@
     letter-spacing: 0.08em;
     color: var(--text-dim);
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .filter-reset {
+    font-size: 9px;
+    color: var(--text-dim);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .filter-reset.visible {
+    opacity: 1;
+  }
+  .filter-reset:hover {
+    color: var(--text);
   }
 
   .filter-category {
@@ -937,6 +955,13 @@ function getNodeSub(node) {
         hideBtn.title = visible ? 'Hide this type' : 'Show this type';
       }
     });
+    // Show/hide reset buttons
+    const nodesDirty = activeNodeTypes.size !== allNodeTypes.length || soloedNodeType;
+    const edgesDirty = activeEdgeTypes.size !== allEdgeTypes.length || soloedEdgeType;
+    filtersEl.querySelectorAll('.filter-reset').forEach(el => {
+      const dirty = el.dataset.reset === 'node' ? nodesDirty : edgesDirty;
+      el.classList.toggle('visible', !!dirty);
+    });
   }
 
   // ── Filterbar data (person-level filters + team) ──
@@ -1211,7 +1236,7 @@ function getNodeSub(node) {
   }
 
   function buildFilters() {
-    let html = '<div class="filter-section"><div class="filter-title">Node Types</div>';
+    let html = '<div class="filter-section"><div class="filter-title"><span>Node Types</span><span class="filter-reset" data-reset="node">Reset</span></div>';
 
     // Categorized node types
     const usedNodeTypes = new Set();
@@ -1225,7 +1250,7 @@ function getNodeSub(node) {
       html += buildFilterCategory('node', 'Other', uncatNodes, nodeTypeCounts, t => effectiveNodeColors[t] || '#666', activeNodeTypes);
     }
 
-    html += '</div><div class="filter-section"><div class="filter-title">Edge Types</div>';
+    html += '</div><div class="filter-section"><div class="filter-title"><span>Edge Types</span><span class="filter-reset" data-reset="edge">Reset</span></div>';
 
     // Categorized edge types
     const usedEdgeTypes = new Set();
@@ -1294,6 +1319,22 @@ function getNodeSub(node) {
         // Toggle this type
         if (set.has(type)) { set.delete(type); }
         else { set.add(type); }
+        syncFilterUI();
+        updateVisibility();
+      });
+    });
+
+    // Reset buttons
+    filtersEl.querySelectorAll('.filter-reset').forEach(el => {
+      el.addEventListener('click', () => {
+        const kind = el.dataset.reset;
+        if (kind === 'node') {
+          allNodeTypes.forEach(t => activeNodeTypes.add(t));
+          soloedNodeType = null;
+        } else {
+          allEdgeTypes.forEach(t => activeEdgeTypes.add(t));
+          soloedEdgeType = null;
+        }
         syncFilterUI();
         updateVisibility();
       });
