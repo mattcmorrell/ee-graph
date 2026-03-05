@@ -311,6 +311,52 @@
     margin-bottom: 10px;
   }
 
+  .filter-category {
+    margin-bottom: 4px;
+  }
+
+  .filter-category-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 0;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text);
+    user-select: none;
+    transition: color 0.15s;
+  }
+
+  .filter-category-header:hover { color: var(--text-bright); }
+
+  .filter-category-header .cat-arrow {
+    font-size: 8px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    width: 10px;
+    text-align: center;
+  }
+
+  .filter-category-header .cat-arrow.collapsed { transform: rotate(-90deg); }
+
+  .filter-category-header .cat-count {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .filter-category-items {
+    padding-left: 16px;
+    overflow: hidden;
+    max-height: 500px;
+    transition: max-height 0.25s ease;
+  }
+
+  .filter-category-items.collapsed {
+    max-height: 0;
+  }
+
   .filter-item {
     display: flex;
     align-items: center;
@@ -1012,41 +1058,166 @@ function getNodeSub(node) {
   }
 
   function updateFilterbarUI() {
-    const count = Object.values(activeFilters).filter(v => v).length;
+    const filterCount = Object.values(activeFilters).filter(v => v).length;
     const countEl = document.getElementById('active-filter-count');
     const clearEl = document.getElementById('filterbar-clear');
-    countEl.textContent = count ? `${count} filter${count > 1 ? 's' : ''}` : '';
-    clearEl.classList.toggle('visible', count > 0);
+
+    if (filterCount) {
+      const matched = getFilterbarMatchedPersons();
+      const matchedCount = matched ? [...matched].filter(id => nodeMap.get(id)?.type === 'person').length : personNodes.length;
+      countEl.textContent = `${matchedCount} of ${personNodes.length} people`;
+    } else {
+      countEl.textContent = '';
+    }
+    clearEl.classList.toggle('visible', filterCount > 0);
+
+    // Cascade: narrow dropdown options based on current filters
+    cascadeDropdowns();
+  }
+
+  function cascadeDropdowns() {
+    // Get the set of persons matching all filters EXCEPT the one being cascaded
+    const dimSelects = { department: 'fb-department', division: 'fb-division', title: 'fb-title', location: 'fb-location', status: 'fb-status' };
+    const propMap = { department: 'department', division: 'division', title: 'role', location: 'location', status: 'status' };
+
+    for (const [dim, selectId] of Object.entries(dimSelects)) {
+      const sel = document.getElementById(selectId);
+      const currentVal = activeFilters[dim];
+
+      // Compute which persons match all OTHER active filters (not this dim)
+      let pool = personNodes;
+
+      // Apply team filter
+      if (activeFilters.team) {
+        const info = teamInfo.get(activeFilters.team);
+        if (info) pool = pool.filter(p => info.members.has(p.id));
+      }
+
+      // Apply other property filters
+      for (const [otherDim, otherPropKey] of Object.entries(propMap)) {
+        if (otherDim === dim) continue;
+        if (activeFilters[otherDim]) {
+          pool = pool.filter(p => (p.properties || {})[otherPropKey] === activeFilters[otherDim]);
+        }
+      }
+
+      // Count values in the remaining pool
+      const valueCounts = new Map();
+      const propKey = propMap[dim];
+      pool.forEach(p => {
+        const val = (p.properties || {})[propKey];
+        if (val) valueCounts.set(val, (valueCounts.get(val) || 0) + 1);
+      });
+
+      // Rebuild options
+      const entries = [...valueCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+      sel.innerHTML = '<option value="">All</option>';
+      entries.forEach(([val, count]) => {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = `${val} (${count})`;
+        if (val === currentVal) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    }
   }
 
   populateFilterbar();
 
-  function buildFilters() {
-    // ── Node type filters ──
-    let html = '<div class="filter-section"><div class="filter-title">Node Types</div>';
-    for (const [type, count] of Object.entries(nodeTypeCounts).sort((a,b) => b[1] - a[1])) {
-      const color = effectiveNodeColors[type] || '#666';
-      const active = activeNodeTypes.has(type);
-      html += `<div class="filter-item ${active ? '' : 'disabled'}" data-kind="node" data-type="${type}">
+  // Node type categories
+  const nodeCategories = {
+    'People': ['person', 'candidate', 'contractor', 'dependent'],
+    'Organization': ['team', 'position', 'location', 'project'],
+    'Compensation': ['comp', 'benefits', 'payroll_run', 'expense', 'garnishment'],
+    'Time & Leave': ['time_off', 'leave_designation', 'life_event'],
+    'Performance': ['review', 'skill', 'certification', 'recognition'],
+    'Hiring': ['interview', 'background_check'],
+    'Compliance': ['jurisdiction', 'policy', 'document', 'cobra_event', 'investigation'],
+    'Operations': ['equipment', 'request', 'survey_response']
+  };
+
+  // Edge type categories
+  const edgeCategories = {
+    'Org Structure': ['reports_to', 'member_of', 'team_parent', 'holds_position', 'located_at'],
+    'Relationships': ['mentors', 'buddy_of', 'recognized', 'referred_by'],
+    'Work': ['works_on', 'has_skill', 'has_certification', 'has_review', 'onboarding_step'],
+    'Compensation': ['has_comp', 'has_benefits', 'included_in', 'submitted_expense', 'has_garnishment', 'has_dependent', 'dependent_covered_by'],
+    'Compliance': ['subject_to', 'governed_by', 'entitled_to', 'signed', 'has_cobra_event', 'has_leave_designation', 'has_background_check', 'investigation_subject'],
+    'Hiring': ['candidate_for', 'interviewed_by', 'has_interview', 'converted_from'],
+    'Operations': ['assigned_equipment', 'has_time_off', 'requested_by', 'approves', 'responded_to', 'contracts_for', 'manages_contractor', 'life_event']
+  };
+
+  function buildFilterCategory(kind, categoryName, types, countsMap, colorFn, activeSet) {
+    const validTypes = types.filter(t => countsMap[t]);
+    if (!validTypes.length) return '';
+    const totalCount = validTypes.reduce((s, t) => s + (countsMap[t] || 0), 0);
+    const allActive = validTypes.every(t => activeSet.has(t));
+
+    let html = `<div class="filter-category">
+      <div class="filter-category-header" data-cat-kind="${kind}" data-cat-types="${validTypes.join(',')}">
+        <span class="cat-arrow collapsed">▾</span>
+        <span>${categoryName}</span>
+        <span class="cat-count">${totalCount}</span>
+      </div>
+      <div class="filter-category-items collapsed">`;
+
+    for (const type of validTypes) {
+      const count = countsMap[type];
+      const color = colorFn(type);
+      const active = activeSet.has(type);
+      html += `<div class="filter-item ${active ? '' : 'disabled'}" data-kind="${kind}" data-type="${type}">
         <span class="swatch" style="background:${color}"></span>
         <span>${type.replace(/_/g, ' ')}</span>
         <span class="count">${count}</span>
-        <button class="solo-btn" data-kind="node" data-type="${type}" title="Solo — show only this type">S</button>
+        <button class="solo-btn" data-kind="${kind}" data-type="${type}" title="Solo — show only this type">S</button>
       </div>`;
     }
+    html += '</div></div>';
+    return html;
+  }
+
+  function buildFilters() {
+    let html = '<div class="filter-section"><div class="filter-title">Node Types</div>';
+
+    // Categorized node types
+    const usedNodeTypes = new Set();
+    for (const [cat, types] of Object.entries(nodeCategories)) {
+      html += buildFilterCategory('node', cat, types, nodeTypeCounts, t => effectiveNodeColors[t] || '#666', activeNodeTypes);
+      types.forEach(t => usedNodeTypes.add(t));
+    }
+    // Any uncategorized node types
+    const uncatNodes = Object.keys(nodeTypeCounts).filter(t => !usedNodeTypes.has(t));
+    if (uncatNodes.length) {
+      html += buildFilterCategory('node', 'Other', uncatNodes, nodeTypeCounts, t => effectiveNodeColors[t] || '#666', activeNodeTypes);
+    }
+
     html += '</div><div class="filter-section"><div class="filter-title">Edge Types</div>';
-    for (const [type, count] of Object.entries(edgeTypeCounts).sort((a,b) => b[1] - a[1])) {
-      const style = getEdgeStyle(type);
-      const active = activeEdgeTypes.has(type);
-      html += `<div class="filter-item ${active ? '' : 'disabled'}" data-kind="edge" data-type="${type}">
-        <span class="swatch" style="background:${style.color}"></span>
-        <span>${type.replace(/_/g, ' ')}</span>
-        <span class="count">${count}</span>
-        <button class="solo-btn" data-kind="edge" data-type="${type}" title="Solo — show only this type">S</button>
-      </div>`;
+
+    // Categorized edge types
+    const usedEdgeTypes = new Set();
+    for (const [cat, types] of Object.entries(edgeCategories)) {
+      html += buildFilterCategory('edge', cat, types, edgeTypeCounts, t => getEdgeStyle(t).color, activeEdgeTypes);
+      types.forEach(t => usedEdgeTypes.add(t));
     }
+    // Any uncategorized edge types
+    const uncatEdges = Object.keys(edgeTypeCounts).filter(t => !usedEdgeTypes.has(t));
+    if (uncatEdges.length) {
+      html += buildFilterCategory('edge', 'Other', uncatEdges, edgeTypeCounts, t => getEdgeStyle(t).color, activeEdgeTypes);
+    }
+
     html += '</div>';
     filtersEl.innerHTML = html;
+
+    // Category header click — expand/collapse
+    filtersEl.querySelectorAll('.filter-category-header').forEach(header => {
+      header.addEventListener('click', (e) => {
+        if (e.target.closest('.solo-btn')) return;
+        const items = header.nextElementSibling;
+        const arrow = header.querySelector('.cat-arrow');
+        items.classList.toggle('collapsed');
+        arrow.classList.toggle('collapsed');
+      });
+    });
 
 
     // Toggle click (on the row, excluding the solo button)
@@ -1573,6 +1744,34 @@ function getNodeSub(node) {
       html += '</div>';
     }
 
+    // Teams section for person nodes
+    if (d.type === 'person') {
+      const personTeams = [];
+      memberOfEdges.forEach(e => {
+        const src = e.source.id || e.source;
+        const tgt = e.target.id || e.target;
+        if (src === d.id && teamInfo.has(tgt)) {
+          personTeams.push({ id: tgt, ...teamInfo.get(tgt) });
+        }
+      });
+      if (personTeams.length) {
+        // Sort: scrum/initiative/working_group first, then department
+        const typeOrder = { scrum: 0, initiative: 1, working_group: 2, department: 3 };
+        personTeams.sort((a, b) => (typeOrder[a.teamType] || 9) - (typeOrder[b.teamType] || 9));
+
+        html += `<div class="detail-section"><div class="detail-section-title">Teams (${personTeams.length})</div>`;
+        for (const t of personTeams) {
+          const typeLabel = t.teamType.replace(/_/g, ' ');
+          html += `<div class="detail-edge team-link" data-team-id="${t.id}">
+            <span class="edge-dir" style="font-size:10px;color:var(--text-dim)">${typeLabel}</span>
+            <span class="edge-target">${t.name}</span>
+            <span class="edge-type">${t.members.size}</span>
+          </div>`;
+        }
+        html += '</div>';
+      }
+    }
+
     // Grouped connections
     if (connectedEdges.length) {
       // Group by edge type
@@ -1646,6 +1845,18 @@ function getNodeSub(node) {
     content.querySelectorAll('.val-filter').forEach(el => {
       el.addEventListener('click', () => {
         showFacet(el.dataset.filterKey, el.dataset.filterVal);
+      });
+    });
+
+    // Click on team links to activate team filter
+    content.querySelectorAll('.team-link').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const teamId = el.dataset.teamId;
+        activeFilters.team = teamId;
+        document.getElementById('fb-team').value = teamId;
+        updateFilterbarUI();
+        updateVisibility();
       });
     });
   }
