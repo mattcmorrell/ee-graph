@@ -307,7 +307,7 @@
         "name": "Jamie Chen",
         "email": "jamie.chen@acmeco.com",
         "role": "Support Lead",
-        "level": "IC-4",
+        "level": "M-1",
         "department": "Customer Support",
         "startDate": "2026-03-03",
         "status": "preparing",
@@ -1032,7 +1032,7 @@
         "name": "Rachel Kim",
         "email": "rachel.kim@acmeco.com",
         "role": "Support Team Lead",
-        "level": "IC-4",
+        "level": "M-1",
         "department": "Customer Support",
         "startDate": "2022-04-11",
         "status": "active",
@@ -1883,8 +1883,8 @@
       "properties": {
         "name": "Ava Thompson",
         "email": "ava.thompson@acmeco.com",
-        "role": "Customer Success Manager",
-        "level": "IC-3",
+        "role": "Customer Success Lead",
+        "level": "M-1",
         "department": "Customer Support",
         "startDate": "2023-02-27",
         "status": "active",
@@ -10069,6 +10069,190 @@
         "level": "IC-2",
         "department": "Engineering",
         "jobFamily": "Engineering",
+        "isOpen": false
+      }
+    },
+    {
+      "id": "person-145",
+      "type": "person",
+      "properties": {
+        "name": "Marcus Webb",
+        "email": "marcus.webb@acme.co",
+        "role": "HR Business Partner",
+        "level": "IC-3",
+        "department": "Operations",
+        "startDate": "2024-03-15",
+        "status": "active",
+        "location": "Austin, TX",
+        "pronouns": "he/him",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "gender": "male",
+        "race": "black",
+        "veteranStatus": "not_veteran"
+      }
+    },
+    {
+      "id": "comp-155",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 95000,
+        "currency": "USD",
+        "effectiveDate": "2024-03-15",
+        "notes": null
+      }
+    },
+    {
+      "id": "position-046",
+      "type": "position",
+      "properties": {
+        "title": "HR Business Partner",
+        "level": "IC-3",
+        "department": "Operations",
+        "jobFamily": "People Operations",
+        "isOpen": false
+      }
+    },
+    {
+      "id": "person-146",
+      "type": "person",
+      "properties": {
+        "name": "Sophie Laurent",
+        "email": "sophie.laurent@acme.co",
+        "role": "HR Coordinator",
+        "level": "IC-2",
+        "department": "Operations",
+        "startDate": "2025-06-01",
+        "status": "active",
+        "location": "Austin, TX",
+        "pronouns": "she/her",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly",
+        "flsaClassification": "nonexempt",
+        "eeoCategory": "admin_support",
+        "gender": "female",
+        "race": "white",
+        "veteranStatus": "not_veteran"
+      }
+    },
+    {
+      "id": "comp-156",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 58000,
+        "currency": "USD",
+        "effectiveDate": "2025-06-01",
+        "notes": null
+      }
+    },
+    {
+      "id": "position-047",
+      "type": "position",
+      "properties": {
+        "title": "HR Coordinator",
+        "level": "IC-2",
+        "department": "Operations",
+        "jobFamily": "People Operations",
+        "isOpen": false
+      }
+    },
+    {
+      "id": "person-147",
+      "type": "person",
+      "properties": {
+        "name": "David Okafor",
+        "email": "david.okafor@acme.co",
+        "role": "Benefits Administrator",
+        "level": "IC-3",
+        "department": "Operations",
+        "startDate": "2024-08-12",
+        "status": "active",
+        "location": "Austin, TX",
+        "pronouns": "he/him",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "gender": "male",
+        "race": "black",
+        "veteranStatus": "not_veteran"
+      }
+    },
+    {
+      "id": "comp-157",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 72000,
+        "currency": "USD",
+        "effectiveDate": "2024-08-12",
+        "notes": null
+      }
+    },
+    {
+      "id": "position-048",
+      "type": "position",
+      "properties": {
+        "title": "Benefits Administrator",
+        "level": "IC-3",
+        "department": "Operations",
+        "jobFamily": "People Operations",
+        "isOpen": false
+      }
+    },
+    {
+      "id": "person-148",
+      "type": "person",
+      "properties": {
+        "name": "Anya Petrova",
+        "email": "anya.petrova@acme.co",
+        "role": "Recruiter",
+        "level": "IC-2",
+        "department": "Operations",
+        "startDate": "2025-09-08",
+        "status": "active",
+        "location": "Remote \u2014 US",
+        "pronouns": "she/her",
+        "division": "G&A",
+        "employmentType": "full_time",
+        "payType": "salary",
+        "payPeriod": "semimonthly",
+        "flsaClassification": "exempt",
+        "eeoCategory": "professionals",
+        "gender": "female",
+        "race": "white",
+        "veteranStatus": "not_veteran"
+      }
+    },
+    {
+      "id": "comp-158",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 65000,
+        "currency": "USD",
+        "effectiveDate": "2025-09-08",
+        "notes": null
+      }
+    },
+    {
+      "id": "position-049",
+      "type": "position",
+      "properties": {
+        "title": "Recruiter",
+        "level": "IC-2",
+        "department": "Operations",
+        "jobFamily": "People Operations",
         "isOpen": false
       }
     }
