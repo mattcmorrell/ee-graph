@@ -8637,6 +8637,1440 @@
         "description": "Standing working group \u2014 new hire experience, culture initiatives, mentorship programs",
         "headcount": 6
       }
+    },
+    {
+      "id": "comp-034",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 109000,
+        "currency": "USD",
+        "effectiveDate": "2023-01-09",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-035",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 62000,
+        "currency": "USD",
+        "effectiveDate": "2024-06-17",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-036",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 171000,
+        "currency": "USD",
+        "effectiveDate": "2021-07-19",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-037",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 164000,
+        "currency": "USD",
+        "effectiveDate": "2022-03-14",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-038",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 112000,
+        "currency": "USD",
+        "effectiveDate": "2024-01-08",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-039",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 110000,
+        "currency": "USD",
+        "effectiveDate": "2024-06-03",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-040",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 191000,
+        "currency": "USD",
+        "effectiveDate": "2022-09-12",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-041",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 93000,
+        "currency": "USD",
+        "effectiveDate": "2023-04-17",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-042",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 103000,
+        "currency": "USD",
+        "effectiveDate": "2023-08-21",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-043",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 131000,
+        "currency": "USD",
+        "effectiveDate": "2021-09-06",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-044",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 103000,
+        "currency": "USD",
+        "effectiveDate": "2023-02-13",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-045",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 113000,
+        "currency": "USD",
+        "effectiveDate": "2023-06-05",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-046",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 76000,
+        "currency": "USD",
+        "effectiveDate": "2022-05-16",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-047",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 82000,
+        "currency": "USD",
+        "effectiveDate": "2023-01-23",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-048",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 119000,
+        "currency": "USD",
+        "effectiveDate": "2022-02-07",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-049",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 89000,
+        "currency": "USD",
+        "effectiveDate": "2021-06-14",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-050",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 66000,
+        "currency": "USD",
+        "effectiveDate": "2024-08-12",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-051",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 56000,
+        "currency": "USD",
+        "effectiveDate": "2025-03-03",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-052",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 59000,
+        "currency": "USD",
+        "effectiveDate": "2025-06-02",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-053",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 155000,
+        "currency": "USD",
+        "effectiveDate": "2021-11-08",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-054",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 96000,
+        "currency": "USD",
+        "effectiveDate": "2022-04-11",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-055",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 75000,
+        "currency": "USD",
+        "effectiveDate": "2023-09-18",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-056",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 53000,
+        "currency": "USD",
+        "effectiveDate": "2024-03-04",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-057",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 50000,
+        "currency": "USD",
+        "effectiveDate": "2024-11-18",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-058",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 61000,
+        "currency": "USD",
+        "effectiveDate": "2025-01-13",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-059",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 68000,
+        "currency": "USD",
+        "effectiveDate": "2023-05-22",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-060",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 57000,
+        "currency": "USD",
+        "effectiveDate": "2023-07-10",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-061",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 57000,
+        "currency": "USD",
+        "effectiveDate": "2024-02-19",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-062",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 53000,
+        "currency": "USD",
+        "effectiveDate": "2025-06-09",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-063",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 51000,
+        "currency": "USD",
+        "effectiveDate": "2025-09-15",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-064",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 103000,
+        "currency": "USD",
+        "effectiveDate": "2023-10-02",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-065",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 101000,
+        "currency": "USD",
+        "effectiveDate": "2022-08-29",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-066",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 131000,
+        "currency": "USD",
+        "effectiveDate": "2021-12-06",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-067",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 94000,
+        "currency": "USD",
+        "effectiveDate": "2024-03-18",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-068",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 108000,
+        "currency": "USD",
+        "effectiveDate": "2023-11-06",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-069",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 63000,
+        "currency": "USD",
+        "effectiveDate": "2025-09-02",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-070",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 129000,
+        "currency": "USD",
+        "effectiveDate": "2020-09-14",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-071",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 90000,
+        "currency": "USD",
+        "effectiveDate": "2022-06-20",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-072",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 116000,
+        "currency": "USD",
+        "effectiveDate": "2024-08-19",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-073",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 140000,
+        "currency": "USD",
+        "effectiveDate": "2023-03-06",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-074",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 111000,
+        "currency": "USD",
+        "effectiveDate": "2024-10-07",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-075",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 91000,
+        "currency": "USD",
+        "effectiveDate": "2024-01-15",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-076",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 128000,
+        "currency": "USD",
+        "effectiveDate": "2022-11-28",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-077",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 99000,
+        "currency": "USD",
+        "effectiveDate": "2024-05-13",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-078",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 123000,
+        "currency": "USD",
+        "effectiveDate": "2023-07-24",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-079",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 97000,
+        "currency": "USD",
+        "effectiveDate": "2025-02-03",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-080",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 124000,
+        "currency": "USD",
+        "effectiveDate": "2023-06-12",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-081",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 98000,
+        "currency": "USD",
+        "effectiveDate": "2024-09-23",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-082",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 142000,
+        "currency": "USD",
+        "effectiveDate": "2023-11-13",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-083",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 101000,
+        "currency": "USD",
+        "effectiveDate": "2024-07-01",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-084",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 133000,
+        "currency": "USD",
+        "effectiveDate": "2023-04-10",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-085",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 163000,
+        "currency": "USD",
+        "effectiveDate": "2021-08-16",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-086",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 52000,
+        "currency": "USD",
+        "effectiveDate": "2024-09-09",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-087",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 47000,
+        "currency": "USD",
+        "effectiveDate": "2025-04-14",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-088",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 44000,
+        "currency": "USD",
+        "effectiveDate": "2025-07-21",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-089",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 134000,
+        "currency": "USD",
+        "effectiveDate": "2022-10-17",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-090",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 65000,
+        "currency": "USD",
+        "effectiveDate": "2023-02-27",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-091",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 75000,
+        "currency": "USD",
+        "effectiveDate": "2024-01-08",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-092",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 95000,
+        "currency": "USD",
+        "effectiveDate": "2025-05-19",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-093",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 133000,
+        "currency": "USD",
+        "effectiveDate": "2023-09-04",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-094",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 120000,
+        "currency": "USD",
+        "effectiveDate": "2024-12-02",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-095",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 142000,
+        "currency": "USD",
+        "effectiveDate": "2022-07-11",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-096",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 44000,
+        "currency": "USD",
+        "effectiveDate": "2025-08-18",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-097",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 45000,
+        "currency": "USD",
+        "effectiveDate": "2025-10-06",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-098",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 115000,
+        "currency": "USD",
+        "effectiveDate": "2025-03-17",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-099",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 113000,
+        "currency": "USD",
+        "effectiveDate": "2025-06-02",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-100",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 164000,
+        "currency": "USD",
+        "effectiveDate": "2021-04-05",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-101",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 121000,
+        "currency": "USD",
+        "effectiveDate": "2023-12-04",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-102",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 41000,
+        "currency": "USD",
+        "effectiveDate": "2025-11-03",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-103",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 67000,
+        "currency": "USD",
+        "effectiveDate": "2023-12-18",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-104",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 96000,
+        "currency": "USD",
+        "effectiveDate": "2025-08-04",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-105",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 153000,
+        "currency": "USD",
+        "effectiveDate": "2023-05-15",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-106",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 116000,
+        "currency": "USD",
+        "effectiveDate": "2024-11-11",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-107",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 52000,
+        "currency": "USD",
+        "effectiveDate": "2025-02-17",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-108",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 45000,
+        "currency": "USD",
+        "effectiveDate": "2025-12-01",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-109",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 63000,
+        "currency": "USD",
+        "effectiveDate": "2025-04-07",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-110",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 117000,
+        "currency": "USD",
+        "effectiveDate": "2025-07-14",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-111",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 136000,
+        "currency": "USD",
+        "effectiveDate": "2023-10-23",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-112",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 67000,
+        "currency": "USD",
+        "effectiveDate": "2024-06-24",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-113",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 97000,
+        "currency": "USD",
+        "effectiveDate": "2025-09-08",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-114",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 107000,
+        "currency": "USD",
+        "effectiveDate": "2024-04-15",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-115",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 129000,
+        "currency": "USD",
+        "effectiveDate": "2023-08-07",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-116",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 108000,
+        "currency": "USD",
+        "effectiveDate": "2024-10-21",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-117",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 47000,
+        "currency": "USD",
+        "effectiveDate": "2026-01-05",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-118",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 54000,
+        "currency": "USD",
+        "effectiveDate": "2024-07-29",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-119",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 97000,
+        "currency": "USD",
+        "effectiveDate": "2025-11-17",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-120",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 155000,
+        "currency": "USD",
+        "effectiveDate": "2024-02-05",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-121",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 175000,
+        "currency": "USD",
+        "effectiveDate": "2021-10-18",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-122",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 64000,
+        "currency": "USD",
+        "effectiveDate": "2023-11-20",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-123",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 91000,
+        "currency": "USD",
+        "effectiveDate": "2025-10-20",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-124",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 78000,
+        "currency": "USD",
+        "effectiveDate": "2023-03-13",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-125",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 109000,
+        "currency": "USD",
+        "effectiveDate": "2024-06-17",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-126",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 148000,
+        "currency": "USD",
+        "effectiveDate": "2023-01-30",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-127",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 103000,
+        "currency": "USD",
+        "effectiveDate": "2024-09-09",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-128",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 92000,
+        "currency": "USD",
+        "effectiveDate": "2025-01-20",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-129",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 133000,
+        "currency": "USD",
+        "effectiveDate": "2022-12-05",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-130",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 120000,
+        "currency": "USD",
+        "effectiveDate": "2025-02-10",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-131",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 43000,
+        "currency": "USD",
+        "effectiveDate": "2025-06-16",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-132",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 62000,
+        "currency": "USD",
+        "effectiveDate": "2024-10-14",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-133",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 116000,
+        "currency": "USD",
+        "effectiveDate": "2024-03-25",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-134",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 120000,
+        "currency": "USD",
+        "effectiveDate": "2023-06-26",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-135",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 112000,
+        "currency": "USD",
+        "effectiveDate": "2025-05-05",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-136",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 45000,
+        "currency": "USD",
+        "effectiveDate": "2025-09-22",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-137",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 106000,
+        "currency": "USD",
+        "effectiveDate": "2024-08-12",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-138",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 98000,
+        "currency": "USD",
+        "effectiveDate": "2025-03-24",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-139",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 181000,
+        "currency": "USD",
+        "effectiveDate": "2021-06-07",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-140",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 39000,
+        "currency": "USD",
+        "effectiveDate": "2025-12-15",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-141",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 103000,
+        "currency": "USD",
+        "effectiveDate": "2025-08-18",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-142",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 136000,
+        "currency": "USD",
+        "effectiveDate": "2024-01-22",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-143",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 79000,
+        "currency": "USD",
+        "effectiveDate": "2024-04-01",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-144",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 116000,
+        "currency": "USD",
+        "effectiveDate": "2025-06-30",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-145",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 98000,
+        "currency": "USD",
+        "effectiveDate": "2025-11-03",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-146",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 71000,
+        "currency": "USD",
+        "effectiveDate": "2024-05-20",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-147",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 95000,
+        "currency": "USD",
+        "effectiveDate": "2024-11-25",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-148",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 152000,
+        "currency": "USD",
+        "effectiveDate": "2023-07-03",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-149",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 116000,
+        "currency": "USD",
+        "effectiveDate": "2025-04-14",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-150",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 167000,
+        "currency": "USD",
+        "effectiveDate": "2022-01-10",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-151",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 109000,
+        "currency": "USD",
+        "effectiveDate": "2025-10-06",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-152",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 108000,
+        "currency": "USD",
+        "effectiveDate": "2024-05-06",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-153",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 40000,
+        "currency": "USD",
+        "effectiveDate": "2026-01-12",
+        "notes": null
+      }
+    },
+    {
+      "id": "comp-154",
+      "type": "comp",
+      "properties": {
+        "type": "salary",
+        "amount": 113000,
+        "currency": "USD",
+        "effectiveDate": "2025-12-08",
+        "notes": null
+      }
+    },
+    {
+      "id": "location-003",
+      "type": "location",
+      "properties": {
+        "id": "location-003",
+        "name": "Denver Office",
+        "city": "Denver",
+        "state": "CO",
+        "country": "US",
+        "type": "office"
+      }
+    },
+    {
+      "id": "location-004",
+      "type": "location",
+      "properties": {
+        "id": "location-004",
+        "name": "Remote - California",
+        "city": "San Francisco",
+        "state": "CA",
+        "country": "US",
+        "type": "remote"
+      }
+    },
+    {
+      "id": "location-005",
+      "type": "location",
+      "properties": {
+        "id": "location-005",
+        "name": "Remote - New York",
+        "city": "New York",
+        "state": "NY",
+        "country": "US",
+        "type": "remote"
+      }
+    },
+    {
+      "id": "location-006",
+      "type": "location",
+      "properties": {
+        "id": "location-006",
+        "name": "Remote - Other",
+        "city": "Various",
+        "state": "Various",
+        "country": "US",
+        "type": "remote"
+      }
+    },
+    {
+      "id": "jurisdiction-003",
+      "type": "jurisdiction",
+      "properties": {
+        "id": "jurisdiction-003",
+        "name": "Colorado",
+        "type": "state",
+        "hasIncomeTax": true,
+        "notes": "Requires pay transparency in job postings"
+      }
+    },
+    {
+      "id": "jurisdiction-004",
+      "type": "jurisdiction",
+      "properties": {
+        "id": "jurisdiction-004",
+        "name": "California",
+        "type": "state",
+        "hasIncomeTax": true,
+        "notes": "Strictest employment laws, meal/rest break requirements, CFRA leave"
+      }
+    },
+    {
+      "id": "jurisdiction-005",
+      "type": "jurisdiction",
+      "properties": {
+        "id": "jurisdiction-005",
+        "name": "New York",
+        "type": "state",
+        "hasIncomeTax": true,
+        "notes": "NY HERO Act, paid family leave, wage theft prevention"
+      }
+    },
+    {
+      "id": "position-044",
+      "type": "position",
+      "properties": {
+        "title": "QA Engineer",
+        "level": "IC-3",
+        "department": "Engineering",
+        "jobFamily": "Engineering",
+        "isOpen": false
+      }
+    },
+    {
+      "id": "position-045",
+      "type": "position",
+      "properties": {
+        "title": "Platform Engineer",
+        "level": "IC-2",
+        "department": "Engineering",
+        "jobFamily": "Engineering",
+        "isOpen": false
+      }
     }
   ]
 }
