@@ -958,6 +958,21 @@ function getNodeSub(node) {
 
   // Collect unique values for person-level filters
   const personNodes = nodes.filter(n => n.type === 'person');
+
+  // Build person → department/division lookups from edges
+  const personDeptMap = new Map(); // person id → department name
+  const personDivMap = new Map();  // person id → division name
+  edges.forEach(e => {
+    if (e.type === 'in_department') {
+      const dept = nodeMap.get(e.target);
+      if (dept) personDeptMap.set(e.source, dept.properties?.name || dept.id);
+    }
+    if (e.type === 'in_division') {
+      const div = nodeMap.get(e.target);
+      if (div) personDivMap.set(e.source, div.properties?.name || div.id);
+    }
+  });
+
   const filterDimensions = {
     department: new Map(),
     division: new Map(),
@@ -968,8 +983,8 @@ function getNodeSub(node) {
   personNodes.forEach(p => {
     const props = p.properties || {};
     const add = (dim, val) => { if (val) filterDimensions[dim].set(val, (filterDimensions[dim].get(val) || 0) + 1); };
-    add('department', props.department);
-    add('division', props.division);
+    add('department', personDeptMap.get(p.id));
+    add('division', personDivMap.get(p.id));
     add('title', props.role);
     add('location', props.location);
     add('status', props.status);
@@ -991,15 +1006,21 @@ function getNodeSub(node) {
       if (info) matched = new Set([...matched].filter(id => info.members.has(id)));
     }
 
-    // Property filters
-    const propMap = { department: 'department', division: 'division', title: 'role', location: 'location', status: 'status' };
-    for (const [filterKey, propKey] of Object.entries(propMap)) {
+    // Property filters (department/division use edge lookups, others use person properties)
+    const propFilters = { title: 'role', location: 'location', status: 'status' };
+    for (const [filterKey, propKey] of Object.entries(propFilters)) {
       if (activeFilters[filterKey]) {
         matched = new Set([...matched].filter(id => {
           const n = nodeMap.get(id);
           return n && (n.properties || {})[propKey] === activeFilters[filterKey];
         }));
       }
+    }
+    if (activeFilters.department) {
+      matched = new Set([...matched].filter(id => personDeptMap.get(id) === activeFilters.department));
+    }
+    if (activeFilters.division) {
+      matched = new Set([...matched].filter(id => personDivMap.get(id) === activeFilters.division));
     }
 
     // Also include the team node itself if team is filtered
@@ -1011,12 +1032,12 @@ function getNodeSub(node) {
   function populateFilterbar() {
     // Team dropdown with optgroups
     const teamSelect = document.getElementById('fb-team');
-    const typeGroups = { department: [], scrum: [], initiative: [], working_group: [] };
+    const typeGroups = { team: [], scrum: [], initiative: [], working_group: [] };
     teamInfo.forEach((info, id) => {
-      const group = typeGroups[info.teamType] || typeGroups['department'];
+      const group = typeGroups[info.teamType] || typeGroups['team'];
       group.push({ id, name: info.name, count: info.members.size });
     });
-    const groupLabels = { department: 'Department', scrum: 'Scrum', initiative: 'Initiative', working_group: 'Working Group' };
+    const groupLabels = { team: 'Teams', scrum: 'Scrum', initiative: 'Initiative', working_group: 'Working Group' };
     for (const [groupKey, label] of Object.entries(groupLabels)) {
       const teams = typeGroups[groupKey];
       if (!teams.length) continue;
@@ -1084,7 +1105,15 @@ function getNodeSub(node) {
   function cascadeDropdowns() {
     // Get the set of persons matching all filters EXCEPT the one being cascaded
     const dimSelects = { department: 'fb-department', division: 'fb-division', title: 'fb-title', location: 'fb-location', status: 'fb-status' };
-    const propMap = { department: 'department', division: 'division', title: 'role', location: 'location', status: 'status' };
+
+    // Helper to get a dimension value for a person
+    function getDimValue(p, dim) {
+      if (dim === 'department') return personDeptMap.get(p.id);
+      if (dim === 'division') return personDivMap.get(p.id);
+      if (dim === 'title') return (p.properties || {}).role;
+      if (dim === 'location') return (p.properties || {}).location;
+      if (dim === 'status') return (p.properties || {}).status;
+    }
 
     for (const [dim, selectId] of Object.entries(dimSelects)) {
       const sel = document.getElementById(selectId);
@@ -1099,19 +1128,18 @@ function getNodeSub(node) {
         if (info) pool = pool.filter(p => info.members.has(p.id));
       }
 
-      // Apply other property filters
-      for (const [otherDim, otherPropKey] of Object.entries(propMap)) {
+      // Apply other dimension filters
+      for (const otherDim of Object.keys(dimSelects)) {
         if (otherDim === dim) continue;
         if (activeFilters[otherDim]) {
-          pool = pool.filter(p => (p.properties || {})[otherPropKey] === activeFilters[otherDim]);
+          pool = pool.filter(p => getDimValue(p, otherDim) === activeFilters[otherDim]);
         }
       }
 
       // Count values in the remaining pool
       const valueCounts = new Map();
-      const propKey = propMap[dim];
       pool.forEach(p => {
-        const val = (p.properties || {})[propKey];
+        const val = getDimValue(p, dim);
         if (val) valueCounts.set(val, (valueCounts.get(val) || 0) + 1);
       });
 
@@ -1133,7 +1161,7 @@ function getNodeSub(node) {
   // Node type categories
   const nodeCategories = {
     'People': ['person', 'candidate', 'contractor', 'dependent'],
-    'Organization': ['team', 'position', 'location', 'project'],
+    'Organization': ['department', 'division', 'team', 'position', 'location', 'project'],
     'Compensation': ['comp', 'benefits', 'payroll_run', 'expense', 'garnishment'],
     'Time & Leave': ['time_off', 'leave_designation', 'life_event'],
     'Performance': ['review', 'skill', 'certification', 'recognition'],
@@ -1144,7 +1172,7 @@ function getNodeSub(node) {
 
   // Edge type categories
   const edgeCategories = {
-    'Org Structure': ['reports_to', 'member_of', 'team_parent', 'holds_position', 'located_at'],
+    'Org Structure': ['reports_to', 'member_of', 'in_department', 'in_division', 'team_parent', 'holds_position', 'located_at'],
     'Relationships': ['mentors', 'buddy_of', 'recognized', 'referred_by'],
     'Work': ['works_on', 'has_skill', 'has_certification', 'has_review', 'onboarding_step'],
     'Compensation': ['has_comp', 'has_benefits', 'included_in', 'submitted_expense', 'has_garnishment', 'has_dependent', 'dependent_covered_by'],
@@ -1763,7 +1791,7 @@ function getNodeSub(node) {
       });
       if (personTeams.length) {
         // Sort: scrum/initiative/working_group first, then department
-        const typeOrder = { scrum: 0, initiative: 1, working_group: 2, department: 3 };
+        const typeOrder = { scrum: 0, initiative: 1, working_group: 2, team: 3 };
         personTeams.sort((a, b) => (typeOrder[a.teamType] || 9) - (typeOrder[b.teamType] || 9));
 
         html += `<div class="detail-section"><div class="detail-section-title">Teams (${personTeams.length})</div>`;

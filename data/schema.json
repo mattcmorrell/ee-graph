@@ -17,7 +17,6 @@
         "email": { "type": "string", "required": true },
         "role": { "type": "string", "required": true, "description": "Current job title" },
         "level": { "type": "string", "required": false, "description": "Level code, e.g. IC-2, IC-4, M-1, VP" },
-        "department": { "type": "string", "required": true },
         "startDate": { "type": "string", "format": "date", "required": true },
         "endDate": { "type": "string", "format": "date", "required": false },
         "status": { "type": "string", "enum": ["active", "onboarding", "preparing", "on_leave", "terminated"], "required": true },
@@ -31,7 +30,6 @@
         "gender": { "type": "string", "enum": ["male", "female", "nonbinary", "prefer_not_to_say"], "required": false },
         "race": { "type": "string", "enum": ["white", "black", "hispanic", "asian", "native_american", "pacific_islander", "two_or_more", "prefer_not_to_say"], "required": false },
         "veteranStatus": { "type": "string", "enum": ["veteran", "not_veteran", "prefer_not_to_say"], "required": false },
-        "division": { "type": "string", "required": false, "description": "Organizational division — usage varies by company (superset of dept, subset, or unrelated). Flat label for filtering/grouping." },
         "employmentType": { "type": "string", "enum": ["full_time", "part_time"], "required": false, "description": "Employment type" },
         "payType": { "type": "string", "enum": ["salary", "hourly"], "required": false, "description": "Compensation structure" },
         "payPeriod": { "type": "string", "enum": ["weekly", "biweekly", "semimonthly", "monthly"], "required": false, "description": "Pay frequency" }
@@ -71,7 +69,6 @@
         "id": { "type": "string", "required": true },
         "title": { "type": "string", "required": true },
         "level": { "type": "string", "required": true },
-        "department": { "type": "string", "required": true },
         "jobFamily": { "type": "string", "required": false, "description": "Groups related roles: Engineering, Design, Sales, Operations, etc." },
         "salaryBand": { "type": "string", "required": false, "description": "Named band e.g. 'Band 4', 'IC-Senior', 'M-1'" },
         "salaryBandMin": { "type": "number", "required": false },
@@ -93,10 +90,25 @@
       "properties": {
         "id": { "type": "string", "required": true },
         "name": { "type": "string", "required": true },
-        "department": { "type": "string", "required": false, "description": "Owning department. Null for cross-functional teams." },
-        "teamType": { "type": "string", "enum": ["department", "scrum", "initiative", "working_group"], "required": true, "description": "Department = org chart unit. Scrum = sprint delivery team. Initiative = cross-dept time-bounded effort. Working group = standing cross-functional group." },
+        "teamType": { "type": "string", "enum": ["team", "scrum", "initiative", "working_group"], "required": true, "description": "Team = functional working team. Scrum = sprint delivery team. Initiative = cross-dept time-bounded effort. Working group = standing cross-functional group." },
         "description": { "type": "string", "required": false },
         "headcount": { "type": "number", "required": false }
+      }
+    },
+    "department": {
+      "description": "Administrative organizational unit — every employee belongs to exactly one",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "description": { "type": "string", "required": false }
+      }
+    },
+    "division": {
+      "description": "Organizational division — usage varies by company (superset of dept, subset, or unrelated). Flat grouping for filtering.",
+      "properties": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "description": { "type": "string", "required": false }
       }
     },
     "location": {
@@ -406,7 +418,6 @@
         "email": { "type": "string", "required": true },
         "company": { "type": "string", "required": false },
         "role": { "type": "string", "required": true },
-        "department": { "type": "string", "required": true },
         "startDate": { "type": "string", "format": "date", "required": true },
         "endDate": { "type": "string", "format": "date", "required": false },
         "rate": { "type": "number", "required": false, "description": "Hourly or daily rate" },
@@ -432,6 +443,22 @@
       "target": "team",
       "metadata": {
         "role": "string (individual_contributor, lead, manager)",
+        "startDate": "date"
+      }
+    },
+    "in_department": {
+      "description": "Person belongs to a department",
+      "source": "person",
+      "target": "department",
+      "metadata": {
+        "startDate": "date"
+      }
+    },
+    "in_division": {
+      "description": "Person belongs to a division",
+      "source": "person",
+      "target": "division",
+      "metadata": {
         "startDate": "date"
       }
     },

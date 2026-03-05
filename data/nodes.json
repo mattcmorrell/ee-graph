@@ -8,7 +8,6 @@
         "email": "elena.voss@acmeco.com",
         "role": "Chief Executive Officer",
         "level": "C-1",
-        "department": "Executive",
         "startDate": "2019-03-15",
         "status": "active",
         "location": "Austin, TX",
@@ -19,7 +18,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "veteran",
-        "division": "Executive",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -33,7 +31,6 @@
         "email": "james.wright@acmeco.com",
         "role": "VP Engineering",
         "level": "VP",
-        "department": "Engineering",
         "startDate": "2020-01-06",
         "status": "active",
         "location": "Austin, TX",
@@ -44,7 +41,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -58,7 +54,6 @@
         "email": "lisa.huang@acmeco.com",
         "role": "Infrastructure Lead",
         "level": "M-1",
-        "department": "Engineering",
         "startDate": "2020-06-15",
         "status": "active",
         "location": "Austin, TX",
@@ -69,7 +64,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -83,7 +77,6 @@
         "email": "david.park@acmeco.com",
         "role": "Engineering Manager",
         "level": "M-1",
-        "department": "Engineering",
         "startDate": "2021-02-01",
         "status": "active",
         "location": "Austin, TX",
@@ -94,7 +87,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -108,7 +100,6 @@
         "email": "maria.santos@acmeco.com",
         "role": "VP Customer Support",
         "level": "VP",
-        "department": "Customer Support",
         "startDate": "2020-08-10",
         "status": "active",
         "location": "Austin, TX",
@@ -119,7 +110,6 @@
         "gender": "female",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -133,7 +123,6 @@
         "email": "mike.torres@acmeco.com",
         "role": "Platform Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-08-14",
         "status": "active",
         "location": "Austin, TX",
@@ -144,7 +133,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "prefer_not_to_say",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -158,7 +146,6 @@
         "email": "ana.kim@acmeco.com",
         "role": "Frontend Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2024-05-20",
         "status": "active",
         "location": "Austin, TX",
@@ -169,7 +156,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -183,7 +169,6 @@
         "email": "raj.patel@acmeco.com",
         "role": "Engineering Lead",
         "level": "M-1",
-        "department": "Engineering",
         "startDate": "2022-11-07",
         "status": "active",
         "location": "Austin, TX",
@@ -194,7 +179,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -208,7 +192,6 @@
         "email": "derek.lin@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-03-10",
         "status": "active",
         "location": "Austin, TX",
@@ -219,7 +202,6 @@
         "gender": "male",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -233,7 +215,6 @@
         "email": "sarah.okafor@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-10-06",
         "status": "active",
         "location": "Austin, TX",
@@ -244,7 +225,6 @@
         "gender": "female",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -258,7 +238,6 @@
         "email": "chris.lee@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2023-01-09",
         "status": "active",
         "location": "Austin, TX",
@@ -269,7 +248,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -283,7 +261,6 @@
         "email": "priya.sharma@acmeco.com",
         "role": "HR Manager",
         "level": "IC-4",
-        "department": "Operations",
         "startDate": "2021-04-12",
         "status": "on_leave",
         "location": "Austin, TX",
@@ -294,7 +271,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -308,7 +284,6 @@
         "email": "jamie.chen@acmeco.com",
         "role": "Support Lead",
         "level": "M-1",
-        "department": "Customer Support",
         "startDate": "2026-03-03",
         "status": "preparing",
         "location": "Austin, TX",
@@ -319,7 +294,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -333,7 +307,6 @@
         "email": "alex.rivera@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2026-02-10",
         "status": "preparing",
         "location": "Austin, TX",
@@ -344,7 +317,6 @@
         "gender": "nonbinary",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "part_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -358,7 +330,6 @@
         "email": "sam.okafor@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2026-02-24",
         "status": "preparing",
         "location": "Austin, TX",
@@ -369,7 +340,6 @@
         "gender": "male",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -383,7 +353,6 @@
         "email": "nina.kowalski@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-11-03",
         "status": "active",
         "location": "Austin, TX",
@@ -394,7 +363,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -408,7 +376,6 @@
         "email": "sam.kim@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2024-12-02",
         "status": "active",
         "location": "Austin, TX",
@@ -419,7 +386,6 @@
         "gender": "male",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "part_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -433,7 +399,6 @@
         "email": "taylor.brooks@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2024-06-17",
         "status": "active",
         "location": "Austin, TX",
@@ -444,7 +409,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "part_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -458,7 +422,6 @@
         "email": "sarah.chen@acmeco.com",
         "role": "Engineering Lead",
         "level": "M-1",
-        "department": "Engineering",
         "startDate": "2023-08-01",
         "status": "active",
         "location": "Austin, TX",
@@ -469,7 +432,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -483,7 +445,6 @@
         "email": "kevin.tran@acmeco.com",
         "role": "VP Design",
         "level": "VP",
-        "department": "Design",
         "startDate": "2020-11-02",
         "status": "active",
         "location": "Austin, TX",
@@ -494,7 +455,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -508,7 +468,6 @@
         "email": "rachel.foster@acmeco.com",
         "role": "VP Sales",
         "level": "VP",
-        "department": "Sales",
         "startDate": "2021-01-11",
         "status": "active",
         "location": "Austin, TX",
@@ -519,7 +478,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "prefer_not_to_say",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -533,7 +491,6 @@
         "email": "diane.crawford@acmeco.com",
         "role": "VP Operations",
         "level": "VP",
-        "department": "Operations",
         "startDate": "2020-05-04",
         "status": "active",
         "location": "Austin, TX",
@@ -544,7 +501,6 @@
         "gender": "female",
         "race": "two_or_more",
         "veteranStatus": "not_veteran",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -558,7 +514,6 @@
         "email": "karen.cho@acmeco.com",
         "role": "QA Lead",
         "level": "M-1",
-        "department": "Engineering",
         "startDate": "2021-07-19",
         "status": "active",
         "location": "Austin, TX",
@@ -569,7 +524,6 @@
         "gender": "female",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -583,7 +537,6 @@
         "email": "tom.walsh@acmeco.com",
         "role": "Engineering Lead",
         "level": "M-1",
-        "department": "Engineering",
         "startDate": "2022-03-14",
         "status": "active",
         "location": "Austin, TX",
@@ -594,7 +547,6 @@
         "gender": "male",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -608,7 +560,6 @@
         "email": "maya.singh@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-01-08",
         "status": "active",
         "location": "Austin, TX",
@@ -619,7 +570,6 @@
         "gender": "female",
         "race": "two_or_more",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -633,7 +583,6 @@
         "email": "alex.kim@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-06-03",
         "status": "active",
         "location": "Austin, TX",
@@ -644,7 +593,6 @@
         "gender": "male",
         "race": "two_or_more",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -658,7 +606,6 @@
         "email": "jordan.liu@acmeco.com",
         "role": "Engineering Lead",
         "level": "M-1",
-        "department": "Engineering",
         "startDate": "2022-09-12",
         "status": "active",
         "location": "Austin, TX",
@@ -669,7 +616,6 @@
         "gender": "nonbinary",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -683,7 +629,6 @@
         "email": "ben.alvarez@acmeco.com",
         "role": "QA Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2023-04-17",
         "status": "active",
         "location": "Austin, TX",
@@ -694,7 +639,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -708,7 +652,6 @@
         "email": "lin.zhang@acmeco.com",
         "role": "QA Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2023-08-21",
         "status": "active",
         "location": "Austin, TX",
@@ -719,7 +662,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -733,7 +675,6 @@
         "email": "emma.davies@acmeco.com",
         "role": "Senior Designer",
         "level": "IC-4",
-        "department": "Design",
         "startDate": "2021-09-06",
         "status": "active",
         "location": "Austin, TX",
@@ -744,7 +685,6 @@
         "gender": "female",
         "race": "prefer_not_to_say",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -758,7 +698,6 @@
         "email": "yuki.tanaka@acmeco.com",
         "role": "Product Designer",
         "level": "IC-3",
-        "department": "Design",
         "startDate": "2023-02-13",
         "status": "active",
         "location": "Austin, TX",
@@ -769,7 +708,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -783,7 +721,6 @@
         "email": "omar.hassan@acmeco.com",
         "role": "UX Researcher",
         "level": "IC-3",
-        "department": "Design",
         "startDate": "2023-06-05",
         "status": "active",
         "location": "Austin, TX",
@@ -794,7 +731,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -808,7 +744,6 @@
         "email": "lisa.park@acmeco.com",
         "role": "Account Executive",
         "level": "IC-3",
-        "department": "Sales",
         "startDate": "2022-05-16",
         "status": "active",
         "location": "Austin, TX",
@@ -819,7 +754,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -833,7 +767,6 @@
         "email": "mark.johnson@acmeco.com",
         "role": "Account Executive",
         "level": "IC-3",
-        "department": "Sales",
         "startDate": "2023-01-23",
         "status": "active",
         "location": "Austin, TX",
@@ -844,7 +777,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "prefer_not_to_say",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -858,7 +790,6 @@
         "email": "sarah.wells@acmeco.com",
         "role": "SDR Lead",
         "level": "M-1",
-        "department": "Sales",
         "startDate": "2022-02-07",
         "status": "active",
         "location": "Austin, TX",
@@ -869,7 +800,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "prefer_not_to_say",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -883,7 +813,6 @@
         "email": "tom.nguyen@acmeco.com",
         "role": "Office Manager",
         "level": "IC-3",
-        "department": "Operations",
         "startDate": "2021-06-14",
         "status": "active",
         "location": "Austin, TX",
@@ -894,7 +823,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -908,7 +836,6 @@
         "email": "karen.washington@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2024-08-12",
         "status": "active",
         "location": "Austin, TX",
@@ -919,7 +846,6 @@
         "gender": "female",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "part_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -933,7 +859,6 @@
         "email": "derek.martinez@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2025-03-03",
         "status": "active",
         "location": "Austin, TX",
@@ -944,7 +869,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "part_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -958,7 +882,6 @@
         "email": "amy.lin@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2025-06-02",
         "status": "active",
         "location": "Austin, TX",
@@ -969,7 +892,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -983,7 +905,6 @@
         "email": "marcus.johnson@acmeco.com",
         "role": "Account Executive",
         "level": "IC-3",
-        "department": "Sales",
         "startDate": "2026-02-24",
         "status": "preparing",
         "location": "Austin, TX",
@@ -994,7 +915,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1008,7 +928,6 @@
         "email": "james.liu@acmeco.com",
         "role": "Engineering Lead",
         "level": "M-1",
-        "department": "Engineering",
         "startDate": "2021-11-08",
         "status": "active",
         "location": "Austin, TX",
@@ -1019,7 +938,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1033,7 +951,6 @@
         "email": "rachel.kim@acmeco.com",
         "role": "Support Team Lead",
         "level": "M-1",
-        "department": "Customer Support",
         "startDate": "2022-04-11",
         "status": "active",
         "location": "Austin, TX",
@@ -1042,7 +959,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1056,7 +972,6 @@
         "email": "daniel.cooper@acmeco.com",
         "role": "Tier 2 Specialist",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2023-09-18",
         "status": "active",
         "location": "Austin, TX",
@@ -1065,7 +980,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1079,7 +993,6 @@
         "email": "sofia.reyes@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2024-03-04",
         "status": "active",
         "location": "Austin, TX",
@@ -1088,7 +1001,6 @@
         "gender": "nonbinary",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1102,7 +1014,6 @@
         "email": "nathan.brown@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2024-11-18",
         "status": "active",
         "location": "Austin, TX",
@@ -1111,7 +1022,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1125,7 +1035,6 @@
         "email": "lily.tran@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2025-01-13",
         "status": "active",
         "location": "Austin, TX",
@@ -1134,7 +1043,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1148,7 +1056,6 @@
         "email": "carlos.mendez@acmeco.com",
         "role": "Tier 2 Specialist",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2023-05-22",
         "status": "active",
         "location": "Austin, TX",
@@ -1157,7 +1064,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1171,7 +1077,6 @@
         "email": "jessica.park@acmeco.com",
         "role": "SDR",
         "level": "IC-2",
-        "department": "Sales",
         "startDate": "2023-07-10",
         "status": "active",
         "location": "Austin, TX",
@@ -1180,7 +1085,6 @@
         "gender": "male",
         "race": "two_or_more",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1194,7 +1098,6 @@
         "email": "ryan.obrien@acmeco.com",
         "role": "SDR",
         "level": "IC-2",
-        "department": "Sales",
         "startDate": "2024-02-19",
         "status": "active",
         "location": "Austin, TX",
@@ -1203,7 +1106,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1217,7 +1119,6 @@
         "email": "aanya.gupta@acmeco.com",
         "role": "SDR",
         "level": "IC-1",
-        "department": "Sales",
         "startDate": "2025-06-09",
         "status": "active",
         "location": "Austin, TX",
@@ -1226,7 +1127,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1240,7 +1140,6 @@
         "email": "david.chen@acmeco.com",
         "role": "SDR",
         "level": "IC-1",
-        "department": "Sales",
         "startDate": "2025-09-15",
         "status": "active",
         "location": "Austin, TX",
@@ -1249,7 +1148,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1263,7 +1161,6 @@
         "email": "megan.stewart@acmeco.com",
         "role": "Account Executive",
         "level": "IC-3",
-        "department": "Sales",
         "startDate": "2023-10-02",
         "status": "active",
         "location": "Austin, TX",
@@ -1272,7 +1169,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1286,7 +1182,6 @@
         "email": "brandon.lee@acmeco.com",
         "role": "Sales Engineer",
         "level": "IC-3",
-        "department": "Sales",
         "startDate": "2022-08-29",
         "status": "active",
         "location": "Austin, TX",
@@ -1295,7 +1190,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1309,7 +1203,6 @@
         "email": "jasmine.watts@acmeco.com",
         "role": "Account Executive",
         "level": "IC-4",
-        "department": "Sales",
         "startDate": "2021-12-06",
         "status": "active",
         "location": "Austin, TX",
@@ -1318,7 +1211,6 @@
         "gender": "female",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1332,7 +1224,6 @@
         "email": "leo.kim@acmeco.com",
         "role": "Visual Designer",
         "level": "IC-2",
-        "department": "Design",
         "startDate": "2024-03-18",
         "status": "active",
         "location": "Austin, TX",
@@ -1341,7 +1232,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1355,7 +1245,6 @@
         "email": "nina.chen@acmeco.com",
         "role": "Content Designer",
         "level": "IC-3",
-        "department": "Design",
         "startDate": "2023-11-06",
         "status": "active",
         "location": "Austin, TX",
@@ -1364,7 +1253,6 @@
         "gender": "prefer_not_to_say",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1378,7 +1266,6 @@
         "email": "hannah.scott@acmeco.com",
         "role": "Design Intern",
         "level": "IC-1",
-        "department": "Design",
         "startDate": "2025-09-02",
         "status": "active",
         "location": "Austin, TX",
@@ -1387,7 +1274,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1401,7 +1287,6 @@
         "email": "robert.chen@acmeco.com",
         "role": "Finance Manager",
         "level": "IC-4",
-        "department": "Operations",
         "startDate": "2020-09-14",
         "status": "active",
         "location": "Austin, TX",
@@ -1410,7 +1295,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1424,7 +1308,6 @@
         "email": "patricia.gomez@acmeco.com",
         "role": "Payroll Specialist",
         "level": "IC-3",
-        "department": "Operations",
         "startDate": "2022-06-20",
         "status": "active",
         "location": "Austin, TX",
@@ -1433,7 +1316,6 @@
         "gender": "female",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1447,7 +1329,6 @@
         "email": "ethan.wu@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-08-19",
         "status": "active",
         "location": "Austin, TX",
@@ -1456,7 +1337,6 @@
         "gender": "male",
         "race": "two_or_more",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1470,7 +1350,6 @@
         "email": "olivia.james@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-03-06",
         "status": "active",
         "location": "Austin, TX",
@@ -1479,7 +1358,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1493,7 +1371,6 @@
         "email": "kevin.park@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-10-07",
         "status": "active",
         "location": "Austin, TX",
@@ -1502,7 +1379,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1516,7 +1392,6 @@
         "email": "samantha.lee@acmeco.com",
         "role": "QA Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-01-15",
         "status": "active",
         "location": "Austin, TX",
@@ -1525,7 +1400,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1539,7 +1413,6 @@
         "email": "victor.huang@acmeco.com",
         "role": "QA Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2022-11-28",
         "status": "active",
         "location": "Austin, TX",
@@ -1548,7 +1421,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1562,7 +1434,6 @@
         "email": "maria.garcia@acmeco.com",
         "role": "QA Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-05-13",
         "status": "active",
         "location": "Austin, TX",
@@ -1571,7 +1442,6 @@
         "gender": "nonbinary",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1585,7 +1455,6 @@
         "email": "ryan.kim@acmeco.com",
         "role": "QA Automation Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-07-24",
         "status": "active",
         "location": "Austin, TX",
@@ -1594,7 +1463,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1608,7 +1476,6 @@
         "email": "grace.patel@acmeco.com",
         "role": "QA Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-02-03",
         "status": "active",
         "location": "Austin, TX",
@@ -1617,7 +1484,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1631,7 +1497,6 @@
         "email": "andrew.wilson@acmeco.com",
         "role": "Platform Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-06-12",
         "status": "active",
         "location": "Austin, TX",
@@ -1640,7 +1505,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1654,7 +1518,6 @@
         "email": "nadia.okonkwo@acmeco.com",
         "role": "Platform Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-09-23",
         "status": "active",
         "location": "Austin, TX",
@@ -1663,7 +1526,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "prefer_not_to_say",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1677,7 +1539,6 @@
         "email": "jason.cooper@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-01-06",
         "status": "terminated",
         "location": "Austin, TX",
@@ -1687,7 +1548,6 @@
         "race": "asian",
         "veteranStatus": "not_veteran",
         "endDate": "2025-12-20",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1701,7 +1561,6 @@
         "email": "emily.zhang@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-11-13",
         "status": "active",
         "location": "Austin, TX",
@@ -1710,7 +1569,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1724,7 +1582,6 @@
         "email": "michael.adams@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-07-01",
         "status": "active",
         "location": "Austin, TX",
@@ -1733,7 +1590,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1747,7 +1603,6 @@
         "email": "isabella.morales@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-04-10",
         "status": "active",
         "location": "Austin, TX",
@@ -1756,7 +1611,6 @@
         "gender": "female",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1770,7 +1624,6 @@
         "email": "william.choi@acmeco.com",
         "role": "Senior Engineer",
         "level": "IC-4",
-        "department": "Engineering",
         "startDate": "2021-08-16",
         "status": "active",
         "location": "Austin, TX",
@@ -1779,7 +1632,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1793,7 +1645,6 @@
         "email": "zoe.robinson@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2024-09-09",
         "status": "active",
         "location": "Austin, TX",
@@ -1802,7 +1653,6 @@
         "gender": "female",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1816,7 +1666,6 @@
         "email": "lucas.wright@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2025-04-14",
         "status": "active",
         "location": "Austin, TX",
@@ -1825,7 +1674,6 @@
         "gender": "male",
         "race": "prefer_not_to_say",
         "veteranStatus": "veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1839,7 +1687,6 @@
         "email": "chloe.davis@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2025-07-21",
         "status": "active",
         "location": "Austin, TX",
@@ -1848,7 +1695,6 @@
         "gender": "female",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -1862,7 +1708,6 @@
         "email": "henry.nakamura@acmeco.com",
         "role": "Solutions Architect",
         "level": "IC-4",
-        "department": "Sales",
         "startDate": "2022-10-17",
         "status": "active",
         "location": "Austin, TX",
@@ -1871,7 +1716,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1885,7 +1729,6 @@
         "email": "ava.thompson@acmeco.com",
         "role": "Customer Success Lead",
         "level": "M-1",
-        "department": "Customer Support",
         "startDate": "2023-02-27",
         "status": "active",
         "location": "Austin, TX",
@@ -1894,7 +1737,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1908,7 +1750,6 @@
         "email": "noah.martinez@acmeco.com",
         "role": "Customer Success Manager",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2024-01-08",
         "status": "active",
         "location": "Austin, TX",
@@ -1917,7 +1758,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "prefer_not_to_say",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1931,7 +1771,6 @@
         "email": "ella.foster@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-05-19",
         "status": "active",
         "location": "Austin, TX",
@@ -1940,7 +1779,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1954,7 +1792,6 @@
         "email": "jack.sullivan@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-09-04",
         "status": "active",
         "location": "Austin, TX",
@@ -1963,7 +1800,6 @@
         "gender": "male",
         "race": "prefer_not_to_say",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -1977,7 +1813,6 @@
         "email": "sophia.nguyen@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-12-02",
         "status": "active",
         "location": "Austin, TX",
@@ -1986,7 +1821,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2000,7 +1834,6 @@
         "email": "liam.patel@acmeco.com",
         "role": "DevOps Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2022-07-11",
         "status": "active",
         "location": "Austin, TX",
@@ -2009,7 +1842,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2023,7 +1855,6 @@
         "email": "mia.rodriguez@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2025-08-18",
         "status": "active",
         "location": "Austin, TX",
@@ -2032,7 +1863,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2046,7 +1876,6 @@
         "email": "james.park2@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2025-10-06",
         "status": "active",
         "location": "Austin, TX",
@@ -2055,7 +1884,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2069,7 +1897,6 @@
         "email": "charlotte.evans@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-03-17",
         "status": "active",
         "location": "Austin, TX",
@@ -2078,7 +1905,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2092,7 +1918,6 @@
         "email": "sebastian.ortiz@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-06-02",
         "status": "active",
         "location": "Austin, TX",
@@ -2101,7 +1926,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2115,7 +1939,6 @@
         "email": "harper.collins@acmeco.com",
         "role": "Senior Engineer",
         "level": "IC-4",
-        "department": "Engineering",
         "startDate": "2021-04-05",
         "status": "active",
         "location": "Austin, TX",
@@ -2124,7 +1947,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2138,7 +1960,6 @@
         "email": "benjamin.zhao@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-12-04",
         "status": "active",
         "location": "Austin, TX",
@@ -2147,7 +1968,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2161,7 +1981,6 @@
         "email": "aria.washington@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2025-11-03",
         "status": "active",
         "location": "Austin, TX",
@@ -2170,7 +1989,6 @@
         "gender": "female",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2184,7 +2002,6 @@
         "email": "owen.brooks@acmeco.com",
         "role": "Tier 2 Specialist",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2023-12-18",
         "status": "active",
         "location": "Austin, TX",
@@ -2193,7 +2010,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2207,7 +2023,6 @@
         "email": "layla.ahmed@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-08-04",
         "status": "active",
         "location": "Austin, TX",
@@ -2216,7 +2031,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2230,7 +2044,6 @@
         "email": "gabriel.santos@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-05-15",
         "status": "active",
         "location": "Austin, TX",
@@ -2239,7 +2052,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2253,7 +2065,6 @@
         "email": "penelope.chang@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-11-11",
         "status": "active",
         "location": "Austin, TX",
@@ -2262,7 +2073,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2276,7 +2086,6 @@
         "email": "adrian.flores@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2025-02-17",
         "status": "active",
         "location": "Austin, TX",
@@ -2285,7 +2094,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2299,7 +2107,6 @@
         "email": "natalie.green@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2025-12-01",
         "status": "active",
         "location": "Austin, TX",
@@ -2308,7 +2115,6 @@
         "gender": "nonbinary",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2322,7 +2128,6 @@
         "email": "isaac.turner@acmeco.com",
         "role": "Account Executive",
         "level": "IC-2",
-        "department": "Sales",
         "startDate": "2025-04-07",
         "status": "active",
         "location": "Austin, TX",
@@ -2331,7 +2136,6 @@
         "gender": "male",
         "race": "prefer_not_to_say",
         "veteranStatus": "prefer_not_to_say",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2345,7 +2149,6 @@
         "email": "camila.reyes@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-07-14",
         "status": "active",
         "location": "Austin, TX",
@@ -2354,7 +2157,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2368,7 +2170,6 @@
         "email": "dylan.mitchell@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-10-23",
         "status": "active",
         "location": "Austin, TX",
@@ -2377,7 +2178,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2391,7 +2191,6 @@
         "email": "stella.hoffman@acmeco.com",
         "role": "Customer Success Manager",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2024-06-24",
         "status": "active",
         "location": "Austin, TX",
@@ -2400,7 +2199,6 @@
         "gender": "female",
         "race": "black",
         "veteranStatus": "prefer_not_to_say",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2414,7 +2212,6 @@
         "email": "austin.reed@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-09-08",
         "status": "active",
         "location": "Austin, TX",
@@ -2423,7 +2220,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2437,7 +2233,6 @@
         "email": "evelyn.torres@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-04-15",
         "status": "active",
         "location": "Austin, TX",
@@ -2446,7 +2241,6 @@
         "gender": "female",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2460,7 +2254,6 @@
         "email": "connor.white@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-08-07",
         "status": "active",
         "location": "Austin, TX",
@@ -2469,7 +2262,6 @@
         "gender": "male",
         "race": "prefer_not_to_say",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2483,7 +2275,6 @@
         "email": "valentina.cruz@acmeco.com",
         "role": "QA Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-10-21",
         "status": "active",
         "location": "Austin, TX",
@@ -2492,7 +2283,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2506,7 +2296,6 @@
         "email": "tyler.bennett@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2026-01-05",
         "status": "active",
         "location": "Austin, TX",
@@ -2515,7 +2304,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2529,7 +2317,6 @@
         "email": "hazel.murphy@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2024-07-29",
         "status": "active",
         "location": "Austin, TX",
@@ -2538,7 +2325,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2552,7 +2338,6 @@
         "email": "maxwell.rivera@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-11-17",
         "status": "active",
         "location": "Austin, TX",
@@ -2561,7 +2346,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2575,7 +2359,6 @@
         "email": "audrey.chen@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2024-02-05",
         "status": "active",
         "location": "Austin, TX",
@@ -2584,7 +2367,6 @@
         "gender": "male",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2598,7 +2380,6 @@
         "email": "elijah.brooks@acmeco.com",
         "role": "Senior Engineer",
         "level": "IC-4",
-        "department": "Engineering",
         "startDate": "2021-10-18",
         "status": "active",
         "location": "Austin, TX",
@@ -2607,7 +2388,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2621,7 +2401,6 @@
         "email": "ruby.anderson@acmeco.com",
         "role": "Tier 2 Specialist",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2023-11-20",
         "status": "active",
         "location": "Austin, TX",
@@ -2630,7 +2409,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2644,7 +2422,6 @@
         "email": "patrick.omalley@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-04-28",
         "status": "terminated",
         "location": "Austin, TX",
@@ -2654,7 +2431,6 @@
         "race": "white",
         "veteranStatus": "not_veteran",
         "endDate": "2026-01-10",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2668,7 +2444,6 @@
         "email": "scarlett.diaz@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-10-20",
         "status": "active",
         "location": "Austin, TX",
@@ -2677,7 +2452,6 @@
         "gender": "female",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2691,7 +2465,6 @@
         "email": "tessa.morgan@acmeco.com",
         "role": "Recruiter",
         "level": "IC-3",
-        "department": "Operations",
         "startDate": "2023-03-13",
         "status": "active",
         "location": "Austin, TX",
@@ -2700,7 +2473,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "prefer_not_to_say",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2714,7 +2486,6 @@
         "email": "diego.ramirez@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-06-17",
         "status": "active",
         "location": "Austin, TX",
@@ -2723,7 +2494,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2737,7 +2507,6 @@
         "email": "ivy.chen@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-01-30",
         "status": "active",
         "location": "Austin, TX",
@@ -2746,7 +2515,6 @@
         "gender": "prefer_not_to_say",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2760,7 +2528,6 @@
         "email": "keith.marshall@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-09-09",
         "status": "active",
         "location": "Austin, TX",
@@ -2769,7 +2536,6 @@
         "gender": "male",
         "race": "prefer_not_to_say",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2783,7 +2549,6 @@
         "email": "fiona.walsh@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-01-20",
         "status": "active",
         "location": "Austin, TX",
@@ -2792,7 +2557,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2806,7 +2570,6 @@
         "email": "marco.russo@acmeco.com",
         "role": "DevOps Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2022-12-05",
         "status": "active",
         "location": "Austin, TX",
@@ -2815,7 +2578,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2829,7 +2591,6 @@
         "email": "hannah.park@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-02-10",
         "status": "active",
         "location": "Austin, TX",
@@ -2838,7 +2599,6 @@
         "gender": "prefer_not_to_say",
         "race": "asian",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2852,7 +2612,6 @@
         "email": "xavier.grant@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2025-06-16",
         "status": "active",
         "location": "Austin, TX",
@@ -2861,7 +2620,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2875,7 +2633,6 @@
         "email": "willow.kim@acmeco.com",
         "role": "Support Specialist",
         "level": "IC-2",
-        "department": "Customer Support",
         "startDate": "2024-10-14",
         "status": "active",
         "location": "Austin, TX",
@@ -2884,7 +2641,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2898,7 +2654,6 @@
         "email": "sienna.baker@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-03-25",
         "status": "active",
         "location": "Austin, TX",
@@ -2907,7 +2662,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2921,7 +2675,6 @@
         "email": "tristan.moore@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-06-26",
         "status": "active",
         "location": "Austin, TX",
@@ -2930,7 +2683,6 @@
         "gender": "male",
         "race": "two_or_more",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2944,7 +2696,6 @@
         "email": "aurora.hayes@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-05-05",
         "status": "active",
         "location": "Austin, TX",
@@ -2953,7 +2704,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -2967,7 +2717,6 @@
         "email": "dominic.sanchez@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2025-09-22",
         "status": "active",
         "location": "Austin, TX",
@@ -2976,7 +2725,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -2990,7 +2738,6 @@
         "email": "piper.lane@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-08-12",
         "status": "active",
         "location": "Austin, TX",
@@ -2999,7 +2746,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3013,7 +2759,6 @@
         "email": "reid.coleman@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-03-24",
         "status": "active",
         "location": "Austin, TX",
@@ -3022,7 +2767,6 @@
         "gender": "male",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3036,7 +2780,6 @@
         "email": "vera.simmons@acmeco.com",
         "role": "Engineering Lead",
         "level": "M-1",
-        "department": "Engineering",
         "startDate": "2021-06-07",
         "status": "active",
         "location": "Austin, TX",
@@ -3045,7 +2788,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3059,7 +2801,6 @@
         "email": "quinn.harper@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2025-12-15",
         "status": "active",
         "location": "Austin, TX",
@@ -3068,7 +2809,6 @@
         "gender": "male",
         "race": "prefer_not_to_say",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -3082,7 +2822,6 @@
         "email": "oscar.delgado@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-08-18",
         "status": "active",
         "location": "Austin, TX",
@@ -3091,7 +2830,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3105,7 +2843,6 @@
         "email": "naomi.fisher@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2024-01-22",
         "status": "active",
         "location": "Austin, TX",
@@ -3114,7 +2851,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3128,7 +2864,6 @@
         "email": "hugh.patterson@acmeco.com",
         "role": "Tier 2 Specialist",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2024-04-01",
         "status": "active",
         "location": "Austin, TX",
@@ -3137,7 +2872,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -3151,7 +2885,6 @@
         "email": "freya.bell@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-06-30",
         "status": "active",
         "location": "Austin, TX",
@@ -3160,7 +2893,6 @@
         "gender": "female",
         "race": "prefer_not_to_say",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3174,7 +2906,6 @@
         "email": "wyatt.gibson@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-11-03",
         "status": "active",
         "location": "Austin, TX",
@@ -3183,7 +2914,6 @@
         "gender": "male",
         "race": "prefer_not_to_say",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3197,7 +2927,6 @@
         "email": "iris.nakamura@acmeco.com",
         "role": "Customer Success Manager",
         "level": "IC-3",
-        "department": "Customer Support",
         "startDate": "2024-05-20",
         "status": "active",
         "location": "Austin, TX",
@@ -3206,7 +2935,6 @@
         "gender": "female",
         "race": "asian",
         "veteranStatus": "prefer_not_to_say",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3220,7 +2948,6 @@
         "email": "felix.dunn@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-11-25",
         "status": "active",
         "location": "Austin, TX",
@@ -3229,7 +2956,6 @@
         "gender": "male",
         "race": "hispanic",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3243,7 +2969,6 @@
         "email": "rowan.blake@acmeco.com",
         "role": "Engineer",
         "level": "IC-3",
-        "department": "Engineering",
         "startDate": "2023-07-03",
         "status": "active",
         "location": "Austin, TX",
@@ -3252,7 +2977,6 @@
         "gender": "male",
         "race": "two_or_more",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3266,7 +2990,6 @@
         "email": "jade.ellis@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-04-14",
         "status": "active",
         "location": "Austin, TX",
@@ -3275,7 +2998,6 @@
         "gender": "female",
         "race": "prefer_not_to_say",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3289,7 +3011,6 @@
         "email": "theo.lambert@acmeco.com",
         "role": "Senior Engineer",
         "level": "IC-4",
-        "department": "Engineering",
         "startDate": "2022-01-10",
         "status": "active",
         "location": "Austin, TX",
@@ -3298,7 +3019,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3312,7 +3032,6 @@
         "email": "clara.fox@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-10-06",
         "status": "active",
         "location": "Austin, TX",
@@ -3321,7 +3040,6 @@
         "gender": "female",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3335,7 +3053,6 @@
         "email": "nolan.ward@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2024-05-06",
         "status": "active",
         "location": "Austin, TX",
@@ -3344,7 +3061,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3358,7 +3074,6 @@
         "email": "bria.hopkins@acmeco.com",
         "role": "Tier 1 Agent",
         "level": "IC-1",
-        "department": "Customer Support",
         "startDate": "2026-01-12",
         "status": "active",
         "location": "Austin, TX",
@@ -3367,7 +3082,6 @@
         "gender": "female",
         "race": "black",
         "veteranStatus": "not_veteran",
-        "division": "Revenue",
         "employmentType": "full_time",
         "payType": "hourly",
         "payPeriod": "biweekly"
@@ -3381,7 +3095,6 @@
         "email": "caleb.stone@acmeco.com",
         "role": "Engineer",
         "level": "IC-2",
-        "department": "Engineering",
         "startDate": "2025-12-08",
         "status": "active",
         "location": "Austin, TX",
@@ -3390,7 +3103,6 @@
         "gender": "male",
         "race": "white",
         "veteranStatus": "not_veteran",
-        "division": "Product & Technology",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly"
@@ -3882,10 +3594,9 @@
       "type": "team",
       "properties": {
         "name": "Platform",
-        "department": "Engineering",
         "description": "Infrastructure, deployment, and platform services. Kubernetes, CI/CD, observability.",
         "headcount": 8,
-        "teamType": "department"
+        "teamType": "team"
       }
     },
     {
@@ -3893,10 +3604,9 @@
       "type": "team",
       "properties": {
         "name": "Product Engineering",
-        "department": "Engineering",
         "description": "Core product development. Features, APIs, frontend.",
         "headcount": 12,
-        "teamType": "department"
+        "teamType": "team"
       }
     },
     {
@@ -3904,10 +3614,9 @@
       "type": "team",
       "properties": {
         "name": "Quality",
-        "department": "Engineering",
         "description": "QA, testing, automation, release quality.",
         "headcount": 8,
-        "teamType": "department"
+        "teamType": "team"
       }
     },
     {
@@ -3915,10 +3624,9 @@
       "type": "team",
       "properties": {
         "name": "Customer Support",
-        "department": "Customer Support",
         "description": "Tier 1/2 support, customer success, support tooling.",
         "headcount": 14,
-        "teamType": "department"
+        "teamType": "team"
       }
     },
     {
@@ -3926,10 +3634,9 @@
       "type": "team",
       "properties": {
         "name": "Sales",
-        "department": "Sales",
         "description": "Account executives, SDRs, sales engineering.",
         "headcount": 10,
-        "teamType": "department"
+        "teamType": "team"
       }
     },
     {
@@ -3937,10 +3644,9 @@
       "type": "team",
       "properties": {
         "name": "Design",
-        "department": "Design",
         "description": "Product design, UX research, visual design, content design.",
         "headcount": 6,
-        "teamType": "department"
+        "teamType": "team"
       }
     },
     {
@@ -3948,76 +3654,9 @@
       "type": "team",
       "properties": {
         "name": "Operations",
-        "department": "Operations",
         "description": "HR, finance, payroll, office management, recruiting.",
         "headcount": 4,
-        "teamType": "department"
-      }
-    },
-    {
-      "id": "team-008",
-      "type": "team",
-      "properties": {
-        "name": "Executive",
-        "department": "Executive",
-        "description": "CEO and executive leadership.",
-        "headcount": 1,
-        "teamType": "department"
-      }
-    },
-    {
-      "id": "team-009",
-      "type": "team",
-      "properties": {
-        "name": "Engineering",
-        "department": "Engineering",
-        "description": "All engineering \u2014 Platform, Product Engineering, and Quality.",
-        "headcount": 28,
-        "teamType": "department"
-      }
-    },
-    {
-      "id": "team-010",
-      "type": "team",
-      "properties": {
-        "name": "SDR Team",
-        "department": "Sales",
-        "description": "Sales development representatives.",
-        "headcount": 4,
-        "teamType": "department"
-      }
-    },
-    {
-      "id": "team-011",
-      "type": "team",
-      "properties": {
-        "name": "Support Tier 1",
-        "department": "Customer Support",
-        "description": "First-line customer support agents.",
-        "headcount": 8,
-        "teamType": "department"
-      }
-    },
-    {
-      "id": "team-012",
-      "type": "team",
-      "properties": {
-        "name": "Support Tier 2",
-        "department": "Customer Support",
-        "description": "Escalation specialists and senior support.",
-        "headcount": 4,
-        "teamType": "department"
-      }
-    },
-    {
-      "id": "team-013",
-      "type": "team",
-      "properties": {
-        "name": "Customer Success",
-        "department": "Customer Support",
-        "description": "Customer success managers.",
-        "headcount": 4,
-        "teamType": "department"
+        "teamType": "team"
       }
     },
     {
@@ -8566,7 +8205,6 @@
       "type": "team",
       "properties": {
         "name": "Atlas",
-        "department": null,
         "teamType": "scrum",
         "description": "Core product scrum team \u2014 payments, billing, subscription features",
         "headcount": 7
@@ -8577,7 +8215,6 @@
       "type": "team",
       "properties": {
         "name": "Horizon",
-        "department": null,
         "teamType": "scrum",
         "description": "Platform scrum team \u2014 infrastructure, developer experience, reliability",
         "headcount": 7
@@ -8588,7 +8225,6 @@
       "type": "team",
       "properties": {
         "name": "Forge",
-        "department": null,
         "teamType": "scrum",
         "description": "Growth scrum team \u2014 onboarding, activation, self-serve",
         "headcount": 7
@@ -8599,7 +8235,6 @@
       "type": "team",
       "properties": {
         "name": "SOC 2 Compliance",
-        "department": null,
         "teamType": "initiative",
         "description": "Cross-functional initiative to achieve SOC 2 Type II certification",
         "headcount": 8
@@ -8610,7 +8245,6 @@
       "type": "team",
       "properties": {
         "name": "Enterprise Launch",
-        "department": null,
         "teamType": "initiative",
         "description": "Cross-functional initiative to launch enterprise tier \u2014 pricing, features, support",
         "headcount": 8
@@ -8621,7 +8255,6 @@
       "type": "team",
       "properties": {
         "name": "Security Champions",
-        "department": null,
         "teamType": "working_group",
         "description": "Standing working group \u2014 security awareness, incident response, secure coding practices",
         "headcount": 6
@@ -8632,7 +8265,6 @@
       "type": "team",
       "properties": {
         "name": "Culture & Onboarding",
-        "department": null,
         "teamType": "working_group",
         "description": "Standing working group \u2014 new hire experience, culture initiatives, mentorship programs",
         "headcount": 6
@@ -10080,12 +9712,10 @@
         "email": "marcus.webb@acme.co",
         "role": "HR Business Partner",
         "level": "IC-3",
-        "department": "Operations",
         "startDate": "2024-03-15",
         "status": "active",
         "location": "Austin, TX",
         "pronouns": "he/him",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly",
@@ -10126,12 +9756,10 @@
         "email": "sophie.laurent@acme.co",
         "role": "HR Coordinator",
         "level": "IC-2",
-        "department": "Operations",
         "startDate": "2025-06-01",
         "status": "active",
         "location": "Austin, TX",
         "pronouns": "she/her",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly",
@@ -10172,12 +9800,10 @@
         "email": "david.okafor@acme.co",
         "role": "Benefits Administrator",
         "level": "IC-3",
-        "department": "Operations",
         "startDate": "2024-08-12",
         "status": "active",
         "location": "Austin, TX",
         "pronouns": "he/him",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly",
@@ -10218,12 +9844,10 @@
         "email": "anya.petrova@acme.co",
         "role": "Recruiter",
         "level": "IC-2",
-        "department": "Operations",
         "startDate": "2025-09-08",
         "status": "active",
         "location": "Remote \u2014 US",
         "pronouns": "she/her",
-        "division": "G&A",
         "employmentType": "full_time",
         "payType": "salary",
         "payPeriod": "semimonthly",
@@ -10254,6 +9878,86 @@
         "department": "Operations",
         "jobFamily": "People Operations",
         "isOpen": false
+      }
+    },
+    {
+      "id": "department-001",
+      "type": "department",
+      "properties": {
+        "name": "Engineering",
+        "description": "Product development \u2014 software engineering, QA, infrastructure"
+      }
+    },
+    {
+      "id": "department-002",
+      "type": "department",
+      "properties": {
+        "name": "Customer Support",
+        "description": "Customer-facing support, success, and service"
+      }
+    },
+    {
+      "id": "department-003",
+      "type": "department",
+      "properties": {
+        "name": "Sales",
+        "description": "Revenue generation \u2014 AEs, SDRs, sales engineering"
+      }
+    },
+    {
+      "id": "department-004",
+      "type": "department",
+      "properties": {
+        "name": "Design",
+        "description": "Product and visual design, UX research"
+      }
+    },
+    {
+      "id": "department-005",
+      "type": "department",
+      "properties": {
+        "name": "Operations",
+        "description": "HR, finance, office management, recruiting"
+      }
+    },
+    {
+      "id": "department-006",
+      "type": "department",
+      "properties": {
+        "name": "Executive",
+        "description": "C-suite leadership"
+      }
+    },
+    {
+      "id": "division-001",
+      "type": "division",
+      "properties": {
+        "name": "Product & Technology",
+        "description": "Engineering and Design functions"
+      }
+    },
+    {
+      "id": "division-002",
+      "type": "division",
+      "properties": {
+        "name": "Revenue",
+        "description": "Sales and Customer Support functions"
+      }
+    },
+    {
+      "id": "division-003",
+      "type": "division",
+      "properties": {
+        "name": "G&A",
+        "description": "General & Administrative \u2014 HR, finance, operations"
+      }
+    },
+    {
+      "id": "division-004",
+      "type": "division",
+      "properties": {
+        "name": "Executive",
+        "description": "Executive leadership"
       }
     }
   ]
