@@ -48,6 +48,62 @@
     z-index: 100;
   }
 
+  /* ── Filter bar (below top bar) ── */
+  #filterbar {
+    position: fixed;
+    top: 52px; left: 0; right: 0;
+    height: 44px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 10px;
+    z-index: 99;
+  }
+
+  #filterbar .filter-select {
+    flex: 0 1 160px;
+    min-width: 0;
+  }
+
+  #filterbar .filter-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  #filterbar .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  #filterbar-clear {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  #filterbar-clear.visible { opacity: 1; }
+
+  #active-filter-count {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
   #topbar .logo {
     font-weight: 500;
     font-size: 14px;
@@ -157,7 +213,7 @@
   /* ── Filter panel (left) ── */
   #filters {
     position: fixed;
-    top: 52px;
+    top: 96px;
     left: 0;
     width: 220px;
     bottom: 0;
@@ -174,7 +230,7 @@
 
   #filter-toggle {
     position: fixed;
-    top: 64px;
+    top: 108px;
     left: 220px;
     width: 24px;
     height: 24px;
@@ -197,6 +253,53 @@
   .filter-section {
     padding: 0 16px;
     margin-bottom: 20px;
+  }
+
+  .filter-select {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: var(--text-bright);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+  }
+
+  .filter-select:focus { border-color: var(--accent); }
+
+  .filter-select option {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+
+  .filter-clear {
+    font-size: 10px;
+    color: var(--accent);
+    cursor: pointer;
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .filter-clear.visible { opacity: 1; }
+
+  .filter-title-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .filter-title-row .filter-title {
+    margin-bottom: 0;
   }
 
   .filter-title {
@@ -264,7 +367,7 @@
   /* ── Detail panel (right) ── */
   #detail {
     position: fixed;
-    top: 52px;
+    top: 96px;
     right: 0;
     width: 340px;
     bottom: 0;
@@ -409,7 +512,7 @@
   /* ── Canvas area ── */
   #graph-container {
     position: fixed;
-    top: 52px;
+    top: 96px;
     left: 220px;
     right: 0;
     bottom: 0;
@@ -605,6 +708,17 @@
   <div id="stats"></div>
 </div>
 
+<div id="filterbar">
+  <div class="filter-group"><span class="filter-label">Team</span><select class="filter-select" id="fb-team"><option value="">All</option></select></div>
+  <div class="filter-group"><span class="filter-label">Dept</span><select class="filter-select" id="fb-department"><option value="">All</option></select></div>
+  <div class="filter-group"><span class="filter-label">Division</span><select class="filter-select" id="fb-division"><option value="">All</option></select></div>
+  <div class="filter-group"><span class="filter-label">Title</span><select class="filter-select" id="fb-title"><option value="">All</option></select></div>
+  <div class="filter-group"><span class="filter-label">Location</span><select class="filter-select" id="fb-location"><option value="">All</option></select></div>
+  <div class="filter-group"><span class="filter-label">Status</span><select class="filter-select" id="fb-status"><option value="">All</option></select></div>
+  <span id="active-filter-count"></span>
+  <span id="filterbar-clear">Clear all</span>
+</div>
+
 <button id="filter-toggle" title="Toggle filters">◂</button>
 
 <div id="filters"></div>
@@ -773,7 +887,142 @@ function getNodeSub(node) {
     });
   }
 
+  // ── Filterbar data (person-level filters + team) ──
+  const teamNodes = nodes.filter(n => n.type === 'team');
+  const memberOfEdges = validEdges.filter(e => e.type === 'member_of');
+  const teamInfo = new Map();
+  teamNodes.forEach(t => {
+    teamInfo.set(t.id, {
+      name: t.properties?.name || t.id,
+      teamType: t.properties?.teamType || 'department',
+      members: new Set()
+    });
+  });
+  memberOfEdges.forEach(e => {
+    const src = e.source.id || e.source;
+    const tgt = e.target.id || e.target;
+    if (teamInfo.has(tgt)) teamInfo.get(tgt).members.add(src);
+  });
+
+  // Collect unique values for person-level filters
+  const personNodes = nodes.filter(n => n.type === 'person');
+  const filterDimensions = {
+    department: new Map(),
+    division: new Map(),
+    title: new Map(),
+    location: new Map(),
+    status: new Map()
+  };
+  personNodes.forEach(p => {
+    const props = p.properties || {};
+    const add = (dim, val) => { if (val) filterDimensions[dim].set(val, (filterDimensions[dim].get(val) || 0) + 1); };
+    add('department', props.department);
+    add('division', props.division);
+    add('title', props.role);
+    add('location', props.location);
+    add('status', props.status);
+  });
+
+  // Active filterbar state
+  const activeFilters = { team: null, department: null, division: null, title: null, location: null, status: null };
+
+  function getFilterbarMatchedPersons() {
+    const hasAny = Object.values(activeFilters).some(v => v);
+    if (!hasAny) return null;
+
+    // Start with all person IDs
+    let matched = new Set(personNodes.map(p => p.id));
+
+    // Team filter
+    if (activeFilters.team) {
+      const info = teamInfo.get(activeFilters.team);
+      if (info) matched = new Set([...matched].filter(id => info.members.has(id)));
+    }
+
+    // Property filters
+    const propMap = { department: 'department', division: 'division', title: 'role', location: 'location', status: 'status' };
+    for (const [filterKey, propKey] of Object.entries(propMap)) {
+      if (activeFilters[filterKey]) {
+        matched = new Set([...matched].filter(id => {
+          const n = nodeMap.get(id);
+          return n && (n.properties || {})[propKey] === activeFilters[filterKey];
+        }));
+      }
+    }
+
+    // Also include the team node itself if team is filtered
+    if (activeFilters.team) matched.add(activeFilters.team);
+
+    return matched;
+  }
+
+  function populateFilterbar() {
+    // Team dropdown with optgroups
+    const teamSelect = document.getElementById('fb-team');
+    const typeGroups = { department: [], scrum: [], initiative: [], working_group: [] };
+    teamInfo.forEach((info, id) => {
+      const group = typeGroups[info.teamType] || typeGroups['department'];
+      group.push({ id, name: info.name, count: info.members.size });
+    });
+    const groupLabels = { department: 'Department', scrum: 'Scrum', initiative: 'Initiative', working_group: 'Working Group' };
+    for (const [groupKey, label] of Object.entries(groupLabels)) {
+      const teams = typeGroups[groupKey];
+      if (!teams.length) continue;
+      const optgroup = document.createElement('optgroup');
+      optgroup.label = label;
+      teams.sort((a, b) => a.name.localeCompare(b.name));
+      teams.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.id;
+        opt.textContent = `${t.name} (${t.count})`;
+        optgroup.appendChild(opt);
+      });
+      teamSelect.appendChild(optgroup);
+    }
+
+    // Other dropdowns
+    const dimSelects = { department: 'fb-department', division: 'fb-division', title: 'fb-title', location: 'fb-location', status: 'fb-status' };
+    for (const [dim, selectId] of Object.entries(dimSelects)) {
+      const sel = document.getElementById(selectId);
+      const entries = [...filterDimensions[dim].entries()].sort((a, b) => a[0].localeCompare(b[0]));
+      entries.forEach(([val, count]) => {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = `${val} (${count})`;
+        sel.appendChild(opt);
+      });
+    }
+
+    // Event listeners
+    const allSelects = { team: 'fb-team', department: 'fb-department', division: 'fb-division', title: 'fb-title', location: 'fb-location', status: 'fb-status' };
+    for (const [key, selectId] of Object.entries(allSelects)) {
+      document.getElementById(selectId).addEventListener('change', (e) => {
+        activeFilters[key] = e.target.value || null;
+        updateFilterbarUI();
+        updateVisibility();
+      });
+    }
+
+    document.getElementById('filterbar-clear').addEventListener('click', () => {
+      for (const key of Object.keys(activeFilters)) activeFilters[key] = null;
+      for (const selectId of Object.values(allSelects)) document.getElementById(selectId).value = '';
+      updateFilterbarUI();
+      updateVisibility();
+    });
+  }
+
+  function updateFilterbarUI() {
+    const count = Object.values(activeFilters).filter(v => v).length;
+    const countEl = document.getElementById('active-filter-count');
+    const clearEl = document.getElementById('filterbar-clear');
+    countEl.textContent = count ? `${count} filter${count > 1 ? 's' : ''}` : '';
+    clearEl.classList.toggle('visible', count > 0);
+  }
+
+  populateFilterbar();
+
   function buildFilters() {
+    // ── Node type filters ──
     let html = '<div class="filter-section"><div class="filter-title">Node Types</div>';
     for (const [type, count] of Object.entries(nodeTypeCounts).sort((a,b) => b[1] - a[1])) {
       const color = effectiveNodeColors[type] || '#666';
@@ -798,6 +1047,7 @@ function getNodeSub(node) {
     }
     html += '</div>';
     filtersEl.innerHTML = html;
+
 
     // Toggle click (on the row, excluding the solo button)
     filtersEl.querySelectorAll('.filter-item').forEach(el => {
@@ -1410,13 +1660,28 @@ function getNodeSub(node) {
 
   // ── Visibility update ──
   function updateVisibility() {
-    nodeElements.attr('display', d => activeNodeTypes.has(d.type) ? null : 'none');
+    const personFilter = getFilterbarMatchedPersons();
+
+    nodeElements.attr('display', d => {
+      if (!activeNodeTypes.has(d.type)) return 'none';
+      // Person-level filters only apply to person nodes (and team node if team filtered)
+      if (personFilter && d.type === 'person' && !personFilter.has(d.id)) return 'none';
+      if (personFilter && d.type === 'team' && activeFilters.team && !personFilter.has(d.id)) return 'none';
+      return null;
+    });
     linkElements.attr('display', d => {
       const sNode = nodeMap.get(d.source.id || d.source);
       const tNode = nodeMap.get(d.target.id || d.target);
       if (!sNode || !tNode) return 'none';
       if (!activeNodeTypes.has(sNode.type) || !activeNodeTypes.has(tNode.type)) return 'none';
       if (!activeEdgeTypes.has(d.type)) return 'none';
+      // If person filter active, hide edges where the person end isn't matched
+      if (personFilter) {
+        const sIsPerson = sNode.type === 'person';
+        const tIsPerson = tNode.type === 'person';
+        if (sIsPerson && !personFilter.has(sNode.id)) return 'none';
+        if (tIsPerson && !personFilter.has(tNode.id)) return 'none';
+      }
       return null;
     });
   }
