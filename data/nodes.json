@@ -6147,50 +6147,6 @@
       }
     },
     {
-      "id": "comp-017",
-      "type": "comp",
-      "properties": {
-        "type": "salary",
-        "amount": 230000,
-        "currency": "USD",
-        "effectiveDate": "2020-11-02",
-        "notes": "Kevin Tran \u2014 VP Design"
-      }
-    },
-    {
-      "id": "comp-018",
-      "type": "comp",
-      "properties": {
-        "type": "salary",
-        "amount": 240000,
-        "currency": "USD",
-        "effectiveDate": "2021-01-11",
-        "notes": "Rachel Foster \u2014 VP Sales"
-      }
-    },
-    {
-      "id": "comp-019",
-      "type": "comp",
-      "properties": {
-        "type": "salary",
-        "amount": 210000,
-        "currency": "USD",
-        "effectiveDate": "2020-05-04",
-        "notes": "Diane Crawford \u2014 VP Operations"
-      }
-    },
-    {
-      "id": "comp-020",
-      "type": "comp",
-      "properties": {
-        "type": "salary",
-        "amount": 170000,
-        "currency": "USD",
-        "effectiveDate": "2021-07-19",
-        "notes": "Karen Cho \u2014 QA Lead"
-      }
-    },
-    {
       "id": "comp-021",
       "type": "comp",
       "properties": {
@@ -6199,28 +6155,6 @@
         "currency": "USD",
         "effectiveDate": "2025-11-03",
         "notes": "Nina Kowalski \u2014 Engineer IC-2"
-      }
-    },
-    {
-      "id": "comp-022",
-      "type": "comp",
-      "properties": {
-        "type": "salary",
-        "amount": 115000,
-        "currency": "USD",
-        "effectiveDate": "2021-04-12",
-        "notes": "Priya Sharma \u2014 HR Manager"
-      }
-    },
-    {
-      "id": "comp-023",
-      "type": "comp",
-      "properties": {
-        "type": "adjustment",
-        "amount": 5000,
-        "currency": "USD",
-        "effectiveDate": "2026-02-01",
-        "notes": "February payroll adjustment \u2014 cost of living increase for 3 employees"
       }
     },
     {
@@ -6462,110 +6396,6 @@
         "completedDate": "2025-12-06",
         "rating": "meets",
         "summary": "Sarah Okafor 30-day check-in. Onboarding on track, starting search service project."
-      }
-    },
-    {
-      "id": "recognition-001",
-      "type": "recognition",
-      "properties": {
-        "type": "peer",
-        "trigger": "collaboration",
-        "message": "Saved me two hours on the deployment pipeline issue. Knew exactly where to look.",
-        "signalSource": "organic",
-        "points": 10,
-        "channel": "team_channel",
-        "date": "2026-02-03"
-      }
-    },
-    {
-      "id": "recognition-002",
-      "type": "recognition",
-      "properties": {
-        "type": "manager",
-        "trigger": "workload_absorption",
-        "message": "Raj, I want to call out something I should have said sooner \u2014 you've been holding the line on the API refactor while picking up the observability dashboard and CI/CD work without missing a beat. That kind of reliability is what keeps this team moving. Thank you.",
-        "signalSource": "graph_prompted",
-        "points": 50,
-        "channel": "dm",
-        "date": "2026-02-06"
-      }
-    },
-    {
-      "id": "recognition-003",
-      "type": "recognition",
-      "properties": {
-        "type": "peer",
-        "trigger": "mentoring",
-        "message": "Mike has been incredibly patient walking me through the K8s cluster setup. I feel like I learned more in one pairing session than a week of docs.",
-        "signalSource": "organic",
-        "points": 10,
-        "channel": "team_channel",
-        "date": "2026-01-20"
-      }
-    },
-    {
-      "id": "recognition-004",
-      "type": "recognition",
-      "properties": {
-        "type": "manager",
-        "trigger": "milestone",
-        "message": "Mike, shipping the K8s consolidation was a massive lift. Three production clusters, zero downtime migration. The whole platform team benefits from this work. Well done.",
-        "signalSource": "graph_prompted",
-        "points": 50,
-        "channel": "dm",
-        "date": "2026-01-16"
-      }
-    },
-    {
-      "id": "recognition-005",
-      "type": "recognition",
-      "properties": {
-        "type": "peer",
-        "trigger": "collaboration",
-        "message": "Ana's design system components saved the customer portal team at least a sprint of work. Everything just plugs in.",
-        "signalSource": "organic",
-        "points": 10,
-        "channel": "team_channel",
-        "date": "2026-01-28"
-      }
-    },
-    {
-      "id": "recognition-006",
-      "type": "recognition",
-      "properties": {
-        "type": "frontline",
-        "trigger": "above_and_beyond",
-        "message": "Maria, you handled the Saturday rush with a short crew and still hit every prep target. The weekend team runs because of you. Thank you. \u2014 Carlos",
-        "signalSource": "graph_prompted",
-        "points": 25,
-        "channel": "sms",
-        "date": "2025-12-14"
-      }
-    },
-    {
-      "id": "recognition-007",
-      "type": "recognition",
-      "properties": {
-        "type": "peer",
-        "trigger": "collaboration",
-        "message": "Derek's Go knowledge saved us from a nasty concurrency bug in the deployment tooling. Great catch.",
-        "signalSource": "organic",
-        "points": 10,
-        "channel": "team_channel",
-        "date": "2026-01-10"
-      }
-    },
-    {
-      "id": "recognition-008",
-      "type": "recognition",
-      "properties": {
-        "type": "manager",
-        "trigger": "growth",
-        "message": "Derek, your growth over the past few months has been remarkable. From pairing on everything to submitting your first solo PR \u2014 and a clean one at that. Keep it up.",
-        "signalSource": "graph_prompted",
-        "points": 25,
-        "channel": "dm",
-        "date": "2026-01-25"
       }
     },
     {
