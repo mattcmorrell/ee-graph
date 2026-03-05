@@ -385,29 +385,28 @@
     color: var(--text-dim);
   }
 
-  .filter-item .solo-btn {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    font-weight: 500;
+  .filter-item .hide-btn {
+    font-size: 12px;
     color: var(--text-dim);
     background: none;
-    border: 1px solid transparent;
-    border-radius: 3px;
-    padding: 0 4px;
+    border: none;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.15s, color 0.15s, border-color 0.15s;
-    line-height: 16px;
+    transition: opacity 0.15s, color 0.15s;
     flex-shrink: 0;
+    padding: 0 2px;
+    line-height: 1;
   }
 
-  .filter-item:hover .solo-btn { opacity: 0.6; }
-  .filter-item .solo-btn:hover { opacity: 1; color: var(--accent); border-color: var(--accent); }
-  .filter-item .solo-btn.active {
-    opacity: 1;
+  .filter-item:hover .hide-btn { opacity: 0.5; }
+  .filter-item .hide-btn:hover { opacity: 1; color: var(--accent); }
+  .filter-item.disabled .hide-btn { opacity: 0.8; color: var(--text-dim); }
+
+  .filter-item.soloed {
     color: var(--accent);
-    border-color: var(--accent);
-    background: var(--accent-dim);
+  }
+  .filter-item.soloed .swatch {
+    box-shadow: 0 0 6px currentColor;
   }
 
   /* ── Detail panel (right) ── */
@@ -928,8 +927,12 @@ function getNodeSub(node) {
       const set = kind === 'node' ? activeNodeTypes : activeEdgeTypes;
       const soloed = kind === 'node' ? soloedNodeType : soloedEdgeType;
       el.classList.toggle('disabled', !set.has(type));
-      const soloBtn = el.querySelector('.solo-btn');
-      if (soloBtn) soloBtn.classList.toggle('active', soloed === type);
+      el.classList.toggle('soloed', soloed === type);
+      const hideBtn = el.querySelector('.hide-btn');
+      if (hideBtn) {
+        hideBtn.textContent = set.has(type) ? '👁' : '👁‍🗨';
+        hideBtn.title = set.has(type) ? 'Hide this type' : 'Show this type';
+      }
     });
   }
 
@@ -1169,7 +1172,7 @@ function getNodeSub(node) {
         <span class="swatch" style="background:${color}"></span>
         <span>${type.replace(/_/g, ' ')}</span>
         <span class="count">${count}</span>
-        <button class="solo-btn" data-kind="${kind}" data-type="${type}" title="Solo — show only this type">S</button>
+        <button class="hide-btn" data-kind="${kind}" data-type="${type}" title="Hide this type">👁</button>
       </div>`;
     }
     html += '</div></div>';
@@ -1211,7 +1214,7 @@ function getNodeSub(node) {
     // Category header click — expand/collapse
     filtersEl.querySelectorAll('.filter-category-header').forEach(header => {
       header.addEventListener('click', (e) => {
-        if (e.target.closest('.solo-btn')) return;
+        if (e.target.closest('.hide-btn')) return;
         const items = header.nextElementSibling;
         const arrow = header.querySelector('.cat-arrow');
         items.classList.toggle('collapsed');
@@ -1220,29 +1223,12 @@ function getNodeSub(node) {
     });
 
 
-    // Toggle click (on the row, excluding the solo button)
+    // Row click = solo (show only this type, click again to un-solo)
     filtersEl.querySelectorAll('.filter-item').forEach(el => {
       el.addEventListener('click', (e) => {
-        if (e.target.closest('.solo-btn')) return; // handled separately
+        if (e.target.closest('.hide-btn')) return; // handled separately
         const kind = el.dataset.kind;
         const type = el.dataset.type;
-        const set = kind === 'node' ? activeNodeTypes : activeEdgeTypes;
-        // If currently soloed, clear solo first
-        if (kind === 'node' && soloedNodeType) { soloedNodeType = null; }
-        if (kind === 'edge' && soloedEdgeType) { soloedEdgeType = null; }
-        if (set.has(type)) { set.delete(type); }
-        else { set.add(type); }
-        syncFilterUI();
-        updateVisibility();
-      });
-    });
-
-    // Solo click
-    filtersEl.querySelectorAll('.solo-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const kind = btn.dataset.kind;
-        const type = btn.dataset.type;
         const set = kind === 'node' ? activeNodeTypes : activeEdgeTypes;
         const allTypes = kind === 'node' ? allNodeTypes : allEdgeTypes;
         const currentSolo = kind === 'node' ? soloedNodeType : soloedEdgeType;
@@ -1259,6 +1245,24 @@ function getNodeSub(node) {
           if (kind === 'node') soloedNodeType = type;
           else soloedEdgeType = type;
         }
+        syncFilterUI();
+        updateVisibility();
+      });
+    });
+
+    // Hide button click = toggle visibility of this type
+    filtersEl.querySelectorAll('.hide-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const kind = btn.dataset.kind;
+        const type = btn.dataset.type;
+        const set = kind === 'node' ? activeNodeTypes : activeEdgeTypes;
+        // Clear any solo state first
+        if (kind === 'node' && soloedNodeType) { soloedNodeType = null; allNodeTypes.forEach(t => set.add(t)); }
+        if (kind === 'edge' && soloedEdgeType) { soloedEdgeType = null; allEdgeTypes.forEach(t => set.add(t)); }
+        // Toggle this type
+        if (set.has(type)) { set.delete(type); }
+        else { set.add(type); }
         syncFilterUI();
         updateVisibility();
       });
