@@ -113,41 +113,72 @@ body::before {
   letter-spacing: -0.02em;
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+.header-sub {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 16px;
 }
 
-.header-hint {
+.data-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.data-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.data-stat {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 400;
-  color: var(--text);
-  letter-spacing: 0.01em;
+  color: var(--text-dim);
 }
 
-.contribute-link {
+.data-num {
+  font-weight: 500;
+  color: var(--text-bright);
+}
+
+.data-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.data-link {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--text);
+  text-decoration: none;
   background: none;
   padding: 5px 10px;
-  border-radius: 0;
+  border-radius: 1px;
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.2s, color 0.2s;
 }
 
-.contribute-link:hover {
+.data-link:hover {
   border-color: var(--accent);
-  background: rgba(208,64,48,0.04);
+  color: var(--accent);
 }
+
+.data-link svg { opacity: 0.5; }
+.data-link:hover svg { opacity: 0.8; }
 
 /* ── Timeline ── */
 .timeline {
@@ -364,7 +395,7 @@ body::before {
 }
 
 .av-m { background: var(--accent-tertiary); }
-.av-k { background: var(--accent); }
+.av-k { background: #c08840; }
 .av-s { background: var(--accent-secondary); }
 
 .card-meta .comments {
@@ -559,13 +590,13 @@ code.inline {
   align-items: center;
   gap: 6px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
-  color: var(--text);
+  color: var(--text-bright);
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: 1px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-hover);
   transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
 
@@ -575,8 +606,8 @@ code.inline {
   background: rgba(208,64,48,0.04);
 }
 
-.modal-link svg { opacity: 0.5; }
-.modal-link:hover svg { opacity: 0.8; }
+.modal-link svg { opacity: 0.7; }
+.modal-link:hover svg { opacity: 1; }
 
 /* ── Theme toggle ── */
 .theme-toggle {
@@ -680,6 +711,8 @@ code.inline {
   .card-preview { height: 140px; }
   .card-compact .card-body { flex-wrap: wrap; }
   .header-title { font-size: 30px; }
+  .data-bar { flex-direction: column; align-items: flex-start; }
+  .data-links { width: 100%; }
 }
 </style>
 </head>
@@ -690,12 +723,27 @@ code.inline {
   <header class="header">
     <div class="header-rule"></div>
     <h1 class="header-title">Employee Graph <span class="lab">Lab</span></h1>
-    <div class="header-actions">
-      <span class="header-hint">Open anything. Hit Discuss to comment.</span>
-      <button class="contribute-link" id="contribute-btn">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-        Contribute
-      </button>
+    <p class="header-sub">Everything here is built on one shared dataset. Grab the data and build something.</p>
+    <div class="data-bar">
+      <div class="data-stats">
+        <span class="data-stat"><span class="data-num">783</span> nodes</span>
+        <span class="data-stat"><span class="data-num">3,281</span> edges</span>
+        <span class="data-stat"><span class="data-num">30</span> types</span>
+      </div>
+      <div class="data-links">
+        <a href="viewer.html" target="_blank" class="data-link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 5C7 5 2.7 8.4 1 12c1.7 3.6 6 7 11 7s9.3-3.4 11-7c-1.7-3.6-6-7-11-7z"/></svg>
+          Open viewer
+        </a>
+        <a href="https://github.com/mattcmorrell/ee-graph/tree/main/data" target="_blank" class="data-link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Get the data
+        </a>
+        <button class="data-link" id="contribute-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          How to contribute
+        </button>
+      </div>
     </div>
   </header>
 
@@ -715,7 +763,7 @@ code.inline {
           </div>
           <p class="card-desc">Connect pre-hire signals to post-hire outcomes. Which interviewers predict success? Which interview types actually correlate with performance?</p>
           <div class="card-meta">
-            <span><span class="avatar av-s">SL</span>Sarah</span>
+            <span><span class="avatar av-s">S</span>Sarah</span>
             <span class="sep">&middot;</span>
             <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 5</span>
           </div>
@@ -733,7 +781,7 @@ code.inline {
           </div>
           <p class="card-desc">Added Giscus discussion panel</p>
           <div class="card-meta">
-            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span><span class="avatar av-m">M</span>Matt</span>
             <span class="sep">&middot;</span>
             <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
           </div>
@@ -755,7 +803,7 @@ code.inline {
           </div>
           <p class="card-desc">AI-powered prep for every kind of 1:1. The graph surfaces comp context, flight risk signals, peer comparisons, and conversation starters.</p>
           <div class="card-meta">
-            <span><span class="avatar av-k">KR</span>Kyle</span>
+            <span><span class="avatar av-k">K</span>Kyle</span>
             <span class="sep">&middot;</span>
             <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 12</span>
           </div>
@@ -782,7 +830,7 @@ code.inline {
           </div>
           <p class="card-desc">Interactive force-directed visualization of the full employee graph. Search, filter by type, click any node to walk its connections.</p>
           <div class="card-meta">
-            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span><span class="avatar av-m">M</span>Matt</span>
             <span class="sep">&middot;</span>
             <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
           </div>
@@ -800,7 +848,7 @@ code.inline {
           </div>
           <p class="card-desc">Someone leaves &mdash; what breaks? Walk the graph outward to surface every consequence.</p>
           <div class="card-meta">
-            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span><span class="avatar av-m">M</span>Matt</span>
             <span class="sep">&middot;</span>
             <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 7</span>
           </div>
@@ -814,29 +862,29 @@ code.inline {
   <div class="modal-overlay" id="contribute-modal">
     <div class="modal">
       <button class="modal-close" id="modal-close">&times;</button>
-      <h2 class="modal-title">Contributing</h2>
-      <p class="modal-desc">Everything here is built on a shared graph dataset &mdash; 783 nodes, 3,281 edges across 30 types. Build whatever you want on top of it.</p>
+      <h2 class="modal-title">Build on the graph</h2>
+      <p class="modal-desc">Every experiment on this page uses the same employee graph &mdash; a dataset of people, teams, projects, and how they're all connected. You can use it too.</p>
 
       <div class="modal-steps">
         <div class="modal-step">
           <span class="step-num">1</span>
           <div>
-            <strong>Get the data</strong>
-            <p>The graph lives in <code class="inline">data/nodes.json</code> and <code class="inline">data/edges.json</code>. Schema is in <code class="inline">data/schema.json</code>. Clone the repo or just grab the files.</p>
+            <strong>Open the project</strong>
+            <p>Open the <a href="https://github.com/mattcmorrell/ee-graph" target="_blank">ee-graph project</a> in Claude Code. The employee data is in the <code class="inline">data/</code> folder &mdash; Claude can read it and use it in whatever you build.</p>
           </div>
         </div>
         <div class="modal-step">
           <span class="step-num">2</span>
           <div>
-            <strong>Build something</strong>
-            <p>Any format works &mdash; a prototype, a notebook, a Figma file, a script, a video. If it uses the graph data and shows something interesting, it belongs here.</p>
+            <strong>Make something</strong>
+            <p>Tell Claude what you want to explore. A prototype, a visualization, a workflow, a Figma file &mdash; anything goes. The interesting part is what happens when you follow the connections in the data.</p>
           </div>
         </div>
         <div class="modal-step">
           <span class="step-num">3</span>
           <div>
-            <strong>Share it</strong>
-            <p>Push to a <code class="inline">poc/</code> branch, drop a link in Slack, or just show someone. We'll add it to this page.</p>
+            <strong>Add it here</strong>
+            <p>When you're ready, ask Claude to add your experiment to this gallery page. It can create a card, link your work, and push the changes &mdash; no git knowledge needed.</p>
           </div>
         </div>
       </div>
@@ -844,11 +892,15 @@ code.inline {
       <div class="modal-links">
         <a href="https://github.com/mattcmorrell/ee-graph" target="_blank" class="modal-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-          Open repo
+          Open in Claude Code
+        </a>
+        <a href="viewer.html" target="_blank" class="modal-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Explore the graph
         </a>
         <a href="https://github.com/mattcmorrell/ee-graph/tree/main/data" target="_blank" class="modal-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Browse graph data
+          Browse raw data
         </a>
       </div>
     </div>
