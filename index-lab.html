@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Graph Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root, [data-theme="light"] {
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --surface-2: #f2f2ee;
+  --border: #ddddd8;
+  --border-hover: #b8b8b2;
+  --text: #4a4a50;
+  --text-dim: #6c6c74;
+  --text-bright: #1a1a1e;
+  --white: #0e0e12;
+  --accent: #d04030;
+  --accent-secondary: #0d8a7a;
+  --accent-tertiary: #6860c8;
+  --spine: #d0d0ca;
+  --spine-dot: #b0b0a8;
+  --grid-line: rgba(0,0,0,0.04);
+  --grid-line-strong: rgba(0,0,0,0.07);
+  --specimen: #a0a098;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  --card-shadow-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+[data-theme="dark"] {
+  --bg: #131316;
+  --surface: #1c1c22;
+  --surface-2: #26262c;
+  --border: #383842;
+  --border-hover: #525260;
+  --text: #a8a8b2;
+  --text-dim: #8d8d9f;
+  --text-bright: #dcdce2;
+  --white: #efeff2;
+  --accent: #ee6456;
+  --accent-secondary: #22c8b0;
+  --accent-tertiary: #8e88ee;
+  --spine: #343440;
+  --spine-dot: #4a4a58;
+  --grid-line: rgba(255,255,255,0.04);
+  --grid-line-strong: rgba(255,255,255,0.07);
+  --specimen: #606070;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --card-shadow-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Grid background ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-line-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-strong) 1px, transparent 1px);
+  background-size:
+    20px 20px,
+    20px 20px,
+    100px 100px,
+    100px 100px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 64px 24px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ── */
+.header {
+  margin-bottom: 56px;
+  padding-left: 52px;
+}
+
+.header-rule {
+  width: 48px;
+  height: 2px;
+  background: var(--accent);
+  margin-bottom: 20px;
+}
+
+.header-title {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+
+.header-title .lab {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.contribute-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  background: none;
+  padding: 5px 10px;
+  border-radius: 0;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.contribute-link:hover {
+  border-color: var(--accent);
+  background: rgba(208,64,48,0.04);
+}
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding-left: 52px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--spine);
+}
+
+.date-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+  margin-top: 12px;
+}
+
+.date-marker:first-child { margin-top: 0; }
+
+/* tick mark instead of dot */
+.date-marker::before {
+  content: '';
+  position: absolute;
+  left: -46px;
+  width: 10px;
+  height: 1px;
+  background: var(--spine-dot);
+}
+
+.date-marker .date-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Cards ── */
+.entry {
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.entry::before {
+  content: '';
+  position: absolute;
+  left: -41px;
+  top: 24px;
+  width: 30px;
+  height: 1px;
+  background: var(--spine);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  box-shadow: var(--card-shadow);
+  transition: border-color 0.2s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  opacity: 0;
+  animation: rise 0.45s cubic-bezier(0.23,1,0.32,1) forwards;
+}
+
+.entry:nth-of-type(1) .card { animation-delay: 0s; }
+.entry:nth-of-type(2) .card { animation-delay: 0.04s; }
+.entry:nth-of-type(3) .card { animation-delay: 0.08s; }
+.entry:nth-of-type(4) .card { animation-delay: 0.12s; }
+.entry:nth-of-type(5) .card { animation-delay: 0.16s; }
+.entry:nth-of-type(6) .card { animation-delay: 0.2s; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+.card:hover::after {
+  width: 3px;
+}
+
+.card-preview {
+  height: 172px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.preview-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.card-specimen {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 300;
+  color: var(--specimen);
+  letter-spacing: 0.04em;
+  z-index: 2;
+  transition: color 0.2s;
+}
+
+.card:hover .card-specimen {
+  color: var(--accent);
+}
+
+.card-body {
+  padding: 14px 18px 16px;
+}
+
+.card-row-1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 1px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pill-new {
+  background: var(--accent);
+  color: #fff;
+}
+
+.pill-updated {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.card-desc {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.card-meta .sep { color: var(--border); }
+
+.avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5px;
+  font-weight: 500;
+  color: #fff;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.av-m { background: var(--accent-tertiary); }
+.av-k { background: var(--accent); }
+.av-s { background: var(--accent-secondary); }
+
+.card-meta .comments {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-meta .comments svg { opacity: 0.4; }
+
+.card-stats {
+  display: flex;
+  gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 300;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.card-stats .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 0;
+  margin-right: 4px;
+  vertical-align: middle;
+  position: relative;
+  top: -0.5px;
+}
+
+/* ── Compact card ── */
+.card-compact .card-body {
+  padding: 11px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-compact .card-row-1 { margin-bottom: 0; flex-shrink: 0; }
+.card-compact .card-title { font-size: 13px; font-weight: 600; }
+.card-compact .card-desc { font-size: 12px; margin-bottom: 0; flex: 1; min-width: 100px; color: var(--text-dim); line-height: 1.4; }
+.card-compact .card-meta { margin-left: auto; flex-shrink: 0; font-size: 10.5px; }
+.card-compact .card-stats { display: none; }
+.card-compact .avatar { width: 16px; height: 16px; font-size: 7px; }
+.card-compact .card-specimen { top: 50%; transform: translateY(-50%); right: 14px; }
+
+.entry-compact::before { top: 16px; }
+
+.card-placeholder { cursor: default; }
+.card-placeholder:hover { transform: translateY(0); }
+.card-placeholder:hover::after { width: 0; }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  padding: 24px;
+}
+
+[data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.55); }
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 32px;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  transform: translateY(6px);
+  transition: transform 0.25s cubic-bezier(0.23,1,0.32,1);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] .modal { box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+
+.modal-overlay.open .modal {
+  transform: translateY(0);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 0;
+  transition: color 0.15s;
+  line-height: 1;
+}
+
+.modal-close:hover { color: var(--accent); }
+
+.modal-title {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+
+.modal-desc {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+.modal-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.modal-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.modal-step strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-bright);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.modal-step p {
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+code.inline {
+  display: inline;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-bright);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 1px;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+.modal-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 1px;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.modal-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(208,64,48,0.04);
+}
+
+.modal-link svg { opacity: 0.5; }
+.modal-link:hover svg { opacity: 0.8; }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 50;
+  width: 32px;
+  height: 32px;
+  border-radius: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.theme-toggle svg { width: 14px; height: 14px; }
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+/* ── Version Switcher ── */
+.version-switcher {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 1px;
+  padding: 3px;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+
+.vs-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 0;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.vs-btn:hover {
+  color: var(--text-bright);
+  background: var(--surface-2);
+}
+
+.vs-btn.vs-active {
+  color: #fff;
+  background: var(--accent);
+}
+
+/* ── Footer ── */
+.footer {
+  margin-top: 48px;
+  padding: 16px 0 0 52px;
+  border-top: 1px solid var(--border);
+}
+
+.footer a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.footer a:hover { color: var(--accent); }
+.footer a svg { opacity: 0.4; }
+.footer a:hover svg { opacity: 0.7; }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page { padding: 36px 16px 80px; }
+  .header { padding-left: 0; }
+  .timeline { padding-left: 0; }
+  .timeline::before, .date-marker::before, .entry::before { display: none; }
+  .footer { padding-left: 0; }
+  .card-preview { height: 140px; }
+  .card-compact .card-body { flex-wrap: wrap; }
+  .header-title { font-size: 30px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="header">
+    <div class="header-rule"></div>
+    <h1 class="header-title"><span class="lab">Employee Graph</span> Lab</h1>
+    <div class="header-actions">
+      <span class="header-hint">Open anything. Hit Discuss to comment.</span>
+      <button class="contribute-link" id="contribute-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Contribute
+      </button>
+    </div>
+  </header>
+
+  <div class="timeline">
+
+    <div class="date-marker"><span class="date-text">Mar 12, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card card-placeholder" href="#">
+        <div class="card-preview">
+          <span class="card-specimen">EXP-001</span>
+          <canvas class="preview-canvas" id="preview-interview"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Interview Intelligence</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">Connect pre-hire signals to post-hire outcomes. Which interviewers predict success? Which interview types actually correlate with performance?</p>
+          <div class="card-meta">
+            <span><span class="avatar av-s">SL</span>Sarah</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 5</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="entry entry-compact">
+      <a target="_blank" class="card card-compact" href="viewer.html">
+        <div class="card-body">
+          <span class="card-specimen">EXP-002</span>
+          <div class="card-row-1">
+            <span class="card-title">Graph Viewer</span>
+            <span class="pill pill-updated">Updated</span>
+          </div>
+          <p class="card-desc">Added Giscus discussion panel</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="date-marker"><span class="date-text">Mar 11, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card card-placeholder" href="#">
+        <div class="card-preview">
+          <span class="card-specimen">EXP-003</span>
+          <canvas class="preview-canvas" id="preview-career"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Career Conversation</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">AI-powered prep for every kind of 1:1. The graph surfaces comp context, flight risk signals, peer comparisons, and conversation starters.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-k">KR</span>Kyle</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 12</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="date-marker"><span class="date-text">Mar 10, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card" href="viewer.html">
+        <div class="card-preview">
+          <span class="card-specimen">EXP-004</span>
+          <canvas class="preview-canvas" id="preview-graph"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Graph Viewer</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <div class="card-stats">
+            <span><span class="dot" style="background:var(--accent-secondary)"></span>783 nodes</span>
+            <span><span class="dot" style="background:var(--accent-tertiary)"></span>3,281 edges</span>
+            <span><span class="dot" style="background:var(--accent)"></span>30 types</span>
+          </div>
+          <p class="card-desc">Interactive force-directed visualization of the full employee graph. Search, filter by type, click any node to walk its connections.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="entry entry-compact">
+      <a target="_blank" class="card card-compact card-placeholder" href="#">
+        <div class="card-body">
+          <span class="card-specimen">EXP-005</span>
+          <div class="card-row-1">
+            <span class="card-title">Departure Cascade</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">Someone leaves &mdash; what breaks? Walk the graph outward to surface every consequence.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 7</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Contribute modal -->
+  <div class="modal-overlay" id="contribute-modal">
+    <div class="modal">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <h2 class="modal-title">Contributing</h2>
+      <p class="modal-desc">Everything here is built on a shared graph dataset &mdash; 783 nodes, 3,281 edges across 30 types. Build whatever you want on top of it.</p>
+
+      <div class="modal-steps">
+        <div class="modal-step">
+          <span class="step-num">1</span>
+          <div>
+            <strong>Get the data</strong>
+            <p>The graph lives in <code class="inline">data/nodes.json</code> and <code class="inline">data/edges.json</code>. Schema is in <code class="inline">data/schema.json</code>. Clone the repo or just grab the files.</p>
+          </div>
+        </div>
+        <div class="modal-step">
+          <span class="step-num">2</span>
+          <div>
+            <strong>Build something</strong>
+            <p>Any format works &mdash; a prototype, a notebook, a Figma file, a script, a video. If it uses the graph data and shows something interesting, it belongs here.</p>
+          </div>
+        </div>
+        <div class="modal-step">
+          <span class="step-num">3</span>
+          <div>
+            <strong>Share it</strong>
+            <p>Push to a <code class="inline">poc/</code> branch, drop a link in Slack, or just show someone. We'll add it to this page.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-links">
+        <a href="https://github.com/mattcmorrell/ee-graph" target="_blank" class="modal-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Open repo
+        </a>
+        <a href="https://github.com/mattcmorrell/ee-graph/tree/main/data" target="_blank" class="modal-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Browse graph data
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+
+  <footer class="footer">
+    <a href="https://github.com/mattcmorrell/ee-graph" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      mattcmorrell/ee-graph
+    </a>
+  </footer>
+
+</div>
+
+<nav class="version-switcher">
+  <a href="index.html" class="vs-btn">Original</a>
+  <a href="index-mecha.html" class="vs-btn">Mecha</a>
+  <a href="index-nasa.html" class="vs-btn">NASA</a>
+  <a href="index-calm.html" class="vs-btn">Calm</a>
+  <a href="index-deco.html" class="vs-btn">Deco</a>
+  <a href="index-lab.html" class="vs-btn vs-active">Lab</a>
+</nav>
+
+<script>
+// ── Theme ──
+(function() {
+  const saved = localStorage.getItem('ee-graph-lab-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ee-graph-lab-theme', next);
+  });
+})();
+
+// ── Contribute modal ──
+(function() {
+  const modal = document.getElementById('contribute-modal');
+  document.getElementById('contribute-btn').addEventListener('click', () => modal.classList.add('open'));
+  document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('open'); });
+})();
+
+function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
+
+function initCanvas(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return null;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+  return { canvas, ctx, W: rect.width, H: rect.height };
+}
+
+function drawGrid(ctx, W, H) {
+  const dk = isDark();
+  ctx.strokeStyle = dk ? 'rgba(255,255,255,0.025)' : 'rgba(0,0,0,0.035)';
+  ctx.lineWidth = 0.5;
+  for (let x = 0; x < W; x += 20) {
+    ctx.globalAlpha = (x % 100 === 0) ? 1.4 : 0.7;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+  for (let y = 0; y < H; y += 20) {
+    ctx.globalAlpha = (y % 100 === 0) ? 1.4 : 0.7;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+
+// ── Graph Viewer: molecular structure ──
+(function() {
+  const c = initCanvas('preview-graph');
+  if (!c) return;
+  const { ctx, W, H } = c;
+  const N = 60, atoms = [], bonds = [];
+  const colors = ['#0d8a7a','#6860c8','#d04030','#0d8a7a','#6860c8'];
+  for (let i = 0; i < N; i++) {
+    const a = Math.random() * Math.PI * 2, d = Math.random() * Math.min(W,H) * 0.38;
+    atoms.push({
+      x: W/2 + Math.cos(a)*d, y: H/2 + Math.sin(a)*d,
+      vx: (Math.random()-0.5)*0.12, vy: (Math.random()-0.5)*0.12,
+      r: 1.5 + Math.random()*2.5,
+      color: colors[i % colors.length],
+      alpha: 0.35 + Math.random()*0.35
+    });
+  }
+  for (let i = 0; i < N; i++) {
+    const b = Math.floor(Math.random()*N);
+    if (b !== i) bonds.push([i,b]);
+    if (Math.random() < 0.15) {
+      const b2 = Math.floor(Math.random()*N);
+      if (b2 !== i) bonds.push([i,b2]);
+    }
+  }
+  (function loop() {
+    ctx.clearRect(0,0,W,H);
+    drawGrid(ctx,W,H);
+    const dk = isDark();
+    // bonds
+    for (const [a,b] of bonds) {
+      const na = atoms[a], nb = atoms[b];
+      const dx = na.x-nb.x, dy = na.y-nb.y, dist = Math.sqrt(dx*dx+dy*dy);
+      if (dist > 120) continue;
+      ctx.globalAlpha = (1-dist/120) * (dk ? 0.08 : 0.12);
+      ctx.strokeStyle = na.color;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(na.x,na.y); ctx.lineTo(nb.x,nb.y); ctx.stroke();
+    }
+    // atoms
+    for (const a of atoms) {
+      ctx.globalAlpha = dk ? a.alpha : Math.min(a.alpha+0.2, 0.85);
+      ctx.fillStyle = a.color;
+      ctx.beginPath(); ctx.arc(a.x,a.y,a.r,0,Math.PI*2); ctx.fill();
+      // orbital ring on larger atoms
+      if (a.r > 3) {
+        ctx.globalAlpha *= 0.25;
+        ctx.strokeStyle = a.color;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.arc(a.x,a.y,a.r+4,0,Math.PI*2); ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+    // drift
+    for (const a of atoms) {
+      a.x += a.vx; a.y += a.vy;
+      a.vx += (W/2-a.x)*0.00003; a.vy += (H/2-a.y)*0.00003;
+      if (a.x<6)a.vx+=0.05; if(a.x>W-6)a.vx-=0.05;
+      if (a.y<6)a.vy+=0.05; if(a.y>H-6)a.vy-=0.05;
+      a.vx += (Math.random()-0.5)*0.006; a.vy += (Math.random()-0.5)*0.006;
+      a.vx *= 0.998; a.vy *= 0.998;
+    }
+    requestAnimationFrame(loop);
+  })();
+})();
+
+// ── Career Conversation: oscilloscope waveform ──
+(function() {
+  const c = initCanvas('preview-career');
+  if (!c) return;
+  const { ctx, W, H } = c;
+  const waves = [
+    { freq: 0.018, amp: H*0.18, phase: 0, speed: 0.012, color: '#0d8a7a' },
+    { freq: 0.028, amp: H*0.12, phase: 1.2, speed: 0.018, color: '#6860c8' },
+    { freq: 0.042, amp: H*0.08, phase: 2.8, speed: 0.008, color: '#d04030' },
+  ];
+  let frame = 0;
+  (function loop() {
+    ctx.clearRect(0,0,W,H);
+    drawGrid(ctx,W,H);
+    const dk = isDark();
+    // center line
+    ctx.globalAlpha = dk ? 0.06 : 0.08;
+    ctx.strokeStyle = dk ? '#fff' : '#000';
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke();
+    ctx.setLineDash([]);
+    // waves
+    for (const w of waves) {
+      ctx.globalAlpha = dk ? 0.25 : 0.35;
+      ctx.strokeStyle = w.color;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const y = H/2 + Math.sin(x * w.freq + frame * w.speed + w.phase) * w.amp
+                      + Math.sin(x * w.freq * 1.7 + frame * w.speed * 0.6) * w.amp * 0.2;
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    // reading dots at wave intersections
+    for (let i = 0; i < waves.length - 1; i++) {
+      const w1 = waves[i], w2 = waves[i+1];
+      for (let x = 10; x < W; x += 3) {
+        const y1 = H/2 + Math.sin(x * w1.freq + frame * w1.speed + w1.phase) * w1.amp;
+        const y2 = H/2 + Math.sin(x * w2.freq + frame * w2.speed + w2.phase) * w2.amp;
+        if (Math.abs(y1 - y2) < 2.5) {
+          ctx.globalAlpha = dk ? 0.5 : 0.6;
+          ctx.fillStyle = w1.color;
+          ctx.beginPath(); ctx.arc(x, y1, 2, 0, Math.PI*2); ctx.fill();
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+    frame++;
+    requestAnimationFrame(loop);
+  })();
+})();
+
+// ── Interview Intelligence: data scatter with regression ──
+(function() {
+  const c = initCanvas('preview-interview');
+  if (!c) return;
+  const { ctx, W, H } = c;
+  const points = [];
+  const colors = ['#0d8a7a','#d04030','#6860c8'];
+  // 3 clusters
+  for (let g = 0; g < 3; g++) {
+    const cx = W * (0.2 + g * 0.3), cy = H * (0.3 + Math.random()*0.4);
+    for (let i = 0; i < 18; i++) {
+      points.push({
+        x: cx + (Math.random()-0.5) * W * 0.22,
+        y: cy + (Math.random()-0.5) * H * 0.35,
+        r: 1.5 + Math.random()*1.5,
+        color: colors[g],
+        alpha: 0.2 + Math.random()*0.3,
+        vy: (Math.random()-0.5)*0.08,
+        vx: (Math.random()-0.5)*0.06,
+        ox: cx + (Math.random()-0.5) * W * 0.22,
+        oy: cy + (Math.random()-0.5) * H * 0.35,
+      });
+    }
+  }
+  let frame = 0;
+  (function loop() {
+    ctx.clearRect(0,0,W,H);
+    drawGrid(ctx,W,H);
+    const dk = isDark();
+    // axis labels
+    ctx.globalAlpha = dk ? 0.08 : 0.1;
+    ctx.strokeStyle = dk ? '#fff' : '#000';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(30,H-20); ctx.lineTo(W-20,H-20); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(30,H-20); ctx.lineTo(30,15); ctx.stroke();
+    // tick marks
+    for (let x = 70; x < W-20; x += 60) {
+      ctx.beginPath(); ctx.moveTo(x,H-20); ctx.lineTo(x,H-16); ctx.stroke();
+    }
+    for (let y = H-60; y > 15; y -= 40) {
+      ctx.beginPath(); ctx.moveTo(30,y); ctx.lineTo(26,y); ctx.stroke();
+    }
+    // points
+    for (const p of points) {
+      ctx.globalAlpha = dk ? p.alpha : Math.min(p.alpha+0.2, 0.7);
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+    }
+    // regression line (slowly rotating)
+    const angle = Math.sin(frame * 0.003) * 0.15 - 0.25;
+    ctx.globalAlpha = dk ? 0.12 : 0.18;
+    ctx.strokeStyle = '#d04030';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    ctx.moveTo(40, H/2 - Math.tan(angle) * (W/2 - 40));
+    ctx.lineTo(W-30, H/2 + Math.tan(angle) * (W/2 - 30));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+    // drift
+    for (const p of points) {
+      p.x += p.vx; p.y += p.vy;
+      p.vx += (p.ox - p.x) * 0.0004;
+      p.vy += (p.oy - p.y) * 0.0004;
+      p.vx += (Math.random()-0.5)*0.008;
+      p.vy += (Math.random()-0.5)*0.008;
+      p.vx *= 0.995; p.vy *= 0.995;
+    }
+    frame++;
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+
+</body>
+</html>

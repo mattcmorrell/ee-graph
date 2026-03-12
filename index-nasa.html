@@ -1,62 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Employee Graph Lab</title>
+<title>Employee Graph Lab — NASA-PUNK</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root, [data-theme="dark"] {
-  --bg: #0c0d12;
-  --surface: #14161c;
-  --surface-2: #1c1e26;
-  --border: #2c3040;
-  --border-hover: #3e4458;
-  --text: #a8b0be;
-  --text-dim: #7e8898;
-  --text-bright: #dce0e8;
-  --white: #eef0f4;
-  --accent-blue: #6b96f5;
-  --accent-red: #ee6860;
-  --accent-purple: #aa8cf5;
-  --accent-teal: #42d4c0;
-  --accent-amber: #f0ac3a;
-  --spine: #282c3a;
-  --spine-dot: #3a4050;
-  --dot-grid: rgba(255,255,255,0.018);
-  --noise-opacity: 0.025;
-  --card-shadow-hover: 0 12px 40px -12px rgba(0,0,0,0.6);
+:root, [data-theme="light"] {
+  --bg: #f4f1eb;
+  --surface: #fffdf8;
+  --surface-2: #eae6dd;
+  --border: #d0c9ba;
+  --border-hover: #a69e8e;
+  --text: #5a5347;
+  --text-dim: #6c6454;
+  --text-bright: #1c1a16;
+  --white: #141210;
+  --accent-blue: #0b3d91;
+  --accent-red: #fc3d21;
+  --accent-purple: #c9a227;
+  --accent-teal: #2d6a4f;
+  --accent-amber: #c9a227;
+  --spine: #c4bda8;
+  --spine-dot: #9a927e;
+  --dot-grid: rgba(0,0,0,0.02);
+  --noise-opacity: 0.015;
+  --card-shadow-hover: 0 12px 40px -12px rgba(11,61,145,0.12);
 }
 
-[data-theme="light"] {
-  --bg: #f5f6f8;
-  --surface: #ffffff;
-  --surface-2: #eef0f3;
-  --border: #d8dbe3;
-  --border-hover: #b0b6c4;
-  --text: #4a5268;
-  --text-dim: #646c7e;
-  --text-bright: #1c2030;
-  --white: #141620;
-  --accent-blue: #3d6ad6;
-  --accent-red: #c44840;
-  --accent-purple: #7454c0;
-  --accent-teal: #1a9485;
-  --accent-amber: #b87c18;
-  --spine: #dfe2ea;
-  --spine-dot: #c4c8d4;
-  --dot-grid: rgba(0,0,0,0.022);
+[data-theme="dark"] {
+  --bg: #0c1020;
+  --surface: #151c30;
+  --surface-2: #1c2540;
+  --border: #2a3858;
+  --border-hover: #3e5078;
+  --text: #9aaac8;
+  --text-dim: #7d8fb3;
+  --text-bright: #d4ddef;
+  --white: #eaecf4;
+  --accent-blue: #5c9aff;
+  --accent-red: #ff6054;
+  --accent-purple: #dbb840;
+  --accent-teal: #4ace88;
+  --accent-amber: #dbb840;
+  --spine: #253050;
+  --spine-dot: #354870;
+  --dot-grid: rgba(255,255,255,0.015);
   --noise-opacity: 0.02;
-  --card-shadow-hover: 0 12px 40px -12px rgba(0,0,0,0.08);
+  --card-shadow-hover: 0 12px 40px -12px rgba(0,0,0,0.5);
 }
 
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Familjen Grotesk', sans-serif;
+  font-family: 'DM Mono', monospace;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -87,21 +87,83 @@ body::before {
   padding-left: 48px;
 }
 
-.header-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 40px;
-  font-weight: 800;
-  color: var(--white);
-  letter-spacing: -0.04em;
-  line-height: 1;
+.header-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 10px;
 }
 
+.mission-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2.5px solid var(--accent-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  background: var(--surface);
+}
+
+.mission-badge::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+.mission-badge svg {
+  width: 22px;
+  height: 22px;
+  color: var(--accent-blue);
+}
+
+.header-title {
+  font-family: 'Anybody', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .header-title .gr {
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple) 60%, var(--accent-teal));
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal) 60%, var(--accent-amber));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.mission-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 500;
+  color: var(--accent-teal);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mission-status::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
 .header-actions {
@@ -112,7 +174,7 @@ body::before {
 }
 
 .header-hint {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 11.5px;
   font-weight: 400;
   color: var(--text);
@@ -123,21 +185,21 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 11.5px;
   font-weight: 500;
   color: var(--accent-blue);
   background: none;
   padding: 4px 10px;
   border-radius: 6px;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--accent-blue);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
 }
 
 .contribute-link:hover {
-  border-color: var(--accent-blue);
-  background: rgba(91,138,240,0.06);
+  background: var(--accent-blue);
+  color: #fff;
 }
 
 /* ── Timeline ── */
@@ -152,7 +214,7 @@ body::before {
   left: 11px;
   top: 0;
   bottom: 0;
-  width: 1px;
+  width: 2px;
   background: var(--spine);
 }
 
@@ -170,20 +232,21 @@ body::before {
   content: '';
   position: absolute;
   left: -42px;
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: var(--spine-dot);
+  background: var(--accent-blue);
   border: 2px solid var(--bg);
-  box-shadow: 0 0 0 1px var(--spine-dot);
+  box-shadow: 0 0 0 2px var(--accent-blue);
 }
 
 .date-marker .date-text {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 11px;
   font-weight: 500;
   color: var(--text-dim);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 /* ── Cards ── */
@@ -198,14 +261,15 @@ body::before {
   left: -38px;
   top: 22px;
   width: 26px;
-  height: 1px;
+  height: 2px;
   background: var(--spine);
 }
 
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-top: 3px solid var(--accent-blue);
+  border-radius: 8px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -230,7 +294,7 @@ body::before {
 .card:hover {
   border-color: var(--border-hover);
   box-shadow: var(--card-shadow-hover);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 .card-preview {
@@ -259,30 +323,33 @@ body::before {
 }
 
 .card-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Anybody', sans-serif;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--white);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .pill {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 9px;
   font-weight: 500;
   padding: 2px 7px;
-  border-radius: 4px;
+  border-radius: 3px;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
-.pill-new { background: rgba(91,138,240,0.12); color: var(--accent-blue); }
-.pill-updated { background: rgba(134,144,160,0.1); color: var(--text-dim); }
+.pill-new { background: var(--accent-red); color: #fff; font-weight: 500; }
+.pill-updated { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
 
 .card-desc {
-  font-size: 13px;
+  font-size: 12.5px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
   color: var(--text);
-  line-height: 1.5;
+  line-height: 1.55;
   margin-bottom: 12px;
 }
 
@@ -290,8 +357,9 @@ body::before {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
 }
 
 .card-meta .sep { color: var(--border); }
@@ -303,7 +371,7 @@ body::before {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 8px;
   font-weight: 500;
   color: #fff;
@@ -311,9 +379,9 @@ body::before {
   margin-right: 4px;
 }
 
-.av-m { background: linear-gradient(135deg, #5b8af0, #7c6cf0); }
-.av-k { background: linear-gradient(135deg, #e8a030, #eb7c30); }
-.av-s { background: linear-gradient(135deg, #36c9b4, #34d399); }
+.av-m { background: linear-gradient(135deg, #0b3d91, #1a5cc8); }
+.av-k { background: linear-gradient(135deg, #c9a227, #d4af37); }
+.av-s { background: linear-gradient(135deg, #2d6a4f, #3a8868); }
 
 .card-meta .comments {
   display: inline-flex;
@@ -326,7 +394,7 @@ body::before {
 .card-stats {
   display: flex;
   gap: 12px;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 10.5px;
   font-weight: 300;
   color: var(--text-dim);
@@ -353,9 +421,9 @@ body::before {
 }
 
 .card-compact .card-row-1 { margin-bottom: 0; flex-shrink: 0; }
-.card-compact .card-title { font-size: 13.5px; font-weight: 600; }
-.card-compact .card-desc { font-size: 12px; margin-bottom: 0; flex: 1; min-width: 100px; color: var(--text-dim); line-height: 1.4; }
-.card-compact .card-meta { margin-left: auto; flex-shrink: 0; font-size: 11px; }
+.card-compact .card-title { font-size: 13px; font-weight: 700; }
+.card-compact .card-desc { font-size: 11.5px; margin-bottom: 0; flex: 1; min-width: 100px; color: var(--text-dim); line-height: 1.4; }
+.card-compact .card-meta { margin-left: auto; flex-shrink: 0; font-size: 10.5px; }
 .card-compact .card-stats { display: none; }
 .card-compact .avatar { width: 16px; height: 16px; font-size: 7px; }
 
@@ -364,12 +432,15 @@ body::before {
 .card-placeholder { cursor: default; }
 .card-placeholder:hover { transform: translateY(-1px); }
 
+/* Alternate cards with red top border */
+.entry:nth-of-type(even) .card { border-top-color: var(--accent-red); }
+
 /* ── Modal ── */
 .modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(0,0,0,0.5);
+  background: rgba(10,14,26,0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -379,7 +450,7 @@ body::before {
   padding: 24px;
 }
 
-[data-theme="light"] .modal-overlay { background: rgba(0,0,0,0.25); }
+[data-theme="light"] .modal-overlay { background: rgba(20,18,16,0.2); }
 
 .modal-overlay.open {
   opacity: 1;
@@ -389,7 +460,8 @@ body::before {
 .modal {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-top: 3px solid var(--accent-blue);
+  border-radius: 8px;
   padding: 32px;
   max-width: 480px;
   width: 100%;
@@ -420,18 +492,21 @@ body::before {
 .modal-close:hover { color: var(--text-bright); }
 
 .modal-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Anybody', sans-serif;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--white);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   margin-bottom: 6px;
 }
 
 .modal-desc {
-  font-size: 13px;
+  font-size: 12.5px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
   color: var(--text);
-  line-height: 1.5;
+  line-height: 1.55;
   margin-bottom: 24px;
 }
 
@@ -449,44 +524,48 @@ body::before {
 }
 
 .step-num {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  background: var(--accent-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
   font-weight: 500;
-  color: var(--text-dim);
+  color: #fff;
   flex-shrink: 0;
   margin-top: 1px;
 }
 
 .modal-step strong {
+  font-family: 'Anybody', sans-serif;
   font-size: 13px;
   font-weight: 600;
   color: var(--text-bright);
   display: block;
   margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .modal-step p {
-  font-size: 12.5px;
+  font-size: 12px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
   color: var(--text);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 code.inline {
   display: inline;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 11px;
   color: var(--text-bright);
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 1px 5px;
   white-space: nowrap;
 }
@@ -501,20 +580,20 @@ code.inline {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 11.5px;
   font-weight: 500;
   color: var(--text);
   text-decoration: none;
   padding: 7px 12px;
-  border-radius: 7px;
-  border: 1px solid var(--border);
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
   transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
 
 .modal-link:hover {
-  border-color: var(--border-hover);
-  color: var(--text-bright);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
   background: var(--surface-2);
 }
 
@@ -531,18 +610,18 @@ code.inline {
   height: 36px;
   border-radius: 50%;
   background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
+  border: 1.5px solid var(--accent-blue);
+  color: var(--accent-blue);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s, background 0.2s;
 }
 
 .theme-toggle:hover {
-  border-color: var(--border-hover);
-  color: var(--text-bright);
+  background: var(--accent-blue);
+  color: #fff;
   transform: scale(1.1);
 }
 
@@ -562,49 +641,50 @@ code.inline {
   display: flex;
   gap: 2px;
   padding: 4px;
-  background: rgba(15,17,22,0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(11,61,145,0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
   border: 1px solid var(--border);
-  border-radius: 10px;
 }
 
-[data-theme="light"] .version-switcher {
-  background: rgba(255,255,255,0.85);
+[data-theme="dark"] .version-switcher {
+  background: rgba(17,23,40,0.85);
+  border-color: var(--border);
 }
 
 .vs-btn {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  font-weight: 500;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--text-dim);
   text-decoration: none;
-  padding: 5px 12px;
-  border-radius: 7px;
+  padding: 5px 14px;
+  border-radius: 20px;
   transition: color 0.2s, background 0.2s;
   white-space: nowrap;
 }
 
 .vs-btn:hover {
   color: var(--text-bright);
-  background: var(--surface-2);
+  background: rgba(11,61,145,0.08);
 }
 
 .vs-btn.vs-active {
-  color: var(--white);
   background: var(--accent-blue);
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  color: #fff;
+  font-weight: 500;
 }
 
 /* ── Footer ── */
 .footer {
   margin-top: 48px;
   padding: 16px 0 0 48px;
-  border-top: 1px solid var(--border);
+  border-top: 2px solid var(--spine);
 }
 
 .footer a {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Mono', monospace;
   font-size: 11px;
   font-weight: 400;
   color: var(--text-dim);
@@ -621,7 +701,7 @@ code.inline {
 
 /* ── Light mode ── */
 [data-theme="light"] .avatar { color: #fff; }
-[data-theme="light"] .card { box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+[data-theme="light"] .card { box-shadow: 0 1px 3px rgba(11,61,145,0.06); }
 
 /* ── Responsive ── */
 @media (max-width: 600px) {
@@ -632,6 +712,9 @@ code.inline {
   .footer { padding-left: 0; }
   .card-preview { height: 140px; }
   .card-compact .card-body { flex-wrap: wrap; }
+  .header-title { font-size: 28px; }
+  .mission-badge { width: 38px; height: 38px; }
+  .mission-badge svg { width: 18px; height: 18px; }
 }
 </style>
 </head>
@@ -640,7 +723,18 @@ code.inline {
 <div class="page">
 
   <header class="header">
-    <h1 class="header-title"><span class="gr">Employee Graph</span> Lab</h1>
+    <div class="mission-status">Mission Status: Active</div>
+    <div class="header-top">
+      <div class="mission-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10"/>
+          <ellipse cx="12" cy="12" rx="4" ry="10" transform="rotate(60 12 12)"/>
+          <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <h1 class="header-title"><span class="gr">Employee Graph</span> Lab</h1>
+    </div>
     <div class="header-actions">
       <span class="header-hint">Open anything. Hit Discuss to comment.</span>
       <button class="contribute-link" id="contribute-btn">
@@ -726,9 +820,9 @@ code.inline {
             <span class="pill pill-new">New</span>
           </div>
           <div class="card-stats">
-            <span><span class="dot" style="background:#5b8af0"></span>783 nodes</span>
-            <span><span class="dot" style="background:#34d399"></span>3,281 edges</span>
-            <span><span class="dot" style="background:#a78bfa"></span>30 types</span>
+            <span><span class="dot" style="background:#0b3d91"></span>783 nodes</span>
+            <span><span class="dot" style="background:#2d6a4f"></span>3,281 edges</span>
+            <span><span class="dot" style="background:#c9a227"></span>30 types</span>
           </div>
           <p class="card-desc">Interactive force-directed visualization of the full employee graph. Search, filter by type, click any node to walk its connections.</p>
           <div class="card-meta">
@@ -808,6 +902,15 @@ code.inline {
     <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
   </button>
 
+  <nav class="version-switcher">
+    <a href="index.html" class="vs-btn">Original</a>
+    <a href="index-mecha.html" class="vs-btn">Mecha</a>
+    <a href="index-nasa.html" class="vs-btn vs-active">NASA</a>
+    <a href="index-calm.html" class="vs-btn">Calm</a>
+    <a href="index-deco.html" class="vs-btn">Deco</a>
+    <a href="index-lab.html" class="vs-btn">Lab</a>
+  </nav>
+
   <footer class="footer">
     <a href="https://github.com/mattcmorrell/ee-graph" target="_blank">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -854,50 +957,289 @@ function initCanvas(id) {
   return { canvas, ctx, W: rect.width, H: rect.height };
 }
 
-// ── Graph Viewer ──
+// ── Graph Viewer: Star field with constellation connections ──
 (function() {
   const c = initCanvas('preview-graph');
   if (!c) return;
   const { ctx, W, H } = c;
-  const palette = ['#5b8af0','#34d399','#a78bfa','#f59e0b','#f472b6','#fb923c','#38bdf8','#818cf8','#2dd4bf','#e879f9'];
-  const N = 90, nodes = [], edges = [];
-  for (let i = 0; i < N; i++) { const a=Math.random()*Math.PI*2, d=Math.random()*Math.min(W,H)*.36; nodes.push({x:W/2+Math.cos(a)*d,y:H/2+Math.sin(a)*d,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,r:1.5+Math.random()*2.5,color:palette[i%palette.length],alpha:.3+Math.random()*.45}); }
-  for (let i=0;i<N;i++){const b=Math.floor(Math.random()*N);if(b!==i)edges.push([i,b]);if(Math.random()<.25){const b2=Math.floor(Math.random()*N);if(b2!==i)edges.push([i,b2]);}}
-  (function loop(){ctx.clearRect(0,0,W,H);const lt=isLight();for(const[a,b]of edges){const na=nodes[a],nb=nodes[b],dx=na.x-nb.x,dy=na.y-nb.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist>160)continue;ctx.globalAlpha=(1-dist/160)*(lt?.1:.05);ctx.strokeStyle=na.color;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);ctx.stroke();}for(const n of nodes){ctx.globalAlpha=lt?Math.min(n.alpha+.3,1):n.alpha;ctx.fillStyle=n.color;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;for(const n of nodes){n.x+=n.vx;n.y+=n.vy;n.vx+=(W/2-n.x)*.00004;n.vy+=(H/2-n.y)*.00004;if(n.x<8)n.vx+=.08;if(n.x>W-8)n.vx-=.08;if(n.y<8)n.vy+=.08;if(n.y>H-8)n.vy-=.08;n.vx+=(Math.random()-.5)*.012;n.vy+=(Math.random()-.5)*.012;n.vx*=.997;n.vy*=.997;}requestAnimationFrame(loop);})();
+  const starColors = ['#c9a227','#d4af37','#f0d060','#ffe08a','#fff4c2','#4a8eff','#7baaf7','#fc5040'];
+  const N = 100, stars = [], constellations = [];
+
+  // Create stars at varying depths (parallax layers)
+  for (let i = 0; i < N; i++) {
+    const layer = Math.random(); // 0=far, 1=near
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 0.5 + layer * 2.5,
+      color: starColors[Math.floor(Math.random() * starColors.length)],
+      alpha: 0.15 + layer * 0.6,
+      layer: layer,
+      twinklePhase: Math.random() * Math.PI * 2,
+      twinkleSpeed: 0.005 + Math.random() * 0.015
+    });
+  }
+
+  // Create constellation edges between nearby stars
+  for (let i = 0; i < N; i++) {
+    for (let j = i + 1; j < N; j++) {
+      const dx = stars[i].x - stars[j].x, dy = stars[i].y - stars[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 80 && Math.random() < 0.3) {
+        constellations.push([i, j]);
+      }
+    }
+  }
+
+  let frame = 0;
+  (function loop() {
+    ctx.clearRect(0, 0, W, H);
+    const lt = isLight();
+
+    // Slow parallax drift
+    for (const s of stars) {
+      s.x += (0.02 + s.layer * 0.05);
+      if (s.x > W + 5) s.x = -5;
+    }
+
+    // Draw constellation lines
+    for (const [a, b] of constellations) {
+      const sa = stars[a], sb = stars[b];
+      const dx = sa.x - sb.x, dy = sa.y - sb.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > 100) continue;
+      ctx.globalAlpha = (1 - dist / 100) * (lt ? 0.12 : 0.08);
+      ctx.strokeStyle = lt ? '#0b3d91' : '#4a8eff';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(sa.x, sa.y);
+      ctx.lineTo(sb.x, sb.y);
+      ctx.stroke();
+    }
+
+    // Draw stars with twinkling
+    for (const s of stars) {
+      const twinkle = 0.6 + 0.4 * Math.sin(frame * s.twinkleSpeed + s.twinklePhase);
+      ctx.globalAlpha = s.alpha * twinkle * (lt ? 0.7 : 1);
+      ctx.fillStyle = lt ? '#0b3d91' : s.color;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Glow for larger stars
+      if (s.r > 2) {
+        ctx.globalAlpha = s.alpha * twinkle * 0.15;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    ctx.globalAlpha = 1;
+    frame++;
+    requestAnimationFrame(loop);
+  })();
 })();
 
-// ── Career Conversation ──
+// ── Career Conversation: Orbital paths with satellites ──
 (function() {
   const c = initCanvas('preview-career');
   if (!c) return;
   const { ctx, W, H } = c;
-  const colors=['#9b7aea','#818cf8','#36c9b4','#c4b5fd'];
-  const orbs=[];for(let i=0;i<28;i++)orbs.push({cx:W*(.2+Math.random()*.6),cy:H*(.2+Math.random()*.6),angle:Math.random()*Math.PI*2,speed:.2+Math.random()*.35,orbit:12+Math.random()*35,r:1.5+Math.random()*2,color:colors[i%colors.length],alpha:.2+Math.random()*.35,x:0,y:0});
-  (function loop(){ctx.clearRect(0,0,W,H);const lt=isLight();for(const o of orbs){o.angle+=o.speed*.01;o.x=o.cx+Math.cos(o.angle)*o.orbit;o.y=o.cy+Math.sin(o.angle)*o.orbit;}ctx.lineWidth=.5;for(let i=0;i<orbs.length;i++)for(let j=i+1;j<orbs.length;j++){const dx=orbs[i].x-orbs[j].x,dy=orbs[i].y-orbs[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<90){ctx.globalAlpha=(1-dist/90)*(lt?.1:.05);ctx.strokeStyle=orbs[i].color;ctx.beginPath();ctx.moveTo(orbs[i].x,orbs[i].y);ctx.lineTo(orbs[j].x,orbs[j].y);ctx.stroke();}}for(const o of orbs){ctx.globalAlpha=lt?Math.min(o.alpha+.3,1):o.alpha;ctx.fillStyle=o.color;ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;requestAnimationFrame(loop);})();
+  const cx = W / 2, cy = H / 2;
+
+  const orbits = [];
+  const orbitColors = ['#0b3d91', '#4a8eff', '#c9a227', '#2d6a4f', '#fc3d21'];
+
+  // Create concentric elliptical orbits
+  for (let i = 0; i < 5; i++) {
+    const rx = 30 + i * 28;
+    const ry = 15 + i * 16;
+    const tilt = -0.15 + i * 0.12;
+    const sats = [];
+    const satCount = 2 + Math.floor(Math.random() * 3);
+    for (let s = 0; s < satCount; s++) {
+      sats.push({
+        angle: (Math.PI * 2 / satCount) * s + Math.random() * 0.5,
+        speed: (0.004 + Math.random() * 0.006) * (i % 2 === 0 ? 1 : -1),
+        r: 1.5 + Math.random() * 2,
+        trail: []
+      });
+    }
+    orbits.push({ rx, ry, tilt, color: orbitColors[i], sats });
+  }
+
+  (function loop() {
+    ctx.clearRect(0, 0, W, H);
+    const lt = isLight();
+
+    // Draw central body
+    ctx.globalAlpha = lt ? 0.3 : 0.2;
+    ctx.fillStyle = lt ? '#c9a227' : '#d4af37';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = lt ? 0.08 : 0.05;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    for (const orbit of orbits) {
+      // Draw orbit path (ellipse)
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(orbit.tilt);
+      ctx.globalAlpha = lt ? 0.12 : 0.06;
+      ctx.strokeStyle = orbit.color;
+      ctx.lineWidth = 0.6;
+      ctx.setLineDash([2, 4]);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, orbit.rx, orbit.ry, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // Animate satellites
+      for (const sat of orbit.sats) {
+        sat.angle += sat.speed;
+        const sx = cx + Math.cos(sat.angle) * orbit.rx * Math.cos(orbit.tilt) - Math.sin(sat.angle) * orbit.ry * Math.sin(orbit.tilt);
+        const sy = cy + Math.cos(sat.angle) * orbit.rx * Math.sin(orbit.tilt) + Math.sin(sat.angle) * orbit.ry * Math.cos(orbit.tilt);
+
+        // Trail
+        sat.trail.push({ x: sx, y: sy });
+        if (sat.trail.length > 12) sat.trail.shift();
+        for (let t = 0; t < sat.trail.length; t++) {
+          ctx.globalAlpha = (t / sat.trail.length) * (lt ? 0.15 : 0.08);
+          ctx.fillStyle = orbit.color;
+          ctx.beginPath();
+          ctx.arc(sat.trail[t].x, sat.trail[t].y, sat.r * 0.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Satellite dot
+        ctx.globalAlpha = lt ? 0.75 : 0.55;
+        ctx.fillStyle = orbit.color;
+        ctx.beginPath();
+        ctx.arc(sx, sy, sat.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Glow
+        ctx.globalAlpha = lt ? 0.12 : 0.08;
+        ctx.beginPath();
+        ctx.arc(sx, sy, sat.r * 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(loop);
+  })();
 })();
 
-// ── Interview Intelligence ──
+// ── Interview Intelligence: Retro telemetry / analog signal readout ──
 (function() {
   const c = initCanvas('preview-interview');
   if (!c) return;
   const { ctx, W, H } = c;
-  const colors=['#36c9b4','#5b8af0','#34d399','#38bdf8'];
-  const barCount=22,barW=W/barCount,bars=[],dots=[];
-  for(let i=0;i<barCount;i++)bars.push({x:i*barW,h:20+Math.random()*H*.5,color:colors[i%colors.length],phase:Math.random()*Math.PI*2,speed:.008+Math.random()*.01});
-  for(let i=0;i<16;i++)dots.push({x:20+Math.random()*(W-40),y:20+Math.random()*(H-40),r:1.5+Math.random()*1.5,color:colors[i%colors.length],alpha:.15+Math.random()*.25,vy:(Math.random()-.5)*.15});
-  let frame=0;
-  (function loop(){ctx.clearRect(0,0,W,H);const lt=isLight();for(const b of bars){const wave=Math.sin(frame*b.speed+b.phase)*6;ctx.globalAlpha=lt?.12:.06;ctx.fillStyle=b.color;ctx.fillRect(b.x+2,H-(b.h+wave),barW-4,b.h+wave);}for(const d of dots){d.y+=d.vy;if(d.y<8||d.y>H-8)d.vy*=-1;ctx.globalAlpha=lt?d.alpha+.2:d.alpha;ctx.fillStyle=d.color;ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;frame++;requestAnimationFrame(loop);})();
+  const colors = ['#0b3d91', '#4a8eff', '#2d6a4f', '#c9a227', '#fc3d21'];
+
+  // Create overlapping sine wave signals
+  const signals = [];
+  for (let i = 0; i < 5; i++) {
+    signals.push({
+      freq: 0.008 + i * 0.005,
+      amp: 12 + Math.random() * 25,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.015 + Math.random() * 0.02,
+      yOffset: H * (0.25 + i * 0.12),
+      color: colors[i],
+      lineWidth: 1 + Math.random() * 0.8
+    });
+  }
+
+  // Horizontal grid lines (retro gauge markers)
+  const gridLines = [];
+  for (let y = 20; y < H; y += 30) {
+    gridLines.push(y);
+  }
+
+  let frame = 0;
+  (function loop() {
+    ctx.clearRect(0, 0, W, H);
+    const lt = isLight();
+
+    // Draw horizontal grid
+    ctx.lineWidth = 0.5;
+    for (const y of gridLines) {
+      ctx.globalAlpha = lt ? 0.06 : 0.03;
+      ctx.strokeStyle = lt ? '#0b3d91' : '#4a8eff';
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+
+    // Draw vertical time markers
+    for (let x = 0; x < W; x += 40) {
+      ctx.globalAlpha = lt ? 0.04 : 0.02;
+      ctx.strokeStyle = lt ? '#0b3d91' : '#4a8eff';
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, H);
+      ctx.stroke();
+    }
+
+    // Draw signal waves
+    for (const sig of signals) {
+      ctx.globalAlpha = lt ? 0.35 : 0.2;
+      ctx.strokeStyle = sig.color;
+      ctx.lineWidth = sig.lineWidth;
+      ctx.beginPath();
+
+      for (let x = 0; x <= W; x += 2) {
+        const y = sig.yOffset +
+          Math.sin((x * sig.freq) + frame * sig.speed + sig.phase) * sig.amp +
+          Math.sin((x * sig.freq * 2.3) + frame * sig.speed * 0.7) * sig.amp * 0.3;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Glow effect for the signal
+      ctx.globalAlpha = lt ? 0.06 : 0.04;
+      ctx.lineWidth = sig.lineWidth * 4;
+      ctx.stroke();
+      ctx.lineWidth = sig.lineWidth;
+    }
+
+    // Scanning line (sweeping vertically like old CRT)
+    const scanX = (frame * 0.8) % W;
+    ctx.globalAlpha = lt ? 0.08 : 0.05;
+    ctx.strokeStyle = lt ? '#fc3d21' : '#fc5040';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(scanX, 0);
+    ctx.lineTo(scanX, H);
+    ctx.stroke();
+
+    // Readout dots at scan intersection
+    for (const sig of signals) {
+      const y = sig.yOffset +
+        Math.sin((scanX * sig.freq) + frame * sig.speed + sig.phase) * sig.amp +
+        Math.sin((scanX * sig.freq * 2.3) + frame * sig.speed * 0.7) * sig.amp * 0.3;
+      ctx.globalAlpha = lt ? 0.6 : 0.4;
+      ctx.fillStyle = sig.color;
+      ctx.beginPath();
+      ctx.arc(scanX, y, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.globalAlpha = 1;
+    frame++;
+    requestAnimationFrame(loop);
+  })();
 })();
 </script>
-
-<nav class="version-switcher">
-  <a href="index.html" class="vs-btn vs-active">Original</a>
-  <a href="index-mecha.html" class="vs-btn">Mecha</a>
-  <a href="index-nasa.html" class="vs-btn">NASA</a>
-  <a href="index-calm.html" class="vs-btn">Calm</a>
-  <a href="index-deco.html" class="vs-btn">Deco</a>
-  <a href="index-lab.html" class="vs-btn">Lab</a>
-</nav>
 
 </body>
 </html>
