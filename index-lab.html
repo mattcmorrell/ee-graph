@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Graph Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root, [data-theme="light"] {
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --surface-2: #f2f2ee;
+  --border: #ddddd8;
+  --border-hover: #b8b8b2;
+  --text: #4a4a50;
+  --text-dim: #6c6c74;
+  --text-bright: #1a1a1e;
+  --white: #0e0e12;
+  --accent: #d04030;
+  --accent-secondary: #0d8a7a;
+  --accent-tertiary: #6860c8;
+  --spine: #d0d0ca;
+  --spine-dot: #b0b0a8;
+  --specimen: #a0a098;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  --card-shadow-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+[data-theme="dark"] {
+  --bg: #131316;
+  --surface: #1c1c22;
+  --surface-2: #26262c;
+  --border: #383842;
+  --border-hover: #525260;
+  --text: #a8a8b2;
+  --text-dim: #8d8d9f;
+  --text-bright: #dcdce2;
+  --white: #efeff2;
+  --accent: #ee6456;
+  --accent-secondary: #22c8b0;
+  --accent-tertiary: #8e88ee;
+  --spine: #343440;
+  --spine-dot: #4a4a58;
+  --specimen: #606070;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --card-shadow-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Dot grid background ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.12) 0.8px, transparent 0.8px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="dark"] body::before {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.1) 0.8px, transparent 0.8px);
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 64px 24px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ── */
+.header {
+  margin-bottom: 56px;
+  padding-left: 52px;
+}
+
+.header-rule {
+  width: 48px;
+  height: 2px;
+  background: var(--accent);
+  margin-bottom: 20px;
+}
+
+.header-title {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+
+.header-title .lab {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+
+.header-sub {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.data-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.data-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.data-stat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.data-num {
+  font-weight: 500;
+  color: var(--text-bright);
+}
+
+.data-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.data-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  background: none;
+  padding: 5px 10px;
+  border-radius: 1px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.data-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.data-link svg { opacity: 0.5; }
+.data-link:hover svg { opacity: 0.8; }
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding-left: 52px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--spine);
+}
+
+.date-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+  margin-top: 12px;
+}
+
+.date-marker:first-child { margin-top: 0; }
+
+/* tick mark instead of dot */
+.date-marker::before {
+  content: '';
+  position: absolute;
+  left: -46px;
+  width: 10px;
+  height: 1px;
+  background: var(--spine-dot);
+}
+
+.date-marker .date-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Cards ── */
+.entry {
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.entry::before {
+  content: '';
+  position: absolute;
+  left: -41px;
+  top: 24px;
+  width: 30px;
+  height: 1px;
+  background: var(--spine);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  box-shadow: var(--card-shadow);
+  transition: border-color 0.2s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  opacity: 0;
+  animation: rise 0.45s cubic-bezier(0.23,1,0.32,1) forwards;
+}
+
+.entry:nth-of-type(1) .card { animation-delay: 0s; }
+.entry:nth-of-type(2) .card { animation-delay: 0.04s; }
+.entry:nth-of-type(3) .card { animation-delay: 0.08s; }
+.entry:nth-of-type(4) .card { animation-delay: 0.12s; }
+.entry:nth-of-type(5) .card { animation-delay: 0.16s; }
+.entry:nth-of-type(6) .card { animation-delay: 0.2s; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+.card:hover::after {
+  width: 3px;
+}
+
+.card-preview {
+  height: 172px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.card-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-specimen {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 300;
+  color: var(--specimen);
+  letter-spacing: 0.04em;
+  z-index: 2;
+  transition: color 0.2s;
+}
+
+.card:hover .card-specimen {
+  color: var(--accent);
+}
+
+.card-body {
+  padding: 14px 18px 16px;
+}
+
+.card-row-1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 1px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pill-new {
+  background: var(--accent);
+  color: #fff;
+}
+
+.pill-updated {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.card-desc {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.card-meta .sep { color: var(--border); }
+
+.avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5px;
+  font-weight: 500;
+  color: #fff;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.av-m { background: var(--accent-tertiary); }
+.av-k { background: #c08840; }
+.av-s { background: var(--accent-secondary); }
+
+.card-meta .comments {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-meta .comments svg { opacity: 0.4; }
+
+.card-stats {
+  display: flex;
+  gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 300;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.card-stats .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 0;
+  margin-right: 4px;
+  vertical-align: middle;
+  position: relative;
+  top: -0.5px;
+}
+
+/* ── Compact card ── */
+.card-compact .card-body {
+  padding: 11px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-compact .card-row-1 { margin-bottom: 0; flex-shrink: 0; }
+.card-compact .card-title { font-size: 13px; font-weight: 600; }
+.card-compact .card-desc { font-size: 12px; margin-bottom: 0; flex: 1; min-width: 100px; color: var(--text-dim); line-height: 1.4; }
+.card-compact .card-meta { margin-left: auto; flex-shrink: 0; font-size: 10.5px; }
+.card-compact .card-stats { display: none; }
+.card-compact .avatar { width: 16px; height: 16px; font-size: 7px; }
+.card-compact .card-specimen { display: none; }
+
+.entry-compact::before { top: 16px; }
+
+.card-placeholder { cursor: default; }
+.card-placeholder:hover { transform: translateY(0); }
+.card-placeholder:hover::after { width: 0; }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  padding: 24px;
+}
+
+[data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.55); }
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 32px;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  transform: translateY(6px);
+  transition: transform 0.25s cubic-bezier(0.23,1,0.32,1);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] .modal { box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+
+.modal-overlay.open .modal {
+  transform: translateY(0);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 0;
+  transition: color 0.15s;
+  line-height: 1;
+}
+
+.modal-close:hover { color: var(--accent); }
+
+.modal-title {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+
+.modal-desc {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+.modal-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.modal-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.modal-step strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-bright);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.modal-step p {
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+code.inline {
+  display: inline;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-bright);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 1px;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+.modal-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-bright);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 1px;
+  border: 1px solid var(--border-hover);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.modal-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(208,64,48,0.04);
+}
+
+.modal-link svg { opacity: 0.7; }
+.modal-link:hover svg { opacity: 1; }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 50;
+  width: 32px;
+  height: 32px;
+  border-radius: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.theme-toggle svg { width: 14px; height: 14px; }
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+/* ── Version Switcher ── */
+.version-switcher {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 1px;
+  padding: 3px;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+
+.vs-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 0;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.vs-btn:hover {
+  color: var(--text-bright);
+  background: var(--surface-2);
+}
+
+.vs-btn.vs-active {
+  color: #fff;
+  background: var(--accent);
+}
+
+/* ── Footer ── */
+.footer {
+  margin-top: 48px;
+  padding: 16px 0 0 52px;
+  border-top: 1px solid var(--border);
+}
+
+.footer a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.footer a:hover { color: var(--accent); }
+.footer a svg { opacity: 0.4; }
+.footer a:hover svg { opacity: 0.7; }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page { padding: 36px 16px 80px; }
+  .header { padding-left: 0; }
+  .timeline { padding-left: 0; }
+  .timeline::before, .date-marker::before, .entry::before { display: none; }
+  .footer { padding-left: 0; }
+  .card-preview { height: 140px; }
+  .card-compact .card-body { flex-wrap: wrap; }
+  .header-title { font-size: 30px; }
+  .data-bar { flex-direction: column; align-items: flex-start; }
+  .data-links { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="header">
+    <div class="header-rule"></div>
+    <h1 class="header-title">Employee Graph <span class="lab">Lab</span></h1>
+    <p class="header-sub">Everything here is built on one shared dataset. Grab the data and build something.</p>
+    <div class="data-bar">
+      <div class="data-stats">
+        <span class="data-stat"><span class="data-num">783</span> nodes</span>
+        <span class="data-stat"><span class="data-num">3,281</span> edges</span>
+        <span class="data-stat"><span class="data-num">30</span> types</span>
+      </div>
+      <div class="data-links">
+        <a href="viewer.html" target="_blank" class="data-link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 5C7 5 2.7 8.4 1 12c1.7 3.6 6 7 11 7s9.3-3.4 11-7c-1.7-3.6-6-7-11-7z"/></svg>
+          Open viewer
+        </a>
+        <a href="https://github.com/mattcmorrell/ee-graph/tree/main/data" target="_blank" class="data-link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Get the data
+        </a>
+        <button class="data-link" id="contribute-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          How to contribute
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="timeline">
+
+    <div class="date-marker"><span class="date-text">Mar 12, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card card-placeholder" href="#">
+        <div class="card-preview">
+          <span class="card-specimen">EXP-001</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Interview Intelligence</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">Connect pre-hire signals to post-hire outcomes. Which interviewers predict success? Which interview types actually correlate with performance?</p>
+          <div class="card-meta">
+            <span><span class="avatar av-s">S</span>Sarah</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 5</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="entry entry-compact">
+      <a target="_blank" class="card card-compact" href="viewer.html">
+        <div class="card-body">
+          <span class="card-specimen">EXP-002</span>
+          <div class="card-row-1">
+            <span class="card-title">Graph Viewer</span>
+            <span class="pill pill-updated">Updated</span>
+          </div>
+          <p class="card-desc">Added Giscus discussion panel</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">M</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="date-marker"><span class="date-text">Mar 11, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card card-placeholder" href="#">
+        <div class="card-preview">
+          <span class="card-specimen">EXP-003</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Career Conversation</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">AI-powered prep for every kind of 1:1. The graph surfaces comp context, flight risk signals, peer comparisons, and conversation starters.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-k">K</span>Kyle</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 12</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="date-marker"><span class="date-text">Mar 10, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card" href="viewer.html">
+        <div class="card-preview">
+          <span class="card-specimen">EXP-004</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Graph Viewer</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <div class="card-stats">
+            <span><span class="dot" style="background:var(--accent-secondary)"></span>783 nodes</span>
+            <span><span class="dot" style="background:var(--accent-tertiary)"></span>3,281 edges</span>
+            <span><span class="dot" style="background:var(--accent)"></span>30 types</span>
+          </div>
+          <p class="card-desc">Interactive force-directed visualization of the full employee graph. Search, filter by type, click any node to walk its connections.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">M</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="entry entry-compact">
+      <a target="_blank" class="card card-compact card-placeholder" href="#">
+        <div class="card-body">
+          <span class="card-specimen">EXP-005</span>
+          <div class="card-row-1">
+            <span class="card-title">Departure Cascade</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">Someone leaves &mdash; what breaks? Walk the graph outward to surface every consequence.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">M</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 7</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Contribute modal -->
+  <div class="modal-overlay" id="contribute-modal">
+    <div class="modal">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <h2 class="modal-title">Build on the graph</h2>
+      <p class="modal-desc">Every experiment on this page uses the same employee graph &mdash; a dataset of people, teams, projects, and how they're all connected. You can use it too.</p>
+
+      <div class="modal-steps">
+        <div class="modal-step">
+          <span class="step-num">1</span>
+          <div>
+            <strong>Open the project</strong>
+            <p>Open the <a href="https://github.com/mattcmorrell/ee-graph" target="_blank">ee-graph project</a> in Claude Code. The employee data is in the <code class="inline">data/</code> folder &mdash; Claude can read it and use it in whatever you build.</p>
+          </div>
+        </div>
+        <div class="modal-step">
+          <span class="step-num">2</span>
+          <div>
+            <strong>Make something</strong>
+            <p>Tell Claude what you want to explore. A prototype, a visualization, a workflow, a Figma file &mdash; anything goes. The interesting part is what happens when you follow the connections in the data.</p>
+          </div>
+        </div>
+        <div class="modal-step">
+          <span class="step-num">3</span>
+          <div>
+            <strong>Add it here</strong>
+            <p>When you're ready, ask Claude to add your experiment to this gallery page. It can create a card, link your work, and push the changes &mdash; no git knowledge needed.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-links">
+        <a href="https://github.com/mattcmorrell/ee-graph" target="_blank" class="modal-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Open in Claude Code
+        </a>
+        <a href="viewer.html" target="_blank" class="modal-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Explore the graph
+        </a>
+        <a href="https://github.com/mattcmorrell/ee-graph/tree/main/data" target="_blank" class="modal-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Browse raw data
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+
+  <footer class="footer">
+    <a href="https://github.com/mattcmorrell/ee-graph" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      mattcmorrell/ee-graph
+    </a>
+  </footer>
+
+</div>
+
+<nav class="version-switcher">
+  <a href="index.html" class="vs-btn">Original</a>
+  <a href="index-mecha.html" class="vs-btn">Mecha</a>
+  <a href="index-nasa.html" class="vs-btn">NASA</a>
+  <a href="index-calm.html" class="vs-btn">Calm</a>
+  <a href="index-deco.html" class="vs-btn">Deco</a>
+  <a href="index-lab.html" class="vs-btn vs-active">Lab</a>
+</nav>
+
+<script>
+// ── Theme ──
+(function() {
+  const saved = localStorage.getItem('ee-graph-lab-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ee-graph-lab-theme', next);
+  });
+})();
+
+// ── Contribute modal ──
+(function() {
+  const modal = document.getElementById('contribute-modal');
+  document.getElementById('contribute-btn').addEventListener('click', () => modal.classList.add('open'));
+  document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('open'); });
+})();
+
+</script>
+
+</body>
+</html>

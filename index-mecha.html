@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Graph Lab — MECHA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root, [data-theme="dark"] {
+  --bg: #080a0e;
+  --surface: #0e1218;
+  --surface-2: #14181e;
+  --border: rgba(0,255,136,0.18);
+  --border-hover: rgba(0,255,136,0.4);
+  --text: #80a894;
+  --text-dim: #5a8a72;
+  --text-bright: #c4f0d8;
+  --white: #d8ffe8;
+  --accent-green: #00ff88;
+  --accent-red: #ff3344;
+  --accent-blue: #00aaff;
+  --accent-amber: #ffaa00;
+  --spine: rgba(0,255,136,0.14);
+  --spine-dot: rgba(0,255,136,0.35);
+  --glow-green: rgba(0,255,136,0.06);
+  --glow-green-strong: rgba(0,255,136,0.15);
+  --card-shadow-hover: 0 0 30px -8px rgba(0,255,136,0.2), 0 12px 40px -12px rgba(0,0,0,0.8);
+  --scanline-opacity: 0.03;
+  --grid-opacity: 0.025;
+}
+
+[data-theme="light"] {
+  --bg: #e8ece8;
+  --surface: #f0f4f0;
+  --surface-2: #dce4dc;
+  --border: rgba(0,80,40,0.2);
+  --border-hover: rgba(0,80,40,0.4);
+  --text: #3a5a4a;
+  --text-dim: #4a6a5a;
+  --text-bright: #0a2a18;
+  --white: #081810;
+  --accent-green: #00882a;
+  --accent-red: #cc2233;
+  --accent-blue: #0066aa;
+  --accent-amber: #aa7700;
+  --spine: rgba(0,80,40,0.15);
+  --spine-dot: rgba(0,80,40,0.35);
+  --glow-green: rgba(0,80,40,0.04);
+  --glow-green-strong: rgba(0,80,40,0.1);
+  --card-shadow-hover: 0 0 20px -8px rgba(0,80,40,0.15), 0 8px 30px -12px rgba(0,0,0,0.1);
+  --scanline-opacity: 0.02;
+  --grid-opacity: 0.03;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Share Tech Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scanlines overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,255,136,var(--scanline-opacity)) 3px,
+    rgba(0,255,136,var(--scanline-opacity)) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Grid overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(rgba(0,255,136,var(--grid-opacity)) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,var(--grid-opacity)) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 56px 24px 120px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ── */
+.header {
+  margin-bottom: 48px;
+  padding-left: 48px;
+}
+
+.header-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: 0.12em;
+  line-height: 1;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(0,255,136,0.3), 0 0 60px rgba(0,255,136,0.1);
+}
+
+.header-title .gr {
+  color: var(--accent-green);
+  text-shadow: 0 0 20px rgba(0,255,136,0.5), 0 0 40px rgba(0,255,136,0.2);
+}
+
+.header-system {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--accent-green);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-system .blink {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  animation: blink-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--accent-green);
+}
+
+@keyframes blink-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-hint {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: 0.03em;
+}
+
+.contribute-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--accent-green);
+  background: rgba(0,255,136,0.04);
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.contribute-link:hover {
+  border-color: var(--accent-green);
+  background: rgba(0,255,136,0.08);
+  box-shadow: 0 0 15px rgba(0,255,136,0.15);
+}
+
+/* ── Muted indicator (worldbuilding) ── */
+.muted-indicator {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 50;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.35;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.muted-indicator::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--accent-red);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding-left: 48px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--spine-dot) 0px,
+    var(--spine-dot) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+.date-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  margin-top: 8px;
+}
+
+.date-marker:first-child { margin-top: 0; }
+
+/* Diamond shape for timeline nodes */
+.date-marker::before {
+  content: '';
+  position: absolute;
+  left: -42px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-green);
+  transform: rotate(45deg);
+  border: 1px solid var(--accent-green);
+  box-shadow: 0 0 6px rgba(0,255,136,0.4);
+}
+
+.date-marker .date-text {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--accent-green);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* ── Cards ── */
+.entry {
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.entry::before {
+  content: '';
+  position: absolute;
+  left: -38px;
+  top: 22px;
+  width: 26px;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--spine-dot) 0px,
+    var(--spine-dot) 3px,
+    transparent 3px,
+    transparent 6px
+  );
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: border-color 0.25s ease, box-shadow 0.3s ease, transform 0.25s cubic-bezier(0.23,1,0.32,1);
+  opacity: 0;
+  animation: rise 0.5s cubic-bezier(0.23,1,0.32,1) forwards;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  position: relative;
+}
+
+/* Corner accents */
+.card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  border-bottom: 1px solid var(--border);
+  transform: rotate(0deg);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.entry:nth-of-type(1) .card { animation-delay: 0s; }
+.entry:nth-of-type(2) .card { animation-delay: 0.04s; }
+.entry:nth-of-type(3) .card { animation-delay: 0.08s; }
+.entry:nth-of-type(4) .card { animation-delay: 0.12s; }
+.entry:nth-of-type(5) .card { animation-delay: 0.16s; }
+.entry:nth-of-type(6) .card { animation-delay: 0.2s; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.card-preview {
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+/* HUD frame around preview */
+.card-preview::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(0,255,136,0.06);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.card-preview::after {
+  content: 'TACTICAL VIEW';
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7px;
+  color: var(--accent-green);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.25;
+  z-index: 2;
+}
+
+.preview-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.card-body {
+  padding: 16px 20px 18px;
+}
+
+.card-row-1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pill {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  font-weight: 400;
+  padding: 2px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+}
+
+.pill-new {
+  background: rgba(0,255,136,0.15);
+  color: var(--accent-green);
+  border: none;
+}
+
+.pill-updated {
+  background: rgba(255,170,0,0.12);
+  color: var(--accent-amber);
+}
+
+.card-desc {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.card-meta .sep { color: rgba(0,255,136,0.15); }
+
+.avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  font-weight: 400;
+  color: #000;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.av-m { background: var(--accent-blue); }
+.av-k { background: var(--accent-amber); }
+.av-s { background: var(--accent-green); }
+
+.card-meta .comments {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-meta .comments svg { opacity: 0.45; }
+
+.card-stats {
+  display: flex;
+  gap: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.card-stats .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  margin-right: 4px;
+  vertical-align: middle;
+  position: relative;
+  top: -0.5px;
+}
+
+/* ── Compact card ── */
+.card-compact .card-body {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-compact .card-row-1 { margin-bottom: 0; flex-shrink: 0; }
+.card-compact .card-title { font-size: 12px; font-weight: 600; }
+.card-compact .card-desc { font-size: 11px; margin-bottom: 0; flex: 1; min-width: 100px; color: var(--text-dim); line-height: 1.4; }
+.card-compact .card-meta { margin-left: auto; flex-shrink: 0; font-size: 10px; }
+.card-compact .card-stats { display: none; }
+.card-compact .avatar { width: 16px; height: 16px; font-size: 7px; }
+
+.entry-compact::before { top: 16px; }
+
+.card-placeholder { cursor: default; }
+.card-placeholder:hover { transform: translateY(-1px); }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  padding: 24px;
+}
+
+[data-theme="light"] .modal-overlay { background: rgba(0,0,0,0.35); }
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border-hover);
+  padding: 32px;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  transform: translateY(8px) scale(0.98);
+  transition: transform 0.25s cubic-bezier(0.23,1,0.32,1);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  box-shadow: 0 0 40px rgba(0,255,136,0.08), inset 0 1px 0 rgba(0,255,136,0.05);
+}
+
+.modal-overlay.open .modal {
+  transform: translateY(0) scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 22px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 2px 6px;
+  transition: color 0.15s;
+  line-height: 1;
+}
+
+.modal-close:hover { color: var(--accent-red); }
+
+.modal-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.modal-desc {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+.modal-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.modal-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* Hexagonal step number */
+.step-num {
+  width: 26px;
+  height: 26px;
+  background: var(--surface-2);
+  border: 1px solid var(--accent-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent-green);
+  flex-shrink: 0;
+  margin-top: 1px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.modal-step strong {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-bright);
+  display: block;
+  margin-bottom: 3px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.modal-step p {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11.5px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+code.inline {
+  display: inline;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-green);
+  background: rgba(0,255,136,0.06);
+  border: 1px solid rgba(0,255,136,0.12);
+  border-radius: 2px;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+.modal-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text);
+  text-decoration: none;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, color 0.2s, background 0.2s, box-shadow 0.2s;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.modal-link:hover {
+  border-color: var(--border-hover);
+  color: var(--accent-green);
+  background: rgba(0,255,136,0.04);
+  box-shadow: 0 0 12px rgba(0,255,136,0.1);
+}
+
+.modal-link svg { opacity: 0.5; }
+.modal-link:hover svg { opacity: 0.8; }
+
+/* ── Theme toggle (power symbol) ── */
+.theme-toggle {
+  position: fixed;
+  bottom: 64px;
+  right: 20px;
+  z-index: 50;
+  width: 36px;
+  height: 36px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--accent-green);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px);
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-hover);
+  color: var(--white);
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(0,255,136,0.2);
+}
+
+.theme-toggle svg { width: 15px; height: 15px; }
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+/* ── Footer ── */
+.footer {
+  margin-top: 48px;
+  padding: 16px 0 0 48px;
+  border-top: 1px solid var(--border);
+}
+
+.footer a {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.footer a:hover { color: var(--accent-green); }
+.footer a svg { opacity: 0.4; }
+.footer a:hover svg { opacity: 0.65; }
+
+/* ── Version Switcher ── */
+.version-switcher {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(10,12,16,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+}
+
+[data-theme="light"] .version-switcher {
+  background: rgba(220,228,220,0.9);
+}
+
+.vs-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 5px 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+.vs-btn:hover {
+  color: var(--text-bright);
+  background: rgba(0,255,136,0.05);
+}
+
+.vs-btn.vs-active {
+  color: #000;
+  background: var(--accent-green);
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px);
+  text-shadow: none;
+}
+
+/* ── Light mode adjustments ── */
+[data-theme="light"] .avatar { color: #fff; }
+[data-theme="light"] .card { box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+[data-theme="light"] .header-title { text-shadow: none; }
+[data-theme="light"] .header-title .gr { text-shadow: none; }
+[data-theme="light"] .vs-btn.vs-active { color: #fff; background: var(--accent-green); }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page { padding: 32px 16px 80px; }
+  .header { padding-left: 0; }
+  .timeline { padding-left: 0; }
+  .timeline::before, .date-marker::before, .entry::before { display: none; }
+  .footer { padding-left: 0; }
+  .card-preview { height: 140px; }
+  .card-compact .card-body { flex-wrap: wrap; }
+  .header-title { font-size: 22px; letter-spacing: 0.06em; }
+}
+</style>
+</head>
+<body>
+
+<div class="muted-indicator">Audio Muted</div>
+
+<div class="page">
+
+  <header class="header">
+    <h1 class="header-title"><span class="gr">Employee Graph</span> Lab</h1>
+    <div class="header-system"><span class="blink"></span> System Online — Mission Briefing Active</div>
+    <div class="header-actions">
+      <span class="header-hint">Open anything. Hit Discuss to comment.</span>
+      <button class="contribute-link" id="contribute-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Contribute
+      </button>
+    </div>
+  </header>
+
+  <div class="timeline">
+
+    <div class="date-marker"><span class="date-text">Mar 12, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card card-placeholder" href="#">
+        <div class="card-preview">
+          <canvas class="preview-canvas" id="preview-interview"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Interview Intelligence</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">Connect pre-hire signals to post-hire outcomes. Which interviewers predict success? Which interview types actually correlate with performance?</p>
+          <div class="card-meta">
+            <span><span class="avatar av-s">SL</span>Sarah</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 5</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="entry entry-compact">
+      <a target="_blank" class="card card-compact" href="viewer.html">
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Graph Viewer</span>
+            <span class="pill pill-updated">Updated</span>
+          </div>
+          <p class="card-desc">Added Giscus discussion panel</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="date-marker"><span class="date-text">Mar 11, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card card-placeholder" href="#">
+        <div class="card-preview">
+          <canvas class="preview-canvas" id="preview-career"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Career Conversation</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">AI-powered prep for every kind of 1:1. The graph surfaces comp context, flight risk signals, peer comparisons, and conversation starters.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-k">KR</span>Kyle</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 12</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="date-marker"><span class="date-text">Mar 10, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card" href="viewer.html">
+        <div class="card-preview">
+          <canvas class="preview-canvas" id="preview-graph"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Graph Viewer</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <div class="card-stats">
+            <span><span class="dot" style="background:#00ff88"></span>783 nodes</span>
+            <span><span class="dot" style="background:#00aaff"></span>3,281 edges</span>
+            <span><span class="dot" style="background:#ffaa00"></span>30 types</span>
+          </div>
+          <p class="card-desc">Interactive force-directed visualization of the full employee graph. Search, filter by type, click any node to walk its connections.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="entry entry-compact">
+      <a target="_blank" class="card card-compact card-placeholder" href="#">
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Departure Cascade</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">Someone leaves &mdash; what breaks? Walk the graph outward to surface every consequence.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 7</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Contribute modal -->
+  <div class="modal-overlay" id="contribute-modal">
+    <div class="modal">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <h2 class="modal-title">Contributing</h2>
+      <p class="modal-desc">Everything here is built on a shared graph dataset &mdash; 783 nodes, 3,281 edges across 30 types. Build whatever you want on top of it.</p>
+
+      <div class="modal-steps">
+        <div class="modal-step">
+          <span class="step-num">1</span>
+          <div>
+            <strong>Get the data</strong>
+            <p>The graph lives in <code class="inline">data/nodes.json</code> and <code class="inline">data/edges.json</code>. Schema is in <code class="inline">data/schema.json</code>. Clone the repo or just grab the files.</p>
+          </div>
+        </div>
+        <div class="modal-step">
+          <span class="step-num">2</span>
+          <div>
+            <strong>Build something</strong>
+            <p>Any format works &mdash; a prototype, a notebook, a Figma file, a script, a video. If it uses the graph data and shows something interesting, it belongs here.</p>
+          </div>
+        </div>
+        <div class="modal-step">
+          <span class="step-num">3</span>
+          <div>
+            <strong>Share it</strong>
+            <p>Push to a <code class="inline">poc/</code> branch, drop a link in Slack, or just show someone. We'll add it to this page.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-links">
+        <a href="https://github.com/mattcmorrell/ee-graph" target="_blank" class="modal-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Open repo
+        </a>
+        <a href="https://github.com/mattcmorrell/ee-graph/tree/main/data" target="_blank" class="modal-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Browse graph data
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Power symbol for theme toggle -->
+  <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v4"/><path d="M6.34 6.34A8 8 0 1 0 12 6a7.96 7.96 0 0 0-5.66 2.34"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v4"/><path d="M6.34 6.34A8 8 0 1 0 12 6a7.96 7.96 0 0 0-5.66 2.34"/><line x1="12" y1="2" x2="12" y2="6" stroke-width="3"/></svg>
+  </button>
+
+  <footer class="footer">
+    <a href="https://github.com/mattcmorrell/ee-graph" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      mattcmorrell/ee-graph
+    </a>
+  </footer>
+
+</div>
+
+<nav class="version-switcher">
+  <a href="index.html" class="vs-btn">Original</a>
+  <a href="index-mecha.html" class="vs-btn vs-active">Mecha</a>
+  <a href="index-nasa.html" class="vs-btn">NASA</a>
+  <a href="index-calm.html" class="vs-btn">Calm</a>
+  <a href="index-deco.html" class="vs-btn">Deco</a>
+  <a href="index-lab.html" class="vs-btn">Lab</a>
+</nav>
+
+<script>
+// ── Theme ──
+(function() {
+  const saved = localStorage.getItem('ee-graph-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ee-graph-theme', next);
+  });
+})();
+
+// ── Contribute modal ──
+(function() {
+  const modal = document.getElementById('contribute-modal');
+  document.getElementById('contribute-btn').addEventListener('click', () => modal.classList.add('open'));
+  document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('open'); });
+})();
+
+function isLight() { return document.documentElement.getAttribute('data-theme') === 'light'; }
+
+function initCanvas(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return null;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+  return { canvas, ctx, W: rect.width, H: rect.height };
+}
+
+// ── Graph Viewer — Tactical Grid Network with Targeting Reticle ──
+(function() {
+  const c = initCanvas('preview-graph');
+  if (!c) return;
+  const { ctx, W, H } = c;
+
+  // Grid-based nodes
+  const cols = 12, rows = 6;
+  const cellW = W / cols, cellH = H / rows;
+  const nodes = [];
+  const greens = ['#00ff88','#00cc66','#00aaff','#00dd77','#88ffbb'];
+
+  for (let gy = 0; gy < rows; gy++) {
+    for (let gx = 0; gx < cols; gx++) {
+      if (Math.random() < 0.45) {
+        nodes.push({
+          x: gx * cellW + cellW/2 + (Math.random()-0.5)*cellW*0.4,
+          y: gy * cellH + cellH/2 + (Math.random()-0.5)*cellH*0.4,
+          r: 1.5 + Math.random()*2,
+          color: greens[Math.floor(Math.random()*greens.length)],
+          alpha: 0.3 + Math.random()*0.5,
+          pulse: Math.random()*Math.PI*2,
+          pulseSpeed: 0.01 + Math.random()*0.02
+        });
+      }
+    }
+  }
+
+  // Angular edges (straight lines only)
+  const edges = [];
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i+1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 100 && Math.random() < 0.35) {
+        edges.push([i, j]);
+      }
+    }
+  }
+
+  let scanAngle = 0;
+
+  (function loop() {
+    ctx.clearRect(0, 0, W, H);
+    const lt = isLight();
+
+    // Faint background grid
+    ctx.globalAlpha = lt ? 0.06 : 0.03;
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < W; x += cellW) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += cellH) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    // Scanning sweep line (rotating from center)
+    scanAngle += 0.008;
+    const scanX = W/2 + Math.cos(scanAngle) * W;
+    const scanY = H/2 + Math.sin(scanAngle) * H;
+    const grad = ctx.createLinearGradient(W/2, H/2, scanX, scanY);
+    grad.addColorStop(0, 'rgba(0,255,136,0)');
+    grad.addColorStop(0.6, lt ? 'rgba(0,136,42,0.04)' : 'rgba(0,255,136,0.03)');
+    grad.addColorStop(1, 'rgba(0,255,136,0)');
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(W/2, H/2);
+    const a1 = scanAngle - 0.15;
+    const a2 = scanAngle + 0.15;
+    ctx.lineTo(W/2 + Math.cos(a1)*W, H/2 + Math.sin(a1)*H);
+    ctx.lineTo(W/2 + Math.cos(a2)*W, H/2 + Math.sin(a2)*H);
+    ctx.closePath();
+    ctx.fill();
+
+    // Edges — angular, straight lines
+    for (const [a, b] of edges) {
+      const na = nodes[a], nb = nodes[b];
+      ctx.globalAlpha = lt ? 0.12 : 0.08;
+      ctx.strokeStyle = na.color;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      // Angular routing: go horizontal first, then vertical
+      ctx.moveTo(na.x, na.y);
+      ctx.lineTo(nb.x, na.y);
+      ctx.lineTo(nb.x, nb.y);
+      ctx.stroke();
+    }
+
+    // Nodes with pulse
+    for (const n of nodes) {
+      n.pulse += n.pulseSpeed;
+      const pulseAlpha = n.alpha + Math.sin(n.pulse) * 0.15;
+      ctx.globalAlpha = lt ? Math.min(pulseAlpha + 0.3, 1) : pulseAlpha;
+      ctx.fillStyle = n.color;
+      ctx.beginPath();
+      // Diamond-shaped nodes
+      ctx.moveTo(n.x, n.y - n.r);
+      ctx.lineTo(n.x + n.r, n.y);
+      ctx.lineTo(n.x, n.y + n.r);
+      ctx.lineTo(n.x - n.r, n.y);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Center targeting reticle
+    ctx.globalAlpha = lt ? 0.15 : 0.08;
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 0.8;
+    const cx = W/2, cy = H/2, rr = 25;
+    ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, rr*0.5, 0, Math.PI*2); ctx.stroke();
+    // Crosshairs
+    ctx.beginPath();
+    ctx.moveTo(cx - rr - 8, cy); ctx.lineTo(cx - rr + 6, cy);
+    ctx.moveTo(cx + rr - 6, cy); ctx.lineTo(cx + rr + 8, cy);
+    ctx.moveTo(cx, cy - rr - 8); ctx.lineTo(cx, cy - rr + 6);
+    ctx.moveTo(cx, cy + rr - 6); ctx.lineTo(cx, cy + rr + 8);
+    ctx.stroke();
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(loop);
+  })();
+})();
+
+// ── Career Conversation — Orbiting Elements with Trajectory Arcs ──
+(function() {
+  const c = initCanvas('preview-career');
+  if (!c) return;
+  const { ctx, W, H } = c;
+
+  const colors = ['#00ff88','#00aaff','#ffaa00','#00dd77'];
+  const centers = [
+    { cx: W*0.3, cy: H*0.4 },
+    { cx: W*0.6, cy: H*0.35 },
+    { cx: W*0.5, cy: H*0.65 },
+    { cx: W*0.75, cy: H*0.55 }
+  ];
+
+  const orbs = [];
+  for (let ci = 0; ci < centers.length; ci++) {
+    const center = centers[ci];
+    const count = 4 + Math.floor(Math.random()*4);
+    for (let i = 0; i < count; i++) {
+      orbs.push({
+        cx: center.cx,
+        cy: center.cy,
+        angle: Math.random() * Math.PI * 2,
+        speed: 0.004 + Math.random() * 0.008,
+        orbit: 15 + Math.random() * 40,
+        r: 1.5 + Math.random() * 2,
+        color: colors[ci % colors.length],
+        alpha: 0.25 + Math.random() * 0.35,
+        x: 0, y: 0,
+        group: ci
+      });
+    }
+  }
+
+  (function loop() {
+    ctx.clearRect(0, 0, W, H);
+    const lt = isLight();
+
+    // Draw orbit paths (dashed trajectory arcs)
+    ctx.setLineDash([3, 4]);
+    for (let ci = 0; ci < centers.length; ci++) {
+      const center = centers[ci];
+      const groupOrbs = orbs.filter(o => o.group === ci);
+      const orbits = [...new Set(groupOrbs.map(o => Math.round(o.orbit)))];
+      for (const orb of orbits) {
+        ctx.globalAlpha = lt ? 0.08 : 0.04;
+        ctx.strokeStyle = colors[ci % colors.length];
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.arc(center.cx, center.cy, orb, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+    ctx.setLineDash([]);
+
+    // Update positions
+    for (const o of orbs) {
+      o.angle += o.speed;
+      o.x = o.cx + Math.cos(o.angle) * o.orbit;
+      o.y = o.cy + Math.sin(o.angle) * o.orbit * 0.6; // Elliptical
+    }
+
+    // Inter-group connections
+    ctx.lineWidth = 0.4;
+    for (let i = 0; i < orbs.length; i++) {
+      for (let j = i + 1; j < orbs.length; j++) {
+        if (orbs[i].group === orbs[j].group) continue;
+        const dx = orbs[i].x - orbs[j].x;
+        const dy = orbs[i].y - orbs[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 80) {
+          ctx.globalAlpha = (1 - dist/80) * (lt ? 0.1 : 0.06);
+          ctx.strokeStyle = orbs[i].color;
+          ctx.beginPath();
+          ctx.moveTo(orbs[i].x, orbs[i].y);
+          ctx.lineTo(orbs[j].x, orbs[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw prediction arcs (small dashed leader lines ahead of each orb)
+    ctx.setLineDash([2, 3]);
+    for (const o of orbs) {
+      ctx.globalAlpha = lt ? 0.12 : 0.06;
+      ctx.strokeStyle = o.color;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      for (let t = 0; t < 0.5; t += 0.05) {
+        const fa = o.angle + o.speed * 60 * t;
+        const fx = o.cx + Math.cos(fa) * o.orbit;
+        const fy = o.cy + Math.sin(fa) * o.orbit * 0.6;
+        if (t === 0) ctx.moveTo(fx, fy);
+        else ctx.lineTo(fx, fy);
+      }
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Draw orbs
+    for (const o of orbs) {
+      ctx.globalAlpha = lt ? Math.min(o.alpha + 0.3, 1) : o.alpha;
+      ctx.fillStyle = o.color;
+      ctx.beginPath();
+      ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+      ctx.fill();
+      // Glow
+      ctx.globalAlpha *= 0.3;
+      ctx.beginPath();
+      ctx.arc(o.x, o.y, o.r * 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Center markers for orbit groups
+    for (let ci = 0; ci < centers.length; ci++) {
+      const center = centers[ci];
+      ctx.globalAlpha = lt ? 0.2 : 0.1;
+      ctx.strokeStyle = colors[ci % colors.length];
+      ctx.lineWidth = 0.8;
+      // Small crosshair at center
+      ctx.beginPath();
+      ctx.moveTo(center.cx - 4, center.cy);
+      ctx.lineTo(center.cx + 4, center.cy);
+      ctx.moveTo(center.cx, center.cy - 4);
+      ctx.lineTo(center.cx, center.cy + 4);
+      ctx.stroke();
+    }
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(loop);
+  })();
+})();
+
+// ── Interview Intelligence — Power Level Readouts / Signal Bars ──
+(function() {
+  const c = initCanvas('preview-interview');
+  if (!c) return;
+  const { ctx, W, H } = c;
+
+  const colors = ['#00ff88','#00aaff','#ffaa00','#ff3344'];
+  const barCount = 24;
+  const barW = W / barCount;
+  const bars = [];
+
+  for (let i = 0; i < barCount; i++) {
+    const maxH = 20 + Math.random() * H * 0.55;
+    bars.push({
+      x: i * barW,
+      maxH: maxH,
+      currentH: maxH,
+      targetH: maxH,
+      color: colors[i % colors.length],
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.006 + Math.random() * 0.008,
+      segments: Math.floor(3 + Math.random() * 8)
+    });
+  }
+
+  let frame = 0;
+  let sweepX = 0;
+
+  (function loop() {
+    ctx.clearRect(0, 0, W, H);
+    const lt = isLight();
+
+    // Background horizontal grid lines (power level markers)
+    ctx.globalAlpha = lt ? 0.06 : 0.03;
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 0.5;
+    for (let y = H; y > 0; y -= 20) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+
+    // Draw segmented bars (power readouts)
+    for (const b of bars) {
+      const wave = Math.sin(frame * b.speed + b.phase) * 8;
+      const h = b.maxH + wave;
+      const segH = h / b.segments;
+      const gap = 2;
+
+      for (let s = 0; s < b.segments; s++) {
+        const sy = H - (s + 1) * segH + gap/2;
+        const sh = segH - gap;
+        if (sh <= 0) continue;
+
+        // Intensity fades towards top
+        const intensity = 1 - (s / b.segments) * 0.5;
+        ctx.globalAlpha = (lt ? 0.2 : 0.12) * intensity;
+
+        // Highlight bar if sweep is nearby
+        const barCenterX = b.x + barW/2;
+        const distToSweep = Math.abs(barCenterX - sweepX);
+        if (distToSweep < 30) {
+          ctx.globalAlpha += (1 - distToSweep/30) * (lt ? 0.15 : 0.1);
+        }
+
+        ctx.fillStyle = b.color;
+        ctx.fillRect(b.x + 2, sy, barW - 4, sh);
+      }
+
+      // Top cap glow
+      ctx.globalAlpha = lt ? 0.35 : 0.2;
+      ctx.fillStyle = b.color;
+      ctx.fillRect(b.x + 2, H - h - 1, barW - 4, 2);
+    }
+
+    // Scanning sweep line
+    sweepX += 1.2;
+    if (sweepX > W + 40) sweepX = -40;
+
+    ctx.globalAlpha = lt ? 0.3 : 0.15;
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(sweepX, 0);
+    ctx.lineTo(sweepX, H);
+    ctx.stroke();
+
+    // Sweep glow
+    const sweepGrad = ctx.createLinearGradient(sweepX - 20, 0, sweepX + 5, 0);
+    sweepGrad.addColorStop(0, 'rgba(0,255,136,0)');
+    sweepGrad.addColorStop(0.7, lt ? 'rgba(0,136,42,0.06)' : 'rgba(0,255,136,0.04)');
+    sweepGrad.addColorStop(1, 'rgba(0,255,136,0)');
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = sweepGrad;
+    ctx.fillRect(sweepX - 20, 0, 25, H);
+
+    // Readout text in top-right
+    ctx.globalAlpha = lt ? 0.2 : 0.1;
+    ctx.fillStyle = '#00ff88';
+    ctx.font = '8px "Share Tech Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('PWR: ' + Math.floor(70 + Math.sin(frame*0.02)*15) + '%', W - 10, 16);
+    ctx.fillText('SIG: NOMINAL', W - 10, 26);
+    ctx.textAlign = 'left';
+
+    ctx.globalAlpha = 1;
+    frame++;
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+
+</body>
+</html>
