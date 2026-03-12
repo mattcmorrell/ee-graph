@@ -1,9 +1,850 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0;url=viewer.html">
-<title>Employee Graph</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Graph Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,400;12..96,600;12..96,800&family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root, [data-theme="dark"] {
+  --bg: #08090d;
+  --surface: #0f1116;
+  --surface-2: #16181f;
+  --border: #1c1f2a;
+  --border-hover: #2c3044;
+  --text: #8690a0;
+  --text-dim: #484f5f;
+  --text-bright: #d4d8e0;
+  --white: #eceef2;
+  --accent-blue: #5b8af0;
+  --accent-red: #e8564e;
+  --accent-purple: #9b7aea;
+  --accent-teal: #36c9b4;
+  --accent-amber: #e8a030;
+  --spine: #181c26;
+  --spine-dot: #2a3040;
+  --dot-grid: rgba(255,255,255,0.018);
+  --noise-opacity: 0.025;
+  --card-shadow-hover: 0 12px 40px -12px rgba(0,0,0,0.6);
+}
+
+[data-theme="light"] {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef0f3;
+  --border: #d8dbe3;
+  --border-hover: #b0b6c4;
+  --text: #4a5268;
+  --text-dim: #7a8294;
+  --text-bright: #1c2030;
+  --white: #141620;
+  --accent-blue: #3d6ad6;
+  --accent-red: #c44840;
+  --accent-purple: #7454c0;
+  --accent-teal: #1a9485;
+  --accent-amber: #b87c18;
+  --spine: #dfe2ea;
+  --spine-dot: #c4c8d4;
+  --dot-grid: rgba(0,0,0,0.022);
+  --noise-opacity: 0.02;
+  --card-shadow-hover: 0 12px 40px -12px rgba(0,0,0,0.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Familjen Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: var(--noise-opacity);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 56px 24px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ── */
+.header {
+  margin-bottom: 48px;
+  padding-left: 48px;
+}
+
+.header-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.header-title .gr {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple) 60%, var(--accent-teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-hint {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.contribute-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--accent-blue);
+  background: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.contribute-link:hover {
+  border-color: var(--accent-blue);
+  background: rgba(91,138,240,0.06);
+}
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding-left: 48px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--spine);
+}
+
+.date-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  margin-top: 8px;
+}
+
+.date-marker:first-child { margin-top: 0; }
+
+.date-marker::before {
+  content: '';
+  position: absolute;
+  left: -42px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--spine-dot);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--spine-dot);
+}
+
+.date-marker .date-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+}
+
+/* ── Cards ── */
+.entry {
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.entry::before {
+  content: '';
+  position: absolute;
+  left: -38px;
+  top: 22px;
+  width: 26px;
+  height: 1px;
+  background: var(--spine);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: border-color 0.25s ease, box-shadow 0.3s ease, transform 0.25s cubic-bezier(0.23,1,0.32,1);
+  opacity: 0;
+  animation: rise 0.5s cubic-bezier(0.23,1,0.32,1) forwards;
+}
+
+.entry:nth-of-type(1) .card { animation-delay: 0s; }
+.entry:nth-of-type(2) .card { animation-delay: 0.04s; }
+.entry:nth-of-type(3) .card { animation-delay: 0.08s; }
+.entry:nth-of-type(4) .card { animation-delay: 0.12s; }
+.entry:nth-of-type(5) .card { animation-delay: 0.16s; }
+.entry:nth-of-type(6) .card { animation-delay: 0.2s; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.card-preview {
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.preview-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.card-body {
+  padding: 16px 20px 18px;
+}
+
+.card-row-1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+
+.pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pill-new { background: rgba(91,138,240,0.12); color: var(--accent-blue); }
+.pill-updated { background: rgba(134,144,160,0.1); color: var(--text-dim); }
+
+.card-desc {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+.card-meta .sep { color: var(--border); }
+
+.avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  font-weight: 500;
+  color: #fff;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.av-m { background: linear-gradient(135deg, #5b8af0, #7c6cf0); }
+.av-k { background: linear-gradient(135deg, #e8a030, #eb7c30); }
+.av-s { background: linear-gradient(135deg, #36c9b4, #34d399); }
+
+.card-meta .comments {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-meta .comments svg { opacity: 0.45; }
+
+.card-stats {
+  display: flex;
+  gap: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 300;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.card-stats .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+  position: relative;
+  top: -0.5px;
+}
+
+/* ── Compact card ── */
+.card-compact .card-body {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-compact .card-row-1 { margin-bottom: 0; flex-shrink: 0; }
+.card-compact .card-title { font-size: 13.5px; font-weight: 600; }
+.card-compact .card-desc { font-size: 12px; margin-bottom: 0; flex: 1; min-width: 100px; color: var(--text-dim); line-height: 1.4; }
+.card-compact .card-meta { margin-left: auto; flex-shrink: 0; font-size: 11px; }
+.card-compact .card-stats { display: none; }
+.card-compact .avatar { width: 16px; height: 16px; font-size: 7px; }
+
+.entry-compact::before { top: 16px; }
+
+.card-placeholder { cursor: default; }
+.card-placeholder:hover { transform: translateY(-1px); }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  padding: 24px;
+}
+
+[data-theme="light"] .modal-overlay { background: rgba(0,0,0,0.25); }
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  transform: translateY(8px) scale(0.98);
+  transition: transform 0.25s cubic-bezier(0.23,1,0.32,1);
+}
+
+.modal-overlay.open .modal {
+  transform: translateY(0) scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s;
+  line-height: 1;
+}
+
+.modal-close:hover { color: var(--text-bright); }
+
+.modal-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.modal-desc {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.modal-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.modal-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.modal-step strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-bright);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.modal-step p {
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+code.inline {
+  display: inline;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-bright);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+.modal-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.modal-link:hover {
+  border-color: var(--border-hover);
+  color: var(--text-bright);
+  background: var(--surface-2);
+}
+
+.modal-link svg { opacity: 0.5; }
+.modal-link:hover svg { opacity: 0.8; }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 50;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-hover);
+  color: var(--text-bright);
+  transform: scale(1.1);
+}
+
+.theme-toggle svg { width: 15px; height: 15px; }
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+/* ── Footer ── */
+.footer {
+  margin-top: 48px;
+  padding: 16px 0 0 48px;
+  border-top: 1px solid var(--border);
+}
+
+.footer a {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.footer a:hover { color: var(--text); }
+.footer a svg { opacity: 0.4; }
+.footer a:hover svg { opacity: 0.65; }
+
+/* ── Light mode ── */
+[data-theme="light"] .avatar { color: #fff; }
+[data-theme="light"] .card { box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page { padding: 32px 16px 60px; }
+  .header { padding-left: 0; }
+  .timeline { padding-left: 0; }
+  .timeline::before, .date-marker::before, .entry::before { display: none; }
+  .footer { padding-left: 0; }
+  .card-preview { height: 140px; }
+  .card-compact .card-body { flex-wrap: wrap; }
+}
+</style>
 </head>
-<body></body>
+<body>
+
+<div class="page">
+
+  <header class="header">
+    <h1 class="header-title">Employee <span class="gr">Graph Lab</span></h1>
+    <div class="header-actions">
+      <span class="header-hint">Open anything. Hit Discuss to comment.</span>
+      <button class="contribute-link" id="contribute-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Contribute
+      </button>
+    </div>
+  </header>
+
+  <div class="timeline">
+
+    <div class="date-marker"><span class="date-text">Mar 12, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card card-placeholder" href="#">
+        <div class="card-preview">
+          <canvas class="preview-canvas" id="preview-interview"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Interview Intelligence</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">Connect pre-hire signals to post-hire outcomes. Which interviewers predict success? Which interview types actually correlate with performance?</p>
+          <div class="card-meta">
+            <span><span class="avatar av-s">SL</span>Sarah</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 5</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="entry entry-compact">
+      <a target="_blank" class="card card-compact" href="viewer.html">
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Graph Viewer</span>
+            <span class="pill pill-updated">Updated</span>
+          </div>
+          <p class="card-desc">Added Giscus discussion panel</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="date-marker"><span class="date-text">Mar 11, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card card-placeholder" href="#">
+        <div class="card-preview">
+          <canvas class="preview-canvas" id="preview-career"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Career Conversation</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">AI-powered prep for every kind of 1:1. The graph surfaces comp context, flight risk signals, peer comparisons, and conversation starters.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-k">KR</span>Kyle</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 12</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="date-marker"><span class="date-text">Mar 10, 2026</span></div>
+
+    <div class="entry">
+      <a target="_blank" class="card" href="viewer.html">
+        <div class="card-preview">
+          <canvas class="preview-canvas" id="preview-graph"></canvas>
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Graph Viewer</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <div class="card-stats">
+            <span><span class="dot" style="background:#5b8af0"></span>783 nodes</span>
+            <span><span class="dot" style="background:#34d399"></span>3,281 edges</span>
+            <span><span class="dot" style="background:#a78bfa"></span>30 types</span>
+          </div>
+          <p class="card-desc">Interactive force-directed visualization of the full employee graph. Search, filter by type, click any node to walk its connections.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="entry entry-compact">
+      <a target="_blank" class="card card-compact card-placeholder" href="#">
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">Departure Cascade</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc">Someone leaves &mdash; what breaks? Walk the graph outward to surface every consequence.</p>
+          <div class="card-meta">
+            <span><span class="avatar av-m">MM</span>Matt</span>
+            <span class="sep">&middot;</span>
+            <span class="comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 7</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Contribute modal -->
+  <div class="modal-overlay" id="contribute-modal">
+    <div class="modal">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <h2 class="modal-title">Contributing</h2>
+      <p class="modal-desc">Everything here is built on a shared graph dataset &mdash; 783 nodes, 3,281 edges across 30 types. Build whatever you want on top of it.</p>
+
+      <div class="modal-steps">
+        <div class="modal-step">
+          <span class="step-num">1</span>
+          <div>
+            <strong>Get the data</strong>
+            <p>The graph lives in <code class="inline">data/nodes.json</code> and <code class="inline">data/edges.json</code>. Schema is in <code class="inline">data/schema.json</code>. Clone the repo or just grab the files.</p>
+          </div>
+        </div>
+        <div class="modal-step">
+          <span class="step-num">2</span>
+          <div>
+            <strong>Build something</strong>
+            <p>Any format works &mdash; a prototype, a notebook, a Figma file, a script, a video. If it uses the graph data and shows something interesting, it belongs here.</p>
+          </div>
+        </div>
+        <div class="modal-step">
+          <span class="step-num">3</span>
+          <div>
+            <strong>Share it</strong>
+            <p>Push to a <code class="inline">poc/</code> branch, drop a link in Slack, or just show someone. We'll add it to this page.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-links">
+        <a href="https://github.com/mattcmorrell/ee-graph" target="_blank" class="modal-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Open repo
+        </a>
+        <a href="https://github.com/mattcmorrell/ee-graph/tree/main/data" target="_blank" class="modal-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Browse graph data
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+
+  <footer class="footer">
+    <a href="https://github.com/mattcmorrell/ee-graph" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      mattcmorrell/ee-graph
+    </a>
+  </footer>
+
+</div>
+
+<script>
+// ── Theme ──
+(function() {
+  const saved = localStorage.getItem('ee-graph-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ee-graph-theme', next);
+  });
+})();
+
+// ── Contribute modal ──
+(function() {
+  const modal = document.getElementById('contribute-modal');
+  document.getElementById('contribute-btn').addEventListener('click', () => modal.classList.add('open'));
+  document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('open'); });
+})();
+
+function isLight() { return document.documentElement.getAttribute('data-theme') === 'light'; }
+
+function initCanvas(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return null;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+  return { canvas, ctx, W: rect.width, H: rect.height };
+}
+
+// ── Graph Viewer ──
+(function() {
+  const c = initCanvas('preview-graph');
+  if (!c) return;
+  const { ctx, W, H } = c;
+  const palette = ['#5b8af0','#34d399','#a78bfa','#f59e0b','#f472b6','#fb923c','#38bdf8','#818cf8','#2dd4bf','#e879f9'];
+  const N = 90, nodes = [], edges = [];
+  for (let i = 0; i < N; i++) { const a=Math.random()*Math.PI*2, d=Math.random()*Math.min(W,H)*.36; nodes.push({x:W/2+Math.cos(a)*d,y:H/2+Math.sin(a)*d,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,r:1.5+Math.random()*2.5,color:palette[i%palette.length],alpha:.3+Math.random()*.45}); }
+  for (let i=0;i<N;i++){const b=Math.floor(Math.random()*N);if(b!==i)edges.push([i,b]);if(Math.random()<.25){const b2=Math.floor(Math.random()*N);if(b2!==i)edges.push([i,b2]);}}
+  (function loop(){ctx.clearRect(0,0,W,H);const lt=isLight();for(const[a,b]of edges){const na=nodes[a],nb=nodes[b],dx=na.x-nb.x,dy=na.y-nb.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist>160)continue;ctx.globalAlpha=(1-dist/160)*(lt?.1:.05);ctx.strokeStyle=na.color;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);ctx.stroke();}for(const n of nodes){ctx.globalAlpha=lt?Math.min(n.alpha+.3,1):n.alpha;ctx.fillStyle=n.color;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;for(const n of nodes){n.x+=n.vx;n.y+=n.vy;n.vx+=(W/2-n.x)*.00004;n.vy+=(H/2-n.y)*.00004;if(n.x<8)n.vx+=.08;if(n.x>W-8)n.vx-=.08;if(n.y<8)n.vy+=.08;if(n.y>H-8)n.vy-=.08;n.vx+=(Math.random()-.5)*.012;n.vy+=(Math.random()-.5)*.012;n.vx*=.997;n.vy*=.997;}requestAnimationFrame(loop);})();
+})();
+
+// ── Career Conversation ──
+(function() {
+  const c = initCanvas('preview-career');
+  if (!c) return;
+  const { ctx, W, H } = c;
+  const colors=['#9b7aea','#818cf8','#36c9b4','#c4b5fd'];
+  const orbs=[];for(let i=0;i<28;i++)orbs.push({cx:W*(.2+Math.random()*.6),cy:H*(.2+Math.random()*.6),angle:Math.random()*Math.PI*2,speed:.2+Math.random()*.35,orbit:12+Math.random()*35,r:1.5+Math.random()*2,color:colors[i%colors.length],alpha:.2+Math.random()*.35,x:0,y:0});
+  (function loop(){ctx.clearRect(0,0,W,H);const lt=isLight();for(const o of orbs){o.angle+=o.speed*.01;o.x=o.cx+Math.cos(o.angle)*o.orbit;o.y=o.cy+Math.sin(o.angle)*o.orbit;}ctx.lineWidth=.5;for(let i=0;i<orbs.length;i++)for(let j=i+1;j<orbs.length;j++){const dx=orbs[i].x-orbs[j].x,dy=orbs[i].y-orbs[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<90){ctx.globalAlpha=(1-dist/90)*(lt?.1:.05);ctx.strokeStyle=orbs[i].color;ctx.beginPath();ctx.moveTo(orbs[i].x,orbs[i].y);ctx.lineTo(orbs[j].x,orbs[j].y);ctx.stroke();}}for(const o of orbs){ctx.globalAlpha=lt?Math.min(o.alpha+.3,1):o.alpha;ctx.fillStyle=o.color;ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;requestAnimationFrame(loop);})();
+})();
+
+// ── Interview Intelligence ──
+(function() {
+  const c = initCanvas('preview-interview');
+  if (!c) return;
+  const { ctx, W, H } = c;
+  const colors=['#36c9b4','#5b8af0','#34d399','#38bdf8'];
+  const barCount=22,barW=W/barCount,bars=[],dots=[];
+  for(let i=0;i<barCount;i++)bars.push({x:i*barW,h:20+Math.random()*H*.5,color:colors[i%colors.length],phase:Math.random()*Math.PI*2,speed:.008+Math.random()*.01});
+  for(let i=0;i<16;i++)dots.push({x:20+Math.random()*(W-40),y:20+Math.random()*(H-40),r:1.5+Math.random()*1.5,color:colors[i%colors.length],alpha:.15+Math.random()*.25,vy:(Math.random()-.5)*.15});
+  let frame=0;
+  (function loop(){ctx.clearRect(0,0,W,H);const lt=isLight();for(const b of bars){const wave=Math.sin(frame*b.speed+b.phase)*6;ctx.globalAlpha=lt?.12:.06;ctx.fillStyle=b.color;ctx.fillRect(b.x+2,H-(b.h+wave),barW-4,b.h+wave);}for(const d of dots){d.y+=d.vy;if(d.y<8||d.y>H-8)d.vy*=-1;ctx.globalAlpha=lt?d.alpha+.2:d.alpha;ctx.fillStyle=d.color;ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;frame++;requestAnimationFrame(loop);})();
+})();
+</script>
+
+</body>
 </html>
