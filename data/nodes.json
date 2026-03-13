@@ -20,7 +20,8 @@
         "veteranStatus": "veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-001.jpg"
       }
     },
     {
@@ -43,7 +44,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-002.jpg"
       }
     },
     {
@@ -66,7 +68,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-003.jpg"
       }
     },
     {
@@ -89,7 +92,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-004.jpg"
       }
     },
     {
@@ -112,7 +116,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-005.jpg"
       }
     },
     {
@@ -135,7 +140,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-006.jpg"
       }
     },
     {
@@ -158,7 +164,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-007.jpg"
       }
     },
     {
@@ -181,7 +188,8 @@
         "veteranStatus": "veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-008.jpg"
       }
     },
     {
@@ -204,7 +212,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-009.jpg"
       }
     },
     {
@@ -227,7 +236,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-010.jpg"
       }
     },
     {
@@ -250,7 +260,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-011.jpg"
       }
     },
     {
@@ -273,7 +284,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-012.jpg"
       }
     },
     {
@@ -296,7 +308,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-013.jpg"
       }
     },
     {
@@ -319,7 +332,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "part_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-014.jpg"
       }
     },
     {
@@ -342,7 +356,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-015.jpg"
       }
     },
     {
@@ -365,7 +380,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-016.jpg"
       }
     },
     {
@@ -388,7 +404,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "part_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-017.jpg"
       }
     },
     {
@@ -411,7 +428,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "part_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-018.jpg"
       }
     },
     {
@@ -434,7 +452,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-019.jpg"
       }
     },
     {
@@ -457,7 +476,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-020.jpg"
       }
     },
     {
@@ -480,7 +500,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-021.jpg"
       }
     },
     {
@@ -503,7 +524,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-022.jpg"
       }
     },
     {
@@ -526,7 +548,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-023.jpg"
       }
     },
     {
@@ -549,7 +572,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-024.jpg"
       }
     },
     {
@@ -572,7 +596,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-025.jpg"
       }
     },
     {
@@ -595,7 +620,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-026.jpg"
       }
     },
     {
@@ -618,7 +644,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-027.jpg"
       }
     },
     {
@@ -641,7 +668,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-028.jpg"
       }
     },
     {
@@ -664,7 +692,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-029.jpg"
       }
     },
     {
@@ -687,7 +716,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-030.jpg"
       }
     },
     {
@@ -710,7 +740,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-031.jpg"
       }
     },
     {
@@ -733,7 +764,8 @@
         "veteranStatus": "veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-032.jpg"
       }
     },
     {
@@ -756,7 +788,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-033.jpg"
       }
     },
     {
@@ -779,7 +812,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-034.jpg"
       }
     },
     {
@@ -802,7 +836,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-035.jpg"
       }
     },
     {
@@ -825,7 +860,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-036.jpg"
       }
     },
     {
@@ -848,7 +884,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "part_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-037.jpg"
       }
     },
     {
@@ -871,7 +908,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "part_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-038.jpg"
       }
     },
     {
@@ -894,7 +932,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-039.jpg"
       }
     },
     {
@@ -917,7 +956,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-040.jpg"
       }
     },
     {
@@ -940,7 +980,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-041.jpg"
       }
     },
     {
@@ -961,7 +1002,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-042.jpg"
       }
     },
     {
@@ -982,7 +1024,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-043.jpg"
       }
     },
     {
@@ -1003,7 +1046,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-044.jpg"
       }
     },
     {
@@ -1024,7 +1068,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-045.jpg"
       }
     },
     {
@@ -1045,7 +1090,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-046.jpg"
       }
     },
     {
@@ -1066,7 +1112,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-047.jpg"
       }
     },
     {
@@ -1087,7 +1134,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-048.jpg"
       }
     },
     {
@@ -1108,7 +1156,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-049.jpg"
       }
     },
     {
@@ -1129,7 +1178,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-050.jpg"
       }
     },
     {
@@ -1150,7 +1200,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-051.jpg"
       }
     },
     {
@@ -1171,7 +1222,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-052.jpg"
       }
     },
     {
@@ -1192,7 +1244,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-053.jpg"
       }
     },
     {
@@ -1213,7 +1266,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-054.jpg"
       }
     },
     {
@@ -1234,7 +1288,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-055.jpg"
       }
     },
     {
@@ -1255,7 +1310,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-056.jpg"
       }
     },
     {
@@ -1276,7 +1332,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-057.jpg"
       }
     },
     {
@@ -1297,7 +1354,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-058.jpg"
       }
     },
     {
@@ -1318,7 +1376,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-059.jpg"
       }
     },
     {
@@ -1339,7 +1398,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-060.jpg"
       }
     },
     {
@@ -1360,7 +1420,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-061.jpg"
       }
     },
     {
@@ -1381,7 +1442,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-062.jpg"
       }
     },
     {
@@ -1402,7 +1464,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-063.jpg"
       }
     },
     {
@@ -1423,7 +1486,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-064.jpg"
       }
     },
     {
@@ -1444,7 +1508,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-065.jpg"
       }
     },
     {
@@ -1465,7 +1530,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-066.jpg"
       }
     },
     {
@@ -1486,7 +1552,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-067.jpg"
       }
     },
     {
@@ -1507,7 +1574,8 @@
         "veteranStatus": "veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-068.jpg"
       }
     },
     {
@@ -1528,7 +1596,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-069.jpg"
       }
     },
     {
@@ -1550,7 +1619,8 @@
         "endDate": "2025-12-20",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-070.jpg"
       }
     },
     {
@@ -1571,7 +1641,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-071.jpg"
       }
     },
     {
@@ -1592,7 +1663,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-072.jpg"
       }
     },
     {
@@ -1613,7 +1685,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-073.jpg"
       }
     },
     {
@@ -1634,7 +1707,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-074.jpg"
       }
     },
     {
@@ -1655,7 +1729,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-075.jpg"
       }
     },
     {
@@ -1676,7 +1751,8 @@
         "veteranStatus": "veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-076.jpg"
       }
     },
     {
@@ -1697,7 +1773,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-077.jpg"
       }
     },
     {
@@ -1718,7 +1795,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-078.jpg"
       }
     },
     {
@@ -1739,7 +1817,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-079.jpg"
       }
     },
     {
@@ -1760,7 +1839,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-080.jpg"
       }
     },
     {
@@ -1781,7 +1861,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-081.jpg"
       }
     },
     {
@@ -1802,7 +1883,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-082.jpg"
       }
     },
     {
@@ -1823,7 +1905,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-083.jpg"
       }
     },
     {
@@ -1844,7 +1927,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-084.jpg"
       }
     },
     {
@@ -1865,7 +1949,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-085.jpg"
       }
     },
     {
@@ -1886,7 +1971,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-086.jpg"
       }
     },
     {
@@ -1907,7 +1993,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-087.jpg"
       }
     },
     {
@@ -1928,7 +2015,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-088.jpg"
       }
     },
     {
@@ -1949,7 +2037,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-089.jpg"
       }
     },
     {
@@ -1970,7 +2059,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-090.jpg"
       }
     },
     {
@@ -1991,7 +2081,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-091.jpg"
       }
     },
     {
@@ -2012,7 +2103,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-092.jpg"
       }
     },
     {
@@ -2033,7 +2125,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-093.jpg"
       }
     },
     {
@@ -2054,7 +2147,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-094.jpg"
       }
     },
     {
@@ -2075,7 +2169,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-095.jpg"
       }
     },
     {
@@ -2096,7 +2191,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-096.jpg"
       }
     },
     {
@@ -2117,7 +2213,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-097.jpg"
       }
     },
     {
@@ -2138,7 +2235,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-098.jpg"
       }
     },
     {
@@ -2159,7 +2257,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-099.jpg"
       }
     },
     {
@@ -2180,7 +2279,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-100.jpg"
       }
     },
     {
@@ -2201,7 +2301,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-101.jpg"
       }
     },
     {
@@ -2222,7 +2323,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-102.jpg"
       }
     },
     {
@@ -2243,7 +2345,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-103.jpg"
       }
     },
     {
@@ -2264,7 +2367,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-104.jpg"
       }
     },
     {
@@ -2285,7 +2389,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-105.jpg"
       }
     },
     {
@@ -2306,7 +2411,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-106.jpg"
       }
     },
     {
@@ -2327,7 +2433,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-107.jpg"
       }
     },
     {
@@ -2348,7 +2455,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-108.jpg"
       }
     },
     {
@@ -2369,7 +2477,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-109.jpg"
       }
     },
     {
@@ -2390,7 +2499,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-110.jpg"
       }
     },
     {
@@ -2411,7 +2521,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-111.jpg"
       }
     },
     {
@@ -2433,7 +2544,8 @@
         "endDate": "2026-01-10",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-112.jpg"
       }
     },
     {
@@ -2454,7 +2566,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-113.jpg"
       }
     },
     {
@@ -2475,7 +2588,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-114.jpg"
       }
     },
     {
@@ -2496,7 +2610,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-115.jpg"
       }
     },
     {
@@ -2517,7 +2632,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-116.jpg"
       }
     },
     {
@@ -2538,7 +2654,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-117.jpg"
       }
     },
     {
@@ -2559,7 +2676,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-118.jpg"
       }
     },
     {
@@ -2580,7 +2698,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-119.jpg"
       }
     },
     {
@@ -2601,7 +2720,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-120.jpg"
       }
     },
     {
@@ -2622,7 +2742,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-121.jpg"
       }
     },
     {
@@ -2643,7 +2764,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-122.jpg"
       }
     },
     {
@@ -2664,7 +2786,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-123.jpg"
       }
     },
     {
@@ -2685,7 +2808,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-124.jpg"
       }
     },
     {
@@ -2706,7 +2830,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-125.jpg"
       }
     },
     {
@@ -2727,7 +2852,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-126.jpg"
       }
     },
     {
@@ -2748,7 +2874,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-127.jpg"
       }
     },
     {
@@ -2769,7 +2896,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-128.jpg"
       }
     },
     {
@@ -2790,7 +2918,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-129.jpg"
       }
     },
     {
@@ -2811,7 +2940,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-130.jpg"
       }
     },
     {
@@ -2832,7 +2962,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-131.jpg"
       }
     },
     {
@@ -2853,7 +2984,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-132.jpg"
       }
     },
     {
@@ -2874,7 +3006,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-133.jpg"
       }
     },
     {
@@ -2895,7 +3028,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-134.jpg"
       }
     },
     {
@@ -2916,7 +3050,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-135.jpg"
       }
     },
     {
@@ -2937,7 +3072,8 @@
         "veteranStatus": "prefer_not_to_say",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-136.jpg"
       }
     },
     {
@@ -2958,7 +3094,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-137.jpg"
       }
     },
     {
@@ -2979,7 +3116,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-138.jpg"
       }
     },
     {
@@ -3000,7 +3138,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-139.jpg"
       }
     },
     {
@@ -3021,7 +3160,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-140.jpg"
       }
     },
     {
@@ -3042,7 +3182,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-141.jpg"
       }
     },
     {
@@ -3063,7 +3204,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-142.jpg"
       }
     },
     {
@@ -3084,7 +3226,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "hourly",
-        "payPeriod": "biweekly"
+        "payPeriod": "biweekly",
+        "avatarUrl": "data/avatars/person-143.jpg"
       }
     },
     {
@@ -3105,7 +3248,8 @@
         "veteranStatus": "not_veteran",
         "employmentType": "full_time",
         "payType": "salary",
-        "payPeriod": "semimonthly"
+        "payPeriod": "semimonthly",
+        "avatarUrl": "data/avatars/person-144.jpg"
       }
     },
     {
@@ -9553,7 +9697,8 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "avatarUrl": "data/avatars/person-145.jpg"
       }
     },
     {
@@ -9597,7 +9742,8 @@
         "eeoCategory": "admin_support",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "avatarUrl": "data/avatars/person-146.jpg"
       }
     },
     {
@@ -9641,7 +9787,8 @@
         "eeoCategory": "professionals",
         "gender": "male",
         "race": "black",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "avatarUrl": "data/avatars/person-147.jpg"
       }
     },
     {
@@ -9685,7 +9832,8 @@
         "eeoCategory": "professionals",
         "gender": "female",
         "race": "white",
-        "veteranStatus": "not_veteran"
+        "veteranStatus": "not_veteran",
+        "avatarUrl": "data/avatars/person-148.jpg"
       }
     },
     {

@@ -653,6 +653,18 @@
     opacity: 0.85;
   }
 
+  .detail-avatar {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .detail-avatar img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+  }
+
   /* ── Canvas area ── */
   #graph-container {
     position: fixed;
@@ -915,7 +927,7 @@ const TYPE_COLORS = {
 };
 
 const NODE_RADIUS = {
-  person: 6, candidate: 5, team: 8, skill: 4, project: 5,
+  person: 12, candidate: 5, team: 8, skill: 4, project: 5,
   certification: 3.5, position: 3, equipment: 3, document: 3,
   benefits: 3.5, comp: 3, location: 5, jurisdiction: 4,
   policy: 3.5, life_event: 4, review: 3.5, recognition: 3.5, interview: 3
@@ -966,9 +978,10 @@ function getNodeSub(node) {
 
 // ── Main ──
 (async function() {
+  const cacheBust = '?v=' + Date.now();
   const [nodesData, edgesData] = await Promise.all([
-    fetch('data/nodes.json').then(r => r.json()),
-    fetch('data/edges.json').then(r => r.json())
+    fetch('data/nodes.json' + cacheBust).then(r => r.json()),
+    fetch('data/edges.json' + cacheBust).then(r => r.json())
   ]);
 
   const nodes = nodesData.nodes || nodesData;
@@ -1467,6 +1480,23 @@ function getNodeSub(node) {
   const svg = d3.select('#graph-svg');
   const container = svg.append('g');
 
+  // ── Avatar pattern definitions ──
+  const defs = svg.append('defs');
+  nodes.filter(n => n.type === 'person' && n.properties.avatarUrl).forEach(n => {
+    const r = effectiveNodeRadius['person'] || 12;
+    const d = r * 2;
+    defs.append('pattern')
+      .attr('id', `avatar-${n.id}`)
+      .attr('patternUnits', 'objectBoundingBox')
+      .attr('width', 1)
+      .attr('height', 1)
+      .append('image')
+      .attr('href', n.properties.avatarUrl)
+      .attr('width', d)
+      .attr('height', d)
+      .attr('preserveAspectRatio', 'xMidYMid slice');
+  });
+
   const zoom = d3.zoom()
     .scaleExtent([0.1, 8])
     .on('zoom', (event) => {
@@ -1663,7 +1693,9 @@ function getNodeSub(node) {
 
   nodeElements.append('circle')
     .attr('r', d => effectiveNodeRadius[d.type] || 4)
-    .attr('fill', d => effectiveNodeColors[d.type] || '#666')
+    .attr('fill', d => (d.type === 'person' && d.properties.avatarUrl)
+      ? `url(#avatar-${d.id})`
+      : (effectiveNodeColors[d.type] || '#666'))
     .attr('stroke', 'none')
     .attr('opacity', 0.85)
     .attr('pointer-events', 'none');
@@ -1886,7 +1918,12 @@ function getNodeSub(node) {
     const label = getNodeLabel(d);
     const labelKey = Object.keys(d.properties).find(k => String(d.properties[k]) === label);
 
+    const avatarHtml = (d.type === 'person' && d.properties.avatarUrl)
+      ? `<div class="detail-avatar"><img src="${d.properties.avatarUrl}" alt="${label}"></div>`
+      : '';
+
     let html = `<div class="detail-header">
+      ${avatarHtml}
       <div class="node-type-badge" style="background:${color}22; color:${color}">${d.type.replace(/_/g, ' ')}</div>
       <div class="node-name">${label}</div>
       <div class="node-sub">${getNodeSub(d)}</div>
@@ -1906,7 +1943,7 @@ function getNodeSub(node) {
     }
 
     // Properties — skip the label key and any long text already shown
-    const skipKeys = new Set([labelKey, 'email'].filter(Boolean));
+    const skipKeys = new Set([labelKey, 'email', 'avatarUrl'].filter(Boolean));
     const propEntries = Object.entries(d.properties).filter(
       ([k, v]) => !skipKeys.has(k) && !(typeof v === 'string' && v.length > 80)
     );
