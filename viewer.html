@@ -677,6 +677,20 @@
 
   #graph-container.expanded { left: 0; }
 
+  #zoom-indicator {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: rgba(20,22,30,0.7);
+    padding: 3px 8px;
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 10;
+  }
+
   svg { width: 100%; height: 100%; display: block; }
 
   /* ── Loading ── */
@@ -908,6 +922,7 @@
 
 <div id="graph-container">
   <svg id="graph-svg"></svg>
+  <div id="zoom-indicator">1.0x</div>
 </div>
 
 <div id="detail">
@@ -1502,21 +1517,30 @@ function getNodeSub(node) {
     .on('zoom', (event) => {
       container.attr('transform', event.transform);
       updateLabelVisibility(event.transform.k);
+      document.getElementById('zoom-indicator').textContent = event.transform.k.toFixed(1) + 'x';
     });
   svg.call(zoom);
 
-  // ── Zoom-dependent label visibility ──
-  // At overview zoom, only show labels on high-importance nodes.
-  // As you zoom in, progressively reveal more.
+  // ── Label visibility ──
+  // Labels hidden by default. Show when: zoomed in close, or few nodes visible (filtered).
   function updateLabelVisibility(zoomScale) {
-    nodeElements.select('text').attr('display', d => {
+    // Count visible nodes
+    let visibleCount = 0;
+    nodeElements.each(function(d) {
+      if (d3.select(this).attr('display') !== 'none') visibleCount++;
+    });
+    const fewVisible = visibleCount <= 60;
+
+    nodeElements.select('text').attr('display', function(d) {
+      // If parent node is hidden, hide label too
+      if (d3.select(this.parentNode).attr('display') === 'none') return 'none';
+      // Few visible nodes (filtered) — show all labels
+      if (fewVisible) return null;
+      // Zoomed in close — show labels
       const r = effectiveNodeRadius[d.type] || 4;
       const screenR = r * zoomScale;
-      // Always show if zoomed in enough that the node is prominent
-      if (screenR >= 8) return null;
-      // At medium zoom, show nodes with radius >= 5 (person, team, location, etc.)
-      if (screenR >= 4 && r >= 5) return null;
-      // At overview, hide small node labels
+      if (screenR >= 20) return null;
+      // Otherwise hide
       return 'none';
     });
   }
@@ -2116,6 +2140,10 @@ function getNodeSub(node) {
       }
       return null;
     });
+
+    // Update labels after visibility changes
+    const currentZoom = d3.zoomTransform(svg.node()).k;
+    updateLabelVisibility(currentZoom);
   }
 
   // ── Search ──
