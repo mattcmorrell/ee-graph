@@ -1067,8 +1067,20 @@ function getNodeSub(node) {
 
   // ── Filters ──
   const filtersEl = document.getElementById('filters');
-  const activeNodeTypes = new Set(Object.keys(nodeTypeCounts));
-  const activeEdgeTypes = new Set(Object.keys(edgeTypeCounts));
+  // Default: hide small utility node types that add clutter
+  const hiddenByDefault = new Set([
+    'request', 'time_off', 'cobra_event', 'investigation',
+    'expense', 'garnishment', 'payroll_run', 'background_check',
+    'survey_response', 'leave_designation'
+  ]);
+  const activeNodeTypes = new Set(Object.keys(nodeTypeCounts).filter(t => !hiddenByDefault.has(t)));
+  // Default: only org structure + relationship edges visible (reduces hairball)
+  const defaultEdgeTypes = new Set([
+    'reports_to', 'member_of', 'in_department', 'in_division',
+    'team_parent', 'holds_position', 'located_at',
+    'mentors', 'buddy_of', 'works_on', 'has_skill'
+  ]);
+  const activeEdgeTypes = new Set(Object.keys(edgeTypeCounts).filter(t => defaultEdgeTypes.has(t)));
   const allNodeTypes = Object.keys(nodeTypeCounts);
   const allEdgeTypes = Object.keys(edgeTypeCounts);
   let soloedNodeType = null;
@@ -1616,17 +1628,17 @@ function getNodeSub(node) {
   const simulation = d3.forceSimulation(nodes)
     .force('link', d3.forceLink(validEdges).id(d => d.id).distance(d => {
       const freq = (edgeTypeCounts[d.type] || 1) / edgeFreqMax;
-      return 40 + (1 - freq) * 40; // common=40, rare=80
+      return 70 + (1 - freq) * 60; // common=70, rare=130
     }).strength(d => {
       const freq = (edgeTypeCounts[d.type] || 1) / edgeFreqMax;
-      return 0.1 + freq * 0.4; // common=0.5, rare=0.1
+      return 0.08 + freq * 0.3; // common=0.38, rare=0.08 (looser)
     }))
     .force('charge', d3.forceManyBody().strength(d => {
       const deg = nodeDegree[d.id] || 0;
-      return -Math.min(30 + deg * 5, 150);
-    }).distanceMax(300))
+      return -Math.min(60 + deg * 8, 300);
+    }).distanceMax(500))
     .force('center', d3.forceCenter(0, 0))
-    .force('collision', d3.forceCollide().radius(d => (effectiveNodeRadius[d.type] || 4) + 2))
+    .force('collision', d3.forceCollide().radius(d => (effectiveNodeRadius[d.type] || 4) + 4))
     .alphaDecay(0.02);
 
   // ── Tooltip (declared early for edge hover) ──
