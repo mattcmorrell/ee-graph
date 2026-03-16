@@ -10,419 +10,1865 @@
   },
   "nodeTypes": {
     "person": {
-      "description": "Core employee node — anyone currently employed or recently employed",
+      "description": "Core employee node \u2014 anyone currently employed or recently employed",
       "properties": {
-        "id": { "type": "string", "required": true, "description": "Unique identifier, e.g. person-001" },
-        "name": { "type": "string", "required": true },
-        "email": { "type": "string", "required": true },
-        "role": { "type": "string", "required": true, "description": "Current job title" },
-        "level": { "type": "string", "required": false, "description": "Level code, e.g. IC-2, IC-4, M-1, VP" },
-        "startDate": { "type": "string", "format": "date", "required": true },
-        "endDate": { "type": "string", "format": "date", "required": false },
-        "status": { "type": "string", "enum": ["active", "onboarding", "preparing", "on_leave", "terminated"], "required": true },
-        "location": { "type": "string", "required": false },
-        "phone": { "type": "string", "required": false },
-        "pronouns": { "type": "string", "required": false },
-        "bio": { "type": "string", "required": false },
-        "avatarUrl": { "type": "string", "required": false },
-        "flsaClassification": { "type": "string", "enum": ["exempt", "nonexempt"], "required": false, "description": "FLSA overtime eligibility — #1 litigation risk for SMBs" },
-        "eeoCategory": { "type": "string", "enum": ["executive", "first_mid_officials", "professionals", "technicians", "sales_workers", "admin_support", "craft_workers", "operatives", "laborers", "service_workers"], "required": false },
-        "gender": { "type": "string", "enum": ["male", "female", "nonbinary", "prefer_not_to_say"], "required": false },
-        "race": { "type": "string", "enum": ["white", "black", "hispanic", "asian", "native_american", "pacific_islander", "two_or_more", "prefer_not_to_say"], "required": false },
-        "veteranStatus": { "type": "string", "enum": ["veteran", "not_veteran", "prefer_not_to_say"], "required": false },
-        "employmentType": { "type": "string", "enum": ["full_time", "part_time"], "required": false, "description": "Employment type" },
-        "payType": { "type": "string", "enum": ["salary", "hourly"], "required": false, "description": "Compensation structure" },
-        "payPeriod": { "type": "string", "enum": ["weekly", "biweekly", "semimonthly", "monthly"], "required": false, "description": "Pay frequency" }
+        "id": {
+          "type": "string",
+          "required": true,
+          "description": "Unique identifier, e.g. person-001"
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "role": {
+          "type": "string",
+          "required": true,
+          "description": "Current job title"
+        },
+        "level": {
+          "type": "string",
+          "required": false,
+          "description": "Level code, e.g. IC-2, IC-4, M-1, VP"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "onboarding",
+            "preparing",
+            "on_leave",
+            "terminated"
+          ],
+          "required": true
+        },
+        "location": {
+          "type": "string",
+          "required": false
+        },
+        "phone": {
+          "type": "string",
+          "required": false
+        },
+        "pronouns": {
+          "type": "string",
+          "required": false
+        },
+        "bio": {
+          "type": "string",
+          "required": false
+        },
+        "avatarUrl": {
+          "type": "string",
+          "required": false
+        },
+        "flsaClassification": {
+          "type": "string",
+          "enum": [
+            "exempt",
+            "nonexempt"
+          ],
+          "required": false,
+          "description": "FLSA overtime eligibility \u2014 #1 litigation risk for SMBs"
+        },
+        "eeoCategory": {
+          "type": "string",
+          "enum": [
+            "executive",
+            "first_mid_officials",
+            "professionals",
+            "technicians",
+            "sales_workers",
+            "admin_support",
+            "craft_workers",
+            "operatives",
+            "laborers",
+            "service_workers"
+          ],
+          "required": false
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "male",
+            "female",
+            "nonbinary",
+            "prefer_not_to_say"
+          ],
+          "required": false
+        },
+        "race": {
+          "type": "string",
+          "enum": [
+            "white",
+            "black",
+            "hispanic",
+            "asian",
+            "native_american",
+            "pacific_islander",
+            "two_or_more",
+            "prefer_not_to_say"
+          ],
+          "required": false
+        },
+        "veteranStatus": {
+          "type": "string",
+          "enum": [
+            "veteran",
+            "not_veteran",
+            "prefer_not_to_say"
+          ],
+          "required": false
+        },
+        "employmentType": {
+          "type": "string",
+          "enum": [
+            "full_time",
+            "part_time"
+          ],
+          "required": false,
+          "description": "Employment type"
+        },
+        "payType": {
+          "type": "string",
+          "enum": [
+            "salary",
+            "hourly"
+          ],
+          "required": false,
+          "description": "Compensation structure"
+        },
+        "payPeriod": {
+          "type": "string",
+          "enum": [
+            "weekly",
+            "biweekly",
+            "semimonthly",
+            "monthly"
+          ],
+          "required": false,
+          "description": "Pay frequency"
+        },
+        "terminationReason": {
+          "type": "string",
+          "enum": [
+            "voluntary",
+            "involuntary"
+          ],
+          "required": false
+        },
+        "terminationDetail": {
+          "type": "string",
+          "required": false
+        },
+        "regrettable": {
+          "type": "boolean",
+          "required": false
+        }
       }
     },
     "candidate": {
-      "description": "Pre-hire node — persists through conversion to person",
+      "description": "Pre-hire node \u2014 persists through conversion to person",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "email": { "type": "string", "required": true },
-        "appliedRole": { "type": "string", "required": true },
-        "source": { "type": "string", "required": false, "description": "Application source: referral, linkedin, website, etc." },
-        "appliedDate": { "type": "string", "format": "date", "required": true },
-        "status": { "type": "string", "enum": ["applied", "screening", "phone_screen", "interviewing", "onsite", "offer", "accepted", "rejected", "withdrawn", "unresponsive"], "required": true },
-        "expectedComp": { "type": "number", "required": false },
-        "resumeUrl": { "type": "string", "required": false },
-        "notes": { "type": "string", "required": false },
-        "stageHistory": { "type": "array", "required": false, "description": "Array of {stage, enteredDate, exitedDate} for pipeline velocity tracking" }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "appliedRole": {
+          "type": "string",
+          "required": true
+        },
+        "source": {
+          "type": "string",
+          "required": false,
+          "description": "Application source: referral, linkedin, website, etc."
+        },
+        "appliedDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "applied",
+            "screening",
+            "phone_screen",
+            "interviewing",
+            "onsite",
+            "offer",
+            "accepted",
+            "rejected",
+            "withdrawn",
+            "unresponsive"
+          ],
+          "required": true
+        },
+        "expectedComp": {
+          "type": "number",
+          "required": false
+        },
+        "resumeUrl": {
+          "type": "string",
+          "required": false
+        },
+        "notes": {
+          "type": "string",
+          "required": false
+        },
+        "stageHistory": {
+          "type": "array",
+          "required": false,
+          "description": "Array of {stage, enteredDate, exitedDate} for pipeline velocity tracking"
+        }
       }
     },
     "interview": {
       "description": "Interview event with feedback and scoring",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["phone_screen", "technical", "behavioral", "design_exercise", "portfolio_review", "panel", "final_round", "reference_check"], "required": true },
-        "date": { "type": "string", "format": "date", "required": true },
-        "score": { "type": "string", "enum": ["strong_hire", "hire", "lean_hire", "lean_no_hire", "no_hire"], "required": false },
-        "feedback": { "type": "string", "required": false },
-        "recommendation": { "type": "string", "required": false },
-        "duration": { "type": "number", "required": false, "description": "Duration in minutes" }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "phone_screen",
+            "technical",
+            "behavioral",
+            "design_exercise",
+            "portfolio_review",
+            "panel",
+            "final_round",
+            "reference_check"
+          ],
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "score": {
+          "type": "string",
+          "enum": [
+            "strong_hire",
+            "hire",
+            "lean_hire",
+            "lean_no_hire",
+            "no_hire"
+          ],
+          "required": false
+        },
+        "feedback": {
+          "type": "string",
+          "required": false
+        },
+        "recommendation": {
+          "type": "string",
+          "required": false
+        },
+        "duration": {
+          "type": "number",
+          "required": false,
+          "description": "Duration in minutes"
+        }
       }
     },
     "position": {
-      "description": "Role definition — unique role/level/department combination",
+      "description": "Role definition \u2014 unique role/level/department combination",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "title": { "type": "string", "required": true },
-        "level": { "type": "string", "required": true },
-        "jobFamily": { "type": "string", "required": false, "description": "Groups related roles: Engineering, Design, Sales, Operations, etc." },
-        "salaryBand": { "type": "string", "required": false, "description": "Named band e.g. 'Band 4', 'IC-Senior', 'M-1'" },
-        "salaryBandMin": { "type": "number", "required": false },
-        "salaryBandMax": { "type": "number", "required": false },
-        "flsaClassification": { "type": "string", "enum": ["exempt", "nonexempt"], "required": false, "description": "FLSA status — job determines this, person inherits" },
-        "eeoCategory": { "type": "string", "enum": ["executive", "first_mid_officials", "professionals", "technicians", "sales_workers", "admin_support", "craft_workers", "operatives", "laborers", "service_workers"], "required": false, "description": "EEO-1 category — job determines this, person inherits" },
-        "careerTrack": { "type": "string", "enum": ["professional", "management", "support", "executive"], "required": false, "description": "Career track — distinct from level. Professional = IC contributors, Management = people managers, Support = operational/admin, Executive = VP+" },
-        "jobCode": { "type": "string", "required": false, "description": "Internal payroll/GL code e.g. 'ENG-SR-04'" },
-        "competencies": { "type": "array", "required": false, "description": "Technical skills (skill IDs) and behavioral competencies (strings) required for this role. Enables gap analysis on backfill. BHR equivalent: Competencies field." },
-        "requiredCertifications": { "type": "array", "required": false, "description": "Certification IDs required — BHR does NOT track this (graph advantage)" },
-        "travelRequirement": { "type": "string", "enum": ["none", "occasional", "frequent"], "required": false },
-        "jobDescription": { "type": "string", "required": false },
-        "isOpen": { "type": "boolean", "required": false },
-        "headcount": { "type": "number", "required": false, "description": "Number of positions at this role" }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "title": {
+          "type": "string",
+          "required": true
+        },
+        "level": {
+          "type": "string",
+          "required": true
+        },
+        "jobFamily": {
+          "type": "string",
+          "required": false,
+          "description": "Groups related roles: Engineering, Design, Sales, Operations, etc."
+        },
+        "salaryBand": {
+          "type": "string",
+          "required": false,
+          "description": "Named band e.g. 'Band 4', 'IC-Senior', 'M-1'"
+        },
+        "salaryBandMin": {
+          "type": "number",
+          "required": false
+        },
+        "salaryBandMax": {
+          "type": "number",
+          "required": false
+        },
+        "flsaClassification": {
+          "type": "string",
+          "enum": [
+            "exempt",
+            "nonexempt"
+          ],
+          "required": false,
+          "description": "FLSA status \u2014 job determines this, person inherits"
+        },
+        "eeoCategory": {
+          "type": "string",
+          "enum": [
+            "executive",
+            "first_mid_officials",
+            "professionals",
+            "technicians",
+            "sales_workers",
+            "admin_support",
+            "craft_workers",
+            "operatives",
+            "laborers",
+            "service_workers"
+          ],
+          "required": false,
+          "description": "EEO-1 category \u2014 job determines this, person inherits"
+        },
+        "careerTrack": {
+          "type": "string",
+          "enum": [
+            "professional",
+            "management",
+            "support",
+            "executive"
+          ],
+          "required": false,
+          "description": "Career track \u2014 distinct from level. Professional = IC contributors, Management = people managers, Support = operational/admin, Executive = VP+"
+        },
+        "jobCode": {
+          "type": "string",
+          "required": false,
+          "description": "Internal payroll/GL code e.g. 'ENG-SR-04'"
+        },
+        "competencies": {
+          "type": "array",
+          "required": false,
+          "description": "Technical skills (skill IDs) and behavioral competencies (strings) required for this role. Enables gap analysis on backfill. BHR equivalent: Competencies field."
+        },
+        "requiredCertifications": {
+          "type": "array",
+          "required": false,
+          "description": "Certification IDs required \u2014 BHR does NOT track this (graph advantage)"
+        },
+        "travelRequirement": {
+          "type": "string",
+          "enum": [
+            "none",
+            "occasional",
+            "frequent"
+          ],
+          "required": false
+        },
+        "jobDescription": {
+          "type": "string",
+          "required": false
+        },
+        "isOpen": {
+          "type": "boolean",
+          "required": false
+        },
+        "headcount": {
+          "type": "number",
+          "required": false,
+          "description": "Number of positions at this role"
+        }
       }
     },
     "team": {
-      "description": "Organizational unit — includes department teams, scrum teams, initiative teams, and working groups",
+      "description": "Organizational unit \u2014 includes department teams, scrum teams, initiative teams, and working groups",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "teamType": { "type": "string", "enum": ["team", "scrum", "initiative", "working_group"], "required": true, "description": "Team = functional working team. Scrum = sprint delivery team. Initiative = cross-dept time-bounded effort. Working group = standing cross-functional group." },
-        "description": { "type": "string", "required": false },
-        "headcount": { "type": "number", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "teamType": {
+          "type": "string",
+          "enum": [
+            "team",
+            "scrum",
+            "initiative",
+            "working_group"
+          ],
+          "required": true,
+          "description": "Team = functional working team. Scrum = sprint delivery team. Initiative = cross-dept time-bounded effort. Working group = standing cross-functional group."
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "headcount": {
+          "type": "number",
+          "required": false
+        }
       }
     },
     "department": {
-      "description": "Administrative organizational unit — every employee belongs to exactly one",
+      "description": "Administrative organizational unit \u2014 every employee belongs to exactly one",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "description": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "division": {
-      "description": "Organizational division — usage varies by company (superset of dept, subset, or unrelated). Flat grouping for filtering.",
+      "description": "Organizational division \u2014 usage varies by company (superset of dept, subset, or unrelated). Flat grouping for filtering.",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "description": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "location": {
       "description": "Physical office or remote designation",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "address": { "type": "string", "required": false },
-        "city": { "type": "string", "required": true },
-        "state": { "type": "string", "required": true },
-        "zip": { "type": "string", "required": false },
-        "country": { "type": "string", "required": true, "default": "US" },
-        "type": { "type": "string", "enum": ["office", "remote", "hybrid"], "required": true }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "address": {
+          "type": "string",
+          "required": false
+        },
+        "city": {
+          "type": "string",
+          "required": true
+        },
+        "state": {
+          "type": "string",
+          "required": true
+        },
+        "zip": {
+          "type": "string",
+          "required": false
+        },
+        "country": {
+          "type": "string",
+          "required": true,
+          "default": "US"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "office",
+            "remote",
+            "hybrid"
+          ],
+          "required": true
+        }
       }
     },
     "document": {
       "description": "Legal and compliance documents",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["offer_letter", "i9", "w4", "handbook_acknowledgment", "performance_review", "nda", "ip_assignment", "benefits_enrollment", "policy_acknowledgment", "w2", "1099_nec", "1094_c", "1095_c", "separation_agreement", "background_check_consent"], "required": true },
-        "title": { "type": "string", "required": true },
-        "status": { "type": "string", "enum": ["draft", "sent", "signed", "expired", "queued"], "required": true },
-        "createdDate": { "type": "string", "format": "date", "required": true },
-        "signedDate": { "type": "string", "format": "date", "required": false },
-        "authorizationExpiryDate": { "type": "string", "format": "date", "required": false, "description": "For I-9: work authorization expiration date requiring re-verification" },
-        "documentSubtype": { "type": "string", "required": false, "description": "For I-9: list_a, list_b, list_c. For tax: w2, 1099_nec, 1094_c, 1095_c" }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "offer_letter",
+            "i9",
+            "w4",
+            "handbook_acknowledgment",
+            "performance_review",
+            "nda",
+            "ip_assignment",
+            "benefits_enrollment",
+            "policy_acknowledgment",
+            "w2",
+            "1099_nec",
+            "1094_c",
+            "1095_c",
+            "separation_agreement",
+            "background_check_consent"
+          ],
+          "required": true
+        },
+        "title": {
+          "type": "string",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "sent",
+            "signed",
+            "expired",
+            "queued"
+          ],
+          "required": true
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "signedDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "authorizationExpiryDate": {
+          "type": "string",
+          "format": "date",
+          "required": false,
+          "description": "For I-9: work authorization expiration date requiring re-verification"
+        },
+        "documentSubtype": {
+          "type": "string",
+          "required": false,
+          "description": "For I-9: list_a, list_b, list_c. For tax: w2, 1099_nec, 1094_c, 1095_c"
+        }
       }
     },
     "benefits": {
       "description": "Benefits plan options",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["medical", "dental", "vision", "401k", "hsa", "life_insurance", "disability"], "required": true },
-        "provider": { "type": "string", "required": true },
-        "tier": { "type": "string", "enum": ["individual", "individual_plus_spouse", "individual_plus_children", "family"], "required": false },
-        "monthlyPremiumEmployee": { "type": "number", "required": false },
-        "monthlyPremiumEmployer": { "type": "number", "required": false },
-        "description": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "medical",
+            "dental",
+            "vision",
+            "401k",
+            "hsa",
+            "life_insurance",
+            "disability"
+          ],
+          "required": true
+        },
+        "provider": {
+          "type": "string",
+          "required": true
+        },
+        "tier": {
+          "type": "string",
+          "enum": [
+            "individual",
+            "individual_plus_spouse",
+            "individual_plus_children",
+            "family"
+          ],
+          "required": false
+        },
+        "monthlyPremiumEmployee": {
+          "type": "number",
+          "required": false
+        },
+        "monthlyPremiumEmployer": {
+          "type": "number",
+          "required": false
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "comp": {
-      "description": "Compensation record — salary, bonus, equity",
+      "description": "Compensation record \u2014 salary, bonus, equity",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["salary", "bonus", "equity", "adjustment"], "required": true },
-        "amount": { "type": "number", "required": true },
-        "currency": { "type": "string", "default": "USD" },
-        "effectiveDate": { "type": "string", "format": "date", "required": true },
-        "endDate": { "type": "string", "format": "date", "required": false },
-        "notes": { "type": "string", "required": false },
-        "vestingSchedule": { "type": "string", "required": false, "description": "For equity: e.g. '4yr/1yr cliff' or 'immediate'" },
-        "totalShares": { "type": "number", "required": false, "description": "For equity: total shares/units granted" },
-        "vestedShares": { "type": "number", "required": false, "description": "For equity: shares vested to date" },
-        "cliffDate": { "type": "string", "format": "date", "required": false, "description": "For equity: cliff vesting date" }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "salary",
+            "bonus",
+            "equity",
+            "adjustment"
+          ],
+          "required": true
+        },
+        "amount": {
+          "type": "number",
+          "required": true
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "notes": {
+          "type": "string",
+          "required": false
+        },
+        "vestingSchedule": {
+          "type": "string",
+          "required": false,
+          "description": "For equity: e.g. '4yr/1yr cliff' or 'immediate'"
+        },
+        "totalShares": {
+          "type": "number",
+          "required": false,
+          "description": "For equity: total shares/units granted"
+        },
+        "vestedShares": {
+          "type": "number",
+          "required": false,
+          "description": "For equity: shares vested to date"
+        },
+        "cliffDate": {
+          "type": "string",
+          "format": "date",
+          "required": false,
+          "description": "For equity: cliff vesting date"
+        }
       }
     },
     "policy": {
       "description": "Company policies, handbook sections, compliance rules",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["leave", "benefits", "expense", "compliance", "handbook", "code_of_conduct", "safety", "remote_work"], "required": true },
-        "section": { "type": "string", "required": false, "description": "Handbook section reference, e.g. §4.3" },
-        "effectiveDate": { "type": "string", "format": "date", "required": true },
-        "summary": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "leave",
+            "benefits",
+            "expense",
+            "compliance",
+            "handbook",
+            "code_of_conduct",
+            "safety",
+            "remote_work"
+          ],
+          "required": true
+        },
+        "section": {
+          "type": "string",
+          "required": false,
+          "description": "Handbook section reference, e.g. \u00a74.3"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "summary": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "equipment": {
       "description": "Physical equipment and corporate assets",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["laptop", "monitor", "badge", "corporate_card", "phone", "headset", "desk"], "required": true },
-        "name": { "type": "string", "required": true },
-        "serialNumber": { "type": "string", "required": false },
-        "status": { "type": "string", "enum": ["requested", "ordered", "shipped", "delivered", "active", "returned", "decommissioned"], "required": true },
-        "requestDate": { "type": "string", "format": "date", "required": false },
-        "deliveryDate": { "type": "string", "format": "date", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "laptop",
+            "monitor",
+            "badge",
+            "corporate_card",
+            "phone",
+            "headset",
+            "desk"
+          ],
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "serialNumber": {
+          "type": "string",
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "requested",
+            "ordered",
+            "shipped",
+            "delivered",
+            "active",
+            "returned",
+            "decommissioned"
+          ],
+          "required": true
+        },
+        "requestDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "deliveryDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        }
       }
     },
     "life_event": {
       "description": "Significant life events that trigger policy cascades",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["pregnancy", "birth", "adoption", "marriage", "divorce", "relocation", "bereavement", "medical_leave", "disability"], "required": true },
-        "status": { "type": "string", "enum": ["reported", "planning", "active", "completed"], "required": true },
-        "reportedDate": { "type": "string", "format": "date", "required": true },
-        "expectedDate": { "type": "string", "format": "date", "required": false },
-        "details": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "pregnancy",
+            "birth",
+            "adoption",
+            "marriage",
+            "divorce",
+            "relocation",
+            "bereavement",
+            "medical_leave",
+            "disability"
+          ],
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "planning",
+            "active",
+            "completed"
+          ],
+          "required": true
+        },
+        "reportedDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "expectedDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "details": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "review": {
       "description": "Performance and milestone reviews",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["annual", "semi_annual", "quarterly", "90_day", "30_day", "pip", "promotion"], "required": true },
-        "status": { "type": "string", "enum": ["draft", "scheduled", "in_progress", "completed", "acknowledged"], "required": true },
-        "scheduledDate": { "type": "string", "format": "date", "required": false },
-        "completedDate": { "type": "string", "format": "date", "required": false },
-        "rating": { "type": "string", "enum": ["exceeds", "meets", "developing", "below"], "required": false },
-        "summary": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "annual",
+            "semi_annual",
+            "quarterly",
+            "90_day",
+            "30_day",
+            "pip",
+            "promotion"
+          ],
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "scheduled",
+            "in_progress",
+            "completed",
+            "acknowledged"
+          ],
+          "required": true
+        },
+        "scheduledDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "completedDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "rating": {
+          "type": "string",
+          "enum": [
+            "exceeds",
+            "meets",
+            "developing",
+            "below"
+          ],
+          "required": false
+        },
+        "summary": {
+          "type": "string",
+          "required": false
+        },
+        "selfAssessment": {
+          "type": "string",
+          "required": false,
+          "description": "Employee's self-assessment text"
+        },
+        "managerAssessment": {
+          "type": "string",
+          "required": false,
+          "description": "Manager's assessment text"
+        }
       }
     },
     "certification": {
       "description": "Professional certifications and compliance training",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["professional", "compliance", "tool", "safety"], "required": true },
-        "provider": { "type": "string", "required": false },
-        "requiredBy": { "type": "string", "format": "date", "required": false },
-        "renewalPeriod": { "type": "string", "required": false, "description": "e.g. annual, biennial" }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "professional",
+            "compliance",
+            "tool",
+            "safety"
+          ],
+          "required": true
+        },
+        "provider": {
+          "type": "string",
+          "required": false
+        },
+        "requiredBy": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "renewalPeriod": {
+          "type": "string",
+          "required": false,
+          "description": "e.g. annual, biennial"
+        }
       }
     },
     "project": {
-      "description": "Active work assignments and initiatives. Requires integration (Jira, Linear, Asana) — not HR-owned data.",
+      "description": "Active work assignments and initiatives. Requires integration (Jira, Linear, Asana) \u2014 not HR-owned data.",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "description": { "type": "string", "required": false },
-        "status": { "type": "string", "enum": ["planning", "active", "on_hold", "completed", "cancelled"], "required": true },
-        "startDate": { "type": "string", "format": "date", "required": false },
-        "targetEndDate": { "type": "string", "format": "date", "required": false },
-        "priority": { "type": "string", "enum": ["critical", "high", "medium", "low"], "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planning",
+            "active",
+            "on_hold",
+            "completed",
+            "cancelled"
+          ],
+          "required": true
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "targetEndDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ],
+          "required": false
+        }
       }
     },
     "skill": {
       "description": "Technical and professional skills",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "category": { "type": "string", "enum": ["language", "framework", "infrastructure", "tool", "methodology", "domain", "soft_skill", "design", "management"], "required": true },
-        "description": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "language",
+            "framework",
+            "infrastructure",
+            "tool",
+            "methodology",
+            "domain",
+            "soft_skill",
+            "design",
+            "management"
+          ],
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "recognition": {
-      "description": "Recognition events — peer and manager",
+      "description": "Recognition events \u2014 peer and manager",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["peer", "manager", "company", "frontline"], "required": true },
-        "trigger": { "type": "string", "required": false, "description": "What prompted the recognition: collaboration, milestone, workload_absorption, mentoring, etc." },
-        "message": { "type": "string", "required": true },
-        "signalSource": { "type": "string", "enum": ["organic", "graph_prompted", "scheduled"], "required": false },
-        "points": { "type": "number", "required": false },
-        "channel": { "type": "string", "enum": ["dm", "team_channel", "sms", "email", "all_hands"], "required": false },
-        "date": { "type": "string", "format": "date", "required": true }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "peer",
+            "manager",
+            "company",
+            "frontline"
+          ],
+          "required": true
+        },
+        "trigger": {
+          "type": "string",
+          "required": false,
+          "description": "What prompted the recognition: collaboration, milestone, workload_absorption, mentoring, etc."
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        },
+        "signalSource": {
+          "type": "string",
+          "enum": [
+            "organic",
+            "graph_prompted",
+            "scheduled"
+          ],
+          "required": false
+        },
+        "points": {
+          "type": "number",
+          "required": false
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "dm",
+            "team_channel",
+            "sms",
+            "email",
+            "all_hands"
+          ],
+          "required": false
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        }
       }
     },
     "jurisdiction": {
       "description": "Tax and compliance jurisdictions",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["federal", "state", "local", "international"], "required": true },
-        "hasIncomeTax": { "type": "boolean", "required": false },
-        "notes": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "federal",
+            "state",
+            "local",
+            "international"
+          ],
+          "required": true
+        },
+        "hasIncomeTax": {
+          "type": "boolean",
+          "required": false
+        },
+        "notes": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "time_off": {
       "description": "Time-off requests and leave records",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["vacation", "sick", "personal", "parental", "bereavement", "jury_duty", "unpaid"], "required": true },
-        "startDate": { "type": "string", "format": "date", "required": true },
-        "endDate": { "type": "string", "format": "date", "required": true },
-        "hours": { "type": "number", "required": false },
-        "status": { "type": "string", "enum": ["requested", "approved", "denied", "taken", "cancelled"], "required": true },
-        "notes": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "vacation",
+            "sick",
+            "personal",
+            "parental",
+            "bereavement",
+            "jury_duty",
+            "unpaid"
+          ],
+          "required": true
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "hours": {
+          "type": "number",
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "requested",
+            "approved",
+            "denied",
+            "taken",
+            "cancelled"
+          ],
+          "required": true
+        },
+        "notes": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "request": {
-      "description": "Approval requests — time-off, expense, comp change, equipment, etc.",
+      "description": "Approval requests \u2014 time-off, expense, comp change, equipment, etc.",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["time_off", "expense", "comp_change", "equipment", "document", "role_change", "offboarding"], "required": true },
-        "status": { "type": "string", "enum": ["pending", "approved", "denied", "withdrawn"], "required": true },
-        "submittedDate": { "type": "string", "format": "date", "required": true },
-        "decidedDate": { "type": "string", "format": "date", "required": false },
-        "details": { "type": "string", "required": false },
-        "amount": { "type": "number", "required": false, "description": "For expense/comp requests" }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "time_off",
+            "expense",
+            "comp_change",
+            "equipment",
+            "document",
+            "role_change",
+            "offboarding"
+          ],
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "approved",
+            "denied",
+            "withdrawn"
+          ],
+          "required": true
+        },
+        "submittedDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "decidedDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "details": {
+          "type": "string",
+          "required": false
+        },
+        "amount": {
+          "type": "number",
+          "required": false,
+          "description": "For expense/comp requests"
+        }
       }
     },
     "payroll_run": {
       "description": "Payroll processing period",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "period": { "type": "string", "required": true, "description": "e.g. 2026-01-16 to 2026-01-31" },
-        "runDate": { "type": "string", "format": "date", "required": true },
-        "status": { "type": "string", "enum": ["draft", "submitted", "completed", "void"], "required": true },
-        "grossTotal": { "type": "number", "required": false },
-        "netTotal": { "type": "number", "required": false },
-        "exceptionsCount": { "type": "number", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "period": {
+          "type": "string",
+          "required": true,
+          "description": "e.g. 2026-01-16 to 2026-01-31"
+        },
+        "runDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "submitted",
+            "completed",
+            "void"
+          ],
+          "required": true
+        },
+        "grossTotal": {
+          "type": "number",
+          "required": false
+        },
+        "netTotal": {
+          "type": "number",
+          "required": false
+        },
+        "exceptionsCount": {
+          "type": "number",
+          "required": false
+        }
       }
     },
     "survey_response": {
       "description": "Employee satisfaction and wellbeing survey responses",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "surveyType": { "type": "string", "enum": ["enps", "satisfaction", "wellbeing", "pulse", "exit"], "required": true },
-        "date": { "type": "string", "format": "date", "required": true },
-        "score": { "type": "number", "required": false, "description": "0-10 for eNPS, 1-5 for satisfaction" },
-        "sentiment": { "type": "string", "enum": ["promoter", "neutral", "detractor"], "required": false },
-        "comment": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "surveyType": {
+          "type": "string",
+          "enum": [
+            "enps",
+            "satisfaction",
+            "wellbeing",
+            "pulse",
+            "exit"
+          ],
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "score": {
+          "type": "number",
+          "required": false,
+          "description": "0-10 for eNPS, 1-5 for satisfaction"
+        },
+        "sentiment": {
+          "type": "string",
+          "enum": [
+            "promoter",
+            "neutral",
+            "detractor"
+          ],
+          "required": false
+        },
+        "comment": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "expense": {
       "description": "Expense reports and reimbursements",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "category": { "type": "string", "enum": ["travel", "meals", "office_supplies", "software", "equipment", "training", "other"], "required": true },
-        "amount": { "type": "number", "required": true },
-        "currency": { "type": "string", "default": "USD" },
-        "date": { "type": "string", "format": "date", "required": true },
-        "status": { "type": "string", "enum": ["submitted", "approved", "denied", "reimbursed"], "required": true },
-        "description": { "type": "string", "required": false },
-        "receiptUrl": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "travel",
+            "meals",
+            "office_supplies",
+            "software",
+            "equipment",
+            "training",
+            "other"
+          ],
+          "required": true
+        },
+        "amount": {
+          "type": "number",
+          "required": true
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "submitted",
+            "approved",
+            "denied",
+            "reimbursed"
+          ],
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "receiptUrl": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "dependent": {
-      "description": "Dependent of an employee — drives benefits eligibility, QLE cascades, FMLA",
+      "description": "Dependent of an employee \u2014 drives benefits eligibility, QLE cascades, FMLA",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "relationship": { "type": "string", "enum": ["spouse", "child", "domestic_partner", "other"], "required": true },
-        "dateOfBirth": { "type": "string", "format": "date", "required": true },
-        "coverageStatus": { "type": "string", "enum": ["covered", "waived", "aged_out", "removed"], "required": true },
-        "ageOutDate": { "type": "string", "format": "date", "required": false, "description": "Date dependent ages off plan (age 26 for children)" }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "relationship": {
+          "type": "string",
+          "enum": [
+            "spouse",
+            "child",
+            "domestic_partner",
+            "other"
+          ],
+          "required": true
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "coverageStatus": {
+          "type": "string",
+          "enum": [
+            "covered",
+            "waived",
+            "aged_out",
+            "removed"
+          ],
+          "required": true
+        },
+        "ageOutDate": {
+          "type": "string",
+          "format": "date",
+          "required": false,
+          "description": "Date dependent ages off plan (age 26 for children)"
+        }
       }
     },
     "garnishment": {
-      "description": "Court-ordered wage garnishment — hard compliance deadlines",
+      "description": "Court-ordered wage garnishment \u2014 hard compliance deadlines",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["child_support", "tax_levy_federal", "tax_levy_state", "creditor", "student_loan", "bankruptcy"], "required": true },
-        "amount": { "type": "number", "required": true, "description": "Fixed dollar amount or percentage of disposable income" },
-        "amountType": { "type": "string", "enum": ["fixed", "percentage"], "required": true },
-        "issuingAuthority": { "type": "string", "required": true },
-        "caseNumber": { "type": "string", "required": false },
-        "receivedDate": { "type": "string", "format": "date", "required": true },
-        "effectiveDate": { "type": "string", "format": "date", "required": true },
-        "endDate": { "type": "string", "format": "date", "required": false },
-        "status": { "type": "string", "enum": ["active", "completed", "suspended"], "required": true },
-        "priority": { "type": "number", "required": false, "description": "Priority order when multiple garnishments exist" }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "child_support",
+            "tax_levy_federal",
+            "tax_levy_state",
+            "creditor",
+            "student_loan",
+            "bankruptcy"
+          ],
+          "required": true
+        },
+        "amount": {
+          "type": "number",
+          "required": true,
+          "description": "Fixed dollar amount or percentage of disposable income"
+        },
+        "amountType": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "percentage"
+          ],
+          "required": true
+        },
+        "issuingAuthority": {
+          "type": "string",
+          "required": true
+        },
+        "caseNumber": {
+          "type": "string",
+          "required": false
+        },
+        "receivedDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "completed",
+            "suspended"
+          ],
+          "required": true
+        },
+        "priority": {
+          "type": "number",
+          "required": false,
+          "description": "Priority order when multiple garnishments exist"
+        }
       }
     },
     "cobra_event": {
-      "description": "COBRA qualifying event — federally mandated 14-day notice deadline",
+      "description": "COBRA qualifying event \u2014 federally mandated 14-day notice deadline",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "qualifyingEvent": { "type": "string", "enum": ["termination", "hours_reduction", "divorce", "dependent_age_out", "death", "medicare_entitlement"], "required": true },
-        "eventDate": { "type": "string", "format": "date", "required": true },
-        "noticeDeadline": { "type": "string", "format": "date", "required": true, "description": "14 days from qualifying event" },
-        "electionDeadline": { "type": "string", "format": "date", "required": true, "description": "60 days from notice" },
-        "status": { "type": "string", "enum": ["pending_notice", "notice_sent", "elected", "waived", "lapsed"], "required": true },
-        "monthlyPremium": { "type": "number", "required": false, "description": "102% of plan cost" },
-        "coverageEndDate": { "type": "string", "format": "date", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "qualifyingEvent": {
+          "type": "string",
+          "enum": [
+            "termination",
+            "hours_reduction",
+            "divorce",
+            "dependent_age_out",
+            "death",
+            "medicare_entitlement"
+          ],
+          "required": true
+        },
+        "eventDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "noticeDeadline": {
+          "type": "string",
+          "format": "date",
+          "required": true,
+          "description": "14 days from qualifying event"
+        },
+        "electionDeadline": {
+          "type": "string",
+          "format": "date",
+          "required": true,
+          "description": "60 days from notice"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending_notice",
+            "notice_sent",
+            "elected",
+            "waived",
+            "lapsed"
+          ],
+          "required": true
+        },
+        "monthlyPremium": {
+          "type": "number",
+          "required": false,
+          "description": "102% of plan cost"
+        },
+        "coverageEndDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        }
       }
     },
     "leave_designation": {
-      "description": "Formal leave designation — FMLA, state equivalents, ADA accommodation",
+      "description": "Formal leave designation \u2014 FMLA, state equivalents, ADA accommodation",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["fmla", "state_family_leave", "state_medical_leave", "ada_accommodation", "userra", "pwfa", "personal", "workers_comp"], "required": true },
-        "status": { "type": "string", "enum": ["requested", "designated", "active", "intermittent", "completed", "denied"], "required": true },
-        "requestDate": { "type": "string", "format": "date", "required": true },
-        "designationDeadline": { "type": "string", "format": "date", "required": false, "description": "5 business days from request for FMLA" },
-        "startDate": { "type": "string", "format": "date", "required": false },
-        "endDate": { "type": "string", "format": "date", "required": false },
-        "entitlementHours": { "type": "number", "required": false, "description": "Total hours entitled (480 for standard FMLA)" },
-        "usedHours": { "type": "number", "required": false },
-        "isIntermittent": { "type": "boolean", "required": false },
-        "concurrentWith": { "type": "array", "required": false, "description": "IDs of concurrent leave designations (FMLA + state leave running simultaneously)" },
-        "notes": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "fmla",
+            "state_family_leave",
+            "state_medical_leave",
+            "ada_accommodation",
+            "userra",
+            "pwfa",
+            "personal",
+            "workers_comp"
+          ],
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "requested",
+            "designated",
+            "active",
+            "intermittent",
+            "completed",
+            "denied"
+          ],
+          "required": true
+        },
+        "requestDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "designationDeadline": {
+          "type": "string",
+          "format": "date",
+          "required": false,
+          "description": "5 business days from request for FMLA"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "entitlementHours": {
+          "type": "number",
+          "required": false,
+          "description": "Total hours entitled (480 for standard FMLA)"
+        },
+        "usedHours": {
+          "type": "number",
+          "required": false
+        },
+        "isIntermittent": {
+          "type": "boolean",
+          "required": false
+        },
+        "concurrentWith": {
+          "type": "array",
+          "required": false,
+          "description": "IDs of concurrent leave designations (FMLA + state leave running simultaneously)"
+        },
+        "notes": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "background_check": {
       "description": "Pre-hire or post-hire background check",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["criminal", "employment_verification", "education_verification", "credit", "drug_screen", "mvr", "professional_license", "reference_check"], "required": true },
-        "provider": { "type": "string", "required": false },
-        "initiatedDate": { "type": "string", "format": "date", "required": true },
-        "completedDate": { "type": "string", "format": "date", "required": false },
-        "status": { "type": "string", "enum": ["pending", "in_progress", "completed", "adverse_action", "cleared"], "required": true },
-        "result": { "type": "string", "enum": ["clear", "flagged", "adverse", "pending"], "required": false },
-        "notes": { "type": "string", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "criminal",
+            "employment_verification",
+            "education_verification",
+            "credit",
+            "drug_screen",
+            "mvr",
+            "professional_license",
+            "reference_check"
+          ],
+          "required": true
+        },
+        "provider": {
+          "type": "string",
+          "required": false
+        },
+        "initiatedDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "completedDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "in_progress",
+            "completed",
+            "adverse_action",
+            "cleared"
+          ],
+          "required": true
+        },
+        "result": {
+          "type": "string",
+          "enum": [
+            "clear",
+            "flagged",
+            "adverse",
+            "pending"
+          ],
+          "required": false
+        },
+        "notes": {
+          "type": "string",
+          "required": false
+        }
       }
     },
     "investigation": {
-      "description": "HR investigation — complaints, harassment, discrimination, misconduct",
+      "description": "HR investigation \u2014 complaints, harassment, discrimination, misconduct",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "type": { "type": "string", "enum": ["harassment", "discrimination", "misconduct", "policy_violation", "safety", "retaliation", "theft", "other"], "required": true },
-        "status": { "type": "string", "enum": ["reported", "under_investigation", "resolved", "closed_no_action", "escalated"], "required": true },
-        "reportedDate": { "type": "string", "format": "date", "required": true },
-        "resolvedDate": { "type": "string", "format": "date", "required": false },
-        "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"], "required": true },
-        "outcome": { "type": "string", "required": false },
-        "isAnonymous": { "type": "boolean", "required": false }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "harassment",
+            "discrimination",
+            "misconduct",
+            "policy_violation",
+            "safety",
+            "retaliation",
+            "theft",
+            "other"
+          ],
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "under_investigation",
+            "resolved",
+            "closed_no_action",
+            "escalated"
+          ],
+          "required": true
+        },
+        "reportedDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "resolvedDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ],
+          "required": true
+        },
+        "outcome": {
+          "type": "string",
+          "required": false
+        },
+        "isAnonymous": {
+          "type": "boolean",
+          "required": false
+        }
       }
     },
     "contractor": {
       "description": "External contractor or contingent worker",
       "properties": {
-        "id": { "type": "string", "required": true },
-        "name": { "type": "string", "required": true },
-        "email": { "type": "string", "required": true },
-        "company": { "type": "string", "required": false },
-        "role": { "type": "string", "required": true },
-        "startDate": { "type": "string", "format": "date", "required": true },
-        "endDate": { "type": "string", "format": "date", "required": false },
-        "rate": { "type": "number", "required": false, "description": "Hourly or daily rate" },
-        "rateType": { "type": "string", "enum": ["hourly", "daily", "project", "monthly"], "required": false },
-        "status": { "type": "string", "enum": ["active", "completed", "terminated"], "required": true }
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "company": {
+          "type": "string",
+          "required": false
+        },
+        "role": {
+          "type": "string",
+          "required": true
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "required": false
+        },
+        "rate": {
+          "type": "number",
+          "required": false,
+          "description": "Hourly or daily rate"
+        },
+        "rateType": {
+          "type": "string",
+          "enum": [
+            "hourly",
+            "daily",
+            "project",
+            "monthly"
+          ],
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "completed",
+            "terminated"
+          ],
+          "required": true
+        }
+      }
+    },
+    "change": {
+      "description": "A discrete change to an employee record field",
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": [
+            "level",
+            "role",
+            "salary",
+            "salary_band",
+            "manager",
+            "team",
+            "department"
+          ],
+          "required": true,
+          "description": "Which field changed"
+        },
+        "from": {
+          "type": "string",
+          "required": true,
+          "description": "Previous value"
+        },
+        "to": {
+          "type": "string",
+          "required": true,
+          "description": "New value"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date",
+          "required": true
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "promotion",
+            "lateral_move",
+            "reorg",
+            "market_adjustment",
+            "annual_review",
+            "merit",
+            "correction",
+            "new_hire"
+          ],
+          "required": false,
+          "description": "Optional reason for the change"
+        }
+      }
+    },
+    "level": {
+      "description": "A career level in the organization's leveling framework",
+      "properties": {
+        "code": {
+          "type": "string",
+          "required": true,
+          "description": "Level code e.g. IC-1, M-2"
+        },
+        "track": {
+          "type": "string",
+          "enum": [
+            "individual_contributor",
+            "management"
+          ],
+          "required": true
+        },
+        "title_template": {
+          "type": "string",
+          "required": false,
+          "description": "Typical title at this level"
+        },
+        "salary_band_min": {
+          "type": "number",
+          "required": true
+        },
+        "salary_band_max": {
+          "type": "number",
+          "required": true
+        },
+        "salary_band_mid": {
+          "type": "number",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        }
       }
     }
   },
@@ -802,6 +2248,16 @@
       "metadata": {
         "role": "string (subject, complainant, witness)"
       }
+    },
+    "has_change": {
+      "source": "person",
+      "target": "change",
+      "description": "Links a person to a change in their employment record"
+    },
+    "next_level": {
+      "source": "level",
+      "target": "level",
+      "description": "Career progression path between levels"
     }
   }
 }
