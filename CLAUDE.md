@@ -2,7 +2,7 @@
 
 These are non-negotiable principles. Push back if work violates them.
 
-1. **Don't recreate Brian's website.** If something we're building is too similar to the BambooHR site in KNOWLEDGE.md, flag it. We must push boundaries, not rebuild existing work.
+1. **Don't recreate Brian's website.** If something we're building is too similar to the BambooHR site in docs/KNOWLEDGE.md, flag it. We must push boundaries, not rebuild existing work.
 2. **Traditional HRIS is the enemy.** If an approach would work fine with flat tables and standard queries, push back. Every feature must demonstrate what the employee graph makes possible that traditional systems can't do.
 3. **Graph traversal is the proof.** Every feature should require walking edges to work. If it could be built with a single database query, it's not proving the graph's value.
 4. **One event, many consequences.** Favor scenarios that cascade across multiple node types. Single-hop lookups (person → team) aren't impressive. Multi-hop discovery (person resigns → team coverage → project risk → hiring pipeline) is.
@@ -11,11 +11,16 @@ These are non-negotiable principles. Push back if work violates them.
 
 Gentle pushback is fine on infrastructure work — sometimes you need it to get the demo healthy — but always ask whether it's serving the demo or just feeling productive.
 
+## Data Privacy Rules
+
+7. **eNPS and wellbeing surveys are anonymous.** Never surface individual survey scores or use them to make claims about a specific person. "Raj's eNPS is 8" is off-limits. Aggregate by team/department/division is fine: "Engineering's eNPS dropped 15 points over 3 quarters." Individual sentiment must be inferred from non-anonymous proxies: review self-assessments, time-off patterns, recognition patterns, workload signals, comp trajectory, manager notes.
+8. **Show your reasoning.** When the AI infers something about an individual (flight risk, burnout, star performer), it must cite the observable signals it used — not anonymous survey data. "I can't see Karen's survey responses, but her sick days doubled, she hasn't taken PTO in 5 months, and her team lost 2 people without backfill" is the right pattern.
+
 ## Decision Journal (Auto-Start & Auto-Update)
 
 When `product-decisions.json` exists in the project root:
 
-**Auto-start server:** At the beginning of a session, check if port 3334 is in use (`lsof -ti:3334`). If not, start the journal server in the background: `node decision-journal-server.js &`. Don't mention this to the user unless it fails.
+**Auto-start server:** At the beginning of a session, check if port 3334 is in use (`lsof -ti:3334`). If not, start the journal server in the background: `node tools/decision-journal-server.js &`. Don't mention this to the user unless it fails.
 
 **Auto-update journal:** As you work, maintain `product-decisions.json`:
 - When a significant decision is made → add a `decisions` entry with reasoning

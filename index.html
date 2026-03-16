@@ -122,14 +122,27 @@ body::before {
 
 .data-bar {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
   padding: 12px 16px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 2px;
+}
+
+.data-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.data-bar-header {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-bright);
+  letter-spacing: 0.02em;
 }
 
 .data-stats {
@@ -193,6 +206,35 @@ body::before {
 }
 .data-link-primary svg { opacity: 1; }
 .data-link-primary:hover svg { opacity: 1; }
+
+.add-experiment-row {
+  margin-bottom: 20px;
+  padding-left: 4px;
+}
+
+.add-experiment-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  background: none;
+  padding: 6px 12px;
+  border-radius: 1px;
+  border: 1px solid var(--accent);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.add-experiment-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.add-experiment-btn svg { opacity: 0.8; }
+.add-experiment-btn:hover svg { opacity: 1; }
 
 /* ── Timeline ── */
 .timeline {
@@ -441,12 +483,31 @@ body::before {
   top: -0.5px;
 }
 
+.card-content-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+.card-content-stack .card-row-1 { margin-bottom: 0; }
+.card-content-stack .card-desc { margin-bottom: 0; }
+
+.card-link-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  opacity: 0.7;
+}
+.card:hover .card-link-label { opacity: 1; }
+
 /* ── Compact card ── */
 .card-compact .card-body {
   padding: 11px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .card-compact .card-row-1 { margin-bottom: 0; flex-shrink: 0; }
@@ -632,6 +693,51 @@ code.inline {
 .modal-link svg { opacity: 0.7; }
 .modal-link:hover svg { opacity: 1; }
 
+/* ── FAQ ── */
+.faq {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.faq-title {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+.faq-item {
+  margin-bottom: 16px;
+}
+
+.faq-q {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+
+.faq-a {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.faq-a code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--surface-2);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: var(--text-bright);
+}
+
 /* ── Theme toggle ── */
 .theme-toggle {
   position: fixed;
@@ -696,7 +802,7 @@ code.inline {
   .card-preview { height: 140px; }
   .card-compact .card-body { flex-wrap: wrap; }
   .header-title { font-size: 30px; }
-  .data-bar { flex-direction: column; align-items: flex-start; }
+  .data-bar-row { flex-direction: column; align-items: flex-start; }
   .data-links { width: 100%; }
 }
 </style>
@@ -710,23 +816,22 @@ code.inline {
     <h1 class="header-title">Employee Graph <span class="lab">Lab</span></h1>
     <p class="header-sub">Everything here is built on one shared dataset. Grab the data and build something.</p>
     <div class="data-bar">
-      <div class="data-stats">
-        <span class="data-stat"><span class="data-num">783</span> nodes</span>
-        <span class="data-stat"><span class="data-num">3,281</span> edges</span>
-        <span class="data-stat"><span class="data-num">30</span> types</span>
+      <div class="data-bar-row">
+        <div class="data-bar-header">Employee Graph Data Template</div>
+        <div class="data-stats">
+          <span class="data-stat"><span class="data-num">783</span> nodes</span>
+          <span class="data-stat"><span class="data-num">3,281</span> edges</span>
+          <span class="data-stat"><span class="data-num">30</span> types</span>
+        </div>
       </div>
       <div class="data-links">
-        <button class="data-link data-link-primary" id="contribute-btn">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-          Add an experiment
-        </button>
+        <a href="https://github.com/mattcmorrell/ee-graph/tree/main/data" target="_blank" class="data-link data-link-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Get the data
+        </a>
         <a href="viewer.html" target="_blank" class="data-link">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 5C7 5 2.7 8.4 1 12c1.7 3.6 6 7 11 7s9.3-3.4 11-7c-1.7-3.6-6-7-11-7z"/></svg>
           Open graph viewer
-        </a>
-        <a href="https://github.com/mattcmorrell/ee-graph/tree/main/data" target="_blank" class="data-link">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Get the data
         </a>
       </div>
     </div>
@@ -734,56 +839,14 @@ code.inline {
 
   <div class="timeline">
 
-    <div class="date-marker"><span class="date-text">Mar 12, 2026</span></div>
-
-    <div class="entry">
-      <a target="_blank" class="card card-placeholder" href="#">
-        <div class="card-preview">
-          <span class="card-specimen">EXP-001</span>
-          <svg class="preview-svg" viewBox="0 0 680 172" xmlns="http://www.w3.org/2000/svg">
-            <rect width="680" height="172" fill="none"/>
-            <g opacity="0.5">
-              <rect x="40" y="120" width="28" height="40" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="76" y="90" width="28" height="70" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="112" y="105" width="28" height="55" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="148" y="60" width="28" height="100" rx="1" fill="var(--accent-tertiary)"/>
-              <rect x="184" y="80" width="28" height="80" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="220" y="45" width="28" height="115" rx="1" fill="var(--accent-tertiary)"/>
-              <rect x="256" y="70" width="28" height="90" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="292" y="95" width="28" height="65" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="328" y="50" width="28" height="110" rx="1" fill="var(--accent-tertiary)"/>
-              <rect x="364" y="75" width="28" height="85" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="400" y="100" width="28" height="60" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="436" y="55" width="28" height="105" rx="1" fill="var(--accent-tertiary)"/>
-              <rect x="472" y="85" width="28" height="75" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="508" y="65" width="28" height="95" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="544" y="40" width="28" height="120" rx="1" fill="var(--accent)"/>
-              <rect x="580" y="110" width="28" height="50" rx="1" fill="var(--accent-secondary)"/>
-              <rect x="616" y="88" width="28" height="72" rx="1" fill="var(--accent-secondary)"/>
-            </g>
-            <polyline points="54,115 90,85 126,100 162,55 198,75 234,40 270,65 306,90 342,45 378,70 414,95 450,50 486,80 522,60 558,35 594,105 630,83" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.6"/>
-            <g opacity="0.7">
-              <circle cx="54" cy="115" r="2.5" fill="var(--accent)"/>
-              <circle cx="234" cy="40" r="2.5" fill="var(--accent)"/>
-              <circle cx="342" cy="45" r="2.5" fill="var(--accent)"/>
-              <circle cx="558" cy="35" r="3" fill="var(--accent)"/>
-            </g>
-          </svg>
-        </div>
-        <div class="card-body">
-          <div class="card-row-1">
-            <span class="card-title">Interview Intelligence</span>
-            <span class="pill pill-new">New</span>
-          </div>
-          <p class="card-desc">Connect pre-hire signals to post-hire outcomes. Which interviewers predict success? Which interview types actually correlate with performance?</p>
-          <div class="card-meta">
-            <span><span class="avatar av-s">S</span>Sarah</span>
-            <span class="sep">&middot;</span>
-            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 5</span>
-          </div>
-        </div>
-      </a>
+    <div class="add-experiment-row">
+      <button class="add-experiment-btn" id="contribute-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Add an experiment
+      </button>
     </div>
+
+    <div class="date-marker"><span class="date-text">Mar 12, 2026</span></div>
 
     <div class="entry entry-compact">
       <a target="_blank" class="card card-compact" href="viewer.html">
@@ -803,64 +866,10 @@ code.inline {
       </a>
     </div>
 
-    <div class="date-marker"><span class="date-text">Mar 11, 2026</span></div>
-
-    <div class="entry">
-      <a target="_blank" class="card card-placeholder" href="#">
-        <div class="card-preview">
-          <span class="card-specimen">EXP-003</span>
-          <svg class="preview-svg" viewBox="0 0 680 172" xmlns="http://www.w3.org/2000/svg">
-            <rect width="680" height="172" fill="none"/>
-            <g opacity="0.4">
-              <circle cx="170" cy="86" r="32" fill="none" stroke="var(--accent-tertiary)" stroke-width="1"/>
-              <circle cx="340" cy="70" r="44" fill="none" stroke="var(--accent-secondary)" stroke-width="1"/>
-              <circle cx="500" cy="90" r="28" fill="none" stroke="var(--accent)" stroke-width="1"/>
-            </g>
-            <g opacity="0.6">
-              <circle cx="140" cy="65" r="3" fill="var(--accent-tertiary)"/>
-              <circle cx="200" cy="100" r="2.5" fill="var(--accent-tertiary)"/>
-              <circle cx="170" cy="54" r="2" fill="var(--accent-tertiary)"/>
-              <circle cx="155" cy="110" r="2" fill="var(--accent-tertiary)"/>
-              <circle cx="300" cy="55" r="3.5" fill="var(--accent-secondary)"/>
-              <circle cx="360" cy="45" r="2.5" fill="var(--accent-secondary)"/>
-              <circle cx="340" cy="100" r="3" fill="var(--accent-secondary)"/>
-              <circle cx="380" cy="75" r="2" fill="var(--accent-secondary)"/>
-              <circle cx="310" cy="90" r="2.5" fill="var(--accent-secondary)"/>
-              <circle cx="370" cy="95" r="2" fill="var(--accent-secondary)"/>
-              <circle cx="480" cy="78" r="2.5" fill="var(--accent)"/>
-              <circle cx="520" cy="95" r="3" fill="var(--accent)"/>
-              <circle cx="505" cy="65" r="2" fill="var(--accent)"/>
-              <circle cx="490" cy="108" r="2" fill="var(--accent)"/>
-            </g>
-            <g stroke-width="0.8" opacity="0.3">
-              <line x1="200" y1="100" x2="300" y2="55" stroke="var(--accent-secondary)"/>
-              <line x1="170" y1="54" x2="310" y2="90" stroke="var(--accent-tertiary)"/>
-              <line x1="360" y1="45" x2="480" y2="78" stroke="var(--accent)"/>
-              <line x1="340" y1="100" x2="520" y2="95" stroke="var(--accent-secondary)"/>
-              <line x1="140" y1="65" x2="300" y2="55" stroke="var(--accent-tertiary)"/>
-              <line x1="380" y1="75" x2="505" y2="65" stroke="var(--accent)"/>
-            </g>
-          </svg>
-        </div>
-        <div class="card-body">
-          <div class="card-row-1">
-            <span class="card-title">Career Conversation</span>
-            <span class="pill pill-new">New</span>
-          </div>
-          <p class="card-desc">AI-powered prep for every kind of 1:1. The graph surfaces comp context, flight risk signals, peer comparisons, and conversation starters.</p>
-          <div class="card-meta">
-            <span><span class="avatar av-k">K</span>Kyle</span>
-            <span class="sep">&middot;</span>
-            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 12</span>
-          </div>
-        </div>
-      </a>
-    </div>
-
     <div class="date-marker"><span class="date-text">Mar 10, 2026</span></div>
 
     <div class="entry">
-      <a target="_blank" class="card" href="viewer.html">
+      <a target="_blank" class="card" href="viewer.html" data-added="2026-03-10">
         <div class="card-preview">
           <span class="card-specimen">EXP-004</span>
           <img src="thumbnails/graph-viewer.png" alt="Graph Viewer screenshot" loading="lazy">
@@ -868,7 +877,7 @@ code.inline {
         <div class="card-body">
           <div class="card-row-1">
             <span class="card-title">Graph Viewer</span>
-            <span class="pill pill-new">New</span>
+            <span class="pill" data-auto-status>New</span>
           </div>
           <div class="card-stats">
             <span><span class="dot" style="background:var(--accent-secondary)"></span>783 nodes</span>
@@ -885,24 +894,35 @@ code.inline {
       </a>
     </div>
 
-    <div class="entry entry-compact">
-      <a target="_blank" class="card card-compact card-placeholder" href="#">
-        <div class="card-body">
-          <span class="card-specimen">EXP-005</span>
-          <div class="card-row-1">
-            <span class="card-title">Departure Cascade</span>
-            <span class="pill pill-new">New</span>
-          </div>
-          <p class="card-desc">Someone leaves &mdash; what breaks? Walk the graph outward to surface every consequence.</p>
-          <div class="card-meta">
-            <span><span class="avatar av-m">M</span>Matt</span>
-            <span class="sep">&middot;</span>
-            <span class="comments"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 7</span>
-          </div>
-        </div>
-      </a>
+  </div>
+
+  <div class="faq">
+    <div class="faq-title">How this works</div>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I add an experiment?</div>
+      <div class="faq-a">Open this project in Claude Code and say something like <code>add an experiment called "My Thing" with a link to myurl.com</code>. Claude will add a card to this page and push it live.</div>
     </div>
 
+    <div class="faq-item">
+      <div class="faq-q">How do I update text or content on this page?</div>
+      <div class="faq-a">Just tell Claude. <code>Change the description on the Google card to "..."</code> or <code>mark Interview Intelligence as Updated</code>. It edits the HTML directly.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I add a video?</div>
+      <div class="faq-a">Yes. Give Claude a Wistia or other video link when adding an experiment and it will include it on the card.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I add to the graph dataset?</div>
+      <div class="faq-a">Yes. Tell Claude what you want to add &mdash; new node types, new edges, new properties. It can read the schema in <code>data/schema.json</code> and extend the graph while keeping everything consistent. Just describe what you need and it will figure out how to wire it in.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Do I need to know git?</div>
+      <div class="faq-a">No. Claude handles commits and pushes. You just describe what you want.</div>
+    </div>
   </div>
 
   <!-- Contribute modal -->
@@ -968,6 +988,26 @@ code.inline {
     const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('ee-graph-lab-theme', next);
+  });
+})();
+
+// ── Auto-status pills ──
+// Cards with data-auto-status pills: "New" for 7 days, then pill is removed.
+// Cards with hardcoded pill-new / pill-updated (no data-auto-status) are manual overrides.
+(function() {
+  const NEW_DAYS = 7;
+  const now = new Date();
+  document.querySelectorAll('.card[data-added]').forEach(card => {
+    const pill = card.querySelector('.pill[data-auto-status]');
+    if (!pill) return;
+    const added = new Date(card.dataset.added);
+    const age = (now - added) / (1000 * 60 * 60 * 24);
+    if (age <= NEW_DAYS) {
+      pill.classList.add('pill-new');
+      pill.textContent = 'New';
+    } else {
+      pill.remove();
+    }
   });
 })();
 
