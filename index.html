@@ -792,6 +792,40 @@ code.inline {
 .footer a svg { opacity: 0.4; }
 .footer a:hover svg { opacity: 0.7; }
 
+/* ── POC link list ── */
+.poc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 12px 0 14px;
+}
+
+.poc-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.poc-item-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.poc-item-link:hover { opacity: 0.7; }
+
+.poc-item-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .page { padding: 36px 16px 80px; }
@@ -844,6 +878,52 @@ code.inline {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
         Add an experiment
       </button>
+    </div>
+
+    <div class="date-marker"><span class="date-text">Mar 17, 2026</span></div>
+
+    <div class="entry">
+      <div class="card card-placeholder" data-added="2026-03-17">
+        <div class="card-preview">
+          <img src="thumbnails/poc-blitz.png" alt="POC Blitz mockups" loading="lazy">
+        </div>
+        <div class="card-body">
+          <div class="card-row-1">
+            <span class="card-title">POC Blitz — Experience Explorations</span>
+            <span class="pill pill-new">New</span>
+          </div>
+          <p class="card-desc" style="margin-top:6px;">Rough brainstorms of the kinds of experiences you could build on the employee graph. These aren't finished products — they're proof that the underlying data makes new kinds of HR software possible that flat tables and standard queries simply can't.</p>
+          <div class="poc-list">
+            <div class="poc-item">
+              <a href="poc/departure-cascade-v5.html" target="_blank" class="poc-item-link">→ Departure Cascade</a>
+              <span class="poc-item-desc">What breaks when someone resigns — team gaps, project risk, hiring pipeline, knowledge loss, all surfaced by walking edges.</span>
+            </div>
+            <div class="poc-item">
+              <a href="poc/employee-lifecycle-v4.html" target="_blank" class="poc-item-link">→ Employee Lifecycle</a>
+              <span class="poc-item-desc">Full arc from offer to offboard, with graph-powered context at every stage: onboarding, performance, career moves, departure.</span>
+            </div>
+            <div class="poc-item">
+              <a href="poc/change-simulator-v5.html" target="_blank" class="poc-item-link">→ Change Simulator</a>
+              <span class="poc-item-desc">Simulate a reorg, departure, or hire and watch the ripple effects cascade across teams, projects, and reporting lines.</span>
+            </div>
+            <div class="poc-item">
+              <a href="poc/interview-intelligence-v5.html" target="_blank" class="poc-item-link">→ Interview Intelligence</a>
+              <span class="poc-item-desc">Surface org connections to candidates — who knows them, who can vouch, how close they are to the team they'd join.</span>
+            </div>
+            <div class="poc-item">
+              <a href="poc/org-health-pulse-v5.html" target="_blank" class="poc-item-link">→ Org Health Pulse</a>
+              <span class="poc-item-desc">Team health built from graph traversal: survey trend lines, coverage gaps, burnout signals, manager span-of-control.</span>
+            </div>
+            <div class="poc-item">
+              <a href="poc/pattern-intelligence-v4.html" target="_blank" class="poc-item-link">→ Pattern Intelligence</a>
+              <span class="poc-item-desc">What the graph reveals across cohorts — why people leave, who gets promoted, what high-performers have in common.</span>
+            </div>
+          </div>
+          <div class="card-meta">
+            <span><span class="avatar av-m">M</span>Matt</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="date-marker"><span class="date-text">Mar 16, 2026</span></div>
