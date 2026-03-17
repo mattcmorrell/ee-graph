@@ -68,7 +68,7 @@
   }
 
   #filterbar .filter-label {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -324,7 +324,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 11px;
     z-index: 91;
     transition: left 0.25s ease;
   }
@@ -363,7 +363,7 @@
   }
 
   .filter-clear {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--accent);
     cursor: pointer;
     margin-left: auto;
@@ -384,7 +384,7 @@
   }
 
   .filter-title {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -395,7 +395,7 @@
     align-items: center;
   }
   .filter-reset {
-    font-size: 9px;
+    font-size: 11px;
     color: var(--text-dim);
     cursor: pointer;
     opacity: 0;
@@ -429,7 +429,7 @@
   .filter-category-header:hover { color: var(--text-bright); }
 
   .filter-category-header .cat-arrow {
-    font-size: 8px;
+    font-size: 11px;
     color: var(--text-dim);
     transition: transform 0.2s;
     width: 10px;
@@ -441,7 +441,7 @@
   .filter-category-header .cat-count {
     margin-left: auto;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--text-dim);
   }
 
@@ -480,7 +480,7 @@
   .filter-item .count {
     margin-left: auto;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--text-dim);
   }
 
@@ -643,7 +643,7 @@
   }
 
   .detail-edge .edge-target { color: var(--text); }
-  .detail-edge .edge-dir { color: var(--text-dim); font-size: 10px; }
+  .detail-edge .edge-dir { color: var(--text-dim); font-size: 11px; }
 
   .detail-bio {
     font-size: 14px;
@@ -741,7 +741,7 @@
   }
 
   #tooltip.visible { opacity: 1; }
-  #tooltip .tt-type { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #tooltip .tt-type { color: var(--text-dim); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
   #tooltip .tt-name { margin-top: 1px; }
 
   /* ── Depth control ── */
@@ -2020,7 +2020,7 @@ function getNodeSub(node) {
         for (const t of personTeams) {
           const typeLabel = t.teamType.replace(/_/g, ' ');
           html += `<div class="detail-edge team-link" data-team-id="${t.id}">
-            <span class="edge-dir" style="font-size:10px;color:var(--text-dim)">${typeLabel}</span>
+            <span class="edge-dir" style="font-size:11px;color:var(--text-dim)">${typeLabel}</span>
             <span class="edge-target">${t.name}</span>
             <span class="edge-type">${t.members.size}</span>
           </div>`;

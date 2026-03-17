@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Departure Cascade | Employee Graph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+/* ============================================================
+   GLOBAL RESET & BASE
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a28;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-glass: rgba(255,255,255,0.05);
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.1);
+  --text-primary: #e8e8ef;
+  --text-secondary: #8888a0;
+  --text-muted: #55556a;
+  --accent-red: #ff4d6a;
+  --accent-red-dim: rgba(255,77,106,0.15);
+  --accent-orange: #ff8c42;
+  --accent-orange-dim: rgba(255,140,66,0.15);
+  --accent-yellow: #ffd166;
+  --accent-yellow-dim: rgba(255,209,102,0.12);
+  --accent-green: #06d6a0;
+  --accent-green-dim: rgba(6,214,160,0.12);
+  --accent-blue: #4ea8de;
+  --accent-blue-dim: rgba(78,168,222,0.12);
+  --accent-purple: #b388ff;
+  --accent-purple-dim: rgba(179,136,255,0.12);
+  --accent-cyan: #64dfdf;
+  --accent-cyan-dim: rgba(100,223,223,0.1);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+html { font-size: 16px; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+
+/* ============================================================
+   TOP BAR — Person picker + Tab switcher
+   ============================================================ */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 16px 32px 0;
+}
+.top-bar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.header-row {
+  display: flex; align-items: center; gap: 20px;
+  margin-bottom: 16px;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+}
+.brand-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent-red), var(--accent-purple));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; color: #fff;
+}
+.brand-text {
+  font-size: 14px; font-weight: 600; color: var(--text-secondary);
+  letter-spacing: -0.02em;
+}
+.brand-text span { color: var(--text-primary); }
+
+.person-picker {
+  display: flex; align-items: center; gap: 10px;
+  margin-left: auto;
+}
+.person-picker label {
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.person-picker select {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-medium);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px; font-weight: 500;
+  padding: 8px 36px 8px 14px;
+  border-radius: var(--radius-md);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none'%3E%3Cpath d='M3 5l3 3 3-3' stroke='%238888a0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.person-picker select:hover { border-color: var(--accent-purple); }
+.person-picker select:focus { outline: none; border-color: var(--accent-purple); box-shadow: 0 0 0 3px var(--accent-purple-dim); }
+
+/* Tabs */
+.tab-bar {
+  display: flex; gap: 2px;
+}
+.tab-btn {
+  background: none; border: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 13px; font-weight: 500;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-purple);
+}
+
+/* ============================================================
+   CONTENT AREA
+   ============================================================ */
+.content-area {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ============================================================
+   MOCK 1A — AI BRIEFING
+   ============================================================ */
+#tab-briefing .briefing-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding-top: 8px;
+}
+#tab-briefing .briefing-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+#tab-briefing .briefing-header .briefing-badge {
+  display: inline-block;
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--accent-purple);
+  background: var(--accent-purple-dim);
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+#tab-briefing .briefing-header h1 {
+  font-size: 28px; font-weight: 700; letter-spacing: -0.03em;
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+#tab-briefing .briefing-header h1 .name-highlight {
+  background: linear-gradient(135deg, var(--accent-red), var(--accent-orange));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+#tab-briefing .briefing-header .briefing-date {
+  font-size: 13px; color: var(--text-muted);
+}
+
+#tab-briefing .urgency-section {
+  margin-bottom: 40px;
+}
+#tab-briefing .urgency-bar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px;
+}
+#tab-briefing .urgency-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0;
+}
+#tab-briefing .urgency-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+}
+#tab-briefing .urgency-line {
+  flex: 1; height: 1px; background: var(--border-subtle);
+}
+
+#tab-briefing .briefing-card {
+  position: relative;
+  padding: 0 0 0 20px;
+  border-left: 2px solid var(--border-subtle);
+  margin-bottom: 24px;
+}
+#tab-briefing .briefing-card::before {
+  content: '';
+  position: absolute; left: -5px; top: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border-medium);
+}
+#tab-briefing .briefing-card h3 {
+  font-size: 16px; font-weight: 600; margin-bottom: 6px;
+  color: var(--text-primary);
+}
+#tab-briefing .briefing-card p {
+  font-size: 14px; line-height: 1.7;
+  color: var(--text-secondary);
+}
+#tab-briefing .briefing-card p strong {
+  color: var(--text-primary); font-weight: 600;
+}
+#tab-briefing .briefing-card .edge-tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.urgency-immediate .briefing-card { border-left-color: var(--accent-red); }
+.urgency-immediate .briefing-card::before { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); }
+.urgency-immediate .urgency-dot { background: var(--accent-red); box-shadow: 0 0 6px var(--accent-red); }
+.urgency-immediate .urgency-label { color: var(--accent-red); }
+.urgency-immediate .edge-tag { background: var(--accent-red-dim); color: var(--accent-red); }
+
+.urgency-week .briefing-card { border-left-color: var(--accent-orange); }
+.urgency-week .briefing-card::before { background: var(--accent-orange); box-shadow: 0 0 8px var(--accent-orange); }
+.urgency-week .urgency-dot { background: var(--accent-orange); box-shadow: 0 0 6px var(--accent-orange); }
+.urgency-week .urgency-label { color: var(--accent-orange); }
+.urgency-week .edge-tag { background: var(--accent-orange-dim); color: var(--accent-orange); }
+
+.urgency-month .briefing-card { border-left-color: var(--accent-blue); }
+.urgency-month .briefing-card::before { background: var(--accent-blue); box-shadow: 0 0 8px var(--accent-blue); }
+.urgency-month .urgency-dot { background: var(--accent-blue); box-shadow: 0 0 6px var(--accent-blue); }
+.urgency-month .urgency-label { color: var(--accent-blue); }
+.urgency-month .edge-tag { background: var(--accent-blue-dim); color: var(--accent-blue); }
+
+#tab-briefing .briefing-footer {
+  text-align: center; padding: 32px 0;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 48px;
+}
+#tab-briefing .briefing-footer .stats-row {
+  display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+}
+#tab-briefing .briefing-footer .stat-item {
+  text-align: center;
+}
+#tab-briefing .briefing-footer .stat-value {
+  font-size: 28px; font-weight: 800;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+#tab-briefing .briefing-footer .stat-label {
+  font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   MOCK 1B — GRAPH CASCADE (D3)
+   ============================================================ */
+#tab-graph .graph-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  height: calc(100vh - 160px);
+}
+#tab-graph .graph-canvas-wrap {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+#tab-graph .graph-canvas-wrap svg {
+  width: 100%; height: 100%;
+}
+#tab-graph .sim-btn-wrap {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 10;
+}
+#tab-graph .sim-btn {
+  background: linear-gradient(135deg, var(--accent-red), #d63384);
+  border: none;
+  color: #fff; font-family: inherit;
+  font-size: 14px; font-weight: 600;
+  padding: 12px 32px;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(255,77,106,0.35);
+  transition: all 0.25s;
+}
+#tab-graph .sim-btn:hover { transform: scale(1.05); box-shadow: 0 6px 32px rgba(255,77,106,0.5); }
+#tab-graph .sim-btn:disabled { opacity: 0.4; cursor: default; transform: none; box-shadow: none; }
+#tab-graph .sim-btn.reset {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  box-shadow: 0 4px 24px rgba(78,168,222,0.35);
+}
+
+#tab-graph .graph-legend {
+  position: absolute; top: 16px; left: 16px; z-index: 10;
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+#tab-graph .legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; color: var(--text-muted);
+  background: rgba(0,0,0,0.6);
+  padding: 4px 10px;
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
+}
+#tab-graph .legend-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+
+#tab-graph .side-panel {
+  display: flex; flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+#tab-graph .side-panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+#tab-graph .side-panel-header h3 {
+  font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+#tab-graph .consequence-list {
+  flex: 1; overflow-y: auto;
+  padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.consequence-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  animation: cardSlideIn 0.4s ease-out;
+  border-left: 3px solid var(--accent-red);
+}
+.consequence-card.structural { border-left-color: var(--accent-yellow); }
+.consequence-card.admin { border-left-color: var(--accent-blue); }
+.consequence-card .cc-type {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted); margin-bottom: 4px;
+}
+.consequence-card .cc-text {
+  font-size: 13px; color: var(--text-primary); line-height: 1.5;
+}
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+#tab-graph .empty-state {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 13px;
+  font-style: italic;
+}
+
+/* ============================================================
+   MOCK 1C — ACTION CHECKLIST
+   ============================================================ */
+#tab-checklist .checklist-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px;
+}
+#tab-checklist .checklist-header h2 {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+}
+#tab-checklist .progress-wrap {
+  display: flex; align-items: center; gap: 12px;
+}
+#tab-checklist .progress-bar-outer {
+  width: 200px; height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+#tab-checklist .progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+#tab-checklist .progress-text {
+  font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  min-width: 36px;
+}
+
+#tab-checklist .checklist-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  #tab-checklist .checklist-groups { grid-template-columns: 1fr; }
+}
+
+.check-group {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.check-group-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.check-group-indicator {
+  width: 4px; height: 24px; border-radius: 2px;
+}
+.check-group-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.check-group-count {
+  margin-left: auto;
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  background: var(--bg-tertiary);
+  padding: 2px 8px; border-radius: 10px;
+}
+.check-group-items {
+  padding: 8px 0;
+}
+
+.check-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 18px;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.check-item:hover { background: var(--bg-glass); }
+.check-item.completed { opacity: 0.4; }
+.check-item.completed .check-title { text-decoration: line-through; }
+
+.check-box {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border: 2px solid var(--border-medium);
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+  transition: all 0.2s;
+}
+.check-item.completed .check-box {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+}
+.check-item.completed .check-box::after {
+  content: '';
+  width: 6px; height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.check-body { flex: 1; min-width: 0; }
+.check-title {
+  font-size: 13px; font-weight: 600; color: var(--text-primary);
+  margin-bottom: 3px;
+}
+.check-reason {
+  font-size: 11px; color: var(--text-muted); line-height: 1.5;
+}
+.check-meta {
+  display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;
+}
+.check-meta-tag {
+  font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.check-meta-tag.deadline { background: var(--accent-red-dim); color: var(--accent-red); }
+.check-meta-tag.owner { background: var(--accent-blue-dim); color: var(--accent-blue); }
+
+/* ============================================================
+   MOCK 1D — TIMELINE
+   ============================================================ */
+#tab-timeline .timeline-container {
+  position: relative;
+  padding-top: 24px;
+}
+#tab-timeline .timeline-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 32px;
+}
+#tab-timeline .timeline-header h2 {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+}
+#tab-timeline .timeline-legend {
+  display: flex; gap: 16px;
+}
+#tab-timeline .tl-legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 500; color: var(--text-muted);
+}
+#tab-timeline .tl-legend-dot {
+  width: 10px; height: 10px; border-radius: 3px;
+}
+
+#tab-timeline .timeline-track {
+  position: relative;
+  padding: 60px 0 40px;
+}
+#tab-timeline .timeline-rail {
+  position: absolute; top: 38px; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-orange) 15%, var(--accent-yellow) 30%, var(--accent-blue) 60%, var(--text-muted) 100%);
+  border-radius: 2px;
+}
+#tab-timeline .timeline-phases {
+  position: absolute; top: 8px; left: 0; right: 0;
+  display: flex; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+}
+#tab-timeline .tl-phase {
+  color: var(--text-muted);
+}
+
+#tab-timeline .tl-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.tl-event-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.tl-event-card:hover { transform: translateY(-2px); border-color: var(--border-medium); }
+.tl-event-card .tl-day-badge {
+  position: absolute; top: 0; right: 0;
+  font-size: 36px; font-weight: 900;
+  opacity: 0.06;
+  line-height: 1;
+  padding: 8px 12px;
+}
+.tl-event-card .tl-day-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.tl-event-card .tl-event-title {
+  font-size: 14px; font-weight: 600; color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.tl-event-card .tl-event-desc {
+  font-size: 12px; color: var(--text-secondary); line-height: 1.6;
+}
+.tl-event-card .tl-event-detail {
+  font-size: 12px; color: var(--text-muted); line-height: 1.6;
+  margin-top: 8px;
+  display: none;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 8px;
+}
+.tl-event-card.expanded .tl-event-detail { display: block; }
+
+.tl-event-card.legal { border-left: 3px solid var(--accent-red); }
+.tl-event-card.legal .tl-day-label { color: var(--accent-red); }
+.tl-event-card.practice { border-left: 3px solid var(--accent-yellow); }
+.tl-event-card.practice .tl-day-label { color: var(--accent-yellow); }
+.tl-event-card.admin { border-left: 3px solid var(--accent-blue); }
+.tl-event-card.admin .tl-day-label { color: var(--accent-blue); }
+
+/* ============================================================
+   MOCK 1E — BEFORE / AFTER
+   ============================================================ */
+#tab-beforeafter .ba-stats-banner {
+  background: linear-gradient(135deg, rgba(255,77,106,0.08), rgba(179,136,255,0.08));
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px 28px;
+  display: flex; justify-content: space-around; flex-wrap: wrap; gap: 16px;
+  margin-bottom: 32px;
+}
+.ba-stat {
+  text-align: center;
+}
+.ba-stat-value {
+  font-size: 32px; font-weight: 900; letter-spacing: -0.03em;
+}
+.ba-stat-value.red { color: var(--accent-red); }
+.ba-stat-value.orange { color: var(--accent-orange); }
+.ba-stat-value.yellow { color: var(--accent-yellow); }
+.ba-stat-value.green { color: var(--accent-green); }
+.ba-stat-label {
+  font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+#tab-beforeafter .ba-sections {
+  display: flex; flex-direction: column; gap: 24px;
+}
+.ba-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.ba-section-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-glass);
+}
+.ba-section-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.ba-section-title {
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+}
+
+.ba-split {
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.ba-col {
+  padding: 18px 20px;
+}
+.ba-col:first-child {
+  border-right: 1px solid var(--border-subtle);
+}
+.ba-col-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.ba-col:first-child .ba-col-label { color: var(--accent-green); }
+.ba-col:last-child .ba-col-label { color: var(--accent-red); }
+
+.ba-person-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 5px 12px 5px 5px;
+  margin: 3px;
+  font-size: 12px; font-weight: 500;
+}
+.ba-person-avatar {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff;
+}
+.ba-person-chip.removed {
+  border-color: rgba(255,77,106,0.3);
+  background: var(--accent-red-dim);
+}
+.ba-person-chip.orphaned {
+  border-color: rgba(255,140,66,0.3);
+  background: var(--accent-orange-dim);
+}
+.ba-person-chip.orphaned::after {
+  content: '?';
+  font-size: 11px; font-weight: 800;
+  color: var(--accent-orange);
+  margin-left: 2px;
+}
+
+.ba-kv-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0;
+}
+.ba-kv-row + .ba-kv-row { border-top: 1px solid var(--border-subtle); }
+.ba-kv-label {
+  font-size: 12px; color: var(--text-secondary);
+}
+.ba-kv-value {
+  font-size: 13px; font-weight: 600;
+}
+.ba-kv-value.strike { text-decoration: line-through; color: var(--text-muted); }
+.ba-diff-tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px;
+  margin-left: 8px;
+}
+.ba-diff-tag.removed { background: var(--accent-red-dim); color: var(--accent-red); }
+.ba-diff-tag.added { background: var(--accent-green-dim); color: var(--accent-green); }
+.ba-diff-tag.changed { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+
+/* ============================================================
+   ANIMATIONS & UTILITIES
+   ============================================================ */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.animate-fadein { animation: fadeIn 0.5s ease; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     TOP BAR
+     ============================================================ -->
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="header-row">
+      <div class="brand">
+        <div class="brand-icon">G</div>
+        <div class="brand-text"><span>Departure</span> Cascade</div>
+        <div style="margin-left:16px;font-size:12px;font-weight:500;display:flex;gap:6px;align-items:center;"><a href="departure-cascade.html" style="color:#b388ff;text-decoration:none;font-weight:700;">v1</a><span style="color:#55556a;">|</span><a href="departure-cascade-v2.html" style="color:#55556a;text-decoration:none;">v2</a><span style="color:#55556a;">|</span><a href="departure-cascade-v3.html" style="color:#55556a;text-decoration:none;">v3</a></div>
+      </div>
+      <div class="person-picker">
+        <label for="person-select">Departing employee</label>
+        <select id="person-select"></select>
+      </div>
+    </div>
+    <div class="tab-bar" id="tab-bar">
+      <button class="tab-btn active" data-tab="tab-briefing">AI Briefing</button>
+      <button class="tab-btn" data-tab="tab-graph">Graph Cascade</button>
+      <button class="tab-btn" data-tab="tab-checklist">Action Checklist</button>
+      <button class="tab-btn" data-tab="tab-timeline">Timeline</button>
+      <button class="tab-btn" data-tab="tab-beforeafter">Before / After</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TAB PANELS
+     ============================================================ -->
+<div class="content-area">
+
+  <!-- TAB 1A: AI BRIEFING -->
+  <div class="tab-panel active" id="tab-briefing"></div>
+
+  <!-- TAB 1B: GRAPH CASCADE -->
+  <div class="tab-panel" id="tab-graph">
+    <div class="graph-layout">
+      <div class="graph-canvas-wrap">
+        <div class="graph-legend" id="graph-legend"></div>
+        <svg id="graph-svg"></svg>
+        <div class="sim-btn-wrap">
+          <button class="sim-btn" id="sim-btn">Simulate Departure</button>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="side-panel-header">
+          <h3>Cascade Consequences</h3>
+        </div>
+        <div class="consequence-list" id="consequence-list">
+          <div class="empty-state" id="consequence-empty">Click "Simulate Departure" to begin</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1C: ACTION CHECKLIST -->
+  <div class="tab-panel" id="tab-checklist"></div>
+
+  <!-- TAB 1D: TIMELINE -->
+  <div class="tab-panel" id="tab-timeline"></div>
+
+  <!-- TAB 1E: BEFORE/AFTER -->
+  <div class="tab-panel" id="tab-beforeafter"></div>
+
+</div>
+
+<script>
+// ============================================================
+// DATA LOADING & GRAPH HELPERS
+// ============================================================
+
+let allNodes = [];
+let allEdges = [];
+let selectedPersonId = 'person-008';
+let graphSimState = 'ready'; // ready | running | done
+
+async function loadData() {
+  const [nodesResp, edgesResp] = await Promise.all([
+    fetch('../data/nodes.json').then(r => r.json()),
+    fetch('../data/edges.json').then(r => r.json())
+  ]);
+  allNodes = nodesResp.nodes;
+  allEdges = edgesResp.edges;
+}
+
+function getNode(id) {
+  return allNodes.find(n => n.id === id);
+}
+
+function getPersonName(id) {
+  const n = getNode(id);
+  return n ? (n.properties.name || n.properties.title || id) : id;
+}
+
+function nodeName(n) {
+  if (!n) return '?';
+  return n.properties.name || n.properties.title || n.properties.planName || n.properties.description || n.id;
+}
+
+// Get all edges connected to a person (as source or target)
+function getPersonEdges(personId) {
+  return allEdges.filter(e => e.source === personId || e.target === personId);
+}
+
+// Get the full subgraph for a person: all 1-hop connected nodes/edges,
+// plus 2nd-hop for dependents (to get their benefits)
+function getPersonSubgraph(personId) {
+  const edges = getPersonEdges(personId);
+  const connectedIds = new Set();
+  edges.forEach(e => {
+    connectedIds.add(e.source);
+    connectedIds.add(e.target);
+  });
+  connectedIds.delete(personId);
+
+  // 2nd hop: dependents' benefits, person's direct reports' teams
+  const secondHopEdges = [];
+  connectedIds.forEach(nid => {
+    const node = getNode(nid);
+    if (node && (node.type === 'dependent')) {
+      const depEdges = allEdges.filter(e => e.source === nid || e.target === nid);
+      depEdges.forEach(de => {
+        secondHopEdges.push(de);
+        connectedIds.add(de.source);
+        connectedIds.add(de.target);
+      });
+    }
+  });
+
+  const nodes = [getNode(personId), ...Array.from(connectedIds).map(getNode).filter(Boolean)];
+  return { nodes, edges: [...edges, ...secondHopEdges], connectedIds };
+}
+
+// Helpers for specific relationships
+function getDirectReports(personId) {
+  return allEdges
+    .filter(e => e.type === 'reports_to' && e.target === personId)
+    .map(e => getNode(e.source))
+    .filter(Boolean);
+}
+
+function getManager(personId) {
+  const edge = allEdges.find(e => e.type === 'reports_to' && e.source === personId);
+  return edge ? getNode(edge.target) : null;
+}
+
+function getTeams(personId) {
+  return allEdges
+    .filter(e => e.type === 'member_of' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getComp(personId) {
+  return allEdges
+    .filter(e => e.type === 'has_comp' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getBenefits(personId) {
+  return allEdges
+    .filter(e => e.type === 'has_benefits' && e.source === personId)
+    .map(e => {
+      const node = getNode(e.target);
+      return node ? { ...node, enrollmentMeta: e.metadata } : null;
+    })
+    .filter(Boolean);
+}
+
+function getDependents(personId) {
+  return allEdges
+    .filter(e => e.type === 'has_dependent' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getJurisdictions(personId) {
+  return allEdges
+    .filter(e => e.type === 'subject_to' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getProjects(personId) {
+  return allEdges
+    .filter(e => e.type === 'works_on' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getPosition(personId) {
+  const edge = allEdges.find(e => e.type === 'holds_position' && e.source === personId);
+  return edge ? getNode(edge.target) : null;
+}
+
+function getEquipment(personId) {
+  return allEdges
+    .filter(e => e.type === 'assigned_equipment' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getMentees(personId) {
+  return allEdges
+    .filter(e => e.type === 'mentors' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getDocuments(personId) {
+  return allEdges
+    .filter(e => e.type === 'signed' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getPolicies(personId) {
+  return allEdges
+    .filter(e => e.type === 'entitled_to' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getSkills(personId) {
+  return allEdges
+    .filter(e => e.type === 'has_skill' && e.source === personId)
+    .map(e => getNode(e.target))
+    .filter(Boolean);
+}
+
+function getLocation(personId) {
+  const edge = allEdges.find(e => e.type === 'located_at' && e.source === personId);
+  return edge ? getNode(edge.target) : null;
+}
+
+function getDepartment(personId) {
+  const edge = allEdges.find(e => e.type === 'in_department' && e.source === personId);
+  return edge ? getNode(edge.target) : null;
+}
+
+function formatMoney(n) {
+  return '$' + n.toLocaleString('en-US');
+}
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ============================================================
+// PERSON PICKER
+// ============================================================
+
+function populatePersonPicker() {
+  const select = document.getElementById('person-select');
+  const people = allNodes
+    .filter(n => n.type === 'person' && n.properties.status === 'active')
+    .sort((a, b) => a.properties.name.localeCompare(b.properties.name));
+
+  people.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `${p.properties.name} — ${p.properties.role}`;
+    if (p.id === 'person-008') opt.selected = true;
+    select.appendChild(opt);
+  });
+
+  select.addEventListener('change', () => {
+    selectedPersonId = select.value;
+    rebuildAll();
+  });
+}
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+
+document.getElementById('tab-bar').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(btn.dataset.tab).classList.add('active');
+});
+
+// ============================================================
+// REBUILD ALL TABS
+// ============================================================
+
+function rebuildAll() {
+  graphSimState = 'ready';
+  buildBriefing();
+  buildGraph();
+  buildChecklist();
+  buildTimeline();
+  buildBeforeAfter();
+}
+
+// ============================================================
+// 1A — AI BRIEFING
+// ============================================================
+
+function buildBriefing() {
+  const pid = selectedPersonId;
+  const person = getNode(pid);
+  if (!person) return;
+
+  const name = person.properties.name;
+  const firstName = name.split(' ')[0];
+  const reports = getDirectReports(pid);
+  const manager = getManager(pid);
+  const teams = getTeams(pid);
+  const comp = getComp(pid);
+  const benefits = getBenefits(pid);
+  const dependents = getDependents(pid);
+  const jurisdictions = getJurisdictions(pid);
+  const projects = getProjects(pid);
+  const position = getPosition(pid);
+  const mentees = getMentees(pid);
+  const equipment = getEquipment(pid);
+  const docs = getDocuments(pid);
+  const skills = getSkills(pid);
+  const dept = getDepartment(pid);
+  const location = getLocation(pid);
+
+  const salary = comp.find(c => c.properties.type === 'salary');
+  const equity = comp.find(c => c.properties.type === 'equity');
+  const medical = benefits.find(b => b.properties.type === 'medical');
+  const stateJuris = jurisdictions.find(j => j.properties.type === 'state');
+  const fedJuris = jurisdictions.find(j => j.properties.type === 'federal');
+  const hasDependents = dependents.length > 0;
+  const benefitsTier = medical && medical.enrollmentMeta ? medical.enrollmentMeta.tier : 'individual';
+
+  // Build state-specific compliance
+  const stateName = stateJuris ? stateJuris.properties.name : 'Unknown';
+  // Texas: final paycheck within 6 days of termination
+  const finalPayDays = stateName === 'Texas' ? 6 : 10;
+  const hasIncomeTax = stateJuris ? stateJuris.properties.hasIncomeTax : true;
+
+  const totalEdges = getPersonEdges(pid).length;
+  const totalComp = comp.reduce((s, c) => s + (c.properties.amount || 0), 0);
+
+  const container = document.getElementById('tab-briefing');
+  container.innerHTML = `
+    <div class="briefing-container animate-fadein">
+      <div class="briefing-header">
+        <div class="briefing-badge">AI Executive Briefing</div>
+        <h1>If <span class="name-highlight">${name}</span> resigns today</h1>
+        <div class="briefing-date">${person.properties.role} &middot; ${person.properties.level} &middot; ${person.properties.location || 'Unknown'} &middot; Since ${person.properties.startDate}</div>
+      </div>
+
+      <!-- IMMEDIATE -->
+      <div class="urgency-section urgency-immediate">
+        <div class="urgency-bar">
+          <div class="urgency-dot"></div>
+          <div class="urgency-label">Immediate &mdash; within 48 hours</div>
+          <div class="urgency-line"></div>
+        </div>
+
+        ${hasDependents ? `
+        <div class="briefing-card">
+          <h3>COBRA Benefits Cascade</h3>
+          <p>${firstName} is enrolled in <strong>${benefits.length} benefit plan${benefits.length !== 1 ? 's' : ''}</strong>${medical ? ` including ${medical.properties.name} at the <strong>${benefitsTier.replace(/_/g, ' ')}</strong> tier` : ''}. ${dependents.length > 0 ? `${dependents.map(d => `<strong>${d.properties.name}</strong> (${d.properties.relationship})`).join(', ')} ${dependents.length === 1 ? 'is' : 'are'} covered under ${firstName}'s plan.` : ''} Federal law requires COBRA notification within <strong>14 days</strong>. <span class="edge-tag">has_benefits</span><span class="edge-tag">has_dependent</span></p>
+        </div>` : ''}
+
+        <div class="briefing-card">
+          <h3>${stateName} Final Paycheck Deadline</h3>
+          <p>${firstName} is subject to <strong>${stateName}</strong>${fedJuris ? ' and <strong>Federal</strong>' : ''} jurisdiction. ${stateName} requires the final paycheck within <strong>${finalPayDays} days</strong> of termination${!hasIncomeTax ? ` (no state income tax withholding required)` : ''}. ${salary ? `Current salary: <strong>${formatMoney(salary.properties.amount)}/year</strong>. ` : ''}Prorate and include any accrued PTO. <span class="edge-tag">subject_to</span><span class="edge-tag">has_comp</span></p>
+        </div>
+
+        <div class="briefing-card">
+          <h3>Access Revocation & Security</h3>
+          <p>Revoke all system access on last day. ${firstName} is a member of the <strong>${teams.length > 0 ? teams.map(t => t.properties.name).join(', ') : 'no'}</strong> team${teams.length !== 1 ? 's' : ''}${teams.find(t => t.properties.teamType === 'working_group') ? ' (including security-sensitive working groups)' : ''}. Deactivate email, VPN, badge, and any shared credentials. <span class="edge-tag">member_of</span></p>
+        </div>
+      </div>
+
+      <!-- THIS WEEK -->
+      <div class="urgency-section urgency-week">
+        <div class="urgency-bar">
+          <div class="urgency-dot"></div>
+          <div class="urgency-label">This week</div>
+          <div class="urgency-line"></div>
+        </div>
+
+        ${reports.length > 0 ? `
+        <div class="briefing-card">
+          <h3>Reporting Chain Disruption</h3>
+          <p>${firstName} manages <strong>${reports.length} direct report${reports.length !== 1 ? 's' : ''}</strong>: ${reports.map(r => `<strong>${r.properties.name}</strong> (${r.properties.role}, ${r.properties.level})`).join(', ')}. ${manager ? `All will need to be reassigned${manager ? ` — most likely to <strong>${manager.properties.name}</strong> (${manager.properties.role}) as interim manager` : ''}.` : 'All need interim management assignment.'} This is a critical structural gap — <strong>${reports.filter(r => r.properties.level && r.properties.level.startsWith('IC-2')).length}</strong> are junior engineers who need active mentorship. <span class="edge-tag">reports_to</span></p>
+        </div>` : ''}
+
+        ${mentees.length > 0 ? `
+        <div class="briefing-card">
+          <h3>Mentorship Relationships</h3>
+          <p>${firstName} is actively mentoring <strong>${mentees.map(m => m.properties.name).join(', ')}</strong>. These relationships need to be reassigned to maintain development continuity. <span class="edge-tag">mentors</span></p>
+        </div>` : ''}
+
+        ${equity ? `
+        <div class="briefing-card">
+          <h3>Equity Vesting Review</h3>
+          <p>${firstName} holds an equity grant worth <strong>${formatMoney(equity.properties.amount)}/year</strong> on a <strong>${equity.properties.vestingSchedule || '4yr/1yr cliff'}</strong> schedule. ${equity.properties.vestedShares && equity.properties.totalShares ? `Currently <strong>${equity.properties.vestedShares.toLocaleString()} of ${equity.properties.totalShares.toLocaleString()} shares</strong> vested (${Math.round(equity.properties.vestedShares/equity.properties.totalShares*100)}%).` : ''} Calculate final vesting based on termination date and communicate exercise window (typically 90 days post-departure). <span class="edge-tag">has_comp</span></p>
+        </div>` : ''}
+
+        ${equipment.length > 0 ? `
+        <div class="briefing-card">
+          <h3>Equipment Return</h3>
+          <p>${equipment.length} equipment item${equipment.length !== 1 ? 's' : ''} assigned: ${equipment.map(eq => `<strong>${eq.properties.name}</strong>`).join(', ')}. Schedule return or shipping. <span class="edge-tag">assigned_equipment</span></p>
+        </div>` : ''}
+      </div>
+
+      <!-- THIS MONTH -->
+      <div class="urgency-section urgency-month">
+        <div class="urgency-bar">
+          <div class="urgency-dot"></div>
+          <div class="urgency-label">This month</div>
+          <div class="urgency-line"></div>
+        </div>
+
+        ${projects.length > 0 ? `
+        <div class="briefing-card">
+          <h3>Active Project Impact</h3>
+          <p>${firstName} is contributing to <strong>${projects.length} active project${projects.length !== 1 ? 's' : ''}</strong>: ${projects.map(p => `<strong>${p.properties.name}</strong> (${p.properties.priority} priority, target ${p.properties.targetEndDate})`).join('; ')}. Each project needs knowledge transfer documentation and contributor reassignment. ${projects.filter(p => p.properties.priority === 'high').length > 0 ? `<strong>${projects.filter(p => p.properties.priority === 'high').length} high-priority project${projects.filter(p => p.properties.priority === 'high').length > 1 ? 's' : ''}</strong> at risk.` : ''} <span class="edge-tag">works_on</span></p>
+        </div>` : ''}
+
+        <div class="briefing-card">
+          <h3>Position Backfill</h3>
+          <p>${position ? `${firstName} holds the <strong>${position.properties.title}</strong> position (${position.properties.level}). Salary band: <strong>${formatMoney(position.properties.salaryBandMin || 0)}&ndash;${formatMoney(position.properties.salaryBandMax || 0)}</strong>.` : `${firstName}'s position needs to be opened.`} ${dept ? `${dept.properties.name} department headcount drops by 1.` : ''} Post the requisition and begin sourcing. ${skills.length > 0 ? `Key skills to replace: <strong>${skills.map(s => s.properties ? (s.properties.name || s.id) : s.id).join(', ')}</strong>.` : ''} <span class="edge-tag">holds_position</span></p>
+        </div>
+
+        ${docs.length > 0 ? `
+        <div class="briefing-card">
+          <h3>Document Review</h3>
+          <p>${docs.length} signed document${docs.length !== 1 ? 's' : ''} on file${docs.find(d => d.properties.type === 'i9') ? ` including <strong>I-9 Employment Eligibility</strong>` : ''}. Archive all records per retention policy. Review any non-compete or IP assignment agreements for post-employment obligations. <span class="edge-tag">signed</span></p>
+        </div>` : ''}
+      </div>
+
+      <div class="briefing-footer">
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-value">${totalEdges}</div>
+            <div class="stat-label">Graph edges severed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">${reports.length}</div>
+            <div class="stat-label">People directly affected</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">${formatMoney(totalComp)}</div>
+            <div class="stat-label">Total comp budget freed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">${projects.length}</div>
+            <div class="stat-label">Projects impacted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// 1B — GRAPH CASCADE (D3)
+// ============================================================
+
+const NODE_COLORS = {
+  person: '#4ea8de',
+  team: '#06d6a0',
+  comp: '#ffd166',
+  benefits: '#b388ff',
+  equipment: '#ff8c42',
+  position: '#64dfdf',
+  project: '#ff4d6a',
+  dependent: '#ff6b9d',
+  jurisdiction: '#8ac926',
+  policy: '#6a6a8a',
+  document: '#9d8df1',
+  review: '#48bfe3',
+  skill: '#f77f00',
+  time_off: '#90be6d',
+  survey_response: '#577590',
+  payroll_run: '#adb5bd',
+  request: '#e07a5f',
+  expense: '#f4845f',
+  location: '#43aa8b',
+  department: '#4cc9f0',
+  division: '#7209b7',
+  default: '#555570'
+};
+
+function getNodeColor(type) {
+  return NODE_COLORS[type] || NODE_COLORS.default;
+}
+
+function buildGraph() {
+  const svgEl = document.getElementById('graph-svg');
+  svgEl.innerHTML = '';
+
+  const subgraph = getPersonSubgraph(selectedPersonId);
+  const person = getNode(selectedPersonId);
+  if (!person) return;
+
+  // Build legend
+  const legendEl = document.getElementById('graph-legend');
+  const seenTypes = new Set(subgraph.nodes.map(n => n.type));
+  legendEl.innerHTML = Array.from(seenTypes).sort().map(t =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${getNodeColor(t)}"></div>${t}</div>`
+  ).join('');
+
+  // Prepare data
+  const nodeMap = new Map();
+  subgraph.nodes.forEach(n => nodeMap.set(n.id, n));
+
+  const gNodes = subgraph.nodes.map(n => ({
+    id: n.id,
+    type: n.type,
+    label: n.type === 'person' ? n.properties.name : (n.properties.name || n.properties.title || n.type),
+    radius: n.id === selectedPersonId ? 24 : (n.type === 'person' ? 14 : 10),
+    isCenter: n.id === selectedPersonId,
+    isPerson: n.type === 'person'
+  }));
+
+  const nodeIds = new Set(gNodes.map(n => n.id));
+  const gEdges = subgraph.edges
+    .filter(e => nodeIds.has(e.source) && nodeIds.has(e.target))
+    .map(e => ({ source: e.source, target: e.target, type: e.type }));
+
+  // Deduplicate edges
+  const edgeSet = new Set();
+  const dedupedEdges = gEdges.filter(e => {
+    const key = `${e.source}-${e.target}-${e.type}`;
+    if (edgeSet.has(key)) return false;
+    edgeSet.add(key);
+    return true;
+  });
+
+  const rect = svgEl.getBoundingClientRect();
+  const width = rect.width || 800;
+  const height = rect.height || 600;
+
+  const svg = d3.select('#graph-svg');
+
+  // Defs for glow
+  const defs = svg.append('defs');
+  const glowFilter = defs.append('filter').attr('id', 'glow');
+  glowFilter.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'coloredBlur');
+  const feMerge = glowFilter.append('feMerge');
+  feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+  feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
+  const g = svg.append('g');
+
+  // Zoom
+  svg.call(d3.zoom()
+    .scaleExtent([0.3, 4])
+    .on('zoom', (event) => {
+      g.attr('transform', event.transform);
+    })
+  );
+
+  const simulation = d3.forceSimulation(gNodes)
+    .force('link', d3.forceLink(dedupedEdges).id(d => d.id).distance(d => {
+      return d.source.isCenter || d.target.isCenter ? 120 : 80;
+    }))
+    .force('charge', d3.forceManyBody().strength(-200))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => d.radius + 5));
+
+  // Draw edges
+  const link = g.append('g')
+    .selectAll('line')
+    .data(dedupedEdges)
+    .join('line')
+    .attr('stroke', 'rgba(255,255,255,0.08)')
+    .attr('stroke-width', 1.5)
+    .attr('class', 'graph-edge');
+
+  // Draw nodes
+  const node = g.append('g')
+    .selectAll('g')
+    .data(gNodes)
+    .join('g')
+    .attr('class', 'graph-node')
+    .call(d3.drag()
+      .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+      .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+      .on('end', (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+    );
+
+  node.append('circle')
+    .attr('r', d => d.radius)
+    .attr('fill', d => getNodeColor(d.type))
+    .attr('fill-opacity', d => d.isCenter ? 1 : 0.7)
+    .attr('stroke', d => d.isCenter ? '#fff' : 'none')
+    .attr('stroke-width', d => d.isCenter ? 2 : 0)
+    .style('filter', d => d.isCenter ? 'url(#glow)' : 'none');
+
+  node.append('text')
+    .text(d => d.isCenter || d.isPerson ? d.label : '')
+    .attr('dy', d => d.radius + 14)
+    .attr('text-anchor', 'middle')
+    .attr('fill', 'rgba(255,255,255,0.6)')
+    .attr('font-size', d => d.isCenter ? '12px' : '10px')
+    .attr('font-weight', d => d.isCenter ? '600' : '400')
+    .attr('font-family', 'Inter, sans-serif');
+
+  simulation.on('tick', () => {
+    link
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+    node.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  // Store references for simulation
+  window._graphRefs = { simulation, link, node, gNodes, dedupedEdges, g };
+
+  // Reset button
+  const simBtn = document.getElementById('sim-btn');
+  simBtn.textContent = 'Simulate Departure';
+  simBtn.className = 'sim-btn';
+  simBtn.disabled = false;
+  simBtn.onclick = () => runCascadeSimulation();
+
+  // Clear consequence list
+  document.getElementById('consequence-list').innerHTML = '<div class="empty-state" id="consequence-empty">Click "Simulate Departure" to begin</div>';
+}
+
+function runCascadeSimulation() {
+  if (graphSimState === 'running') return;
+
+  const refs = window._graphRefs;
+  if (!refs) return;
+
+  const simBtn = document.getElementById('sim-btn');
+  const consList = document.getElementById('consequence-list');
+
+  if (graphSimState === 'done') {
+    // Reset
+    graphSimState = 'ready';
+    buildGraph();
+    return;
+  }
+
+  graphSimState = 'running';
+  simBtn.disabled = true;
+  simBtn.textContent = 'Simulating...';
+  consList.innerHTML = '';
+
+  const person = getNode(selectedPersonId);
+  const personName = person.properties.name;
+
+  // Group edges by type for sequenced animation
+  const personEdges = refs.dedupedEdges.filter(e => {
+    const sid = typeof e.source === 'object' ? e.source.id : e.source;
+    const tid = typeof e.target === 'object' ? e.target.id : e.target;
+    return sid === selectedPersonId || tid === selectedPersonId;
+  });
+
+  // Consequence data
+  const reports = getDirectReports(selectedPersonId);
+  const benefits = getBenefits(selectedPersonId);
+  const dependents = getDependents(selectedPersonId);
+  const projects = getProjects(selectedPersonId);
+  const comp = getComp(selectedPersonId);
+  const jurisdictions = getJurisdictions(selectedPersonId);
+
+  const consequences = [];
+  if (reports.length > 0) {
+    consequences.push({ type: 'Structural', cls: 'structural', text: `${reports.length} direct reports lose their manager. ${reports.map(r => r.properties.name).join(', ')} need immediate reassignment.` });
+  }
+  if (dependents.length > 0) {
+    consequences.push({ type: 'Compliance', cls: '', text: `COBRA notification required within 14 days for ${dependents.map(d => d.properties.name).join(', ')}.` });
+  }
+  if (jurisdictions.length > 0) {
+    const state = jurisdictions.find(j => j.properties.type === 'state');
+    if (state) {
+      consequences.push({ type: 'Compliance', cls: '', text: `${state.properties.name} final paycheck deadline: ${state.properties.name === 'Texas' ? '6' : '10'} days. ${!state.properties.hasIncomeTax ? 'No state income tax withholding.' : ''}` });
+    }
+  }
+  if (benefits.length > 0) {
+    consequences.push({ type: 'Administrative', cls: 'admin', text: `${benefits.length} benefit enrollments terminated: ${benefits.map(b => b.properties.name).join(', ')}.` });
+  }
+  if (projects.length > 0) {
+    consequences.push({ type: 'Structural', cls: 'structural', text: `${projects.length} active projects lose a contributor: ${projects.map(p => p.properties.name).join(', ')}.` });
+  }
+  const salary = comp.find(c => c.properties.type === 'salary');
+  const equity = comp.find(c => c.properties.type === 'equity');
+  if (salary) {
+    consequences.push({ type: 'Administrative', cls: 'admin', text: `${formatMoney(salary.properties.amount)}/yr salary budget freed. ${equity ? `Equity: ${equity.properties.vestedShares || '?'}/${equity.properties.totalShares || '?'} shares vested.` : ''}` });
+  }
+
+  // Animate edges breaking
+  let idx = 0;
+  const animInterval = setInterval(() => {
+    if (idx >= personEdges.length) {
+      clearInterval(animInterval);
+
+      // Fade the center node
+      refs.node.filter(d => d.id === selectedPersonId)
+        .select('circle')
+        .transition()
+        .duration(600)
+        .attr('fill', '#333')
+        .attr('fill-opacity', 0.3)
+        .attr('stroke', '#555');
+
+      // Flash affected person nodes
+      refs.node.filter(d => {
+        return d.type === 'person' && d.id !== selectedPersonId && reports.some(r => r.id === d.id);
+      })
+        .select('circle')
+        .transition()
+        .duration(300)
+        .attr('stroke', '#ff4d6a')
+        .attr('stroke-width', 3)
+        .transition()
+        .duration(300)
+        .attr('stroke-width', 1)
+        .transition()
+        .duration(300)
+        .attr('stroke', '#ff4d6a')
+        .attr('stroke-width', 3);
+
+      simBtn.disabled = false;
+      simBtn.textContent = 'Reset';
+      simBtn.className = 'sim-btn reset';
+      graphSimState = 'done';
+      return;
+    }
+
+    const edge = personEdges[idx];
+    const matchingLinks = refs.link.filter(d => d === edge);
+
+    matchingLinks
+      .transition()
+      .duration(300)
+      .attr('stroke', '#ff4d6a')
+      .attr('stroke-width', 3)
+      .transition()
+      .duration(400)
+      .attr('stroke-dasharray', '4,4')
+      .attr('stroke', 'rgba(255,77,106,0.3)')
+      .attr('stroke-width', 1);
+
+    // Add consequence card at intervals
+    if (idx < consequences.length) {
+      const c = consequences[idx];
+      const card = document.createElement('div');
+      card.className = `consequence-card ${c.cls}`;
+      card.innerHTML = `<div class="cc-type">${c.type}</div><div class="cc-text">${c.text}</div>`;
+      consList.appendChild(card);
+    }
+
+    idx++;
+  }, 250);
+}
+
+// ============================================================
+// 1C — ACTION CHECKLIST
+// ============================================================
+
+function buildChecklist() {
+  const pid = selectedPersonId;
+  const person = getNode(pid);
+  if (!person) return;
+
+  const name = person.properties.name;
+  const firstName = name.split(' ')[0];
+  const reports = getDirectReports(pid);
+  const manager = getManager(pid);
+  const teams = getTeams(pid);
+  const comp = getComp(pid);
+  const benefits = getBenefits(pid);
+  const dependents = getDependents(pid);
+  const jurisdictions = getJurisdictions(pid);
+  const projects = getProjects(pid);
+  const position = getPosition(pid);
+  const equipment = getEquipment(pid);
+  const docs = getDocuments(pid);
+  const mentees = getMentees(pid);
+  const skills = getSkills(pid);
+
+  const salary = comp.find(c => c.properties.type === 'salary');
+  const equity = comp.find(c => c.properties.type === 'equity');
+  const stateJuris = jurisdictions.find(j => j.properties.type === 'state');
+  const stateName = stateJuris ? stateJuris.properties.name : 'State';
+  const finalPayDays = stateName === 'Texas' ? 6 : 10;
+  const medical = benefits.find(b => b.properties.type === 'medical');
+
+  // Build checklist items by category
+  const groups = [
+    {
+      name: 'Compliance',
+      color: 'var(--accent-red)',
+      items: [
+        ...(dependents.length > 0 || (medical && medical.enrollmentMeta && medical.enrollmentMeta.tier !== 'individual') ? [{
+          title: `Send COBRA notification to ${dependents.map(d => d.properties.name).join(', ') || firstName}`,
+          reason: `${firstName} has ${benefits.filter(b => ['medical','dental','vision'].includes(b.properties.type)).length} qualifying health plans. Federal COBRA requires notice within 14 calendar days.`,
+          deadline: 'Day 14',
+          owner: 'HR / Benefits'
+        }] : []),
+        {
+          title: `Issue final paycheck (${stateName} law: ${finalPayDays} days)`,
+          reason: `${stateName} jurisdiction requires final wages within ${finalPayDays} days of separation. ${salary ? `Salary: ${formatMoney(salary.properties.amount)}/yr.` : ''} Include accrued PTO payout.`,
+          deadline: `Day ${finalPayDays}`,
+          owner: 'Payroll'
+        },
+        {
+          title: 'Process W-2 and tax documents',
+          reason: `Federal jurisdiction requires W-2 by Jan 31 of following year. Update withholding records, process final FICA.`,
+          deadline: 'Year-end',
+          owner: 'Payroll'
+        },
+        ...(equity ? [{
+          title: 'Notify of equity exercise window',
+          reason: `${firstName} has ${equity.properties.vestedShares || '?'} vested shares. Stock option exercise window typically 90 days post-departure. Send formal notification.`,
+          deadline: 'Day 7',
+          owner: 'Finance / Legal'
+        }] : []),
+        ...(docs.find(d => d.properties.type === 'i9') ? [{
+          title: 'Archive I-9 and employment verification',
+          reason: `I-9 records must be retained for 3 years after hire or 1 year after termination, whichever is later.`,
+          deadline: 'Day 30',
+          owner: 'HR / Compliance'
+        }] : [])
+      ]
+    },
+    {
+      name: 'Structural',
+      color: 'var(--accent-yellow)',
+      items: [
+        ...(reports.length > 0 ? [{
+          title: `Reassign ${reports.length} direct reports`,
+          reason: `${reports.map(r => `${r.properties.name} (${r.properties.level})`).join(', ')} currently report to ${firstName}. ${manager ? `Interim manager: ${manager.properties.name}.` : 'Identify interim manager.'}`,
+          deadline: 'Day 1',
+          owner: manager ? manager.properties.name : 'VP/Director'
+        }] : []),
+        ...teams.map(t => ({
+          title: `Update ${t.properties.name} team headcount`,
+          reason: `${firstName} is a member of ${t.properties.name} (${t.properties.teamType}). Update roster and headcount (currently ${t.properties.headcount || '?'}).`,
+          deadline: 'Day 3',
+          owner: 'Team Lead'
+        })),
+        ...(mentees.length > 0 ? [{
+          title: `Reassign ${mentees.length} mentorship relationship${mentees.length > 1 ? 's' : ''}`,
+          reason: `${firstName} mentors ${mentees.map(m => m.properties.name).join(', ')}. Assign new mentors to maintain development.`,
+          deadline: 'Day 7',
+          owner: 'Engineering Leadership'
+        }] : [])
+      ]
+    },
+    {
+      name: 'Pipeline',
+      color: 'var(--accent-blue)',
+      items: [
+        ...(position ? [{
+          title: `Open requisition for ${position.properties.title}`,
+          reason: `Position ${position.properties.jobCode || ''}: ${position.properties.title} (${position.properties.level}). Band: ${formatMoney(position.properties.salaryBandMin || 0)}-${formatMoney(position.properties.salaryBandMax || 0)}.`,
+          deadline: 'Day 7',
+          owner: 'Hiring Manager'
+        }] : []),
+        ...(projects.filter(p => p.properties.priority === 'high').length > 0 ? [{
+          title: `Backfill critical project coverage`,
+          reason: `${projects.filter(p => p.properties.priority === 'high').map(p => p.properties.name).join(', ')} ${projects.filter(p => p.properties.priority === 'high').length > 1 ? 'are' : 'is'} high priority. Identify immediate coverage from existing team.`,
+          deadline: 'Day 3',
+          owner: 'Engineering Leadership'
+        }] : []),
+        ...(skills.length > 0 ? [{
+          title: `Source candidates with matching skills`,
+          reason: `Key skills to replace: ${skills.map(s => s.properties ? (s.properties.name || s.id) : s.id).join(', ')}. Check internal pipeline and external sourcing.`,
+          deadline: 'Day 14',
+          owner: 'Recruiting'
+        }] : [])
+      ]
+    },
+    {
+      name: 'Administrative',
+      color: 'var(--text-muted)',
+      items: [
+        {
+          title: 'Revoke system access and credentials',
+          reason: `Deactivate email, VPN, SSO, badge access, and any shared service accounts. ${teams.find(t => t.properties.name === 'Security Champions') ? 'PRIORITY: Member of Security Champions working group.' : ''}`,
+          deadline: 'Last day',
+          owner: 'IT'
+        },
+        ...(equipment.length > 0 ? [{
+          title: `Collect ${equipment.length} equipment item${equipment.length > 1 ? 's' : ''}`,
+          reason: `${equipment.map(eq => eq.properties.name).join(', ')} assigned to ${firstName}. Schedule return or ship.`,
+          deadline: 'Day 14',
+          owner: 'IT'
+        }] : [{
+          title: 'Collect company equipment',
+          reason: `Retrieve laptop, badge, corporate card, and any other company property from ${firstName}.`,
+          deadline: 'Day 14',
+          owner: 'IT'
+        }]),
+        ...(projects.length > 0 ? [{
+          title: `Knowledge transfer for ${projects.length} project${projects.length > 1 ? 's' : ''}`,
+          reason: `Schedule handoff sessions for: ${projects.map(p => p.properties.name).join(', ')}. Document tribal knowledge.`,
+          deadline: 'Day 14',
+          owner: reports[0] ? reports[0].properties.name : 'Team Lead'
+        }] : []),
+        {
+          title: 'Conduct exit interview',
+          reason: `Schedule exit interview to gather feedback. ${person.properties.level && person.properties.level.startsWith('M') ? 'Manager-level departure — HRBP should attend.' : ''}`,
+          deadline: 'Last day',
+          owner: 'HRBP'
+        }
+      ]
+    }
+  ];
+
+  const totalItems = groups.reduce((s, g) => s + g.items.length, 0);
+
+  const container = document.getElementById('tab-checklist');
+  container.innerHTML = `
+    <div class="animate-fadein">
+      <div class="checklist-header">
+        <h2>Departure Checklist for ${name}</h2>
+        <div class="progress-wrap">
+          <div class="progress-bar-outer"><div class="progress-bar-inner" id="checklist-progress-bar"></div></div>
+          <div class="progress-text" id="checklist-progress-text">0/${totalItems}</div>
+        </div>
+      </div>
+      <div class="checklist-groups" id="checklist-groups">
+        ${groups.map(g => `
+          <div class="check-group">
+            <div class="check-group-header">
+              <div class="check-group-indicator" style="background:${g.color}"></div>
+              <div class="check-group-label" style="color:${g.color}">${g.name}</div>
+              <div class="check-group-count">${g.items.length}</div>
+            </div>
+            <div class="check-group-items">
+              ${g.items.map((item, i) => `
+                <div class="check-item" data-group="${g.name}" data-idx="${i}">
+                  <div class="check-box"></div>
+                  <div class="check-body">
+                    <div class="check-title">${item.title}</div>
+                    <div class="check-reason">${item.reason}</div>
+                    <div class="check-meta">
+                      ${item.deadline ? `<span class="check-meta-tag deadline">${item.deadline}</span>` : ''}
+                      ${item.owner ? `<span class="check-meta-tag owner">${item.owner}</span>` : ''}
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  // Checkbox interactivity
+  container.querySelectorAll('.check-item').forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('completed');
+      updateChecklistProgress(totalItems);
+    });
+  });
+}
+
+function updateChecklistProgress(total) {
+  const completed = document.querySelectorAll('.check-item.completed').length;
+  const pct = total > 0 ? Math.round(completed / total * 100) : 0;
+  document.getElementById('checklist-progress-bar').style.width = pct + '%';
+  document.getElementById('checklist-progress-text').textContent = `${completed}/${total}`;
+}
+
+// ============================================================
+// 1D — TIMELINE
+// ============================================================
+
+function buildTimeline() {
+  const pid = selectedPersonId;
+  const person = getNode(pid);
+  if (!person) return;
+
+  const name = person.properties.name;
+  const firstName = name.split(' ')[0];
+  const reports = getDirectReports(pid);
+  const benefits = getBenefits(pid);
+  const dependents = getDependents(pid);
+  const jurisdictions = getJurisdictions(pid);
+  const projects = getProjects(pid);
+  const comp = getComp(pid);
+  const equipment = getEquipment(pid);
+  const mentees = getMentees(pid);
+
+  const stateJuris = jurisdictions.find(j => j.properties.type === 'state');
+  const stateName = stateJuris ? stateJuris.properties.name : 'State';
+  const finalPayDays = stateName === 'Texas' ? 6 : 10;
+  const equity = comp.find(c => c.properties.type === 'equity');
+  const hasCobra = dependents.length > 0 || benefits.some(b => ['medical','dental','vision'].includes(b.properties.type));
+
+  // Build timeline events
+  const events = [
+    {
+      day: 0, category: 'legal', title: 'Last Day / Access Revocation',
+      desc: `${firstName}'s final day. Revoke all system access: email, VPN, SSO, badge. Conduct exit interview.`,
+      detail: `Deactivate accounts across all systems. Ensure knowledge transfer sessions are complete. Collect badge and any on-site equipment.`
+    },
+    ...(reports.length > 0 ? [{
+      day: 1, category: 'practice', title: `Notify ${reports.length} Direct Reports`,
+      desc: `Inform ${reports.map(r => r.properties.name).slice(0, 4).join(', ')}${reports.length > 4 ? `, +${reports.length - 4} more` : ''} of manager change.`,
+      detail: `Schedule 1:1s with each report to discuss transition. Assign interim manager. Update org chart.`
+    }] : []),
+    {
+      day: finalPayDays, category: 'legal', title: `${stateName} Final Paycheck Deadline`,
+      desc: `${stateName} law mandates final wages within ${finalPayDays} days of separation. Include accrued PTO payout.`,
+      detail: `Calculate prorated salary, accrued PTO, and any outstanding expense reimbursements. No state income tax withholding for TX.`
+    },
+    ...(hasCobra ? [{
+      day: 14, category: 'legal', title: 'COBRA Notice Deadline',
+      desc: `Federal requirement: notify ${dependents.map(d => d.properties.name).join(', ') || firstName} of COBRA rights. ${benefits.filter(b => ['medical','dental','vision'].includes(b.properties.type)).length} qualifying plans.`,
+      detail: `Mail COBRA election forms. Coverage can be elected retroactively within 60-day window. Plans: ${benefits.filter(b => ['medical','dental','vision'].includes(b.properties.type)).map(b => b.properties.name).join(', ')}.`
+    }] : []),
+    ...(projects.length > 0 ? [{
+      day: 14, category: 'practice', title: 'Knowledge Transfer Complete',
+      desc: `Complete handoff for ${projects.length} projects: ${projects.map(p => p.properties.name).join(', ')}.`,
+      detail: `Document architecture decisions, ongoing work, access keys, and tribal knowledge. Ensure CI/CD pipelines are documented.`
+    }] : []),
+    {
+      day: 30, category: 'admin', title: 'Equipment Return Deadline',
+      desc: `All company equipment must be returned or shipped: laptop, badge, corporate card.`,
+      detail: `Send pre-paid shipping label if not returned on last day. Track via IT asset management.`
+    },
+    ...(mentees.length > 0 ? [{
+      day: 30, category: 'practice', title: 'Mentorship Transition Complete',
+      desc: `${mentees.map(m => m.properties.name).join(', ')} should have new mentors assigned and onboarded.`,
+      detail: `Check in with mentees to ensure smooth transition. New mentors should schedule introductory sessions.`
+    }] : []),
+    ...(hasCobra ? [{
+      day: 60, category: 'legal', title: 'COBRA Election Window Closes',
+      desc: `${dependents.map(d => d.properties.name).join(', ') || firstName} must elect or decline COBRA by this date.`,
+      detail: `If elected, COBRA coverage is retroactive to termination date. Premium: full employee + employer cost plus 2% admin fee.`
+    }] : []),
+    ...(equity ? [{
+      day: 90, category: 'practice', title: 'Equity Exercise Window Closes',
+      desc: `Standard 90-day window for ${firstName} to exercise ${equity.properties.vestedShares || '?'} vested stock options.`,
+      detail: `${equity.properties.vestedShares || '?'} of ${equity.properties.totalShares || '?'} shares vested. Grant value: ${formatMoney(equity.properties.amount || 0)}/yr. Notify legal if exercise is not completed.`
+    }] : []),
+    {
+      day: 90, category: 'admin', title: 'Backfill Target',
+      desc: `Target date to have replacement hired or redistributed work permanently assigned.`,
+      detail: `Review requisition pipeline. If position unfilled, escalate to VP level for prioritization.`
+    }
+  ];
+
+  events.sort((a, b) => a.day - b.day || (a.category === 'legal' ? -1 : 1));
+
+  const container = document.getElementById('tab-timeline');
+  container.innerHTML = `
+    <div class="timeline-container animate-fadein">
+      <div class="timeline-header">
+        <h2>Departure Timeline: ${name}</h2>
+        <div class="timeline-legend">
+          <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--accent-red)"></div>Legally mandated</div>
+          <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--accent-yellow)"></div>Best practice</div>
+          <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--accent-blue)"></div>Administrative</div>
+        </div>
+      </div>
+
+      <div class="timeline-track">
+        <div class="timeline-rail"></div>
+        <div class="timeline-phases">
+          <div class="tl-phase" style="width:10%">Day 0</div>
+          <div class="tl-phase" style="width:10%">Week 1</div>
+          <div class="tl-phase" style="width:15%">Week 2</div>
+          <div class="tl-phase" style="width:25%">Month 1</div>
+          <div class="tl-phase" style="width:20%">Month 2</div>
+          <div class="tl-phase" style="width:20%; text-align:right">Month 3</div>
+        </div>
+      </div>
+
+      <div class="tl-events-grid">
+        ${events.map(ev => `
+          <div class="tl-event-card ${ev.category}" onclick="this.classList.toggle('expanded')">
+            <div class="tl-day-badge">${ev.day}</div>
+            <div class="tl-day-label">Day ${ev.day}</div>
+            <div class="tl-event-title">${ev.title}</div>
+            <div class="tl-event-desc">${ev.desc}</div>
+            <div class="tl-event-detail">${ev.detail}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// 1E — BEFORE / AFTER
+// ============================================================
+
+function buildBeforeAfter() {
+  const pid = selectedPersonId;
+  const person = getNode(pid);
+  if (!person) return;
+
+  const name = person.properties.name;
+  const firstName = name.split(' ')[0];
+  const reports = getDirectReports(pid);
+  const manager = getManager(pid);
+  const teams = getTeams(pid);
+  const comp = getComp(pid);
+  const benefits = getBenefits(pid);
+  const dependents = getDependents(pid);
+  const projects = getProjects(pid);
+  const position = getPosition(pid);
+  const dept = getDepartment(pid);
+  const mentees = getMentees(pid);
+  const totalEdges = getPersonEdges(pid).length;
+
+  const salary = comp.find(c => c.properties.type === 'salary');
+  const equity = comp.find(c => c.properties.type === 'equity');
+  const totalComp = comp.reduce((s, c) => s + (c.properties.amount || 0), 0);
+  const medicalBen = benefits.find(b => b.properties.type === 'medical');
+
+  const avatarColors = ['#4ea8de','#06d6a0','#ffd166','#b388ff','#ff8c42','#64dfdf','#ff4d6a','#ff6b9d','#8ac926','#f77f00','#48bfe3','#9d8df1'];
+  function avatarColor(id) {
+    const num = parseInt(id.replace(/\D/g, '')) || 0;
+    return avatarColors[num % avatarColors.length];
+  }
+  function initials(n) {
+    return n.split(' ').map(w => w[0]).join('').slice(0, 2);
+  }
+
+  // Compliance deadlines count
+  const complianceCount = (dependents.length > 0 ? 1 : 0) + 1 + (equity ? 1 : 0); // COBRA + final pay + equity
+
+  const container = document.getElementById('tab-beforeafter');
+  container.innerHTML = `
+    <div class="animate-fadein">
+      <div class="ba-stats-banner">
+        <div class="ba-stat">
+          <div class="ba-stat-value red">${totalEdges}</div>
+          <div class="ba-stat-label">Edges Severed</div>
+        </div>
+        <div class="ba-stat">
+          <div class="ba-stat-value orange">${reports.length}</div>
+          <div class="ba-stat-label">People Affected</div>
+        </div>
+        <div class="ba-stat">
+          <div class="ba-stat-value yellow">${complianceCount}</div>
+          <div class="ba-stat-label">Compliance Deadlines</div>
+        </div>
+        <div class="ba-stat">
+          <div class="ba-stat-value green">${formatMoney(totalComp)}</div>
+          <div class="ba-stat-label">Comp Budget Freed</div>
+        </div>
+      </div>
+
+      <div class="ba-sections">
+
+        <!-- Reporting Chain -->
+        ${reports.length > 0 ? `
+        <div class="ba-section">
+          <div class="ba-section-header">
+            <div class="ba-section-icon" style="background:var(--accent-blue-dim);color:var(--accent-blue)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="ba-section-title">Reporting Chain</div>
+            <span class="ba-diff-tag changed">${reports.length} orphaned</span>
+          </div>
+          <div class="ba-split">
+            <div class="ba-col">
+              <div class="ba-col-label">Today</div>
+              <div style="margin-bottom:8px;">
+                <span class="ba-person-chip">
+                  <span class="ba-person-avatar" style="background:${avatarColor(pid)}">${initials(name)}</span>
+                  ${name} <span style="color:var(--text-muted);font-size:11px">(manager)</span>
+                </span>
+              </div>
+              <div style="padding-left:24px; border-left:2px solid var(--border-subtle)">
+                ${reports.map(r => `
+                  <span class="ba-person-chip">
+                    <span class="ba-person-avatar" style="background:${avatarColor(r.id)}">${initials(r.properties.name)}</span>
+                    ${r.properties.name}
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-col-label">After Departure</div>
+              <div style="margin-bottom:8px;">
+                <span class="ba-person-chip removed">
+                  <span class="ba-person-avatar" style="background:#333">&mdash;</span>
+                  <span style="text-decoration:line-through;color:var(--text-muted)">${name}</span>
+                </span>
+              </div>
+              <div style="padding-left:24px; border-left:2px dashed var(--accent-red)">
+                ${reports.map(r => `
+                  <span class="ba-person-chip orphaned">
+                    <span class="ba-person-avatar" style="background:${avatarColor(r.id)}">${initials(r.properties.name)}</span>
+                    ${r.properties.name}
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>` : ''}
+
+        <!-- Team Composition -->
+        ${teams.length > 0 ? `
+        <div class="ba-section">
+          <div class="ba-section-header">
+            <div class="ba-section-icon" style="background:var(--accent-green-dim);color:var(--accent-green)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </div>
+            <div class="ba-section-title">Team Composition</div>
+            <span class="ba-diff-tag removed">-1 member</span>
+          </div>
+          <div class="ba-split">
+            <div class="ba-col">
+              <div class="ba-col-label">Today</div>
+              ${teams.map(t => `
+                <div class="ba-kv-row">
+                  <span class="ba-kv-label">${t.properties.name} (${t.properties.teamType})</span>
+                  <span class="ba-kv-value">${t.properties.headcount || '?'} members</span>
+                </div>
+              `).join('')}
+            </div>
+            <div class="ba-col">
+              <div class="ba-col-label">After Departure</div>
+              ${teams.map(t => `
+                <div class="ba-kv-row">
+                  <span class="ba-kv-label">${t.properties.name}</span>
+                  <span class="ba-kv-value">${(t.properties.headcount || 1) - 1} members <span class="ba-diff-tag removed">-1</span></span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>` : ''}
+
+        <!-- Comp Budget -->
+        <div class="ba-section">
+          <div class="ba-section-header">
+            <div class="ba-section-icon" style="background:var(--accent-yellow-dim);color:var(--accent-yellow)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="ba-section-title">Compensation Budget</div>
+            <span class="ba-diff-tag added">+${formatMoney(totalComp)} freed</span>
+          </div>
+          <div class="ba-split">
+            <div class="ba-col">
+              <div class="ba-col-label">Today</div>
+              ${salary ? `<div class="ba-kv-row"><span class="ba-kv-label">Base Salary</span><span class="ba-kv-value">${formatMoney(salary.properties.amount)}/yr</span></div>` : ''}
+              ${equity ? `<div class="ba-kv-row"><span class="ba-kv-label">Equity Grant</span><span class="ba-kv-value">${formatMoney(equity.properties.amount)}/yr</span></div>` : ''}
+              ${equity ? `<div class="ba-kv-row"><span class="ba-kv-label">Vested Shares</span><span class="ba-kv-value">${(equity.properties.vestedShares || 0).toLocaleString()} / ${(equity.properties.totalShares || 0).toLocaleString()}</span></div>` : ''}
+              <div class="ba-kv-row"><span class="ba-kv-label">Total Comp</span><span class="ba-kv-value" style="font-size:16px">${formatMoney(totalComp)}/yr</span></div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-col-label">After Departure</div>
+              ${salary ? `<div class="ba-kv-row"><span class="ba-kv-label">Base Salary</span><span class="ba-kv-value strike">${formatMoney(salary.properties.amount)}/yr</span></div>` : ''}
+              ${equity ? `<div class="ba-kv-row"><span class="ba-kv-label">Unvested Shares</span><span class="ba-kv-value" style="color:var(--accent-green)">${((equity.properties.totalShares || 0) - (equity.properties.vestedShares || 0)).toLocaleString()} returned to pool</span></div>` : ''}
+              <div class="ba-kv-row"><span class="ba-kv-label">Budget Freed</span><span class="ba-kv-value" style="font-size:16px;color:var(--accent-green)">${formatMoney(totalComp)}/yr</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Benefits -->
+        ${benefits.length > 0 ? `
+        <div class="ba-section">
+          <div class="ba-section-header">
+            <div class="ba-section-icon" style="background:var(--accent-purple-dim);color:var(--accent-purple)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <div class="ba-section-title">Benefits &amp; COBRA</div>
+            <span class="ba-diff-tag changed">${benefits.length} plans affected</span>
+          </div>
+          <div class="ba-split">
+            <div class="ba-col">
+              <div class="ba-col-label">Today</div>
+              ${benefits.map(b => `
+                <div class="ba-kv-row">
+                  <span class="ba-kv-label">${b.properties.name}</span>
+                  <span class="ba-kv-value" style="font-size:12px">${b.enrollmentMeta?.tier ? b.enrollmentMeta.tier.replace(/_/g, ' ') : 'enrolled'}</span>
+                </div>
+              `).join('')}
+              ${dependents.length > 0 ? `
+                <div class="ba-kv-row" style="border-top:1px solid var(--border-subtle)">
+                  <span class="ba-kv-label">Covered Dependents</span>
+                  <span class="ba-kv-value" style="font-size:12px">${dependents.map(d => d.properties.name).join(', ')}</span>
+                </div>
+              ` : ''}
+            </div>
+            <div class="ba-col">
+              <div class="ba-col-label">After Departure</div>
+              ${benefits.filter(b => ['medical','dental','vision'].includes(b.properties.type)).map(b => `
+                <div class="ba-kv-row">
+                  <span class="ba-kv-label">${b.properties.name}</span>
+                  <span class="ba-kv-value" style="font-size:12px;color:var(--accent-orange)">COBRA eligible</span>
+                </div>
+              `).join('')}
+              ${benefits.filter(b => !['medical','dental','vision'].includes(b.properties.type)).map(b => `
+                <div class="ba-kv-row">
+                  <span class="ba-kv-label">${b.properties.name}</span>
+                  <span class="ba-kv-value" style="font-size:12px"><span class="ba-diff-tag removed">terminated</span></span>
+                </div>
+              `).join('')}
+              ${dependents.length > 0 ? `
+                <div class="ba-kv-row" style="border-top:1px solid var(--border-subtle)">
+                  <span class="ba-kv-label">COBRA for dependents</span>
+                  <span class="ba-kv-value" style="font-size:12px;color:var(--accent-orange)">14-day notice required</span>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>` : ''}
+
+        <!-- Position -->
+        ${position ? `
+        <div class="ba-section">
+          <div class="ba-section-header">
+            <div class="ba-section-icon" style="background:var(--accent-cyan-dim);color:var(--accent-cyan)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <div class="ba-section-title">Position</div>
+            <span class="ba-diff-tag changed">vacancy created</span>
+          </div>
+          <div class="ba-split">
+            <div class="ba-col">
+              <div class="ba-col-label">Today</div>
+              <div class="ba-kv-row"><span class="ba-kv-label">Position</span><span class="ba-kv-value">${position.properties.title}</span></div>
+              <div class="ba-kv-row"><span class="ba-kv-label">Level</span><span class="ba-kv-value">${position.properties.level}</span></div>
+              <div class="ba-kv-row"><span class="ba-kv-label">Salary Band</span><span class="ba-kv-value">${formatMoney(position.properties.salaryBandMin || 0)} &ndash; ${formatMoney(position.properties.salaryBandMax || 0)}</span></div>
+              <div class="ba-kv-row"><span class="ba-kv-label">Status</span><span class="ba-kv-value" style="color:var(--accent-green)">Filled</span></div>
+            </div>
+            <div class="ba-col">
+              <div class="ba-col-label">After Departure</div>
+              <div class="ba-kv-row"><span class="ba-kv-label">Position</span><span class="ba-kv-value">${position.properties.title}</span></div>
+              <div class="ba-kv-row"><span class="ba-kv-label">Level</span><span class="ba-kv-value">${position.properties.level}</span></div>
+              <div class="ba-kv-row"><span class="ba-kv-label">Salary Band</span><span class="ba-kv-value">${formatMoney(position.properties.salaryBandMin || 0)} &ndash; ${formatMoney(position.properties.salaryBandMax || 0)}</span></div>
+              <div class="ba-kv-row"><span class="ba-kv-label">Status</span><span class="ba-kv-value" style="color:var(--accent-red)">Open <span class="ba-diff-tag removed">vacant</span></span></div>
+            </div>
+          </div>
+        </div>` : ''}
+
+        <!-- Projects -->
+        ${projects.length > 0 ? `
+        <div class="ba-section">
+          <div class="ba-section-header">
+            <div class="ba-section-icon" style="background:var(--accent-orange-dim);color:var(--accent-orange)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </div>
+            <div class="ba-section-title">Active Projects</div>
+            <span class="ba-diff-tag removed">${projects.length} impacted</span>
+          </div>
+          <div class="ba-split">
+            <div class="ba-col">
+              <div class="ba-col-label">Today</div>
+              ${projects.map(p => `
+                <div class="ba-kv-row">
+                  <span class="ba-kv-label">${p.properties.name}</span>
+                  <span class="ba-kv-value" style="font-size:12px;color:${p.properties.priority === 'high' ? 'var(--accent-red)' : 'var(--accent-yellow)'}">${p.properties.priority}</span>
+                </div>
+              `).join('')}
+            </div>
+            <div class="ba-col">
+              <div class="ba-col-label">After Departure</div>
+              ${projects.map(p => `
+                <div class="ba-kv-row">
+                  <span class="ba-kv-label">${p.properties.name}</span>
+                  <span class="ba-kv-value" style="font-size:12px"><span class="ba-diff-tag changed">needs coverage</span></span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>` : ''}
+
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+(async function init() {
+  await loadData();
+  populatePersonPicker();
+  rebuildAll();
+})();
+</script>
+</body>
+</html>

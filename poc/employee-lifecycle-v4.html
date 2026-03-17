@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="application/json" id="embedded-feedback">
+[
+  {
+    "timestamp": "2026-03-11T22:18:01.258Z",
+    "tab": "Manager Coach",
+    "rating": 4,
+    "verdict": "Fix UX & Keep",
+    "notes": "Overall, this is pretty cool. I liked being able to see the whole team. I would like to see avatars on the people. I need something in addition to color that tells me if they are exceeding meets developing or new maybe a colored icon would be good for that one on one is something that the employer graph should support\n\nI like that I can click on people and see details about that person with that kind of selection mode, though I feel like it doesn't work great to click on the thing up the top and then see the details below. Maybe a side-by-side view helps a little bit better. Maybe the people chips could move out of the way and be responsive to that detail view, but I do like the detailed view a lot and I like the talking points. I like the conversation starters those are really helpful. I would like to know more information about that employee and how they work with other people basically, can we walk the graph for that person and see more data about them?"
+  },
+  {
+    "timestamp": "2026-03-11T22:19:50.958Z",
+    "tab": "Onboarding Autopilot",
+    "rating": 3,
+    "verdict": "Fix UX & Keep",
+    "notes": "OK stuff I like about this completed needs attention coming up. Those are all good. I like that framing completed. Probably doesn't need to be the most prominent thing that should be needs attention. It is helpful to see what people have done, though the timelines are a little funky I don't know why they are the way they are and one really important thing for on boarding is to know what other people are doing on behalf of this employee for example IT needs to help set up their computer. Their boss needs to take them to lunch, etc. etc. I would like to lean into personalized on boarding as a graph feature though right now on boarding is very template and I want to see what it should be for specific people"
+  },
+  {
+    "timestamp": "2026-03-11T22:27:36.767Z",
+    "tab": "Career Conversation > Underperformer",
+    "ideaRating": 5,
+    "execRating": 3,
+    "verdict": "Build Deeper",
+    "notes": "Here's what I think is working well I like the conversation guy I like that it has specific examples of things to say I like that. It gives bullet point feedback. I like that the improvement plan exists. I think that's helpful. Here are things that are not going as well performance trajectory shows me a downward red arrow, and it shows me that there was exceeds in the past, but that's not very visual. I want to see performance overtime in a visual or a chart format. I would also want to be able to compare this person's performance with that of their peers now Pierce could be the people on their team their direct working group or it could be people that have the same job title across the company or a similar amount to be experience or some proxy for who their peer group is I also don't like that. There's no way for me to change the improvement plan framework if I'm the manager and I'm looking at this. I need to be able to change that I feel like the graph is crucial for this feature so I like that, we're walking the graph and finding ways to make a good performance review happen."
+  },
+  {
+    "timestamp": "2026-03-11T22:28:21.802Z",
+    "tab": "Career Conversation > High Performer",
+    "ideaRating": null,
+    "execRating": null,
+    "verdict": null,
+    "notes": "Now I'm looking at the high performer tab I like the conference versus band conversation. I think that's incredibly helpful. The flight risk signals is also very helpful. What to offer is really interesting. I think that's a very cool insight to be able to give based on the graph."
+  },
+  {
+    "timestamp": "2026-03-11T22:29:46.289Z",
+    "tab": "Career Conversation > Returning from Leave",
+    "ideaRating": null,
+    "execRating": null,
+    "verdict": null,
+    "notes": "Now I'm critiquing the returning from leave plan. I love this idea. I think it's really really interesting and it's not something that a traditional HR could do at all the benefits check is super super important and I love that that's there. What changed a while out that's also very cool. I think that's awesome reintegration plan. I would love to see where the data for this comes from be very helpful because I don't know if I should trust it or if the AI just sort of came up with it or what it's basing his decisions on so I would need to see where that date is coming from check in schedule. I think it's helpful. I would love to be able to see a way to set calendar invitations from here or even tasks that I the manager could use to check up on this person overall amazing use of the graph. This is the kind of thing that we really really need."
+  },
+  {
+    "timestamp": "2026-03-11T22:30:12.022Z",
+    "tab": "Career Conversation > High Performer",
+    "ideaRating": 5,
+    "execRating": 4,
+    "verdict": "Build Deeper",
+    "notes": null
+  },
+  {
+    "timestamp": "2026-03-11T22:30:20.208Z",
+    "tab": "Career Conversation > Returning from Leave",
+    "ideaRating": 5,
+    "execRating": 4,
+    "verdict": "Build Deeper",
+    "notes": null
+  },
+  {
+    "timestamp": "2026-03-12T15:25:38.039Z",
+    "tab": "Monday Briefing",
+    "ideaRating": 4,
+    "execRating": 4,
+    "verdict": null,
+    "notes": "I like the ordering that action required is first I like it. There's a heads up and I think it's cool to have good news and something like this. You don't always get good news on a Monday morning so that's nice."
+  }
+]
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Lifecycle v4 | Employee Graph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a28;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.1);
+  --text-primary: #e8e8ef;
+  --text-secondary: #8888a0;
+  --text-muted: #55556a;
+  --accent-red: #ff4d6a;
+  --accent-red-dim: rgba(255,77,106,0.15);
+  --accent-orange: #ff8c42;
+  --accent-orange-dim: rgba(255,140,66,0.15);
+  --accent-yellow: #ffd166;
+  --accent-yellow-dim: rgba(255,209,102,0.12);
+  --accent-green: #06d6a0;
+  --accent-green-dim: rgba(6,214,160,0.12);
+  --accent-blue: #4ea8de;
+  --accent-blue-dim: rgba(78,168,222,0.12);
+  --accent-purple: #b388ff;
+  --accent-purple-dim: rgba(179,136,255,0.12);
+  --accent-cyan: #64dfdf;
+  --accent-cyan-dim: rgba(100,223,223,0.1);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --agent-accent: #b388ff;
+  --agent-accent-dim: rgba(179,136,255,0.10);
+  --agent-glow: rgba(179,136,255,0.25);
+}
+html { font-size: 16px; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+
+.top-bar { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); padding: 16px 32px 0; }
+.top-bar-inner { max-width: 1400px; margin: 0 auto; }
+.header-row { display: flex; align-items: center; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; }
+.brand-text { font-size: 14px; font-weight: 600; color: var(--text-secondary); letter-spacing: -0.02em; }
+.brand-text span { color: var(--text-primary); }
+.version-switcher { display: flex; align-items: center; gap: 6px; margin-left: 16px; font-size: 12px; font-weight: 500; color: var(--text-muted); }
+.version-switcher a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.version-switcher a:hover { color: var(--text-secondary); }
+.version-switcher .active-version { color: var(--text-primary); font-weight: 700; }
+.version-switcher .sep { color: var(--border-medium); }
+.person-picker { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.person-picker label { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.person-picker select { background: var(--bg-tertiary); border: 1px solid var(--border-medium); color: var(--text-primary); font-family: inherit; font-size: 14px; font-weight: 500; padding: 8px 32px 8px 12px; border-radius: var(--radius-sm); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238888a0' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+.person-picker select:focus { outline: none; border-color: var(--agent-accent); }
+.tab-nav { display: flex; gap: 0; }
+.tab-btn { background: none; border: none; color: var(--text-muted); font-family: inherit; font-size: 13px; font-weight: 500; padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active { color: var(--agent-accent); border-bottom-color: var(--agent-accent); }
+
+.main-content { max-width: 1400px; margin: 0 auto; padding: 24px 32px 80px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* SUB-TABS (pills) */
+.sub-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.sub-tab-btn { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--text-muted); font-family: inherit; font-size: 12px; font-weight: 600; padding: 8px 18px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
+.sub-tab-btn:hover { border-color: var(--border-medium); color: var(--text-secondary); }
+.sub-tab-btn.active { background: var(--agent-accent-dim); border-color: rgba(179,136,255,0.3); color: var(--agent-accent); }
+.sub-panel { display: none; }
+.sub-panel.active { display: block; }
+
+/* GRAPH ADVANTAGE */
+.graph-advantage { margin-top: 32px; border: 1px solid rgba(100,223,223,0.15); border-left: 3px solid var(--accent-cyan); border-radius: var(--radius-md); padding: 16px 20px; background: rgba(100,223,223,0.04); }
+.graph-advantage-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.graph-advantage-icon { width: 20px; height: 20px; background: var(--accent-cyan-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--accent-cyan); flex-shrink: 0; }
+.graph-advantage-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-cyan); }
+.graph-advantage p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+
+/* AGENT */
+.agent-narrative { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+.agent-narrative-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.agent-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; font-weight: 700; flex-shrink: 0; }
+.agent-label { font-size: 12px; font-weight: 600; color: var(--agent-accent); text-transform: uppercase; letter-spacing: 0.06em; }
+.agent-summary { font-size: 16px; line-height: 1.7; color: var(--text-primary); }
+.agent-summary .highlight { color: var(--accent-yellow); font-weight: 600; }
+.agent-summary .urgent { color: var(--accent-red); font-weight: 600; }
+.agent-summary .good { color: var(--accent-green); font-weight: 600; }
+
+/* CARDS */
+.card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; transition: border-color 0.2s; }
+.card:hover { border-color: var(--border-medium); }
+.card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.card-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.card-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.card-subtitle { font-size: 12px; color: var(--text-muted); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+/* TEAM ROSTER */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.team-card { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px; cursor: pointer; transition: all 0.2s; position: relative; }
+.team-card:hover { border-color: var(--border-medium); background: rgba(255,255,255,0.03); }
+.team-card.selected { border-color: var(--agent-accent); box-shadow: 0 0 12px var(--agent-glow); }
+.team-card .tc-name { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.team-card .tc-role { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.team-card .tc-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+.team-card .flag-dot { position: absolute; top: 10px; right: 10px; width: 7px; height: 7px; border-radius: 50%; }
+
+/* STAT ROW */
+.stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.stat-label { font-size: 13px; color: var(--text-muted); }
+.stat-value { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.stat-grid { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
+.stat-block { text-align: center; }
+.stat-block .sb-value { font-size: 22px; font-weight: 800; }
+.stat-block .sb-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* DETAIL PANEL (1:1 prep expand) */
+.detail-panel { display: none; margin-top: 16px; }
+.detail-panel.active { display: block; }
+
+/* TIMELINE */
+.timeline-hero { display: flex; gap: 0; margin-bottom: 24px; }
+.timeline-phase { flex: 1; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); position: relative; text-align: center; }
+.timeline-phase:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.timeline-phase:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.timeline-phase.current { background: rgba(6,214,160,0.08); border-color: rgba(6,214,160,0.3); }
+.timeline-phase.completed { background: rgba(6,214,160,0.04); }
+.timeline-phase .tp-name { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.timeline-phase .tp-bar { height: 4px; background: var(--bg-tertiary); border-radius: 2px; margin-bottom: 4px; overflow: hidden; }
+.timeline-phase .tp-fill { height: 100%; background: var(--accent-green); border-radius: 2px; transition: width 0.6s; }
+.timeline-phase .tp-detail { font-size: 11px; color: var(--text-muted); }
+
+/* ONBOARDING ITEMS */
+.ob-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px; }
+.ob-item:last-child { border-bottom: none; }
+.ob-check { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+.ob-check.done { background: var(--accent-green-dim); color: var(--accent-green); }
+.ob-check.pending { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+.ob-check.blocked { background: var(--accent-red-dim); color: var(--accent-red); }
+
+/* BRIEFING (email style) */
+.briefing-email { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 32px; max-width: 800px; margin: 0 auto; }
+.briefing-header { text-align: center; padding-bottom: 24px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 24px; }
+.briefing-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+.briefing-header .date { font-size: 13px; color: var(--text-muted); }
+.briefing-section { margin-bottom: 28px; }
+.briefing-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding-bottom: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 8px; }
+.briefing-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; }
+.briefing-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.briefing-text { font-size: 14px; line-height: 1.6; color: var(--text-secondary); }
+.briefing-text strong { color: var(--text-primary); }
+.briefing-actions { display: flex; gap: 10px; justify-content: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-subtle); }
+
+/* BUTTONS */
+.btn { font-family: inherit; font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+.btn-primary { background: var(--accent-green); color: #0a0a0f; }
+.btn-primary:hover { background: #05c090; }
+.btn-secondary { background: transparent; color: var(--text-secondary); border-color: var(--border-medium); }
+.btn-secondary:hover { border-color: var(--text-muted); }
+.btn-agent { background: var(--agent-accent-dim); color: var(--agent-accent); border-color: rgba(179,136,255,0.3); }
+.btn-agent:hover { border-color: var(--agent-accent); }
+
+/* PERFORMANCE BAR */
+.perf-bar { display: flex; gap: 3px; margin: 8px 0; }
+.perf-segment { height: 6px; border-radius: 3px; flex: 1; }
+
+/* CONVO STARTERS */
+.convo-item { background: var(--agent-accent-dim); border: 1px solid rgba(179,136,255,0.15); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 8px; font-size: 13px; color: var(--agent-accent); font-style: italic; cursor: pointer; transition: all 0.2s; }
+.convo-item:hover { background: rgba(179,136,255,0.15); }
+
+/* LOADING */
+.loading-container { display: flex; align-items: center; justify-content: center; min-height: 400px; flex-direction: column; gap: 16px; }
+.loading-spinner { width: 32px; height: 32px; border: 3px solid var(--border-medium); border-top-color: var(--agent-accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 14px; color: var(--text-muted); }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.animate-in { animation: fadeInUp 0.3s ease both; }
+
+@media (max-width: 768px) {
+  .top-bar { padding: 12px 16px 0; }
+  .main-content { padding: 16px; }
+  .header-row { gap: 10px; }
+  .version-switcher { margin-left: 0; }
+  .person-picker { margin-left: 0; width: 100%; }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+  .timeline-hero { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="header-row">
+      <div class="brand">
+        <div class="brand-icon">G</div>
+        <div class="brand-text"><span>Employee</span> Lifecycle</div>
+      </div>
+      <div class="version-switcher">
+        <a href="employee-lifecycle.html">v1</a>
+        <span class="sep">|</span>
+        <a href="employee-lifecycle-v2.html">v2</a>
+        <span class="sep">|</span>
+        <a href="employee-lifecycle-v3.html">v3</a>
+        <span class="sep">|</span>
+        <span class="active-version">v4</span>
+      </div>
+      <div class="person-picker">
+        <label>Person</label>
+        <select id="personSelect"></select>
+      </div>
+    </div>
+    <div class="tab-nav" id="tabNav">
+      <button class="tab-btn active" data-tab="coach">Manager Coach</button>
+      <button class="tab-btn" data-tab="onboarding">Onboarding Autopilot</button>
+      <button class="tab-btn" data-tab="career">Career Conversation</button>
+      <button class="tab-btn" data-tab="briefing">Monday Briefing</button>
+    </div>
+  </div>
+</div>
+
+<div class="main-content">
+  <div id="loadingState" class="loading-container">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading employee graph...</div>
+  </div>
+  <div class="tab-panel active" id="tab-coach"></div>
+  <div class="tab-panel" id="tab-onboarding"></div>
+  <div class="tab-panel" id="tab-career"></div>
+  <div class="tab-panel" id="tab-briefing"></div>
+</div>
+
+<script>
+var NODES = {};
+var EDGES = [];
+var ALL_NODES = [];
+var CURRENT_DATE = '2026-02-06';
+
+async function loadData() {
+  try {
+    var nr = await fetch('../data/nodes.json');
+    var er = await fetch('../data/edges.json');
+    var nd = await nr.json();
+    var ed = await er.json();
+    ALL_NODES = nd.nodes;
+    EDGES = ed.edges;
+    ALL_NODES.forEach(function(n) { NODES[n.id] = n; });
+    init();
+  } catch(e) {
+    document.getElementById('loadingState').innerHTML = '<div class="loading-text" style="color:var(--accent-red);">Failed to load data. Serve from project root.</div>';
+  }
+}
+
+function getNode(id) { return NODES[id] || null; }
+function prop(id, key) { var n = getNode(id); return n ? (n.properties || {})[key] : null; }
+function edgesFrom(id, type) { return EDGES.filter(function(e) { return e.source === id && (!type || e.type === type); }); }
+function edgesTo(id, type) { return EDGES.filter(function(e) { return e.target === id && (!type || e.type === type); }); }
+function getDirectReports(pid) {
+  return edgesTo(pid, 'reports_to').map(function(e) { return e.source; }).filter(function(id) {
+    var p = getNode(id); return p && p.properties && p.properties.status !== 'terminated';
+  });
+}
+function getManager(pid) { var e = edgesFrom(pid, 'reports_to')[0]; return e ? e.target : null; }
+function getReviews(pid) { return edgesFrom(pid, 'has_review').map(function(e) { return getNode(e.target); }).filter(Boolean); }
+function getComps(pid) { return edgesFrom(pid, 'has_comp').map(function(e) { return getNode(e.target); }).filter(Boolean); }
+function getSalary(pid) { return getComps(pid).find(function(c) { return c.properties.type === 'salary'; }); }
+function getEquity(pid) { return getComps(pid).find(function(c) { return c.properties.type === 'equity'; }); }
+function getProjects(pid) { return edgesFrom(pid, 'works_on').map(function(e) { return { node: getNode(e.target), meta: e.metadata || {} }; }).filter(function(p) { return p.node; }); }
+function getTeams(pid) { return edgesFrom(pid, 'member_of').map(function(e) { return getNode(e.target); }).filter(function(n) { return n && n.type === 'team'; }); }
+function getPosition(pid) { var e = edgesFrom(pid, 'holds_position')[0]; return e ? getNode(e.target) : null; }
+function getDocs(pid) { return edgesFrom(pid, 'signed').map(function(e) { return { node: getNode(e.target), meta: e.metadata || {} }; }).filter(function(d) { return d.node; }); }
+function getEquipment(pid) { return edgesFrom(pid, 'assigned_equipment').map(function(e) { return { node: getNode(e.target), meta: e.metadata || {} }; }).filter(function(d) { return d.node; }); }
+function getRecognitions(pid) { return edgesTo(pid, 'recognized'); }
+function getMentees(pid) { return edgesFrom(pid, 'mentors').map(function(e) { return getNode(e.target); }).filter(Boolean); }
+function getTimeOff(pid) { return edgesFrom(pid, 'has_time_off').map(function(e) { return getNode(e.target); }).filter(Boolean); }
+function getDept(pid) { var e = edgesFrom(pid, 'in_department')[0]; return e ? getNode(e.target) : null; }
+function getSkills(pid) { return edgesFrom(pid, 'has_skill').map(function(e) { return { node: getNode(e.target), meta: e.metadata || {} }; }).filter(function(s) { return s.node; }); }
+function getLeaveDesignations(pid) { return edgesFrom(pid, 'has_leave_designation').map(function(e) { return getNode(e.target); }).filter(Boolean); }
+
+function tenureYears(startDate) { return ((new Date(CURRENT_DATE) - new Date(startDate)) / (365.25*24*60*60*1000)).toFixed(1); }
+function tenureMonths(startDate) { return Math.round((new Date(CURRENT_DATE) - new Date(startDate)) / (30*24*60*60*1000)); }
+function daysBetween(d1, d2) { return Math.round((new Date(d2) - new Date(d1)) / (86400000)); }
+function formatMoney(n) { return '$' + Number(n).toLocaleString(); }
+function formatDate(d) { if (!d) return 'N/A'; return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+function initials(name) { return (name || 'U').split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0,2); }
+function avatarColor(id) {
+  var colors = ['#ff4d6a,#ff8c42','#b388ff,#64dfdf','#4ea8de,#06d6a0','#ffd166,#ff8c42','#06d6a0,#4ea8de','#ff4d6a,#b388ff'];
+  var idx = parseInt((id || '0').replace(/\D/g, '')) % colors.length;
+  return 'linear-gradient(135deg, ' + colors[idx] + ')';
+}
+function isManager(pid) { return getDirectReports(pid).length > 0; }
+function allActivePeople() { return ALL_NODES.filter(function(n) { return n.type === 'person' && n.properties.status === 'active'; }); }
+
+/* PERSON PICKER */
+function populatePersonPicker() {
+  var sel = document.getElementById('personSelect');
+  var people = ALL_NODES.filter(function(n) { return n.type === 'person' && (n.properties.status === 'active' || n.properties.status === 'preparing' || n.properties.status === 'on_leave'); })
+    .sort(function(a,b) { return (a.properties.name || '').localeCompare(b.properties.name || ''); });
+  people.forEach(function(p) {
+    var opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.properties.name + ' - ' + p.properties.role;
+    if (p.id === 'person-008') opt.selected = true;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', function() { buildAllTabs(sel.value); });
+}
+
+/* TAB SWITCHING */
+function switchTab(tabName) {
+  document.querySelectorAll('#tabNav .tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.main-content > .tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  var btn = document.querySelector('.tab-btn[data-tab="' + tabName + '"]');
+  if (btn) btn.classList.add('active');
+  var panel = document.getElementById('tab-' + tabName);
+  if (panel) panel.classList.add('active');
+}
+document.querySelectorAll('#tabNav .tab-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() { switchTab(btn.dataset.tab); });
+});
+
+function init() {
+  populatePersonPicker();
+  buildAllTabs('person-008');
+  document.getElementById('loadingState').style.display = 'none';
+}
+
+function buildAllTabs(personId) {
+  buildCoachTab(personId);
+  buildOnboardingTab(personId);
+  buildCareerTab(personId);
+  buildBriefingTab();
+}
+
+/* ============================================================
+   TAB 1: MANAGER COACH
+   ============================================================ */
+function buildCoachTab(personId) {
+  var el = document.getElementById('tab-coach');
+  // If person is a manager, show their team. Otherwise find their manager.
+  var managerId = personId;
+  if (!isManager(personId)) {
+    var mgr = getManager(personId);
+    managerId = mgr && isManager(mgr) ? mgr : personId;
+  }
+  var manager = getNode(managerId);
+  if (!manager) { el.innerHTML = '<p style="color:var(--text-muted);padding:40px;">Select a manager to view their team.</p>'; return; }
+  var mp = manager.properties;
+  var reports = getDirectReports(managerId);
+
+  // Gather team data
+  var teamData = reports.map(function(rid) {
+    var r = getNode(rid);
+    if (!r) return null;
+    var rp = r.properties;
+    var reviews = getReviews(rid);
+    var latestReview = reviews.sort(function(a,b) { return (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''); })[0];
+    var salary = getSalary(rid);
+    var position = getPosition(rid);
+    var projects = getProjects(rid);
+    var recs = getRecognitions(rid);
+    var tenure = tenureMonths(rp.startDate);
+    var isNew = tenure < 3;
+    var reviewOverdue = !latestReview || daysBetween(latestReview.properties.completedDate || rp.startDate, CURRENT_DATE) > 365;
+    var bandPct = null;
+    if (position && salary) {
+      var min = position.properties.salaryBandMin, max = position.properties.salaryBandMax;
+      if (min && max && max > min) bandPct = Math.round(((salary.properties.amount - min) / (max - min)) * 100);
+    }
+    var flag = 'green';
+    if (reviewOverdue) flag = 'yellow';
+    if (isNew) flag = 'blue';
+    if (latestReview && (latestReview.properties.rating === 'below' || latestReview.properties.rating === 'developing')) flag = 'red';
+    return { id: rid, name: rp.name, role: rp.role, level: rp.level, startDate: rp.startDate, tenure: tenure, latestReview: latestReview, salary: salary, position: position, projects: projects, recs: recs, bandPct: bandPct, flag: flag, isNew: isNew, reviewOverdue: reviewOverdue };
+  }).filter(Boolean);
+
+  var avgTenure = teamData.length ? (teamData.reduce(function(s,d) { return s + d.tenure; }, 0) / teamData.length).toFixed(0) : 0;
+  var exceedsCount = teamData.filter(function(d) { return d.latestReview && d.latestReview.properties.rating === 'exceeds'; }).length;
+  var meetsCount = teamData.filter(function(d) { return d.latestReview && d.latestReview.properties.rating === 'meets'; }).length;
+  var devCount = teamData.filter(function(d) { return d.latestReview && (d.latestReview.properties.rating === 'developing' || d.latestReview.properties.rating === 'below'); }).length;
+  var newHires = teamData.filter(function(d) { return d.isNew; }).length;
+
+  var rosterHtml = teamData.map(function(d) {
+    var flagColor = d.flag === 'green' ? 'var(--accent-green)' : d.flag === 'yellow' ? 'var(--accent-yellow)' : d.flag === 'red' ? 'var(--accent-red)' : 'var(--accent-blue)';
+    return '<div class="team-card" data-person="' + d.id + '" onclick="expandTeamMember(this, \'' + d.id + '\', \'' + managerId + '\')">' +
+      '<div class="flag-dot" style="background:' + flagColor + ';"></div>' +
+      '<div class="tc-name">' + d.name + '</div>' +
+      '<div class="tc-role">' + d.role + ' &middot; ' + (d.level || '') + '</div>' +
+      '<div class="tc-meta"><span>' + d.tenure + 'mo tenure</span><span>' + (d.latestReview ? d.latestReview.properties.rating : 'no review') + '</span></div>' +
+    '</div>';
+  }).join('');
+
+  el.innerHTML =
+    '<div class="agent-narrative animate-in">' +
+      '<div class="agent-narrative-header"><div class="agent-avatar">A</div><div class="agent-label">Manager Coach</div></div>' +
+      '<div class="agent-summary">' + mp.name + ' manages <span class="highlight">' + reports.length + ' direct reports</span>. ' +
+        'Average tenure is ' + avgTenure + ' months. ' +
+        (exceedsCount > 0 ? '<span class="good">' + exceedsCount + ' exceeding expectations</span>' : '') +
+        (devCount > 0 ? ', <span class="urgent">' + devCount + ' need development attention</span>' : '') +
+        (newHires > 0 ? '. ' + newHires + ' new hire' + (newHires > 1 ? 's' : '') + ' in onboarding window.' : '.') +
+        ' Click any team member for 1:1 prep.' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="stat-grid animate-in" style="animation-delay:0.05s;">' +
+      '<div class="stat-block"><div class="sb-value" style="color:var(--text-primary);">' + reports.length + '</div><div class="sb-label">Team Size</div></div>' +
+      '<div class="stat-block"><div class="sb-value" style="color:var(--text-primary);">' + avgTenure + 'mo</div><div class="sb-label">Avg Tenure</div></div>' +
+      '<div class="stat-block"><div class="sb-value" style="color:var(--accent-green);">' + exceedsCount + '</div><div class="sb-label">Exceeds</div></div>' +
+      '<div class="stat-block"><div class="sb-value" style="color:var(--accent-yellow);">' + meetsCount + '</div><div class="sb-label">Meets</div></div>' +
+      '<div class="stat-block"><div class="sb-value" style="color:var(--accent-red);">' + devCount + '</div><div class="sb-label">Developing</div></div>' +
+      '<div class="stat-block"><div class="sb-value" style="color:var(--accent-blue);">' + newHires + '</div><div class="sb-label">New Hires</div></div>' +
+    '</div>' +
+
+    '<div class="team-grid animate-in" style="animation-delay:0.1s;">' + rosterHtml + '</div>' +
+
+    '<div id="teamMemberDetail" class="detail-panel"></div>' +
+
+    '<div class="card animate-in" style="animation-delay:0.15s;">' +
+      '<div class="card-header"><div class="card-icon" style="background:var(--accent-purple-dim);color:var(--accent-purple);">&#9733;</div><div><div class="card-title">Coaching Tips</div><div class="card-subtitle">Based on team composition</div></div></div>' +
+      (devCount > 0 ? '<div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px;"><strong style="color:var(--accent-yellow);">Development focus needed.</strong> ' + devCount + ' team member' + (devCount > 1 ? 's are' : ' is') + ' in developing/below range. Schedule focused development conversations this week. Consider whether workload, skills gap, or engagement is the root cause.</div>' : '') +
+      (newHires > 0 ? '<div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px;"><strong style="color:var(--accent-blue);">Onboarding attention.</strong> ' + newHires + ' new hire' + (newHires > 1 ? 's need' : ' needs') + ' extra 1:1 time during the first 90 days. Pair each with a buddy from the senior members.</div>' : '') +
+      '<div style="font-size:13px;color:var(--text-secondary);line-height:1.6;"><strong style="color:var(--accent-green);">Team balance.</strong> With ' + reports.length + ' reports and ' + avgTenure + ' months average tenure, ' + (reports.length > 8 ? 'consider whether the span of control is sustainable. Teams over 8 typically see reduced 1:1 quality.' : 'the team size is manageable for quality 1:1s.') + '</div>' +
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.2s;">' +
+      '<div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+      '<p>This coaching dashboard was assembled by walking ' + mp.name + '\'s reporting chain, then for each report traversing to their reviews, compensation, position bands, project allocations, and recognition history. Traditional HRIS shows a flat org chart. The graph connects performance trajectory + comp position + project load + recognition frequency into a holistic coaching picture per person, surfacing patterns no single module could reveal.</p>' +
+    '</div>';
+}
+
+function expandTeamMember(card, personId, managerId) {
+  document.querySelectorAll('.team-card').forEach(function(c) { c.classList.remove('selected'); });
+  card.classList.add('selected');
+  var detail = document.getElementById('teamMemberDetail');
+  var p = getNode(personId);
+  if (!p) return;
+  var pp = p.properties;
+  var reviews = getReviews(personId).sort(function(a,b) { return (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''); });
+  var salary = getSalary(personId);
+  var equity = getEquity(personId);
+  var position = getPosition(personId);
+  var projects = getProjects(personId);
+  var recs = getRecognitions(personId);
+  var mentees = getMentees(personId);
+  var timeOffs = getTimeOff(personId);
+  var tenure = tenureMonths(pp.startDate);
+  var salaryAmt = salary ? salary.properties.amount : null;
+  var bandPct = null;
+  if (position && salaryAmt) {
+    var min = position.properties.salaryBandMin, max = position.properties.salaryBandMax;
+    if (min && max && max > min) bandPct = Math.round(((salaryAmt - min) / (max - min)) * 100);
+  }
+  var monthsSinceComp = salary ? Math.round((new Date(CURRENT_DATE) - new Date(salary.properties.effectiveDate)) / (30*86400000)) : null;
+
+  var reviewHtml = reviews.slice(0, 4).map(function(r) {
+    var rp = r.properties;
+    var color = rp.rating === 'exceeds' ? 'var(--accent-green)' : rp.rating === 'meets' ? 'var(--accent-blue)' : 'var(--accent-yellow)';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;">' +
+      '<span style="color:var(--text-muted);">' + formatDate(rp.completedDate) + ' &middot; ' + rp.type + '</span>' +
+      '<span style="color:' + color + ';font-weight:600;">' + (rp.rating || 'pending') + '</span></div>';
+  }).join('');
+
+  var compHtml = '';
+  if (salaryAmt) {
+    compHtml += '<div class="stat-row"><span class="stat-label">Base Salary</span><span class="stat-value">' + formatMoney(salaryAmt) + '</span></div>';
+    if (bandPct !== null) compHtml += '<div class="stat-row"><span class="stat-label">Band Position</span><span class="stat-value" style="color:' + (bandPct < 40 ? 'var(--accent-red)' : bandPct > 80 ? 'var(--accent-green)' : 'var(--accent-yellow)') + ';">' + bandPct + '%</span></div>';
+    if (monthsSinceComp) compHtml += '<div class="stat-row"><span class="stat-label">Last Change</span><span class="stat-value" style="font-size:13px;">' + monthsSinceComp + ' months ago</span></div>';
+  }
+  if (equity) {
+    compHtml += '<div class="stat-row"><span class="stat-label">Equity</span><span class="stat-value">' + (equity.properties.vestedShares || 0).toLocaleString() + '/' + (equity.properties.totalShares || 0).toLocaleString() + ' vested</span></div>';
+  }
+
+  var talkingPoints = [];
+  if (projects.length >= 3) talkingPoints.push('<strong>Workload:</strong> ' + pp.name + ' is on ' + projects.length + ' projects (' + projects.map(function(p) { return p.node.properties.name; }).join(', ') + '). Check if this is sustainable.');
+  if (bandPct !== null && bandPct < 50 && reviews[0] && reviews[0].properties.rating === 'exceeds') talkingPoints.push('<strong style="color:var(--accent-yellow);">Comp gap:</strong> Salary at ' + bandPct + '% of band despite Exceeds review. Discuss timeline for adjustment.');
+  if (monthsSinceComp && monthsSinceComp > 12) talkingPoints.push('<strong>Comp cadence:</strong> No compensation change in ' + monthsSinceComp + ' months. Consider whether a review is warranted.');
+  if (recs.length === 0) talkingPoints.push('<strong>Recognition:</strong> No peer or manager recognition on record. Acknowledge recent contributions.');
+  if (mentees.length > 0) talkingPoints.push('<strong>Mentoring:</strong> Currently mentoring ' + mentees.map(function(m) { return m.properties.name; }).join(', ') + '. Ask how it\'s going.');
+  if (tenure < 3) talkingPoints.push('<strong style="color:var(--accent-blue);">New hire:</strong> ' + tenure + ' months in. Focus on onboarding progress, team integration, and early blockers.');
+  if (talkingPoints.length === 0) talkingPoints.push('<strong>General check-in:</strong> Career trajectory, workload satisfaction, and team dynamics.');
+
+  var convoStarters = [];
+  if (reviews[0] && reviews[0].properties.rating === 'exceeds') convoStarters.push('"Your last review was outstanding. What projects excite you most right now?"');
+  if (projects.length >= 3) convoStarters.push('"You\'re spread across ' + projects.length + ' projects. Which one would you cut if you could?"');
+  if (bandPct !== null && bandPct < 50) convoStarters.push('"I want to talk about your compensation trajectory and make sure we\'re planning ahead."');
+  convoStarters.push('"What\'s one thing I could do differently as your manager?"');
+
+  detail.className = 'detail-panel active';
+  detail.innerHTML =
+    '<div class="card animate-in" style="border-color:rgba(179,136,255,0.2);">' +
+      '<div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">' +
+        '<div style="width:48px;height:48px;border-radius:50%;background:' + avatarColor(personId) + ';display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;">' + initials(pp.name) + '</div>' +
+        '<div><div style="font-size:18px;font-weight:800;">' + pp.name + '</div><div style="font-size:13px;color:var(--text-secondary);">' + pp.role + ' &middot; ' + (pp.level || '') + ' &middot; ' + tenure + ' months</div></div>' +
+      '</div>' +
+      '<div class="two-col">' +
+        '<div><div style="font-size:12px;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">Review History</div>' + (reviewHtml || '<div style="font-size:12px;color:var(--text-muted);">No reviews on file</div>') + '</div>' +
+        '<div><div style="font-size:12px;font-weight:700;color:var(--accent-green);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">Compensation</div>' + (compHtml || '<div style="font-size:12px;color:var(--text-muted);">No comp data</div>') + '</div>' +
+      '</div>' +
+      '<div style="margin-top:16px;"><div style="font-size:12px;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">Talking Points</div>' +
+        talkingPoints.map(function(tp) { return '<div style="display:flex;gap:8px;font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:6px;"><span style="color:var(--accent-blue);flex-shrink:0;">&#8226;</span><span>' + tp + '</span></div>'; }).join('') +
+      '</div>' +
+      '<div style="margin-top:16px;"><div style="font-size:12px;font-weight:700;color:var(--agent-accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">Conversation Starters</div>' +
+        convoStarters.map(function(cs) { return '<div class="convo-item">' + cs + '</div>'; }).join('') +
+      '</div>' +
+    '</div>';
+  detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ============================================================
+   TAB 2: ONBOARDING AUTOPILOT
+   ============================================================ */
+function buildOnboardingTab(personId) {
+  var el = document.getElementById('tab-onboarding');
+  var p = getNode(personId);
+  if (!p) return;
+  var pp = p.properties;
+  var startDate = pp.startDate;
+  var daysSince = daysBetween(startDate, CURRENT_DATE);
+  var dayLabel = daysSince < 0 ? 'Day ' + daysSince : daysSince === 0 ? 'Day 1' : 'Day ' + daysSince;
+
+  var docs = getDocs(personId);
+  var equip = getEquipment(personId);
+  var manager = getNode(getManager(personId));
+  var dept = getDept(personId);
+  var teams = getTeams(personId);
+  var position = getPosition(personId);
+
+  var signedDocs = docs.filter(function(d) { return d.node.properties.status === 'signed'; });
+  var pendingDocs = docs.filter(function(d) { return d.node.properties.status !== 'signed'; });
+  var readyEquip = equip.filter(function(e) { return e.node.properties.status === 'delivered' || e.node.properties.status === 'active'; });
+  var pendingEquip = equip.filter(function(e) { return e.node.properties.status !== 'delivered' && e.node.properties.status !== 'active'; });
+
+  var totalTasks = docs.length + equip.length + 5;
+  var completedTasks = signedDocs.length + readyEquip.length + 3;
+  var pct = Math.round((completedTasks / totalTasks) * 100);
+
+  var phases = [
+    { name: 'Pre-boarding', pct: daysSince < 0 ? Math.min(100, pct * 1.5) : 100 },
+    { name: 'Day 1', pct: daysSince >= 0 ? Math.min(100, 50) : 0 },
+    { name: 'Week 1', pct: daysSince >= 7 ? 30 : 0 },
+    { name: 'Month 1', pct: daysSince >= 30 ? 20 : 0 },
+    { name: '90 Days', pct: daysSince >= 90 ? 10 : 0 }
+  ];
+  var currentIdx = daysSince < 0 ? 0 : daysSince < 7 ? 1 : daysSince < 30 ? 2 : daysSince < 90 ? 3 : 4;
+
+  var doneItemsHtml = '';
+  signedDocs.forEach(function(d) {
+    doneItemsHtml += '<div class="ob-item"><div class="ob-check done">&#10003;</div><span style="color:var(--text-primary);">' + (d.node.properties.title || d.node.properties.type).replace(/\s*\u2014.*/, '') + '</span><span style="margin-left:auto;font-size:11px;color:var(--accent-green);">Signed ' + formatDate(d.node.properties.signedDate) + '</span></div>';
+  });
+  readyEquip.forEach(function(e) {
+    doneItemsHtml += '<div class="ob-item"><div class="ob-check done">&#10003;</div><span style="color:var(--text-primary);">' + (e.node.properties.name || e.node.properties.type) + '</span><span style="margin-left:auto;font-size:11px;color:var(--accent-green);">Ready</span></div>';
+  });
+  doneItemsHtml += '<div class="ob-item"><div class="ob-check done">&#10003;</div><span style="color:var(--text-primary);">Background check</span><span style="margin-left:auto;font-size:11px;color:var(--accent-green);">Cleared</span></div>';
+  if (manager) doneItemsHtml += '<div class="ob-item"><div class="ob-check done">&#10003;</div><span style="color:var(--text-primary);">Manager assigned: ' + manager.properties.name + '</span><span style="margin-left:auto;font-size:11px;color:var(--accent-green);">Confirmed</span></div>';
+  doneItemsHtml += '<div class="ob-item"><div class="ob-check done">&#10003;</div><span style="color:var(--text-primary);">Day 1 orientation scheduled</span><span style="margin-left:auto;font-size:11px;color:var(--accent-green);">' + formatDate(startDate) + '</span></div>';
+
+  var pendingItemsHtml = '';
+  pendingDocs.forEach(function(d) {
+    pendingItemsHtml += '<div class="ob-item"><div class="ob-check pending">!</div><span style="color:var(--text-primary);">' + (d.node.properties.title || d.node.properties.type).replace(/\s*\u2014.*/, '') + '</span><span style="margin-left:auto;font-size:11px;color:var(--accent-yellow);">' + d.node.properties.status + '</span></div>';
+  });
+  pendingEquip.forEach(function(e) {
+    pendingItemsHtml += '<div class="ob-item"><div class="ob-check pending">!</div><span style="color:var(--text-primary);">' + (e.node.properties.name || e.node.properties.type) + '</span><span style="margin-left:auto;font-size:11px;color:var(--accent-yellow);">' + e.node.properties.status + '</span></div>';
+  });
+
+  var addDate = function(base, days) {
+    var d = new Date(base);
+    d.setDate(d.getDate() + days);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  el.innerHTML =
+    '<div class="agent-narrative animate-in">' +
+      '<div class="agent-narrative-header"><div class="agent-avatar">A</div><div class="agent-label">Onboarding Autopilot</div></div>' +
+      '<div class="agent-summary">Running onboarding for <span class="highlight">' + pp.name + '</span> (' + pp.role + '). <strong>' + dayLabel + '</strong> &mdash; starts ' + formatDate(startDate) + '. ' +
+        '<span class="good">' + completedTasks + ' of ' + totalTasks + ' tasks complete</span>.' +
+        (pendingDocs.length > 0 ? ' <span class="urgent">' + pendingDocs.length + ' documents pending.</span>' : ' Everything on track.') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="timeline-hero animate-in" style="animation-delay:0.05s;">' +
+      phases.map(function(ph, i) {
+        return '<div class="timeline-phase ' + (i === currentIdx ? 'current' : i < currentIdx ? 'completed' : '') + '">' +
+          '<div class="tp-name" style="color:' + (i === currentIdx ? 'var(--accent-green)' : 'var(--text-muted)') + ';">' + ph.name + '</div>' +
+          '<div class="tp-bar"><div class="tp-fill" style="width:' + ph.pct + '%;"></div></div>' +
+          '<div class="tp-detail">' + (i === currentIdx ? 'Active' : i < currentIdx ? 'Complete' : 'Upcoming') + '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+
+    '<div class="two-col animate-in" style="animation-delay:0.1s;">' +
+      '<div class="card"><div class="card-header"><div class="card-icon" style="background:var(--accent-green-dim);color:var(--accent-green);">&#10003;</div><div><div class="card-title">Completed</div><div class="card-subtitle">' + completedTasks + ' tasks done</div></div></div>' + doneItemsHtml + '</div>' +
+      '<div class="card"><div class="card-header"><div class="card-icon" style="background:var(--accent-yellow-dim);color:var(--accent-yellow);">!</div><div><div class="card-title">Needs Attention</div><div class="card-subtitle">' + (pendingDocs.length + pendingEquip.length) + ' items pending</div></div></div>' +
+        (pendingItemsHtml || '<div style="font-size:13px;color:var(--accent-green);">All clear! Nothing pending.</div>') +
+        (pendingDocs.length > 0 ? '<div style="margin-top:12px;display:flex;gap:8px;"><button class="btn btn-primary" onclick="this.textContent=\'Reminder Sent\';">Send Reminder</button><button class="btn btn-secondary" onclick="this.textContent=\'OK\';">I\'ll Handle It</button></div>' : '') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="card animate-in" style="animation-delay:0.15s;">' +
+      '<div class="card-header"><div class="card-icon" style="background:var(--accent-blue-dim);color:var(--accent-blue);">&#8594;</div><div><div class="card-title">Coming Up &mdash; On Autopilot</div></div></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-blue-dim);color:var(--accent-blue);font-size:11px;">1</div><span><strong>Day 1</strong> (' + addDate(startDate, 0) + ') &mdash; Welcome email, orientation, IT setup, first meeting with ' + (manager ? manager.properties.name : 'manager') + '</span></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-blue-dim);color:var(--accent-blue);font-size:11px;">3</div><span><strong>Day 3</strong> (' + addDate(startDate, 3) + ') &mdash; Week 1 check-in with manager</span></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-blue-dim);color:var(--accent-blue);font-size:11px;">7</div><span><strong>Week 1</strong> (' + addDate(startDate, 7) + ') &mdash; Team introductions, shadow sessions, access verification</span></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-purple-dim);color:var(--accent-purple);font-size:11px;">30</div><span><strong>Month 1</strong> (' + addDate(startDate, 30) + ') &mdash; 30-day review. Template auto-generated.</span></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-purple-dim);color:var(--accent-purple);font-size:11px;">90</div><span><strong>90 Days</strong> (' + addDate(startDate, 90) + ') &mdash; Performance check-in. Feedback compiled from team.</span></div>' +
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.2s;">' +
+      '<div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+      '<p>The graph connects ' + pp.name + '\'s role (' + pp.role + '), department (' + (dept ? dept.properties.name : 'N/A') + '), location (' + (pp.location || 'N/A') + '), and manager (' + (manager ? manager.properties.name : 'N/A') + ') to auto-generate a personalized onboarding plan. The role triggered specific equipment ordering, team invitations, compliance documents, and training assignments. Traditional HRIS uses the same generic checklist for every hire. The graph personalizes every step by traversing position requirements, team context, compliance obligations, and equipment needs.</p>' +
+    '</div>';
+}
+
+/* ============================================================
+   TAB 3: CAREER CONVERSATION (with sub-tabs)
+   ============================================================ */
+function buildCareerTab(personId) {
+  var el = document.getElementById('tab-career');
+  el.innerHTML =
+    '<div class="sub-tabs" id="careerSubTabs">' +
+      '<button class="sub-tab-btn active" data-sub="underperformer">Underperformer</button>' +
+      '<button class="sub-tab-btn" data-sub="highperformer">High Performer</button>' +
+      '<button class="sub-tab-btn" data-sub="returnleave">Returning from Leave</button>' +
+    '</div>' +
+    '<div class="sub-panel active" id="sub-underperformer"></div>' +
+    '<div class="sub-panel" id="sub-highperformer"></div>' +
+    '<div class="sub-panel" id="sub-returnleave"></div>';
+
+  document.querySelectorAll('#careerSubTabs .sub-tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('#careerSubTabs .sub-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('#tab-career .sub-panel').forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('sub-' + btn.dataset.sub).classList.add('active');
+    });
+  });
+
+  buildUnderperformerSub(personId);
+  buildHighPerformerSub(personId);
+  buildReturnLeaveSub(personId);
+}
+
+function buildUnderperformerSub(personId) {
+  var el = document.getElementById('sub-underperformer');
+  // Find someone with developing/below review, or use the selected person
+  var allPeople = allActivePeople();
+  var underperformer = null;
+  for (var i = 0; i < allPeople.length; i++) {
+    var reviews = getReviews(allPeople[i].id);
+    var latest = reviews.sort(function(a,b) { return (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''); })[0];
+    if (latest && (latest.properties.rating === 'developing' || latest.properties.rating === 'below')) {
+      underperformer = allPeople[i];
+      break;
+    }
+  }
+  if (!underperformer) underperformer = getNode(personId);
+  var pp = underperformer.properties;
+  var reviews = getReviews(underperformer.id).sort(function(a,b) { return (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''); });
+  var latestReview = reviews[0];
+  var salary = getSalary(underperformer.id);
+  var projects = getProjects(underperformer.id);
+  var manager = getNode(getManager(underperformer.id));
+  var tenure = tenureMonths(pp.startDate);
+
+  var reviewTrajectory = reviews.slice(0, 4).map(function(r) {
+    var rp = r.properties;
+    var color = rp.rating === 'exceeds' ? 'var(--accent-green)' : rp.rating === 'meets' ? 'var(--accent-blue)' : rp.rating === 'developing' ? 'var(--accent-yellow)' : 'var(--accent-red)';
+    return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle);font-size:13px;">' +
+      '<span style="color:var(--text-muted);">' + formatDate(rp.completedDate) + '</span>' +
+      '<span style="color:' + color + ';font-weight:600;">' + (rp.rating || 'N/A') + '</span></div>';
+  }).join('');
+
+  el.innerHTML =
+    '<div class="agent-narrative animate-in">' +
+      '<div class="agent-narrative-header"><div class="agent-avatar">A</div><div class="agent-label">Performance Conversation Prep</div></div>' +
+      '<div class="agent-summary">Preparing a performance conversation for <span class="urgent">' + pp.name + '</span> (' + pp.role + ', ' + tenure + ' months). ' +
+        (latestReview ? 'Last review: <span class="urgent">' + latestReview.properties.rating + '</span>. ' : '') +
+        'Here\'s your conversation guide and improvement framework.' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="two-col animate-in" style="animation-delay:0.05s;">' +
+      '<div class="card">' +
+        '<div class="card-header"><div class="card-icon" style="background:var(--accent-red-dim);color:var(--accent-red);">&#9660;</div><div><div class="card-title">Performance Trajectory</div></div></div>' +
+        reviewTrajectory +
+        (latestReview && latestReview.properties.summary ? '<div style="margin-top:12px;font-size:13px;color:var(--text-secondary);line-height:1.6;font-style:italic;">"' + latestReview.properties.summary + '"</div>' : '') +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="card-header"><div class="card-icon" style="background:var(--accent-yellow-dim);color:var(--accent-yellow);">&#9733;</div><div><div class="card-title">Conversation Guide</div></div></div>' +
+        '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">' +
+          '<div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">1. Open with care.</strong> "I want to talk about how things are going and figure out together how to get you back on track."</div>' +
+          '<div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">2. Be specific.</strong> Reference concrete examples from recent projects' + (projects.length > 0 ? ' (' + projects.map(function(p) { return p.node.properties.name; }).join(', ') + ')' : '') + '.</div>' +
+          '<div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">3. Listen for root causes.</strong> Workload? Skills gap? Personal circumstances? Engagement?</div>' +
+          '<div><strong style="color:var(--text-primary);">4. Co-create the plan.</strong> Agree on specific, measurable goals with a 30/60/90 checkpoint.</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="card animate-in" style="animation-delay:0.1s;">' +
+      '<div class="card-header"><div class="card-icon" style="background:var(--accent-orange-dim);color:var(--accent-orange);">&#8593;</div><div><div class="card-title">Improvement Plan Framework</div><div class="card-subtitle">30/60/90 day structure</div></div></div>' +
+      '<div class="three-col">' +
+        '<div style="background:var(--bg-tertiary);border-radius:var(--radius-md);padding:16px;"><div style="font-size:12px;font-weight:700;color:var(--accent-yellow);margin-bottom:8px;">30 DAYS</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Weekly 1:1 check-ins. Define clear deliverables. Assign a skills buddy. Remove non-essential projects. Document expectations.</div></div>' +
+        '<div style="background:var(--bg-tertiary);border-radius:var(--radius-md);padding:16px;"><div style="font-size:12px;font-weight:700;color:var(--accent-orange);margin-bottom:8px;">60 DAYS</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Assess progress against goals. If improving, expand scope gradually. If not, escalate to formal PIP with HR. Biweekly check-ins.</div></div>' +
+        '<div style="background:var(--bg-tertiary);border-radius:var(--radius-md);padding:16px;"><div style="font-size:12px;font-weight:700;color:var(--accent-red);margin-bottom:8px;">90 DAYS</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Final assessment. Decision point: retain with new role/scope, extend PIP, or initiate separation. Document everything.</div></div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.15s;">' +
+      '<div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+      '<p>The graph connected ' + pp.name + '\'s review trajectory across multiple review cycles, their current project load (' + projects.length + ' projects), compensation position, and team context to generate this conversation guide. Traditional HRIS shows a single review score. The graph reveals the pattern: how performance is trending over time, whether workload might be a factor, and whether comp or recognition gaps are contributing.</p>' +
+    '</div>';
+}
+
+function buildHighPerformerSub(personId) {
+  var el = document.getElementById('sub-highperformer');
+  var allPeople = allActivePeople();
+  var highPerf = null;
+  for (var i = 0; i < allPeople.length; i++) {
+    var reviews = getReviews(allPeople[i].id);
+    var latest = reviews.sort(function(a,b) { return (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''); })[0];
+    if (latest && latest.properties.rating === 'exceeds' && allPeople[i].id !== personId) {
+      highPerf = allPeople[i];
+      break;
+    }
+  }
+  if (!highPerf) highPerf = getNode(personId);
+  var pp = highPerf.properties;
+  var reviews = getReviews(highPerf.id).sort(function(a,b) { return (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''); });
+  var salary = getSalary(highPerf.id);
+  var equity = getEquity(highPerf.id);
+  var position = getPosition(highPerf.id);
+  var projects = getProjects(highPerf.id);
+  var recs = getRecognitions(highPerf.id);
+  var mentees = getMentees(highPerf.id);
+  var tenure = tenureMonths(pp.startDate);
+  var salaryAmt = salary ? salary.properties.amount : null;
+  var bandPct = null;
+  if (position && salaryAmt) {
+    var min = position.properties.salaryBandMin, max = position.properties.salaryBandMax;
+    if (min && max && max > min) bandPct = Math.round(((salaryAmt - min) / (max - min)) * 100);
+  }
+  var exceedsCount = reviews.filter(function(r) { return r.properties.rating === 'exceeds'; }).length;
+  var monthsSinceComp = salary ? Math.round((new Date(CURRENT_DATE) - new Date(salary.properties.effectiveDate)) / (30*86400000)) : null;
+
+  var flightRisks = [];
+  if (bandPct !== null && bandPct < 60) flightRisks.push('Compensation at ' + bandPct + '% of band despite top performance');
+  if (monthsSinceComp && monthsSinceComp > 14) flightRisks.push('No comp change in ' + monthsSinceComp + ' months');
+  if (projects.length >= 4) flightRisks.push('Spread across ' + projects.length + ' projects (potential burnout)');
+  if (tenure > 30 && exceedsCount >= 2) flightRisks.push('High performer for ' + Math.round(tenure/12) + ' years without promotion');
+
+  el.innerHTML =
+    '<div class="agent-narrative animate-in">' +
+      '<div class="agent-narrative-header"><div class="agent-avatar">A</div><div class="agent-label">Retention Conversation Prep</div></div>' +
+      '<div class="agent-summary">Preparing a retention conversation for <span class="good">' + pp.name + '</span> (' + pp.role + ', ' + tenure + ' months). ' +
+        '<span class="good">' + exceedsCount + ' Exceeds review' + (exceedsCount !== 1 ? 's' : '') + '</span>. ' +
+        (flightRisks.length > 0 ? '<span class="urgent">' + flightRisks.length + ' flight risk signal' + (flightRisks.length !== 1 ? 's' : '') + ' detected.</span>' : 'No immediate flight risk signals.') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="two-col animate-in" style="animation-delay:0.05s;">' +
+      '<div class="card">' +
+        '<div class="card-header"><div class="card-icon" style="background:var(--accent-green-dim);color:var(--accent-green);">&#9650;</div><div><div class="card-title">Performance Trend</div></div></div>' +
+        reviews.slice(0, 4).map(function(r) {
+          var rp = r.properties;
+          var color = rp.rating === 'exceeds' ? 'var(--accent-green)' : rp.rating === 'meets' ? 'var(--accent-blue)' : 'var(--accent-yellow)';
+          return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle);font-size:13px;">' +
+            '<span style="color:var(--text-muted);">' + formatDate(rp.completedDate) + ' &middot; ' + rp.type + '</span>' +
+            '<span style="color:' + color + ';font-weight:600;">' + (rp.rating || 'N/A') + '</span></div>';
+        }).join('') +
+        (reviews[0] && reviews[0].properties.summary ? '<div style="margin-top:10px;font-size:12px;color:var(--text-secondary);line-height:1.5;font-style:italic;">"' + reviews[0].properties.summary + '"</div>' : '') +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="card-header"><div class="card-icon" style="background:var(--accent-yellow-dim);color:var(--accent-yellow);">&#9888;</div><div><div class="card-title">Comp vs Band</div></div></div>' +
+        (salaryAmt ? '<div class="stat-row"><span class="stat-label">Current Salary</span><span class="stat-value">' + formatMoney(salaryAmt) + '</span></div>' : '') +
+        (bandPct !== null ? '<div class="stat-row"><span class="stat-label">Band Position</span><span class="stat-value" style="color:' + (bandPct < 50 ? 'var(--accent-red)' : 'var(--accent-green)') + ';">' + bandPct + '%</span></div>' : '') +
+        (position ? '<div class="stat-row"><span class="stat-label">Band Range</span><span class="stat-value" style="font-size:12px;">' + formatMoney(position.properties.salaryBandMin) + ' - ' + formatMoney(position.properties.salaryBandMax) + '</span></div>' : '') +
+        (equity ? '<div class="stat-row"><span class="stat-label">Equity</span><span class="stat-value" style="font-size:12px;">' + (equity.properties.vestedShares || 0).toLocaleString() + ' / ' + (equity.properties.totalShares || 0).toLocaleString() + ' vested</span></div>' : '') +
+        (monthsSinceComp ? '<div class="stat-row"><span class="stat-label">Last Comp Change</span><span class="stat-value" style="font-size:12px;color:' + (monthsSinceComp > 12 ? 'var(--accent-yellow)' : 'var(--text-primary)') + ';">' + monthsSinceComp + ' months ago</span></div>' : '') +
+      '</div>' +
+    '</div>' +
+
+    (flightRisks.length > 0 ? '<div class="card animate-in" style="animation-delay:0.1s;border-left:3px solid var(--accent-red);">' +
+      '<div class="card-header"><div class="card-icon" style="background:var(--accent-red-dim);color:var(--accent-red);">&#9888;</div><div><div class="card-title">Flight Risk Signals</div></div></div>' +
+      flightRisks.map(function(r) { return '<div style="display:flex;gap:8px;font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:6px;"><span style="color:var(--accent-red);">&#8226;</span><span>' + r + '</span></div>'; }).join('') +
+    '</div>' : '') +
+
+    '<div class="card animate-in" style="animation-delay:0.15s;">' +
+      '<div class="card-header"><div class="card-icon" style="background:var(--accent-purple-dim);color:var(--accent-purple);">&#9733;</div><div><div class="card-title">What to Offer</div></div></div>' +
+      '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">' +
+        (bandPct !== null && bandPct < 70 ? '<div style="margin-bottom:8px;"><strong style="color:var(--accent-green);">Compensation adjustment.</strong> Move to ' + Math.min(85, bandPct + 20) + '% of band (' + formatMoney(Math.round(salaryAmt * 1.1)) + '). Aligns pay with performance and reduces flight risk.</div>' : '') +
+        '<div style="margin-bottom:8px;"><strong style="color:var(--accent-purple);">Title/scope expansion.</strong> ' + pp.name + ' is ready for a senior title or expanded leadership scope. ' + (mentees.length > 0 ? 'Already mentoring ' + mentees.map(function(m) { return m.properties.name; }).join(', ') + '.' : 'Consider a mentoring assignment.') + '</div>' +
+        '<div style="margin-bottom:8px;"><strong style="color:var(--accent-blue);">Project alignment.</strong> ' + (projects.length >= 3 ? 'Currently on ' + projects.length + ' projects. Offer to focus on the 1-2 most impactful, with lead ownership.' : 'Give ownership of a high-visibility initiative.') + '</div>' +
+        '<div><strong style="color:var(--accent-cyan);">Development investment.</strong> Conference budget, executive coaching, or cross-functional rotation to signal long-term commitment.</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.2s;">' +
+      '<div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+      '<p>Flight risk detection required traversing ' + pp.name + '\'s review history, comp trajectory relative to position bands, project load, recognition frequency, and promotion velocity. Traditional HRIS shows a performance score. The graph reveals the story: top performer + below-market comp + high workload + no promotion = flight risk. Each signal alone is invisible; the pattern across graph connections is unmistakable.</p>' +
+    '</div>';
+}
+
+function buildReturnLeaveSub(personId) {
+  var el = document.getElementById('sub-returnleave');
+  // Find someone on leave
+  var onLeave = ALL_NODES.find(function(n) { return n.type === 'person' && n.properties.status === 'on_leave'; });
+  if (!onLeave) onLeave = getNode(personId);
+  var pp = onLeave.properties;
+  var reviews = getReviews(onLeave.id);
+  var projects = getProjects(onLeave.id);
+  var teams = getTeams(onLeave.id);
+  var manager = getNode(getManager(onLeave.id));
+  var leaves = getLeaveDesignations(onLeave.id);
+  var dept = getDept(onLeave.id);
+  var tenure = tenureMonths(pp.startDate);
+
+  // Find what changed while they were out
+  var recentHires = ALL_NODES.filter(function(n) { return n.type === 'person' && n.properties.status === 'preparing' && daysBetween(n.properties.startDate, CURRENT_DATE) <= 90 && daysBetween(n.properties.startDate, CURRENT_DATE) >= -30; });
+  var leaveType = leaves.length > 0 ? leaves[0].properties.type : 'personal';
+  var leaveStart = leaves.length > 0 ? leaves[0].properties.startDate : null;
+
+  el.innerHTML =
+    '<div class="agent-narrative animate-in">' +
+      '<div class="agent-narrative-header"><div class="agent-avatar">A</div><div class="agent-label">Reintegration Guide</div></div>' +
+      '<div class="agent-summary">Preparing reintegration for <span class="highlight">' + pp.name + '</span> (' + pp.role + '), returning from <span class="highlight">' + leaveType.replace(/_/g, ' ') + ' leave</span>. ' +
+        'Here\'s what changed, a reintegration plan, and check-in structure to ensure a smooth return.' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="two-col animate-in" style="animation-delay:0.05s;">' +
+      '<div class="card">' +
+        '<div class="card-header"><div class="card-icon" style="background:var(--accent-blue-dim);color:var(--accent-blue);">&#8635;</div><div><div class="card-title">What Changed While Out</div></div></div>' +
+        (recentHires.length > 0 ? '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;"><strong style="color:var(--text-primary);">New team members:</strong> ' + recentHires.slice(0,3).map(function(h) { return h.properties.name + ' (' + h.properties.role + ')'; }).join(', ') + '</div>' : '') +
+        '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;"><strong style="color:var(--text-primary);">Active projects:</strong> ' + (projects.length > 0 ? projects.map(function(p) { return p.node.properties.name + ' (' + p.node.properties.status + ')'; }).join(', ') : 'No active assignments') + '</div>' +
+        '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;"><strong style="color:var(--text-primary);">Team:</strong> ' + (teams.length > 0 ? teams.map(function(t) { return t.properties.name; }).join(', ') : 'N/A') + '</div>' +
+        '<div style="font-size:13px;color:var(--text-secondary);"><strong style="color:var(--text-primary);">Manager:</strong> ' + (manager ? manager.properties.name : 'N/A') + ' (unchanged)</div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="card-header"><div class="card-icon" style="background:var(--accent-green-dim);color:var(--accent-green);">&#10003;</div><div><div class="card-title">Benefits Check</div></div></div>' +
+        '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">' +
+          '<div style="margin-bottom:6px;"><strong style="color:var(--accent-green);">&#10003;</strong> Benefits coverage continued during leave</div>' +
+          '<div style="margin-bottom:6px;"><strong style="color:var(--accent-green);">&#10003;</strong> PTO balance restored on return date</div>' +
+          '<div style="margin-bottom:6px;"><strong style="color:var(--accent-green);">&#10003;</strong> Same role and level guaranteed (FMLA)</div>' +
+          '<div><strong style="color:var(--accent-yellow);">!</strong> Review any deferred compensation or bonus proration</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="card animate-in" style="animation-delay:0.1s;">' +
+      '<div class="card-header"><div class="card-icon" style="background:var(--accent-purple-dim);color:var(--accent-purple);">&#8594;</div><div><div class="card-title">Reintegration Plan</div><div class="card-subtitle">Gradual ramp-back to full capacity</div></div></div>' +
+      '<div class="three-col">' +
+        '<div style="background:var(--bg-tertiary);border-radius:var(--radius-md);padding:16px;">' +
+          '<div style="font-size:12px;font-weight:700;color:var(--accent-green);margin-bottom:8px;">WEEK 1 &mdash; RECONNECT</div>' +
+          '<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Welcome back meeting with ' + (manager ? manager.properties.name : 'manager') + '. Catch-up on team changes. Light workload &mdash; focus on reading docs and attending meetings. No deliverables expected.</div>' +
+        '</div>' +
+        '<div style="background:var(--bg-tertiary);border-radius:var(--radius-md);padding:16px;">' +
+          '<div style="font-size:12px;font-weight:700;color:var(--accent-blue);margin-bottom:8px;">WEEK 2-4 &mdash; RAMP</div>' +
+          '<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Resume 1-2 projects at reduced allocation. Pair with a teammate who covered during leave. Bi-weekly check-ins with manager on comfort level and workload.</div>' +
+        '</div>' +
+        '<div style="background:var(--bg-tertiary);border-radius:var(--radius-md);padding:16px;">' +
+          '<div style="font-size:12px;font-weight:700;color:var(--accent-purple);margin-bottom:8px;">MONTH 2-3 &mdash; FULL CAPACITY</div>' +
+          '<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Full project load restored. 30-day check-in on reintegration experience. Discuss any accommodations needed. Recalibrate goals for remainder of review period.</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="card animate-in" style="animation-delay:0.15s;">' +
+      '<div class="card-header"><div class="card-icon" style="background:var(--accent-cyan-dim);color:var(--accent-cyan);">&#9993;</div><div><div class="card-title">Check-in Schedule</div></div></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-green-dim);color:var(--accent-green);font-size:11px;">1</div><span><strong>Day 1 Return</strong> &mdash; Welcome back meeting with manager, IT access verification, team re-introduction</span></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-blue-dim);color:var(--accent-blue);font-size:11px;">7</div><span><strong>Week 1</strong> &mdash; How are you settling back in? Any surprises?</span></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-purple-dim);color:var(--accent-purple);font-size:11px;">30</div><span><strong>30 Days</strong> &mdash; Formal check-in on workload, wellbeing, any needed accommodations</span></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-purple-dim);color:var(--accent-purple);font-size:11px;">60</div><span><strong>60 Days</strong> &mdash; Performance recalibration conversation, goals for remainder of cycle</span></div>' +
+      '<div class="ob-item"><div class="ob-check" style="background:var(--accent-purple-dim);color:var(--accent-purple);font-size:11px;">90</div><span><strong>90 Days</strong> &mdash; Full reintegration assessment, close out any remaining leave-related items</span></div>' +
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.2s;">' +
+      '<div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+      '<p>The graph knows ' + pp.name + '\'s leave designation, their team structure, active projects, benefits enrollments, and manager &mdash; all connected. It can surface what changed during their absence by traversing recent hires, project status changes, and team membership updates. Traditional HRIS sends a generic "welcome back" email. The graph builds a personalized reintegration plan that accounts for the specific organizational changes that happened while they were away.</p>' +
+    '</div>';
+}
+
+/* ============================================================
+   TAB 4: MONDAY BRIEFING
+   ============================================================ */
+function buildBriefingTab() {
+  var el = document.getElementById('tab-briefing');
+  var allPeople = allActivePeople();
+  var total = allPeople.length;
+
+  // Gather data for briefing
+  var preparing = ALL_NODES.filter(function(n) { return n.type === 'person' && n.properties.status === 'preparing'; });
+  var onLeave = ALL_NODES.filter(function(n) { return n.type === 'person' && n.properties.status === 'on_leave'; });
+  var terminated = ALL_NODES.filter(function(n) { return n.type === 'person' && n.properties.status === 'terminated'; });
+
+  // Reviews due
+  var overdueReviews = [];
+  allPeople.forEach(function(p) {
+    var reviews = getReviews(p.id);
+    var latest = reviews.sort(function(a,b) { return (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''); })[0];
+    if (!latest || daysBetween(latest.properties.completedDate || p.properties.startDate, CURRENT_DATE) > 365) {
+      overdueReviews.push(p);
+    }
+  });
+
+  // People approaching anniversaries (within 30 days)
+  var anniversaries = allPeople.filter(function(p) {
+    var start = new Date(p.properties.startDate);
+    var now = new Date(CURRENT_DATE);
+    var thisYearAnniv = new Date(now.getFullYear(), start.getMonth(), start.getDate());
+    var diff = daysBetween(CURRENT_DATE, thisYearAnniv.toISOString().split('T')[0]);
+    return diff >= 0 && diff <= 30 && tenureMonths(p.properties.startDate) > 11;
+  });
+
+  // People with many projects (overloaded)
+  var overloaded = allPeople.filter(function(p) { return getProjects(p.id).length >= 4; });
+
+  // New hires starting this month
+  var newHires = preparing.filter(function(n) {
+    return daysBetween(CURRENT_DATE, n.properties.startDate) <= 30 && daysBetween(CURRENT_DATE, n.properties.startDate) >= -7;
+  });
+
+  // High performers
+  var highPerfs = [];
+  allPeople.forEach(function(p) {
+    var reviews = getReviews(p.id);
+    var latest = reviews.sort(function(a,b) { return (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''); })[0];
+    if (latest && latest.properties.rating === 'exceeds') highPerfs.push(p);
+  });
+
+  el.innerHTML =
+    '<div class="briefing-email animate-in">' +
+      '<div class="briefing-header">' +
+        '<h2>Monday Briefing</h2>' +
+        '<div class="date">Week of February 3, 2026 &middot; Acme Co &middot; ' + total + ' employees</div>' +
+      '</div>' +
+
+      // ACTION REQUIRED
+      '<div class="briefing-section">' +
+        '<div class="briefing-section-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent-red);display:inline-block;"></span> Action Required</div>' +
+        (overdueReviews.length > 0 ? '<div class="briefing-item"><div class="briefing-dot" style="background:var(--accent-red);"></div><div class="briefing-text"><strong>' + overdueReviews.length + ' overdue performance reviews.</strong> ' + overdueReviews.slice(0,3).map(function(p) { return p.properties.name; }).join(', ') + (overdueReviews.length > 3 ? ' and ' + (overdueReviews.length - 3) + ' more' : '') + ' have not been reviewed in over 12 months. <button class="btn btn-agent" onclick="this.textContent=\'Reminders Sent\';" style="margin-left:6px;">Send Reminders</button></div></div>' : '') +
+        (newHires.length > 0 ? '<div class="briefing-item"><div class="briefing-dot" style="background:var(--accent-red);"></div><div class="briefing-text"><strong>' + newHires.length + ' new hire' + (newHires.length > 1 ? 's' : '') + ' starting soon.</strong> ' + newHires.map(function(h) { return h.properties.name + ' (' + h.properties.role + ', ' + formatDate(h.properties.startDate) + ')'; }).join('; ') + '. Ensure onboarding prep is complete. <button class="btn btn-agent" onclick="switchTab(\'onboarding\');this.textContent=\'Opened\';" style="margin-left:6px;">Review Onboarding</button></div></div>' : '') +
+        (onLeave.length > 0 ? '<div class="briefing-item"><div class="briefing-dot" style="background:var(--accent-red);"></div><div class="briefing-text"><strong>' + onLeave.length + ' employee' + (onLeave.length > 1 ? 's' : '') + ' on leave.</strong> ' + onLeave.map(function(p) { return p.properties.name + ' (' + p.properties.role + ')'; }).join(', ') + '. Monitor return dates and prepare reintegration plan.</div></div>' : '') +
+      '</div>' +
+
+      // HEADS UP
+      '<div class="briefing-section">' +
+        '<div class="briefing-section-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent-yellow);display:inline-block;"></span> Heads Up</div>' +
+        (overloaded.length > 0 ? '<div class="briefing-item"><div class="briefing-dot" style="background:var(--accent-yellow);"></div><div class="briefing-text"><strong>' + overloaded.length + ' people across 4+ projects.</strong> ' + overloaded.slice(0,3).map(function(p) { return p.properties.name + ' (' + getProjects(p.id).length + ' projects)'; }).join(', ') + '. Consider rebalancing workload before burnout signals emerge.</div></div>' : '') +
+        (anniversaries.length > 0 ? '<div class="briefing-item"><div class="briefing-dot" style="background:var(--accent-yellow);"></div><div class="briefing-text"><strong>Upcoming work anniversaries.</strong> ' + anniversaries.slice(0,3).map(function(p) { return p.properties.name + ' (' + Math.round(tenureMonths(p.properties.startDate)/12) + ' years)'; }).join(', ') + '. Consider recognition or milestone conversations.</div></div>' : '') +
+        '<div class="briefing-item"><div class="briefing-dot" style="background:var(--accent-yellow);"></div><div class="briefing-text"><strong>Q1 review cycle approaching.</strong> Schedule planning for annual reviews. ' + total + ' employees to be reviewed across 6 departments.</div></div>' +
+      '</div>' +
+
+      // GOOD NEWS
+      '<div class="briefing-section">' +
+        '<div class="briefing-section-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent-green);display:inline-block;"></span> Good News</div>' +
+        (highPerfs.length > 0 ? '<div class="briefing-item"><div class="briefing-dot" style="background:var(--accent-green);"></div><div class="briefing-text"><strong>' + highPerfs.length + ' employees received Exceeds reviews.</strong> ' + highPerfs.slice(0,4).map(function(p) { return p.properties.name; }).join(', ') + (highPerfs.length > 4 ? ' and ' + (highPerfs.length - 4) + ' more' : '') + '. Strong performers across the organization.</div></div>' : '') +
+        (newHires.length > 0 ? '<div class="briefing-item"><div class="briefing-dot" style="background:var(--accent-green);"></div><div class="briefing-text"><strong>Hiring pipeline active.</strong> ' + preparing.length + ' new hires in onboarding pipeline. Team growth on track with Q1 headcount plan.</div></div>' : '') +
+        '<div class="briefing-item"><div class="briefing-dot" style="background:var(--accent-green);"></div><div class="briefing-text"><strong>Zero open compliance issues.</strong> All I-9s current, benefits enrollments up to date, no pending investigations.</div></div>' +
+      '</div>' +
+
+      // ORG SNAPSHOT
+      '<div class="briefing-section">' +
+        '<div class="briefing-section-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent-cyan);display:inline-block;"></span> Org Snapshot</div>' +
+        '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px;">' +
+          '<div style="text-align:center;padding:12px;background:var(--bg-tertiary);border-radius:var(--radius-sm);"><div style="font-size:20px;font-weight:800;">' + total + '</div><div style="font-size:11px;color:var(--text-muted);">Active</div></div>' +
+          '<div style="text-align:center;padding:12px;background:var(--bg-tertiary);border-radius:var(--radius-sm);"><div style="font-size:20px;font-weight:800;color:var(--accent-blue);">' + preparing.length + '</div><div style="font-size:11px;color:var(--text-muted);">Onboarding</div></div>' +
+          '<div style="text-align:center;padding:12px;background:var(--bg-tertiary);border-radius:var(--radius-sm);"><div style="font-size:20px;font-weight:800;color:var(--accent-yellow);">' + onLeave.length + '</div><div style="font-size:11px;color:var(--text-muted);">On Leave</div></div>' +
+          '<div style="text-align:center;padding:12px;background:var(--bg-tertiary);border-radius:var(--radius-sm);"><div style="font-size:20px;font-weight:800;color:var(--accent-red);">' + overdueReviews.length + '</div><div style="font-size:11px;color:var(--text-muted);">Overdue Reviews</div></div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="briefing-actions">' +
+        '<button class="btn btn-primary" onclick="this.textContent=\'Sent!\';">Send to Email</button>' +
+        '<button class="btn btn-secondary" onclick="this.textContent=\'Shared!\';">Share with Leadership</button>' +
+        '<button class="btn btn-agent" onclick="this.textContent=\'Exported!\';">Export PDF</button>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.1s;margin-top:24px;">' +
+      '<div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+      '<p>This briefing was compiled by traversing the entire employee graph: every person\'s review dates, project allocations, leave status, onboarding progress, start date, and benefits enrollment. Traditional HRIS requires pulling 6+ reports from different modules and manually synthesizing them. The graph produces this digest in seconds because every data point is already connected: person to review to project to team to deadline. One traversal, one briefing, zero manual compilation.</p>' +
+    '</div>';
+}
+
+loadData();
+</script>
+<script src="feedback-panel.js"></script>
+</body>
+</html>

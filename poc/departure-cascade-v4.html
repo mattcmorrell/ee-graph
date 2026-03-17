@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="application/json" id="embedded-feedback">
+[
+  {
+    "timestamp": "2026-03-11T21:28:13.888Z",
+    "tab": "Impact Story",
+    "rating": null,
+    "verdict": null,
+    "notes": "test"
+  },
+  {
+    "timestamp": "2026-03-11T21:50:47.220Z",
+    "tab": "Impact Story",
+    "rating": 3,
+    "verdict": null,
+    "notes": "Some kind of progressive disclosure does probably make sense for this kind of stuff."
+  },
+  {
+    "timestamp": "2026-03-11T22:05:41.229Z",
+    "tab": "Offboarding",
+    "rating": 3,
+    "verdict": "Fix UX & Keep",
+    "notes": "Great idea, so  so execution. It's info overload right now. I like tha tthe system is auto handling things. I wonder if we could group them up so it's not so overwhelming. Knowledge transfer plan refers to task tracking that we don't actually support right now with the graph. Needs a way for me to sort what is most important and actionable.\nOverall, not bad not amazing. Needs a little work. Good start."
+  },
+  {
+    "timestamp": "2026-03-11T22:07:40.305Z",
+    "tab": "Restructuring",
+    "rating": 2,
+    "verdict": "Fix UX & Keep",
+    "notes": "Great idea not great execution. I love that. It's calling out the risks that's very helpful. I don't love the card approach because I don't feel like it gives me a good idea of what is changing. I need something more visual. I need to be able to see the numbers of people on the teams rather than +9 more +8 more, etc.. I like that it's calling out time to fill. That's very helpful. I don't know how we're defining continuity hiring cost is also interesting but I don't know how that's defined. I know that customers would want to know that. I would really like to see what happens when I click start execution plan"
+  },
+  {
+    "timestamp": "2026-03-11T22:08:39.224Z",
+    "tab": "Compliance",
+    "rating": 3,
+    "verdict": "Fix UX & Keep",
+    "notes": "I really like the timeline view. I think that's handy. The card of the top is good too. The list below the timeline view is it's not giving me as good as a sense of when exactly things are due or in what order I should do things the things that are done. Need a better treatment to know that they're actually done. I like that I can approve and review things from this view though."
+  }
+]
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Departure Cascade v4 | Employee Graph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a28;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.1);
+  --text-primary: #e8e8ef;
+  --text-secondary: #8888a0;
+  --text-muted: #55556a;
+  --accent-red: #ff4d6a;
+  --accent-red-dim: rgba(255,77,106,0.15);
+  --accent-orange: #ff8c42;
+  --accent-orange-dim: rgba(255,140,66,0.15);
+  --accent-yellow: #ffd166;
+  --accent-yellow-dim: rgba(255,209,102,0.12);
+  --accent-green: #06d6a0;
+  --accent-green-dim: rgba(6,214,160,0.12);
+  --accent-blue: #4ea8de;
+  --accent-blue-dim: rgba(78,168,222,0.12);
+  --accent-purple: #b388ff;
+  --accent-purple-dim: rgba(179,136,255,0.12);
+  --accent-cyan: #64dfdf;
+  --accent-cyan-dim: rgba(100,223,223,0.1);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --agent-accent: #b388ff;
+  --agent-accent-dim: rgba(179,136,255,0.10);
+  --agent-glow: rgba(179,136,255,0.25);
+}
+
+html { font-size: 16px; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+
+/* TOP BAR */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 16px 32px 0;
+}
+.top-bar-inner { max-width: 1400px; margin: 0 auto; }
+.header-row { display: flex; align-items: center; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; }
+.brand-text { font-size: 14px; font-weight: 600; color: var(--text-secondary); letter-spacing: -0.02em; }
+.brand-text span { color: var(--text-primary); }
+.version-switcher { display: flex; align-items: center; gap: 6px; margin-left: 16px; font-size: 12px; font-weight: 500; color: var(--text-muted); }
+.version-switcher a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.version-switcher a:hover { color: var(--text-secondary); }
+.version-switcher .active-version { color: var(--text-primary); font-weight: 700; }
+.version-switcher .sep { color: var(--border-medium); }
+.person-picker { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.person-picker label { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.person-picker select { background: var(--bg-tertiary); border: 1px solid var(--border-medium); color: var(--text-primary); font-family: inherit; font-size: 14px; font-weight: 500; padding: 8px 32px 8px 12px; border-radius: var(--radius-sm); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238888a0' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+.person-picker select:focus { outline: none; border-color: var(--agent-accent); }
+.tab-nav { display: flex; gap: 0; }
+.tab-btn { background: none; border: none; color: var(--text-muted); font-family: inherit; font-size: 13px; font-weight: 500; padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active { color: var(--agent-accent); border-bottom-color: var(--agent-accent); }
+.tab-btn .tab-badge { display: inline-block; background: var(--accent-red-dim); color: var(--accent-red); font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 8px; margin-left: 6px; vertical-align: middle; }
+
+/* MAIN */
+.main-content { max-width: 1400px; margin: 0 auto; padding: 24px 32px 80px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* GRAPH ADVANTAGE */
+.graph-advantage { margin-top: 32px; border: 1px solid rgba(100,223,223,0.15); border-left: 3px solid var(--accent-cyan); border-radius: var(--radius-md); padding: 16px 20px; background: rgba(100,223,223,0.04); }
+.graph-advantage-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.graph-advantage-icon { width: 20px; height: 20px; background: var(--accent-cyan-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--accent-cyan); flex-shrink: 0; }
+.graph-advantage-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-cyan); }
+.graph-advantage p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+
+/* PERSON CARD */
+.person-card { display: flex; align-items: center; gap: 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+.person-avatar { width: 64px; height: 64px; background: linear-gradient(135deg, var(--accent-red), var(--accent-orange)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; color: #fff; flex-shrink: 0; }
+.person-info { flex: 1; }
+.person-name { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.person-role { font-size: 14px; color: var(--text-secondary); margin-bottom: 10px; }
+.person-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+.person-stat-value { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.person-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.departure-badge { background: var(--accent-red-dim); border: 1px solid rgba(255,77,106,0.3); color: var(--accent-red); font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: var(--radius-sm); text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+
+/* AGENT SUMMARY */
+.agent-narrative { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+.agent-narrative-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.agent-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; font-weight: 700; flex-shrink: 0; }
+.agent-label { font-size: 12px; font-weight: 600; color: var(--agent-accent); text-transform: uppercase; letter-spacing: 0.06em; }
+.agent-summary { font-size: 16px; line-height: 1.7; color: var(--text-primary); }
+.agent-summary .highlight { color: var(--accent-yellow); font-weight: 600; }
+.agent-summary .urgent { color: var(--accent-red); font-weight: 600; }
+.agent-summary .good { color: var(--accent-green); font-weight: 600; }
+
+/* IMPACT SECTIONS */
+.impact-sections { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+.impact-section { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; transition: border-color 0.2s; }
+.impact-section:hover { border-color: var(--border-medium); }
+.impact-section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.impact-section-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.impact-section-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.impact-section-subtitle { font-size: 12px; color: var(--text-muted); }
+.impact-detail { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+.impact-detail strong { color: var(--text-primary); }
+.impact-action-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--agent-accent); cursor: pointer; margin-top: 10px; background: none; border: none; font-family: inherit; transition: color 0.2s; }
+.impact-action-link:hover { color: #c9a8ff; }
+
+/* COUNTDOWN CARDS */
+.countdown-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.countdown-card { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px 14px; flex: 1; min-width: 130px; }
+.countdown-card .cd-title { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.countdown-card .cd-date { font-size: 11px; color: var(--text-muted); }
+.countdown-card .cd-days { font-size: 11px; font-weight: 700; margin-top: 2px; }
+
+/* CANDIDATE CARDS */
+.candidate-card { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 8px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.candidate-card .c-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.candidate-card .c-role { font-size: 12px; color: var(--text-muted); }
+.candidate-card .c-stage { margin-left: auto; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+.candidate-card .c-stage.offer { background: var(--accent-green-dim); color: var(--accent-green); }
+.candidate-card .c-stage.interview { background: var(--accent-blue-dim); color: var(--accent-blue); }
+
+/* STAT ROW */
+.stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.stat-label { font-size: 13px; color: var(--text-muted); }
+.stat-value { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+
+/* OFFBOARDING */
+.offboarding-progress { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding: 16px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); flex-wrap: wrap; }
+.progress-stat { text-align: center; }
+.progress-stat .stat-num { font-size: 24px; font-weight: 800; color: var(--text-primary); }
+.progress-stat .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.progress-stat.urgent .stat-num { color: var(--accent-orange); }
+.progress-stat.approved .stat-num { color: var(--accent-green); }
+.progress-bar-track { flex: 1; min-width: 200px; height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); border-radius: 3px; transition: width 0.6s ease; }
+
+.action-category { margin-bottom: 28px; }
+.action-category-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); }
+.action-category-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.action-category-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-primary); }
+.action-category-count { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+.action-category-progress { width: 60px; height: 4px; background: var(--bg-tertiary); border-radius: 2px; overflow: hidden; }
+.action-category-progress-fill { height: 100%; background: var(--accent-green); border-radius: 2px; transition: width 0.4s; }
+.action-feed { display: flex; flex-direction: column; gap: 10px; }
+.action-card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px 20px; transition: border-color 0.2s; }
+.action-card:hover { border-color: var(--border-medium); }
+.action-card.needs-input { border-left: 3px solid var(--accent-orange); }
+.action-card.ready { border-left: 3px solid var(--accent-blue); }
+.action-card.auto-done { border-left: 3px solid var(--accent-green); opacity: 0.8; }
+.action-card.completed { border-left: 3px solid var(--accent-green); opacity: 0.7; }
+.action-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.action-status-icon { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+.action-status-icon.review { background: var(--accent-blue-dim); color: var(--accent-blue); }
+.action-status-icon.input { background: var(--accent-orange-dim); color: var(--accent-orange); }
+.action-status-icon.auto { background: var(--accent-green-dim); color: var(--accent-green); }
+.action-status-icon.done { background: var(--accent-green-dim); color: var(--accent-green); }
+.action-card-title { font-size: 14px; font-weight: 600; }
+.action-card-label { margin-left: auto; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.action-card-label.review-label { background: var(--accent-blue-dim); color: var(--accent-blue); }
+.action-card-label.input-label { background: var(--accent-orange-dim); color: var(--accent-orange); }
+.action-card-label.auto-label { background: var(--accent-green-dim); color: var(--accent-green); }
+.action-card-label.done-label { background: var(--accent-green-dim); color: var(--accent-green); }
+.action-agent-text { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
+.action-draft { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 12px; line-height: 1.6; color: var(--text-secondary); max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease; padding: 0 16px; margin-bottom: 0; }
+.action-draft.expanded { max-height: 500px; padding: 14px 16px; margin-bottom: 12px; }
+.action-draft-toggle { background: none; border: none; color: var(--text-muted); font-family: inherit; font-size: 12px; cursor: pointer; padding: 4px 0; margin-bottom: 8px; transition: color 0.2s; }
+.action-draft-toggle:hover { color: var(--text-secondary); }
+.action-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.action-btn { font-family: inherit; font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+.action-btn.approve { background: var(--accent-green); color: #0a0a0f; border-color: var(--accent-green); }
+.action-btn.approve:hover { background: #05c090; }
+.action-btn.edit { background: transparent; color: var(--text-secondary); border-color: var(--border-medium); }
+.action-btn.edit:hover { border-color: var(--text-muted); }
+.action-btn.reject { background: transparent; color: var(--accent-red); border-color: rgba(255,77,106,0.3); }
+.action-btn.reject:hover { border-color: var(--accent-red); }
+.action-btn.choose { background: var(--agent-accent-dim); color: var(--agent-accent); border-color: rgba(179,136,255,0.3); }
+.action-btn.choose:hover { border-color: var(--agent-accent); }
+
+/* RESTRUCTURING */
+.current-org-compact { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 24px; }
+.current-org-compact h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.compact-org-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.compact-org-chip { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 12px; }
+.compact-org-chip.departing { background: var(--accent-red-dim); border-color: rgba(255,77,106,0.2); color: var(--accent-red); }
+.compact-org-chip.manager { background: var(--accent-purple-dim); border-color: rgba(179,136,255,0.2); }
+.scenario-cards { display: flex; flex-direction: column; gap: 20px; margin-bottom: 24px; }
+.scenario-card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 28px; cursor: pointer; transition: all 0.2s; position: relative; }
+.scenario-card:hover { border-color: var(--agent-accent); }
+.scenario-card.selected { border-color: var(--agent-accent); box-shadow: 0 0 20px var(--agent-glow); }
+.scenario-card-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.scenario-badge { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+.scenario-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.scenario-recommend { font-size: 12px; font-weight: 600; color: var(--accent-green); display: inline-flex; align-items: center; gap: 4px; }
+.scenario-reasoning { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px; padding-left: 52px; }
+.scenario-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; padding-left: 52px; }
+.scenario-before, .scenario-after { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px; }
+.scenario-col-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; }
+.scenario-mini-node { display: flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 0; color: var(--text-secondary); }
+.scenario-mini-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.scenario-metrics { display: flex; gap: 12px; flex-wrap: wrap; padding-left: 52px; margin-bottom: 12px; }
+.scenario-metric { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 8px 14px; text-align: center; }
+.scenario-metric-value { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.scenario-metric-label { font-size: 11px; color: var(--text-muted); }
+.scenario-risk { padding-left: 52px; margin-top: 8px; }
+.risk-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-sm); }
+.risk-badge.medium { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+.risk-badge.high { background: var(--accent-orange-dim); color: var(--accent-orange); }
+.risk-badge.low { background: var(--accent-green-dim); color: var(--accent-green); }
+.scenario-risk-text { font-size: 12px; color: var(--text-muted); margin-top: 4px; padding-left: 52px; }
+.decision-area { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px; text-align: center; }
+.decision-area p { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
+.decision-area .action-buttons { justify-content: center; }
+.execution-plan { background: var(--agent-accent-dim); border: 1px solid rgba(179,136,255,0.2); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px; display: none; }
+.execution-plan.visible { display: block; }
+.execution-plan h4 { font-size: 14px; font-weight: 600; color: var(--agent-accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.execution-step { display: flex; gap: 10px; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.5; }
+.execution-step-num { width: 20px; height: 20px; background: rgba(179,136,255,0.2); color: var(--agent-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+
+/* COMPLIANCE */
+.compliance-score { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding: 20px 24px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); flex-wrap: wrap; }
+.compliance-score-circle { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; }
+.compliance-score-info { flex: 1; }
+.compliance-score-title { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+.compliance-score-subtitle { font-size: 13px; color: var(--text-secondary); }
+.compliance-score-breakdown { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+.compliance-score-item { font-size: 12px; color: var(--text-muted); }
+.compliance-score-item strong { color: var(--text-primary); }
+.timeline-visual { position: relative; margin-bottom: 28px; padding: 20px 0; overflow-x: auto; }
+.timeline-axis { display: flex; align-items: center; height: 50px; position: relative; min-width: 700px; padding: 0 40px; }
+.timeline-line { position: absolute; top: 50%; left: 40px; right: 40px; height: 2px; background: var(--border-medium); transform: translateY(-50%); }
+.timeline-marker { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 16px; height: 16px; border-radius: 50%; border: 3px solid var(--bg-primary); z-index: 2; cursor: pointer; transition: transform 0.2s; }
+.timeline-marker:hover { transform: translate(-50%, -50%) scale(1.3); }
+.timeline-marker.red { background: var(--accent-red); }
+.timeline-marker.yellow { background: var(--accent-yellow); }
+.timeline-marker.green { background: var(--accent-green); }
+.timeline-marker.gray { background: var(--text-muted); }
+.timeline-marker-label { position: absolute; top: 28px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.compliance-cards { display: flex; flex-direction: column; gap: 12px; }
+.compliance-card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: start; }
+.compliance-card-dot { width: 12px; height: 12px; border-radius: 50%; margin-top: 4px; }
+.compliance-card-dot.red { background: var(--accent-red); }
+.compliance-card-dot.yellow { background: var(--accent-yellow); }
+.compliance-card-dot.green { background: var(--accent-green); }
+.compliance-card-dot.gray { background: var(--text-muted); }
+.compliance-card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.compliance-card-when { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.compliance-card-desc { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+.compliance-card-desc .done-text { color: var(--accent-green); font-weight: 500; }
+.compliance-card-desc .pending-text { color: var(--accent-yellow); font-weight: 500; }
+.compliance-card-legal { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.compliance-card-meta { text-align: right; }
+.compliance-card-countdown { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 4px; white-space: nowrap; }
+.compliance-card-countdown.red { background: var(--accent-red-dim); color: var(--accent-red); }
+.compliance-card-countdown.yellow { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+.compliance-card-countdown.green { background: var(--accent-green-dim); color: var(--accent-green); }
+.compliance-card-countdown.gray { background: var(--bg-tertiary); color: var(--text-muted); }
+.compliance-card-owner { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* LOADING */
+.loading-container { display: flex; align-items: center; justify-content: center; min-height: 400px; flex-direction: column; gap: 16px; }
+.loading-spinner { width: 32px; height: 32px; border: 3px solid var(--border-medium); border-top-color: var(--agent-accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 14px; color: var(--text-muted); }
+
+/* ANIMATIONS */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.animate-in { animation: fadeInUp 0.3s ease both; }
+.approve-check { display: inline-flex; align-items: center; gap: 6px; color: var(--accent-green); font-weight: 600; font-size: 13px; }
+@keyframes checkPop { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.check-icon { animation: checkPop 0.3s ease both; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .top-bar { padding: 12px 16px 0; }
+  .main-content { padding: 16px; }
+  .header-row { gap: 10px; }
+  .version-switcher { margin-left: 0; }
+  .person-picker { margin-left: 0; width: 100%; }
+  .person-picker select { flex: 1; }
+  .impact-sections { grid-template-columns: 1fr; }
+  .scenario-comparison { grid-template-columns: 1fr; }
+  .person-card { flex-direction: column; text-align: center; }
+  .person-stats { justify-content: center; }
+  .scenario-reasoning, .scenario-comparison, .scenario-metrics, .scenario-risk, .scenario-risk-text { padding-left: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="header-row">
+      <div class="brand">
+        <div class="brand-icon">G</div>
+        <div class="brand-text"><span>Departure</span> Cascade</div>
+      </div>
+      <div class="version-switcher">
+        <a href="departure-cascade.html">v1</a>
+        <span class="sep">|</span>
+        <a href="departure-cascade-v2.html">v2</a>
+        <span class="sep">|</span>
+        <a href="departure-cascade-v3.html">v3</a>
+        <span class="sep">|</span>
+        <span class="active-version">v4</span>
+      </div>
+      <div class="person-picker">
+        <label>Departing</label>
+        <select id="personSelect"></select>
+      </div>
+    </div>
+    <div class="tab-nav" id="tabNav">
+      <button class="tab-btn active" data-tab="story">Impact Story</button>
+      <button class="tab-btn" data-tab="offboarding">Offboarding <span class="tab-badge" id="offboardingBadge">0</span></button>
+      <button class="tab-btn" data-tab="restructuring">Restructuring</button>
+      <button class="tab-btn" data-tab="compliance">Compliance</button>
+    </div>
+  </div>
+</div>
+
+<div class="main-content">
+  <div id="loadingState" class="loading-container">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Analyzing organizational connections...</div>
+  </div>
+  <div class="tab-panel active" id="tab-story"></div>
+  <div class="tab-panel" id="tab-offboarding"></div>
+  <div class="tab-panel" id="tab-restructuring"></div>
+  <div class="tab-panel" id="tab-compliance"></div>
+</div>
+
+<script>
+/* ============================================================
+   DATA LOADING & GRAPH HELPERS
+   ============================================================ */
+let NODES = {};
+let EDGES = [];
+let ALL_NODES = [];
+
+async function loadData() {
+  const [nodesRes, edgesRes] = await Promise.all([
+    fetch('../data/nodes.json'),
+    fetch('../data/edges.json')
+  ]);
+  const nodesData = await nodesRes.json();
+  const edgesData = await edgesRes.json();
+  ALL_NODES = nodesData.nodes;
+  EDGES = edgesData.edges;
+  ALL_NODES.forEach(n => NODES[n.id] = n);
+}
+
+function getNode(id) { return NODES[id] || null; }
+function prop(id, key) {
+  const n = getNode(id);
+  return n ? (n.properties || {})[key] : null;
+}
+function edgesFrom(nodeId, type) {
+  return EDGES.filter(e => e.source === nodeId && (!type || e.type === type));
+}
+function edgesTo(nodeId, type) {
+  return EDGES.filter(e => e.target === nodeId && (!type || e.type === type));
+}
+function getDirectReports(personId) {
+  return edgesTo(personId, 'reports_to').map(e => e.source);
+}
+function getManager(personId) {
+  const e = edgesFrom(personId, 'reports_to')[0];
+  return e ? e.target : null;
+}
+function getDependents(personId) {
+  return edgesFrom(personId, 'has_dependent').map(e => e.target);
+}
+function getBenefits(personId) {
+  return edgesFrom(personId, 'has_benefits').map(e => ({ id: e.target, meta: e.metadata || {} }));
+}
+function getComp(personId) {
+  return edgesFrom(personId, 'has_comp').map(e => e.target);
+}
+function getProjects(personId) {
+  return edgesFrom(personId, 'works_on').map(e => ({ id: e.target, meta: e.metadata || {} }));
+}
+function getTeams(personId) {
+  return edgesFrom(personId, 'member_of').filter(e => {
+    const n = getNode(e.target);
+    return n && n.type === 'team';
+  }).map(e => ({ id: e.target, meta: e.metadata || {} }));
+}
+function getJurisdictions(personId) {
+  return edgesFrom(personId, 'subject_to').map(e => e.target);
+}
+function getCandidatesForPosition(posId) {
+  return EDGES.filter(e => e.type === 'candidate_for' && e.target === posId).map(e => ({
+    id: e.source, meta: e.metadata || {}
+  }));
+}
+function getPosition(personId) {
+  const e = edgesFrom(personId, 'holds_position')[0];
+  return e ? e.target : null;
+}
+function getDependentBenefits(depId) {
+  return edgesFrom(depId, 'dependent_covered_by').map(e => e.target);
+}
+function getMentees(personId) {
+  return edgesFrom(personId, 'mentors').map(e => e.target);
+}
+function getEquipment(personId) {
+  return edgesFrom(personId, 'assigned_equipment').map(e => e.target);
+}
+function getEquityComp(personId) {
+  return getComp(personId).map(id => getNode(id)).filter(n => n && (n.properties || {}).type === 'equity')[0];
+}
+function getSalaryComp(personId) {
+  return getComp(personId).map(id => getNode(id)).filter(n => n && (n.properties || {}).type === 'salary')[0];
+}
+function tenureYears(startDate) {
+  const start = new Date(startDate);
+  const now = new Date('2026-02-06');
+  return ((now - start) / (365.25 * 24 * 60 * 60 * 1000)).toFixed(1);
+}
+function formatMoney(n) {
+  return '$' + Number(n).toLocaleString();
+}
+function totalActivePeople() {
+  return ALL_NODES.filter(n => n.type === 'person' && (n.properties || {}).status === 'active').length;
+}
+
+/* ============================================================
+   PERSON PICKER
+   ============================================================ */
+function populatePersonPicker() {
+  const sel = document.getElementById('personSelect');
+  const people = ALL_NODES.filter(n => n.type === 'person' && (n.properties || {}).status === 'active')
+    .sort((a,b) => (a.properties.name || '').localeCompare(b.properties.name || ''));
+  people.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.properties.name + ' - ' + p.properties.role;
+    if (p.id === 'person-008') opt.selected = true;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', () => buildAllTabs(sel.value));
+}
+
+/* ============================================================
+   TAB SWITCHING
+   ============================================================ */
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector('.tab-btn[data-tab="' + tabName + '"]');
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById('tab-' + tabName);
+  if (panel) panel.classList.add('active');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    switchTab(btn.dataset.tab);
+  });
+});
+
+/* ============================================================
+   BUILD ALL TABS
+   ============================================================ */
+function buildAllTabs(personId) {
+  const person = getNode(personId);
+  if (!person) return;
+  const p = person.properties;
+  const reports = getDirectReports(personId);
+  const managerId = getManager(personId);
+  const manager = getNode(managerId);
+  const managerName = manager ? manager.properties.name : 'Unknown';
+  const dependents = getDependents(personId);
+  const benefits = getBenefits(personId);
+  const projects = getProjects(personId);
+  const teams = getTeams(personId);
+  const jurisdictions = getJurisdictions(personId);
+  const positionId = getPosition(personId);
+  const position = getNode(positionId);
+  const equity = getEquityComp(personId);
+  const salary = getSalaryComp(personId);
+  const mentees = getMentees(personId);
+  const total = totalActivePeople();
+  const equipment = getEquipment(personId);
+
+  const depBenefitsList = [];
+  dependents.forEach(dId => {
+    const dep = getNode(dId);
+    const depBens = getDependentBenefits(dId);
+    depBenefitsList.push({ dep, benefits: depBens.map(b => getNode(b)).filter(Boolean) });
+  });
+
+  const candidates = positionId ? getCandidatesForPosition(positionId) : [];
+  const candidateNodes = candidates.map(c => ({ node: getNode(c.id), meta: c.meta })).filter(c => c.node);
+  const offerCandidates = candidateNodes.filter(c => (c.meta.stage === 'offer' || (c.node.properties || {}).status === 'offer'));
+  const interviewCandidates = candidateNodes.filter(c => c.meta.stage === 'interviewing' || (c.node.properties || {}).status === 'interviewing');
+
+  const salaryAmt = salary ? salary.properties.amount : 0;
+  const equityAmt = equity ? equity.properties.amount : 0;
+  const totalComp = salaryAmt + equityAmt;
+  const unvestedShares = equity ? (equity.properties.totalShares || 0) - (equity.properties.vestedShares || 0) : 0;
+  const unvestedValue = equity ? Math.round((equityAmt / (equity.properties.totalShares || 1)) * unvestedShares) : 0;
+  const tenure = tenureYears(p.startDate);
+  const pctHeadcount = total > 0 ? ((reports.length / total) * 100).toFixed(1) : '?';
+
+  const hasCobra = depBenefitsList.some(d => d.benefits.some(b => b.properties.type === 'medical'));
+  const depNames = depBenefitsList.map(d => d.dep ? d.dep.properties.name : 'Unknown');
+  const medicalBenefits = depBenefitsList.flatMap(d => d.benefits.filter(b => b.properties.type === 'medical'));
+  const medicalPlan = medicalBenefits.length > 0 ? medicalBenefits[0] : null;
+
+  const jurisdictionNames = jurisdictions.map(j => { const n = getNode(j); return n ? n.properties.name : ''; }).filter(Boolean);
+  const hasTexas = jurisdictionNames.includes('Texas');
+
+  const ctx = {
+    personId, p, reports, managerId, manager, managerName, dependents, depBenefitsList,
+    benefits, projects, teams, jurisdictions, jurisdictionNames, hasTexas,
+    positionId, position, equity, salary, mentees, total, equipment,
+    candidateNodes, offerCandidates, interviewCandidates,
+    salaryAmt, equityAmt, totalComp, unvestedShares, unvestedValue,
+    tenure, pctHeadcount, hasCobra, depNames, medicalPlan
+  };
+
+  // Count actions for badge
+  const actionCount = 3 + dependents.length + benefits.length + projects.length + teams.length;
+  const clampedActions = Math.min(actionCount, 18);
+  document.getElementById('offboardingBadge').textContent = clampedActions;
+  ctx.actionCount = clampedActions;
+
+  buildStoryTab(ctx);
+  buildOffboardingTab(ctx);
+  buildRestructuringTab(ctx);
+  buildComplianceTab(ctx);
+}
+
+/* ============================================================
+   TAB 1: IMPACT STORY (LEAD TAB)
+   ============================================================ */
+function buildStoryTab(ctx) {
+  const { personId, p, reports, managerName, managerId, dependents, depBenefitsList, benefits,
+    projects, teams, candidateNodes, offerCandidates, equity, salary,
+    salaryAmt, equityAmt, totalComp, unvestedShares, unvestedValue,
+    tenure, pctHeadcount, hasCobra, depNames, medicalPlan, total, actionCount,
+    position, jurisdictionNames } = ctx;
+
+  const el = document.getElementById('tab-story');
+
+  const ic3Reports = reports.filter(r => prop(r, 'level') === 'IC-3');
+
+  // Build report snippet
+  const reportSnippet = reports.slice(0, 4).map(r => {
+    const name = prop(r, 'name') || 'Unknown';
+    const role = prop(r, 'role') || '';
+    return '<div style="display:flex;align-items:center;gap:6px;font-size:12px;padding:3px 0;color:var(--text-secondary);">' +
+      '<div style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);flex-shrink:0;"></div>' +
+      '<span style="font-weight:600;color:var(--text-primary);">' + name + '</span>' +
+      '<span style="color:var(--text-muted);">' + role + '</span></div>';
+  }).join('');
+  const moreReports = reports.length > 4 ? '<div style="font-size:12px;color:var(--text-muted);padding-left:12px;">+ ' + (reports.length - 4) + ' more</div>' : '';
+
+  // Compliance countdown items
+  let complianceCountdownHtml = '<div class="countdown-row">';
+  if (hasCobra) complianceCountdownHtml += '<div class="countdown-card"><div class="cd-title">COBRA Notice</div><div class="cd-date">Feb 20, 2026</div><div class="cd-days" style="color:var(--accent-red);">14 days</div></div>';
+  complianceCountdownHtml += '<div class="countdown-card"><div class="cd-title">Final Paycheck</div><div class="cd-date">Feb 12, 2026</div><div class="cd-days" style="color:var(--accent-red);">6 days</div></div>';
+  if (equity) complianceCountdownHtml += '<div class="countdown-card"><div class="cd-title">Equity Exercise</div><div class="cd-date">May 7, 2026</div><div class="cd-days" style="color:var(--accent-yellow);">90 days</div></div>';
+  complianceCountdownHtml += '</div>';
+
+  // Pipeline section
+  let pipelineHtml = '';
+  if (candidateNodes.length > 0) {
+    pipelineHtml = candidateNodes.slice(0, 3).map(c => {
+      const cn = c.node.properties;
+      const stage = c.meta.stage || cn.status || 'unknown';
+      const stageClass = stage === 'offer' ? 'offer' : 'interview';
+      return '<div class="candidate-card"><div><div class="c-name">' + cn.name + '</div><div class="c-role">' + (cn.appliedRole || 'Engineer') + '</div></div><div class="c-stage ' + stageClass + '">' + stage + '</div></div>';
+    }).join('');
+    if (ic3Reports.length > 0) {
+      pipelineHtml += '<div style="margin-top:8px;font-size:12px;color:var(--accent-purple);">Internal: ' + prop(ic3Reports[0], 'name') + ' (promotion candidate)</div>';
+    }
+  } else {
+    pipelineHtml = '<div class="impact-detail">No external candidates in pipeline.' +
+      (ic3Reports.length > 0 ? ' <strong>' + prop(ic3Reports[0], 'name') + '</strong> is a strong internal promotion candidate.' : ' Consider posting the backfill position immediately.') + '</div>';
+  }
+
+  // Financial section
+  let financialHtml = '';
+  financialHtml += '<div class="stat-row"><span class="stat-label">Salary Freed</span><span class="stat-value">' + formatMoney(salaryAmt) + '/yr</span></div>';
+  if (equity) {
+    financialHtml += '<div class="stat-row"><span class="stat-label">Unvested Equity Returned</span><span class="stat-value">' + unvestedShares.toLocaleString() + ' shares</span></div>';
+    financialHtml += '<div class="stat-row"><span class="stat-label">Unvested Value</span><span class="stat-value" style="color:var(--accent-green);">' + formatMoney(unvestedValue) + '</span></div>';
+  }
+  if (hasCobra) {
+    const monthlyPremium = medicalPlan ? ((medicalPlan.properties.monthlyPremiumEmployee || 0) + (medicalPlan.properties.monthlyPremiumEmployer || 0)) : 900;
+    financialHtml += '<div class="stat-row"><span class="stat-label">COBRA Cost (18 mo)</span><span class="stat-value" style="color:var(--accent-orange);">' + formatMoney(Math.round(monthlyPremium * 1.02 * 18)) + '</span></div>';
+  }
+  financialHtml += '<div class="stat-row"><span class="stat-label">Backfill Band</span><span class="stat-value">' + (position ? formatMoney(position.properties.salaryBandMin || salaryAmt * 0.85) + ' - ' + formatMoney(position.properties.salaryBandMax || salaryAmt * 1.05) : 'N/A') + '</span></div>';
+
+  el.innerHTML =
+    '<div class="person-card animate-in">' +
+      '<div class="person-avatar">' + (p.name || 'U').charAt(0) + '</div>' +
+      '<div class="person-info">' +
+        '<div class="person-name">' + p.name + '</div>' +
+        '<div class="person-role">' + p.role + ' &middot; ' + (p.level || '') + ' &middot; ' + (p.location || '') + '</div>' +
+        '<div class="person-stats">' +
+          '<div><div class="person-stat-value">' + tenure + ' yr</div><div class="person-stat-label">Tenure</div></div>' +
+          '<div><div class="person-stat-value">' + reports.length + '</div><div class="person-stat-label">Reports</div></div>' +
+          '<div><div class="person-stat-value">' + formatMoney(totalComp) + '</div><div class="person-stat-label">Total Comp</div></div>' +
+          '<div><div class="person-stat-value">' + projects.length + '</div><div class="person-stat-label">Projects</div></div>' +
+          '<div><div class="person-stat-value">' + teams.length + '</div><div class="person-stat-label">Teams</div></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="departure-badge">Departing Feb 6</div>' +
+    '</div>' +
+
+    '<div class="agent-narrative animate-in" style="animation-delay:0.1s;">' +
+      '<div class="agent-narrative-header">' +
+        '<div class="agent-avatar">A</div>' +
+        '<div class="agent-label">Executive Summary</div>' +
+      '</div>' +
+      '<div class="agent-summary">' +
+        p.name + '\'s departure removes <span class="highlight">' + reports.length + ' direct reports</span> (' + pctHeadcount + '% of headcount) from their manager chain, ' +
+        'creates <span class="urgent">' + (hasCobra ? '3+' : '2+') + ' compliance deadlines</span> starting in 6 days, and opens a ' +
+        '<span class="highlight">' + formatMoney(totalComp) + ' total comp position</span> to backfill. ' +
+        (candidateNodes.length > 0 ?
+          '<span class="good">' + candidateNodes.length + ' candidates are already in pipeline</span>' +
+          (offerCandidates.length > 0 ? ' -- ' + offerCandidates[0].node.properties.name + ' is at offer stage.' : '.') :
+          'No pipeline candidates exist yet -- backfill posting should be immediate.') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="impact-sections animate-in" style="animation-delay:0.15s;">' +
+
+      // Team Impact
+      '<div class="impact-section">' +
+        '<div class="impact-section-header">' +
+          '<div class="impact-section-icon" style="background:var(--accent-purple-dim);color:var(--accent-purple);">&#9679;</div>' +
+          '<div><div class="impact-section-title">Team Impact</div><div class="impact-section-subtitle">' + reports.length + ' people need reassignment</div></div>' +
+        '</div>' +
+        '<div class="impact-detail">' + managerName + '\'s span of control drops from <strong>' + (reports.length + 1) + '</strong> to <strong>0</strong> in this chain. ' + reports.length + ' reports need a new manager.</div>' +
+        reportSnippet + moreReports +
+        '<button class="impact-action-link" onclick="switchTab(\'restructuring\')">Plan Restructuring &#8594;</button>' +
+      '</div>' +
+
+      // Compliance Countdown
+      '<div class="impact-section">' +
+        '<div class="impact-section-header">' +
+          '<div class="impact-section-icon" style="background:var(--accent-red-dim);color:var(--accent-red);">&#9888;</div>' +
+          '<div><div class="impact-section-title">Compliance Countdown</div><div class="impact-section-subtitle">' + (hasCobra ? '3' : '2') + '+ deadlines identified</div></div>' +
+        '</div>' +
+        complianceCountdownHtml +
+        '<button class="impact-action-link" onclick="switchTab(\'compliance\')">View Full Timeline &#8594;</button>' +
+      '</div>' +
+
+      // Pipeline Status
+      '<div class="impact-section">' +
+        '<div class="impact-section-header">' +
+          '<div class="impact-section-icon" style="background:var(--accent-blue-dim);color:var(--accent-blue);">&#8599;</div>' +
+          '<div><div class="impact-section-title">Pipeline Status</div><div class="impact-section-subtitle">' + candidateNodes.length + ' candidate' + (candidateNodes.length !== 1 ? 's' : '') + ' in pipeline</div></div>' +
+        '</div>' +
+        pipelineHtml +
+        '<button class="impact-action-link" onclick="switchTab(\'offboarding\')">Start Offboarding &#8594;</button>' +
+      '</div>' +
+
+      // Financial Impact
+      '<div class="impact-section">' +
+        '<div class="impact-section-header">' +
+          '<div class="impact-section-icon" style="background:var(--accent-green-dim);color:var(--accent-green);">$</div>' +
+          '<div><div class="impact-section-title">Financial Impact</div><div class="impact-section-subtitle">Comp and cost implications</div></div>' +
+        '</div>' +
+        financialHtml +
+        '<button class="impact-action-link" onclick="switchTab(\'offboarding\')">Review Actions &#8594;</button>' +
+      '</div>' +
+
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.25s;">' +
+      '<div class="graph-advantage-header">' +
+        '<div class="graph-advantage-icon">G</div>' +
+        '<div class="graph-advantage-label">Why this requires the employee graph</div>' +
+      '</div>' +
+      '<p>This impact assessment was generated by analyzing ' + p.name + '\'s connections across people, compensation, benefits, compliance, and pipeline data. Traditional HRIS requires an HR business partner to compile this from 6+ system modules over 2-4 hours. The graph produced it in seconds because every relationship is already connected: person to dependent to benefits plan to jurisdiction to deadline, position to candidate to interview score.</p>' +
+    '</div>';
+}
+
+/* ============================================================
+   TAB 2: OFFBOARDING COMMAND CENTER
+   ============================================================ */
+function buildOffboardingTab(ctx) {
+  const { personId, p, reports, managerName, managerId, dependents, depBenefitsList,
+    benefits, projects, teams, equity, salary, position, candidateNodes, offerCandidates,
+    interviewCandidates, hasCobra, depNames, medicalPlan, actionCount } = ctx;
+
+  const el = document.getElementById('tab-offboarding');
+  const depRelationship = depBenefitsList.length > 0 && depBenefitsList[0].dep ? depBenefitsList[0].dep.properties.relationship : 'dependent';
+  const posTitle = position ? position.properties.title : p.role;
+  const salaryMin = position ? formatMoney(position.properties.salaryBandMin) : '?';
+  const salaryMax = position ? formatMoney(position.properties.salaryBandMax) : '?';
+
+  // Build action cards by category
+  let immediateCards = '';
+  let peopleCards = '';
+  let systemsCards = '';
+  let knowledgeCards = '';
+  let ci = 0; // card index
+
+  // === IMMEDIATE ACTIONS ===
+  if (hasCobra) {
+    const monthlyPremium = medicalPlan ? ((medicalPlan.properties.monthlyPremiumEmployee || 0) + (medicalPlan.properties.monthlyPremiumEmployer || 0)) : 900;
+    const cobraPremium = (monthlyPremium * 1.02).toFixed(2);
+    immediateCards += buildActionCard({
+      type: 'ready', icon: 'review', label: 'Ready for review', labelClass: 'review-label',
+      title: 'COBRA Notice for ' + (depNames[0] || 'Dependent'),
+      text: 'Drafted the COBRA election notice for ' + (depNames[0] || 'dependent') + ' (' + depRelationship + ', family medical plan through ' + (medicalPlan ? medicalPlan.properties.name : 'Medical') + '). Monthly premium: $' + cobraPremium + ' (102% of plan cost). Election deadline: April 7, 2026.',
+      draft: '<strong>COBRA Continuation Coverage Election Notice</strong><br><br>Dear ' + (depNames[0] || 'Dependent') + ',<br><br>Due to the qualifying event of ' + p.name + '\'s separation from Acme Co. effective February 6, 2026, you are entitled to continue your group health coverage under COBRA.<br><br><strong>Covered Plans:</strong> ' + (medicalPlan ? medicalPlan.properties.name : 'Medical Plan') + ' (Family tier)<br><strong>Monthly Premium:</strong> $' + cobraPremium + '<br><strong>Election Deadline:</strong> April 7, 2026 (60 days)<br><strong>Coverage Duration:</strong> Up to 18 months',
+      buttons: ['approve', 'edit', 'reject'], index: ci++
+    });
+  }
+
+  immediateCards += buildActionCard({
+    type: 'auto-done', icon: 'auto', label: 'Auto-handled', labelClass: 'auto-label',
+    title: 'Final Paycheck Processing',
+    text: 'Flagged payroll to include ' + p.name + ' in the February 12 run with prorated salary through last day, plus accrued PTO payout. Texas requires payment within 6 days of separation.',
+    buttons: [], index: ci++
+  });
+
+  if (equity) {
+    const unvested = (equity.properties.totalShares || 0) - (equity.properties.vestedShares || 0);
+    immediateCards += buildActionCard({
+      type: 'ready', icon: 'review', label: 'Ready for review', labelClass: 'review-label',
+      title: 'Equity Exercise Window Notification',
+      text: p.name + ' has ' + (equity.properties.vestedShares || 0).toLocaleString() + ' vested shares and ' + unvested.toLocaleString() + ' unvested shares. The 90-day post-termination exercise window begins on their last day.',
+      buttons: ['approve', 'edit'], index: ci++
+    });
+  }
+
+  // === PEOPLE & COMMUNICATION ===
+  const reportNames = reports.slice(0, 4).map(r => prop(r, 'name')).filter(Boolean);
+  peopleCards += buildActionCard({
+    type: 'ready', icon: 'review', label: 'Ready for review', labelClass: 'review-label',
+    title: 'Team Notification Email',
+    text: 'Drafted an email to ' + p.name + '\'s ' + reports.length + ' direct reports informing them of the transition. The tone is reassuring and focuses on continuity.',
+    draft: '<strong>Subject:</strong> Team Update -- Leadership Transition<br><br>Hi team,<br><br>I\'m writing to let you know that ' + p.name + ' has decided to move on from Acme Co., with their last day being February 6, 2026. We\'re grateful for ' + p.name + '\'s contributions over the past ' + tenureYears(p.startDate) + ' years.<br><br>We have a transition plan in place. Your day-to-day work continues as normal, and we\'ll announce interim reporting arrangements within 48 hours. I\'ll be scheduling 1-on-1s with each of you this week.<br><br>Best,<br>' + managerName,
+    buttons: ['approve', 'edit', 'reject'], index: ci++
+  });
+
+  peopleCards += buildActionCard({
+    type: 'needs-input', icon: 'input', label: 'Needs your input', labelClass: 'input-label',
+    title: 'Reassign ' + reports.length + ' Direct Reports',
+    text: 'Who should ' + p.name + '\'s ' + reports.length + ' reports temporarily report to? Suggestion: <strong>' + managerName + '</strong> (' + p.name + '\'s current manager, already oversees this area) as interim.',
+    buttons: ['choose'], choiceLabel: 'Accept ' + managerName.split(' ')[0], altLabel: 'Choose Someone Else',
+    index: ci++
+  });
+
+  if (position) {
+    peopleCards += buildActionCard({
+      type: 'ready', icon: 'review', label: 'Ready for review', labelClass: 'review-label',
+      title: 'Post Backfill Position',
+      text: 'Drafted a job posting based on the ' + posTitle + ' position. Salary band: ' + salaryMin + ' - ' + salaryMax + '. ' + (candidateNodes.length > 0 ? candidateNodes.length + ' candidates are already in pipeline for this role family.' : ''),
+      draft: '<strong>' + posTitle + '</strong><br><br><strong>Location:</strong> ' + (p.location || 'TBD') + '<br><strong>Level:</strong> ' + (position.properties.level || p.level) + '<br><strong>Salary Range:</strong> ' + salaryMin + ' - ' + salaryMax + '<br><br>Lead a team of ' + reports.length + ' engineers. Own technical direction for platform engineering, API architecture, CI/CD, and deployment infrastructure.',
+      buttons: ['approve', 'edit'], index: ci++
+    });
+  }
+
+  // === SYSTEMS & ACCESS ===
+  systemsCards += buildActionCard({
+    type: 'auto-done', icon: 'auto', label: 'Auto-handled', labelClass: 'auto-label',
+    title: 'Access Revocation Scheduled',
+    text: 'Scheduled deactivation of ' + p.name + '\'s accounts (email, Slack, GitHub, AWS) for 5:00 PM on their last day. Manager retains email archive access for 30 days.',
+    buttons: [], index: ci++
+  });
+
+  systemsCards += buildActionCard({
+    type: 'auto-done', icon: 'auto', label: 'Auto-handled', labelClass: 'auto-label',
+    title: 'Equipment Return Request',
+    text: 'Sent automated return request to IT for ' + p.name + '\'s assigned devices. Return shipping label auto-generated for last day.',
+    buttons: [], index: ci++
+  });
+
+  systemsCards += buildActionCard({
+    type: 'auto-done', icon: 'auto', label: 'Auto-handled', labelClass: 'auto-label',
+    title: 'Benefits Termination',
+    text: 'Scheduled termination of ' + benefits.length + ' benefit enrollments (medical, dental, vision, life insurance) effective end of February 2026. COBRA election notice being sent separately.',
+    buttons: [], index: ci++
+  });
+
+  // === KNOWLEDGE TRANSFER ===
+  knowledgeCards += buildActionCard({
+    type: 'ready', icon: 'review', label: 'Ready for review', labelClass: 'review-label',
+    title: 'Knowledge Transfer Plan',
+    text: 'Identified ' + projects.length + ' active projects that need knowledge transfer. Drafted a handoff schedule with sessions for each project, prioritized by deadline proximity.',
+    draft: '<strong>Knowledge Transfer Schedule</strong><br><br>' + projects.map(function(proj, i) {
+      var pNode = getNode(proj.id);
+      var pName = pNode ? pNode.properties.name : 'Project';
+      var priority = pNode ? pNode.properties.priority : 'medium';
+      return '<strong>' + (i+1) + '. ' + pName + '</strong> (' + priority + ' priority)<br>&nbsp;&nbsp;Role: ' + (proj.meta.role || 'contributor') + ' | Allocation: ' + (proj.meta.allocation || '?') + '%<br>';
+    }).join('<br>'),
+    buttons: ['approve', 'edit'], index: ci++
+  });
+
+  var immediateCount = (hasCobra ? 1 : 0) + 1 + (equity ? 1 : 0);
+  var peopleCount = 2 + (position ? 1 : 0);
+  var systemsCount = 3;
+  var knowledgeCount = 1;
+  var totalCards = ci;
+  var autoCount = 4; // final paycheck, access, equipment, benefits
+  var autoCountStr = String(autoCount);
+
+  el.innerHTML =
+    '<div class="offboarding-progress animate-in">' +
+      '<div class="progress-stat"><div class="stat-num">' + totalCards + '</div><div class="stat-label">Actions</div></div>' +
+      '<div class="progress-stat approved" id="approvedCount"><div class="stat-num">0</div><div class="stat-label">Approved</div></div>' +
+      '<div class="progress-stat urgent"><div class="stat-num">' + 1 + '</div><div class="stat-label">Need Input</div></div>' +
+      '<div class="progress-stat" style="color:var(--accent-green);"><div class="stat-num">' + autoCountStr + '</div><div class="stat-label">Auto-handled</div></div>' +
+      '<div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar" style="width:' + Math.round((autoCount / totalCards) * 100) + '%"></div></div>' +
+    '</div>' +
+
+    // Immediate Actions
+    '<div class="action-category animate-in" style="animation-delay:0.05s;">' +
+      '<div class="action-category-header">' +
+        '<div class="action-category-icon" style="background:var(--accent-red-dim);color:var(--accent-red);">&#9888;</div>' +
+        '<div class="action-category-title">Immediate Actions</div>' +
+        '<div class="action-category-count">' + immediateCount + ' items &middot; Legal deadlines</div>' +
+      '</div>' +
+      '<div class="action-feed">' + immediateCards + '</div>' +
+    '</div>' +
+
+    // People & Communication
+    '<div class="action-category animate-in" style="animation-delay:0.1s;">' +
+      '<div class="action-category-header">' +
+        '<div class="action-category-icon" style="background:var(--accent-purple-dim);color:var(--accent-purple);">&#9679;</div>' +
+        '<div class="action-category-title">People & Communication</div>' +
+        '<div class="action-category-count">' + peopleCount + ' items</div>' +
+      '</div>' +
+      '<div class="action-feed">' + peopleCards + '</div>' +
+    '</div>' +
+
+    // Systems & Access
+    '<div class="action-category animate-in" style="animation-delay:0.15s;">' +
+      '<div class="action-category-header">' +
+        '<div class="action-category-icon" style="background:var(--accent-green-dim);color:var(--accent-green);">&#10003;</div>' +
+        '<div class="action-category-title">Systems & Access</div>' +
+        '<div class="action-category-count">' + systemsCount + ' items &middot; All auto-handled</div>' +
+      '</div>' +
+      '<div class="action-feed">' + systemsCards + '</div>' +
+    '</div>' +
+
+    // Knowledge Transfer
+    '<div class="action-category animate-in" style="animation-delay:0.2s;">' +
+      '<div class="action-category-header">' +
+        '<div class="action-category-icon" style="background:var(--accent-blue-dim);color:var(--accent-blue);">&#9998;</div>' +
+        '<div class="action-category-title">Knowledge Transfer</div>' +
+        '<div class="action-category-count">' + knowledgeCount + ' item</div>' +
+      '</div>' +
+      '<div class="action-feed">' + knowledgeCards + '</div>' +
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.25s;">' +
+      '<div class="graph-advantage-header">' +
+        '<div class="graph-advantage-icon">G</div>' +
+        '<div class="graph-advantage-label">Why this requires the employee graph</div>' +
+      '</div>' +
+      '<p>These ' + totalCards + ' actions were discovered by tracing ' + p.name + '\'s connections across 7 domains -- reporting chain, benefits, compensation, compliance, equipment, pipeline, and documents. A static offboarding template covers about 60% of these. The graph found the rest by walking relationships: dependent to benefits plan to COBRA requirement, position to candidate pipeline, jurisdiction to paycheck deadline.</p>' +
+    '</div>';
+
+  // Wire up buttons
+  el.querySelectorAll('.action-btn.approve').forEach(function(btn) {
+    btn.addEventListener('click', function() { handleApprove(this); });
+  });
+  el.querySelectorAll('.action-btn.choose').forEach(function(btn) {
+    btn.addEventListener('click', function() { handleApprove(this); });
+  });
+  el.querySelectorAll('.action-draft-toggle').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var draft = this.nextElementSibling;
+      draft.classList.toggle('expanded');
+      this.textContent = draft.classList.contains('expanded') ? 'Hide draft' : 'Show draft';
+    });
+  });
+}
+
+function buildActionCard(opts) {
+  var draftHtml = opts.draft ? '<button class="action-draft-toggle">Show draft</button><div class="action-draft">' + opts.draft + '</div>' : '';
+  var buttonsHtml = '';
+  (opts.buttons || []).forEach(function(b) {
+    if (b === 'approve') buttonsHtml += '<button class="action-btn approve">Approve & Send</button>';
+    if (b === 'edit') buttonsHtml += '<button class="action-btn edit">Edit</button>';
+    if (b === 'reject') buttonsHtml += '<button class="action-btn reject">Reject</button>';
+    if (b === 'choose') {
+      buttonsHtml += '<button class="action-btn choose approve">' + (opts.choiceLabel || 'Accept') + '</button>';
+      buttonsHtml += '<button class="action-btn edit">' + (opts.altLabel || 'Choose Other') + '</button>';
+    }
+  });
+  var iconSym = opts.icon === 'review' ? '&#9998;' : opts.icon === 'input' ? '?' : '&#10003;';
+  return '<div class="action-card ' + opts.type + ' animate-in" style="animation-delay:' + (0.03 * opts.index) + 's;" data-status="' + opts.type + '">' +
+    '<div class="action-card-header">' +
+      '<div class="action-status-icon ' + opts.icon + '">' + iconSym + '</div>' +
+      '<div class="action-card-title">' + opts.title + '</div>' +
+      '<div class="action-card-label ' + opts.labelClass + '">' + opts.label + '</div>' +
+    '</div>' +
+    '<div class="action-agent-text">' + opts.text + '</div>' +
+    draftHtml +
+    (buttonsHtml ? '<div class="action-buttons">' + buttonsHtml + '</div>' : '') +
+  '</div>';
+}
+
+function handleApprove(btn) {
+  var card = btn.closest('.action-card');
+  var buttonsDiv = card.querySelector('.action-buttons');
+  buttonsDiv.innerHTML = '<span class="approve-check"><span class="check-icon">&#10003;</span> Approved</span>';
+  card.classList.remove('ready', 'needs-input');
+  card.classList.add('completed');
+  card.dataset.status = 'completed';
+  var label = card.querySelector('.action-card-label');
+  if (label) { label.className = 'action-card-label done-label'; label.textContent = 'Completed'; }
+  var icon = card.querySelector('.action-status-icon');
+  if (icon) { icon.className = 'action-status-icon done'; icon.innerHTML = '&#10003;'; }
+  updateProgress();
+}
+
+function updateProgress() {
+  var allCards = document.querySelectorAll('#tab-offboarding .action-card');
+  var total = allCards.length;
+  var completed = document.querySelectorAll('#tab-offboarding .action-card.completed, #tab-offboarding .action-card.auto-done').length;
+  var autoHandled = document.querySelectorAll('#tab-offboarding .action-card.auto-done').length;
+  var manualApproved = completed - autoHandled;
+  var countEl = document.getElementById('approvedCount');
+  if (countEl) countEl.querySelector('.stat-num').textContent = manualApproved;
+  var bar = document.getElementById('progressBar');
+  if (bar) bar.style.width = Math.round((completed / total) * 100) + '%';
+}
+
+/* ============================================================
+   TAB 3: RESTRUCTURING SCENARIOS
+   ============================================================ */
+function buildRestructuringTab(ctx) {
+  const { personId, p, reports, managerName, managerId, candidateNodes, offerCandidates, tenure, manager } = ctx;
+  const el = document.getElementById('tab-restructuring');
+
+  const ic3Reports = reports.filter(r => prop(r, 'level') === 'IC-3');
+  const ic2Reports = reports.filter(r => prop(r, 'level') === 'IC-2');
+  const devOpsReports = reports.filter(r => (prop(r, 'role') || '').toLowerCase().includes('devops'));
+  const platformReports = reports.filter(r => (prop(r, 'role') || '').toLowerCase().includes('platform'));
+
+  const promoCandidate = ic3Reports.sort((a, b) => new Date(prop(a, 'startDate')) - new Date(prop(b, 'startDate')))[0];
+  const promoCandidateName = promoCandidate ? prop(promoCandidate, 'name') : null;
+  const promoCandidateTenure = promoCandidate ? tenureYears(prop(promoCandidate, 'startDate')) : '?';
+
+  const peerManagers = managerId ? getDirectReports(managerId).filter(r => r !== personId && prop(r, 'level') && prop(r, 'level').startsWith('M')) : [];
+  const peerManagerName = peerManagers.length > 0 ? prop(peerManagers[0], 'name') || 'Peer Manager' : 'Peer Manager';
+  const currentManagerSpan = managerId ? getDirectReports(managerId).length : 0;
+
+  // Compact org row
+  var chipReports = reports.slice(0, 8).map(r => '<span class="compact-org-chip">' + (prop(r, 'name') || 'Unknown') + '</span>').join('');
+  var moreChips = reports.length > 8 ? '<span style="font-size:12px;color:var(--text-muted);">+' + (reports.length - 8) + ' more</span>' : '';
+
+  // Before/After for Scenario A (Promote)
+  var beforeA = '<div class="scenario-col-label">Before</div>';
+  beforeA += '<div class="scenario-mini-node"><div class="scenario-mini-dot" style="background:var(--accent-purple);"></div><strong>' + managerName + '</strong></div>';
+  beforeA += '<div class="scenario-mini-node" style="padding-left:14px;"><div class="scenario-mini-dot" style="background:var(--accent-red);"></div><span style="text-decoration:line-through;color:var(--text-muted);">' + p.name + '</span></div>';
+  reports.slice(0, 3).forEach(r => {
+    beforeA += '<div class="scenario-mini-node" style="padding-left:28px;"><div class="scenario-mini-dot" style="background:var(--accent-blue);"></div>' + (prop(r, 'name') || '') + '</div>';
+  });
+  if (reports.length > 3) beforeA += '<div class="scenario-mini-node" style="padding-left:28px;color:var(--text-muted);">+' + (reports.length - 3) + ' more</div>';
+
+  var afterA = '<div class="scenario-col-label">After</div>';
+  afterA += '<div class="scenario-mini-node"><div class="scenario-mini-dot" style="background:var(--accent-purple);"></div><strong>' + managerName + '</strong></div>';
+  afterA += '<div class="scenario-mini-node" style="padding-left:14px;"><div class="scenario-mini-dot" style="background:var(--accent-green);"></div><strong>' + (promoCandidateName || 'Senior IC') + '</strong> <span style="color:var(--accent-green);font-size:11px;">PROMOTED</span></div>';
+  reports.filter(r => r !== (promoCandidate || '')).slice(0, 3).forEach(r => {
+    afterA += '<div class="scenario-mini-node" style="padding-left:28px;"><div class="scenario-mini-dot" style="background:var(--accent-blue);"></div>' + (prop(r, 'name') || '') + '</div>';
+  });
+  if (reports.length > 4) afterA += '<div class="scenario-mini-node" style="padding-left:28px;color:var(--text-muted);">+' + (reports.length - 4) + ' more</div>';
+
+  // Before/After for Scenario B (Split)
+  var afterB = '<div class="scenario-col-label">After</div>';
+  afterB += '<div class="scenario-mini-node"><div class="scenario-mini-dot" style="background:var(--accent-purple);"></div><strong>' + managerName + '</strong> <span style="font-size:11px;color:var(--text-muted);">(+' + Math.ceil(reports.length/2) + ')</span></div>';
+  reports.slice(0, 2).forEach(r => {
+    afterB += '<div class="scenario-mini-node" style="padding-left:14px;"><div class="scenario-mini-dot" style="background:var(--accent-blue);"></div>' + (prop(r, 'name') || '') + '</div>';
+  });
+  afterB += '<div class="scenario-mini-node"><div class="scenario-mini-dot" style="background:var(--accent-orange);"></div><strong>' + peerManagerName + '</strong> <span style="font-size:11px;color:var(--text-muted);">(+' + Math.floor(reports.length/2) + ')</span></div>';
+  reports.slice(2, 4).forEach(r => {
+    afterB += '<div class="scenario-mini-node" style="padding-left:14px;"><div class="scenario-mini-dot" style="background:var(--accent-blue);"></div>' + (prop(r, 'name') || '') + '</div>';
+  });
+
+  // Before/After for Scenario C (External hire)
+  var afterC = '<div class="scenario-col-label">After (Interim)</div>';
+  afterC += '<div class="scenario-mini-node"><div class="scenario-mini-dot" style="background:var(--accent-purple);"></div><strong>' + managerName + '</strong> <span style="font-size:11px;color:var(--accent-orange);">INTERIM +' + reports.length + '</span></div>';
+  reports.slice(0, 3).forEach(r => {
+    afterC += '<div class="scenario-mini-node" style="padding-left:14px;"><div class="scenario-mini-dot" style="background:var(--accent-blue);"></div>' + (prop(r, 'name') || '') + '</div>';
+  });
+  if (reports.length > 3) afterC += '<div class="scenario-mini-node" style="padding-left:14px;color:var(--text-muted);">+' + (reports.length - 3) + ' more</div>';
+  afterC += '<div style="margin-top:6px;font-size:11px;color:var(--accent-cyan);">External hire targeted: 45-60 days</div>';
+
+  el.innerHTML =
+    '<div class="current-org-compact animate-in">' +
+      '<h3>Current Structure <span style="font-weight:400;font-size:11px;color:var(--text-muted);text-transform:none;">(' + reports.length + ' reports affected)</span></h3>' +
+      '<div class="compact-org-row">' +
+        '<span class="compact-org-chip manager">' + managerName + '</span>' +
+        '<span style="color:var(--text-muted);">&#8594;</span>' +
+        '<span class="compact-org-chip departing">' + p.name + ' (departing)</span>' +
+        '<span style="color:var(--text-muted);">&#8594;</span>' +
+        chipReports + moreChips +
+      '</div>' +
+    '</div>' +
+
+    '<div class="scenario-cards">' +
+
+    // Scenario A: Promote
+    '<div class="scenario-card animate-in" style="animation-delay:0.1s;" data-scenario="promote" onclick="selectScenario(this)">' +
+      '<div class="scenario-card-top">' +
+        '<div class="scenario-badge" style="background:var(--accent-green-dim);color:var(--accent-green);">A</div>' +
+        '<div><h4>Promote ' + (promoCandidateName || 'Senior IC') + '</h4>' +
+        (promoCandidate ? '<span class="scenario-recommend">&#10003; Recommended</span>' : '') + '</div>' +
+      '</div>' +
+      '<div class="scenario-reasoning">' +
+        (promoCandidateName ? promoCandidateName + ' has ' + promoCandidateTenure + ' years tenure and is the most senior IC on the team.' : 'The most senior IC has the longest tenure.') +
+        ' Promoting from within maintains team continuity, preserves institutional knowledge, and demonstrates a clear growth path.' +
+      '</div>' +
+      '<div class="scenario-comparison">' +
+        '<div class="scenario-before">' + beforeA + '</div>' +
+        '<div class="scenario-after">' + afterA + '</div>' +
+      '</div>' +
+      '<div class="scenario-metrics">' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">' + (reports.length - 1) + '</div><div class="scenario-metric-label">New Span</div></div>' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">$0</div><div class="scenario-metric-label">Hiring Cost</div></div>' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">1 week</div><div class="scenario-metric-label">Time to Fill</div></div>' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">High</div><div class="scenario-metric-label">Continuity</div></div>' +
+      '</div>' +
+      '<div class="scenario-risk"><span class="risk-badge medium">Medium Risk</span></div>' +
+      '<div class="scenario-risk-text">' + (promoCandidateName ? promoCandidateName.split(' ')[0] : 'Candidate') + ' has no prior management experience. May need coaching budget and mentorship from ' + managerName.split(' ')[0] + '.</div>' +
+    '</div>' +
+
+    // Scenario B: Split
+    '<div class="scenario-card animate-in" style="animation-delay:0.15s;" data-scenario="split" onclick="selectScenario(this)">' +
+      '<div class="scenario-card-top">' +
+        '<div class="scenario-badge" style="background:var(--accent-orange-dim);color:var(--accent-orange);">B</div>' +
+        '<div><h4>Distribute Reports to Peers</h4></div>' +
+      '</div>' +
+      '<div class="scenario-reasoning">' +
+        'Split ' + reports.length + ' reports across ' + managerName + ' and ' + peerManagerName + '. Platform engineers go to ' + managerName.split(' ')[0] + ', DevOps engineers to ' + peerManagerName.split(' ')[0] + '. No single manager overloaded.' +
+      '</div>' +
+      '<div class="scenario-comparison">' +
+        '<div class="scenario-before">' + beforeA + '</div>' +
+        '<div class="scenario-after">' + afterB + '</div>' +
+      '</div>' +
+      '<div class="scenario-metrics">' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">' + Math.ceil(reports.length/2) + '/' + Math.floor(reports.length/2) + '</div><div class="scenario-metric-label">Split</div></div>' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">$0</div><div class="scenario-metric-label">Hiring Cost</div></div>' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">Immediate</div><div class="scenario-metric-label">Time to Fill</div></div>' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">Low</div><div class="scenario-metric-label">Continuity</div></div>' +
+      '</div>' +
+      '<div class="scenario-risk"><span class="risk-badge high">High Risk</span></div>' +
+      '<div class="scenario-risk-text">' + reports.length + ' people get new managers simultaneously during an already unsettled transition. Team identity may fragment and cross-functional context is lost.</div>' +
+    '</div>' +
+
+    // Scenario C: External Hire
+    '<div class="scenario-card animate-in" style="animation-delay:0.2s;" data-scenario="hire" onclick="selectScenario(this)">' +
+      '<div class="scenario-card-top">' +
+        '<div class="scenario-badge" style="background:var(--accent-cyan-dim);color:var(--accent-cyan);">C</div>' +
+        '<div><h4>External Hire + Interim Plan</h4></div>' +
+      '</div>' +
+      '<div class="scenario-reasoning">' +
+        managerName + ' takes interim management of all ' + reports.length + ' reports. Post backfill immediately. ' +
+        (offerCandidates.length > 0 ? offerCandidates[0].node.properties.name + ' (at offer stage) could be evaluated for the leadership track.' : 'Pipeline candidates could be fast-tracked if any demonstrate leadership potential.') +
+      '</div>' +
+      '<div class="scenario-comparison">' +
+        '<div class="scenario-before">' + beforeA + '</div>' +
+        '<div class="scenario-after">' + afterC + '</div>' +
+      '</div>' +
+      '<div class="scenario-metrics">' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">' + (reports.length + currentManagerSpan - 1) + '</div><div class="scenario-metric-label">Interim Span</div></div>' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">$30-60K</div><div class="scenario-metric-label">Hiring Cost</div></div>' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">45-60 days</div><div class="scenario-metric-label">Time to Fill</div></div>' +
+        '<div class="scenario-metric"><div class="scenario-metric-value">Medium</div><div class="scenario-metric-label">Continuity</div></div>' +
+      '</div>' +
+      '<div class="scenario-risk"><span class="risk-badge medium">Medium Risk</span></div>' +
+      '<div class="scenario-risk-text">' + managerName.split(' ')[0] + ' temporarily manages ' + (reports.length + currentManagerSpan - 1) + ' people. Requires aggressive hiring timeline and strong interim support.</div>' +
+    '</div>' +
+
+    '</div>' +
+
+    '<div class="decision-area animate-in" style="animation-delay:0.25s;" id="decisionArea">' +
+      '<p>Select a scenario above to see the execution plan.</p>' +
+    '</div>' +
+
+    '<div class="execution-plan" id="executionPlan">' +
+      '<h4><span class="agent-avatar" style="width:20px;height:20px;font-size:11px;">A</span> Execution Plan</h4>' +
+      '<div id="executionSteps"></div>' +
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.3s;">' +
+      '<div class="graph-advantage-header">' +
+        '<div class="graph-advantage-icon">G</div>' +
+        '<div class="graph-advantage-label">Why this requires the employee graph</div>' +
+      '</div>' +
+      '<p>The graph knows who reports to ' + p.name + ', their roles and tenure, peer managers and their current span of control, and which candidates are in pipeline. It also knows each person\'s project allocations, skill profiles, and mentoring relationships -- all factors in restructuring decisions. A traditional HRIS would require manually looking up each of these across 4+ different screens.</p>' +
+    '</div>';
+}
+
+function selectScenario(card) {
+  document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  const scenario = card.dataset.scenario;
+  const area = document.getElementById('decisionArea');
+  const plan = document.getElementById('executionPlan');
+  const steps = document.getElementById('executionSteps');
+
+  area.innerHTML = '<p style="color:var(--accent-green);font-weight:600;">Scenario selected. Ready to execute?</p>' +
+    '<div class="action-buttons"><button class="action-btn approve" onclick="executeScenario()">Execute This Plan</button><button class="action-btn edit" onclick="clearScenario()">Reconsider</button></div>';
+
+  const personId = document.getElementById('personSelect').value;
+  const person = getNode(personId);
+  const managerId = getManager(personId);
+  const managerName = getNode(managerId) ? getNode(managerId).properties.name : 'Manager';
+  const reports = getDirectReports(personId);
+
+  let stepsHtml = '';
+  if (scenario === 'promote') {
+    const ic3s = reports.filter(r => prop(r, 'level') === 'IC-3').sort((a,b) => new Date(prop(a,'startDate')) - new Date(prop(b,'startDate')));
+    const promName = ic3s[0] ? prop(ic3s[0], 'name') : 'Senior IC';
+    stepsHtml = [
+      'Update ' + promName + '\'s title to ' + person.properties.role + ' and level to ' + person.properties.level,
+      'Reassign ' + (reports.length - 1) + ' reports from ' + person.properties.name + ' to ' + promName,
+      'Schedule announcement to the team within 24 hours',
+      'Create management coaching plan for ' + promName.split(' ')[0],
+      'Redistribute ' + promName.split(' ')[0] + '\'s current IC work to team members'
+    ].map(function(s, i) { return '<div class="execution-step"><div class="execution-step-num">' + (i+1) + '</div><div>' + s + '</div></div>'; }).join('');
+  } else if (scenario === 'split') {
+    stepsHtml = [
+      'Identify optimal split based on role types and project alignment',
+      'Reassign platform engineers to ' + managerName,
+      'Reassign DevOps engineers to peer manager',
+      'Notify all ' + reports.length + ' affected people with new reporting assignments',
+      'Schedule transition 1-on-1s with new managers',
+      'Update team channels, meeting invites, and access groups'
+    ].map(function(s, i) { return '<div class="execution-step"><div class="execution-step-num">' + (i+1) + '</div><div>' + s + '</div></div>'; }).join('');
+  } else {
+    stepsHtml = [
+      'Assign all ' + reports.length + ' reports to ' + managerName + ' as interim manager',
+      'Post backfill position immediately (draft already prepared)',
+      'Schedule team meeting with ' + managerName + ' to address transition',
+      'Fast-track pipeline candidates for leadership evaluation',
+      'Set 45-day review checkpoint for interim arrangement'
+    ].map(function(s, i) { return '<div class="execution-step"><div class="execution-step-num">' + (i+1) + '</div><div>' + s + '</div></div>'; }).join('');
+  }
+  steps.innerHTML = stepsHtml;
+  plan.classList.add('visible');
+}
+
+function executeScenario() {
+  document.getElementById('decisionArea').innerHTML = '<p><span class="approve-check"><span class="check-icon">&#10003;</span> Plan approved and executing. Updates will be applied within the hour.</span></p>';
+}
+
+function clearScenario() {
+  document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('decisionArea').innerHTML = '<p>Select a scenario above to see the execution plan.</p>';
+  document.getElementById('executionPlan').classList.remove('visible');
+}
+
+/* ============================================================
+   TAB 4: COMPLIANCE TIMELINE
+   ============================================================ */
+function buildComplianceTab(ctx) {
+  const { personId, p, reports, dependents, depBenefitsList, jurisdictions, jurisdictionNames,
+    hasTexas, equity, salary, benefits, hasCobra, depNames, medicalPlan, managerName } = ctx;
+
+  const el = document.getElementById('tab-compliance');
+  const depRelationship = depBenefitsList.length > 0 && depBenefitsList[0].dep ? depBenefitsList[0].dep.properties.relationship : 'dependent';
+
+  // Build compliance items
+  var items = [];
+
+  if (hasTexas) {
+    items.push({
+      title: 'Final Paycheck', date: 'February 12, 2026', days: 6, color: 'red',
+      desc: 'TX Labor Code 61.014 requires payment within 6 days of separation. <span class="done-text">Flagged payroll to include ' + p.name + ' in the February 12 run</span> with prorated salary, accrued PTO, and pending reimbursements.',
+      legal: 'Texas Labor Code 61.014', owner: 'Payroll', status: 'Flagged'
+    });
+  }
+
+  if (hasCobra) {
+    var monthlyPremium = medicalPlan ? ((medicalPlan.properties.monthlyPremiumEmployee || 0) + (medicalPlan.properties.monthlyPremiumEmployer || 0)) : 900;
+    var cobraPremium = (monthlyPremium * 1.02).toFixed(2);
+    items.push({
+      title: 'COBRA Notice for ' + (depNames[0] || 'Dependent'), date: 'February 20, 2026', days: 14, color: 'red',
+      desc: '29 USC 1166 requires 14-day employer notice for qualifying events. <span class="pending-text">Draft prepared for ' + (depNames[0] || 'dependent') + ' (' + depRelationship + ', family medical through ' + (medicalPlan ? medicalPlan.properties.name : 'Medical Plan') + ').</span> Monthly COBRA premium: $' + cobraPremium + '. Election period: 60 days.',
+      legal: '29 USC 1166, COBRA Continuation Coverage', owner: 'Benefits', status: 'Draft ready',
+      hasAction: true
+    });
+  }
+
+  items.push({
+    title: 'Benefits Coverage Ends', date: 'February 28, 2026', days: 22, color: 'yellow',
+    desc: '<span class="done-text">Scheduled termination of ' + benefits.length + ' benefit enrollments</span> at end of month per plan terms.' + (depBenefitsList.length > 0 ? ' Dependent coverage for ' + depNames.join(', ') + ' also terminates -- COBRA election covers the gap.' : ''),
+    legal: 'Plan SPD terms, ERISA 601-608', owner: 'Benefits', status: 'Scheduled'
+  });
+
+  if (equity) {
+    var unvested = (equity.properties.totalShares || 0) - (equity.properties.vestedShares || 0);
+    items.push({
+      title: 'Equity Exercise Window Closes', date: 'May 7, 2026', days: 90, color: 'yellow',
+      desc: p.name + ' has ' + (equity.properties.vestedShares || 0).toLocaleString() + ' vested shares eligible for exercise. <span class="pending-text">' + unvested.toLocaleString() + ' unvested shares (' + formatMoney(Math.round((equity.properties.amount / equity.properties.totalShares) * unvested)) + ') return to the company pool.</span> 90-day post-termination exercise window per grant agreement.',
+      legal: 'Equity Grant Agreement, IRC 422 (ISO rules)', owner: 'Legal/Finance', status: 'Pending notification',
+      hasAction: true
+    });
+  }
+
+  items.push({
+    title: 'Equipment Return', date: 'February 6, 2026', days: 0, color: 'green',
+    desc: '<span class="done-text">Return request sent to IT for assigned devices.</span> Shipping label auto-generated. Tracking monitored and escalated if not received within 14 days.',
+    legal: 'Company Property Policy', owner: 'IT', status: 'Auto-handled'
+  });
+
+  items.push({
+    title: 'Access Revocation', date: 'February 6, 2026', days: 0, color: 'green',
+    desc: '<span class="done-text">Scheduled deactivation of all accounts</span> (email, Slack, GitHub, AWS, VPN) at 5:00 PM on last day. Manager email archive retained for 30 days.',
+    legal: 'Security Policy', owner: 'IT', status: 'Auto-handled'
+  });
+
+  items.push({
+    title: 'W-2 Preparation', date: 'January 31, 2027', days: 359, color: 'gray',
+    desc: '<span class="done-text">Queued for year-end processing.</span> Will include all compensation through separation date, PTO payout, and any equity exercise income.',
+    legal: 'IRS Publication 15, 26 USC 6051', owner: 'Payroll', status: 'Queued'
+  });
+
+  var autoHandled = items.filter(i => i.color === 'green').length;
+  var needsAction = items.filter(i => i.hasAction).length;
+  var totalItems = items.length;
+
+  // Timeline markers
+  var timelineSpan = 365; // days range for visual axis
+  var markersHtml = items.map(function(item) {
+    var pct = Math.max(2, Math.min(98, (item.days / timelineSpan) * 100));
+    return '<div class="timeline-marker ' + item.color + '" style="left:' + pct + '%;" title="' + item.title + '">' +
+      '<div class="timeline-marker-label">' + item.date.replace(', 2026', '').replace(', 2027', ' \'27') + '</div>' +
+    '</div>';
+  }).join('');
+
+  // Detail cards
+  var cardsHtml = items.map(function(item) {
+    var countdownText = item.days === 0 ? 'Done' : item.days + ' days';
+    var actionHtml = '';
+    if (item.hasAction) {
+      actionHtml = '<div class="action-buttons" style="margin-top:8px;">' +
+        '<button class="action-btn approve" onclick="handleComplianceApprove(this)">Approve</button>' +
+        '<button class="action-btn edit">Review</button>' +
+      '</div>';
+    }
+    return '<div class="compliance-card">' +
+      '<div class="compliance-card-dot ' + item.color + '"></div>' +
+      '<div>' +
+        '<div class="compliance-card-title">' + item.title + '</div>' +
+        '<div class="compliance-card-when">' + item.date + '</div>' +
+        '<div class="compliance-card-desc">' + item.desc + '</div>' +
+        '<div class="compliance-card-legal">' + item.legal + '</div>' +
+        actionHtml +
+      '</div>' +
+      '<div class="compliance-card-meta">' +
+        '<div class="compliance-card-countdown ' + item.color + '">' + countdownText + '</div>' +
+        '<div class="compliance-card-owner">' + item.owner + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  el.innerHTML =
+    '<div class="compliance-score animate-in">' +
+      '<div class="compliance-score-circle" style="background:' + (needsAction > 0 ? 'var(--accent-yellow-dim);color:var(--accent-yellow)' : 'var(--accent-green-dim);color:var(--accent-green)') + ';">' + Math.round(((totalItems - needsAction) / totalItems) * 100) + '%</div>' +
+      '<div class="compliance-score-info">' +
+        '<div class="compliance-score-title">' + totalItems + ' Compliance Requirements Identified</div>' +
+        '<div class="compliance-score-subtitle">' + autoHandled + ' auto-handled, ' + needsAction + ' need your sign-off' + (jurisdictionNames.length > 0 ? ' | Jurisdictions: ' + jurisdictionNames.join(', ') : '') + '</div>' +
+        '<div class="compliance-score-breakdown">' +
+          '<div class="compliance-score-item"><strong style="color:var(--accent-red);">' + items.filter(i => i.color === 'red').length + '</strong> Urgent</div>' +
+          '<div class="compliance-score-item"><strong style="color:var(--accent-yellow);">' + items.filter(i => i.color === 'yellow').length + '</strong> This month</div>' +
+          '<div class="compliance-score-item"><strong style="color:var(--accent-green);">' + autoHandled + '</strong> Handled</div>' +
+          '<div class="compliance-score-item"><strong style="color:var(--text-muted);">' + items.filter(i => i.color === 'gray').length + '</strong> Future</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="timeline-visual animate-in" style="animation-delay:0.1s;">' +
+      '<div class="timeline-axis">' +
+        '<div class="timeline-line"></div>' +
+        markersHtml +
+      '</div>' +
+    '</div>' +
+
+    '<div class="compliance-cards animate-in" style="animation-delay:0.15s;">' +
+      cardsHtml +
+    '</div>' +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.25s;">' +
+      '<div class="graph-advantage-header">' +
+        '<div class="graph-advantage-icon">G</div>' +
+        '<div class="graph-advantage-label">Why this requires the employee graph</div>' +
+      '</div>' +
+      '<p>These compliance requirements were identified by tracing ' + p.name + '\'s connections to jurisdictions (' + jurisdictionNames.join(', ') + '), benefits plans (' + benefits.map(function(b) { var n = getNode(b.id); return n ? n.properties.type : ''; }).filter(Boolean).filter(function(v,i,a) { return a.indexOf(v) === i; }).join(', ') + '), dependents (' + (depNames.join(', ') || 'none') + '), and compensation records. A traditional HRIS offboarding checklist is generic -- it cannot adapt to each person\'s specific situation. The graph builds a custom compliance plan for every departure by walking their actual relationships.</p>' +
+    '</div>';
+}
+
+function handleComplianceApprove(btn) {
+  var card = btn.closest('.compliance-card');
+  var buttonsDiv = card.querySelector('.action-buttons');
+  if (buttonsDiv) {
+    buttonsDiv.innerHTML = '<span class="approve-check"><span class="check-icon">&#10003;</span> Approved</span>';
+  }
+  var dot = card.querySelector('.compliance-card-dot');
+  if (dot) { dot.className = 'compliance-card-dot green'; }
+  var countdown = card.querySelector('.compliance-card-countdown');
+  if (countdown) { countdown.className = 'compliance-card-countdown green'; countdown.textContent = 'Done'; }
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+async function init() {
+  try {
+    await loadData();
+    populatePersonPicker();
+    buildAllTabs('person-008');
+    document.getElementById('loadingState').style.display = 'none';
+  } catch (err) {
+    console.error('Failed to load data:', err);
+    document.getElementById('loadingState').innerHTML =
+      '<div style="color:var(--accent-red);text-align:center;">' +
+        '<p style="font-size:16px;font-weight:600;margin-bottom:8px;">Failed to load data</p>' +
+        '<p style="font-size:13px;color:var(--text-muted);">Make sure you\'re serving from the project root.<br>Try: python3 -m http.server 8765</p>' +
+        '<p style="font-size:12px;color:var(--text-muted);margin-top:8px;">' + err.message + '</p>' +
+      '</div>';
+  }
+}
+
+init();
+</script>
+<script src="feedback-panel.js"></script>
+</body>
+</html>

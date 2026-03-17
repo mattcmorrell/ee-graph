@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Lifecycle Explorer v3 — Agentic</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: #0a0b0f;
+  color: #e0e0e8;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== TOP CHROME ========== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: linear-gradient(180deg, rgba(20,22,30,0.98) 0%, rgba(14,15,22,0.95) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+}
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.top-bar h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #34d399, #22d3ee, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.version-switcher {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  align-items: center;
+}
+.version-switcher a {
+  color: #666;
+  text-decoration: none;
+  padding: 3px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.version-switcher a:hover { color: #aaa; background: rgba(255,255,255,0.05); }
+.version-switcher a.active {
+  color: #6ee7b7;
+  background: rgba(52,211,153,0.12);
+  font-weight: 700;
+}
+.version-switcher span { color: #444; }
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.paradigm-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #34d399;
+  background: rgba(52,211,153,0.1);
+  border: 1px solid rgba(52,211,153,0.2);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* ========== TABS ========== */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  padding: 0 32px;
+  background: rgba(14,15,22,0.9);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  overflow-x: auto;
+}
+.tab-btn {
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #888;
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.tab-btn:hover { color: #bbb; }
+.tab-btn.active {
+  color: #6ee7b7;
+  border-bottom-color: #34d399;
+  font-weight: 600;
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 32px 60px;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ========== AGENT HEADER ========== */
+.agent-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(52,211,153,0.06), rgba(34,211,238,0.04));
+  border: 1px solid rgba(52,211,153,0.15);
+  border-radius: 12px;
+}
+.agent-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #34d399, #22d3ee);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.agent-avatar svg { width: 18px; height: 18px; fill: #0a0b0f; }
+.agent-header .agent-msg {
+  font-size: 14px;
+  color: #d1d5db;
+  line-height: 1.5;
+}
+.agent-header .agent-msg strong { color: #6ee7b7; font-weight: 600; }
+
+/* ========== PERSON SELECTOR (inline) ========== */
+.person-selector-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.person-selector-row label {
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.person-select {
+  background: #13141a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 8px 14px;
+  color: #e0e0e8;
+  font-size: 14px;
+  font-family: inherit;
+  min-width: 260px;
+  cursor: pointer;
+}
+.person-select:focus { outline: none; border-color: rgba(52,211,153,0.4); }
+
+/* ========== CARDS ========== */
+.card {
+  background: #13141a;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #c4b5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.card-title.green { color: #6ee7b7; }
+.card-title.blue { color: #7dd3fc; }
+.card-title.amber { color: #fbbf24; }
+.card-title.rose { color: #fb7185; }
+.card-title.slate { color: #94a3b8; }
+
+/* ========== AGENT ITEMS ========== */
+.agent-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.agent-item:last-child { border-bottom: none; }
+.agent-bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.agent-bullet.amber { background: #fbbf24; }
+.agent-bullet.rose { background: #fb7185; }
+.agent-bullet.blue { background: #22d3ee; }
+.agent-bullet.done { background: #34d399; }
+.agent-item-text {
+  font-size: 13px;
+  color: #c9cdd5;
+  line-height: 1.5;
+}
+.agent-item-text strong { color: #e0e0e8; font-weight: 600; }
+.agent-item-text .meta { color: #666; font-size: 12px; }
+.agent-item-text .highlight { color: #fbbf24; }
+
+/* ========== ACTION BUTTONS ========== */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+.action-btn.primary {
+  background: rgba(52,211,153,0.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(52,211,153,0.2);
+}
+.action-btn.primary:hover { background: rgba(52,211,153,0.25); }
+.action-btn.secondary {
+  background: rgba(255,255,255,0.05);
+  color: #aaa;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.action-btn.secondary:hover { background: rgba(255,255,255,0.1); color: #ccc; }
+.action-btn.done {
+  background: rgba(52,211,153,0.1);
+  color: #34d399;
+  border: 1px solid rgba(52,211,153,0.15);
+  cursor: default;
+}
+.action-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* ========== SIDEBAR LAYOUT ========== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+
+/* ========== QUICK REF SIDEBAR ========== */
+.sidebar-section {
+  margin-bottom: 16px;
+}
+.sidebar-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.sidebar-value {
+  font-size: 13px;
+  color: #c9cdd5;
+  line-height: 1.6;
+}
+.sidebar-value .flag { color: #fbbf24; font-size: 12px; }
+
+/* ========== GRAPH ADVANTAGE ========== */
+.graph-advantage {
+  margin-top: 20px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(129,140,248,0.06), rgba(196,181,253,0.04));
+  border: 1px solid rgba(129,140,248,0.15);
+  border-left: 3px solid #818cf8;
+  border-radius: 0 10px 10px 0;
+}
+.graph-advantage-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a78bfa;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.graph-advantage p {
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+/* ========== PROGRESS BAR ========== */
+.progress-track {
+  display: flex;
+  gap: 4px;
+  margin: 16px 0;
+}
+.progress-phase {
+  flex: 1;
+  text-align: center;
+}
+.progress-phase-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.progress-phase-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: #34d399;
+  transition: width 0.6s ease;
+}
+.progress-phase-label {
+  font-size: 11px;
+  color: #666;
+  font-weight: 500;
+}
+.progress-phase.active .progress-phase-label { color: #6ee7b7; font-weight: 600; }
+
+/* ========== STATUS BAR ========== */
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  background: rgba(52,211,153,0.06);
+  border: 1px solid rgba(52,211,153,0.12);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #d1d5db;
+}
+.status-bar .pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52,211,153,0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(52,211,153,0); }
+}
+
+/* ========== ATTENTION CARD ========== */
+.attention-card {
+  background: #13141a;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-left: 3px solid #fbbf24;
+  border-radius: 0 10px 10px 0;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+.attention-card.urgent { border-left-color: #fb7185; }
+.attention-card.info { border-left-color: #22d3ee; }
+.attention-card.success { border-left-color: #34d399; }
+.attention-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0e8;
+  margin-bottom: 6px;
+}
+.attention-card-body {
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.5;
+}
+.attention-card-body strong { color: #d1d5db; }
+
+/* ========== TEAM GRID ========== */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.team-member-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.team-member-card:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+.team-member-card.flagged { border-color: rgba(251,191,36,0.3); }
+.team-member-card .name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0e8;
+  margin-bottom: 2px;
+}
+.team-member-card .role {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+}
+.team-member-card .meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #666;
+}
+.team-member-card .flag-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.team-member-card .flag-dot.green { background: #34d399; }
+.team-member-card .flag-dot.yellow { background: #fbbf24; }
+.team-member-card .flag-dot.red { background: #fb7185; }
+.team-member-card .expanded-detail {
+  display: none;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.5;
+}
+.team-member-card.open .expanded-detail { display: block; }
+
+/* ========== CAREER TIMELINE ========== */
+.career-timeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 20px 0;
+  position: relative;
+}
+.career-phase {
+  flex: 1;
+  position: relative;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.career-phase:first-child { border-radius: 10px 0 0 10px; }
+.career-phase:last-child { border-radius: 0 10px 10px 0; }
+.career-phase.current { background: rgba(52,211,153,0.06); border-color: rgba(52,211,153,0.2); }
+.career-phase-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e0e0e8;
+  margin-bottom: 2px;
+}
+.career-phase-dates {
+  font-size: 11px;
+  color: #666;
+}
+.career-phase-comp {
+  font-size: 12px;
+  color: #6ee7b7;
+  margin-top: 4px;
+}
+
+/* ========== BRIEFING ========== */
+.briefing-header {
+  text-align: center;
+  margin-bottom: 28px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.briefing-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e0e0e8;
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+}
+.briefing-header .date {
+  font-size: 13px;
+  color: #666;
+}
+.briefing-section {
+  margin-bottom: 24px;
+}
+.briefing-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.headline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+}
+.headline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.headline-dot.green { background: #34d399; }
+.headline-dot.amber { background: #fbbf24; }
+.headline-dot.blue { background: #22d3ee; }
+.headline-dot.rose { background: #fb7185; }
+.headline-text {
+  font-size: 13px;
+  color: #c9cdd5;
+  line-height: 1.5;
+}
+.headline-text strong { color: #e0e0e8; }
+
+/* ========== DEPT ACCORDION ========== */
+.dept-row {
+  background: #13141a;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.dept-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dept-header:hover { background: rgba(255,255,255,0.02); }
+.dept-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0e8;
+}
+.dept-count {
+  font-size: 12px;
+  color: #888;
+  background: rgba(255,255,255,0.04);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.dept-detail {
+  display: none;
+  padding: 0 16px 14px;
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+.dept-row.open .dept-detail { display: block; }
+
+/* ========== SPARKLINE (mini) ========== */
+.sparkline-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.sparkline-item {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  text-align: center;
+}
+.sparkline-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e0e0e8;
+}
+.sparkline-label {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+}
+.sparkline-trend {
+  font-size: 11px;
+  margin-top: 4px;
+}
+.sparkline-trend.up { color: #34d399; }
+.sparkline-trend.down { color: #fb7185; }
+.sparkline-trend.flat { color: #888; }
+
+/* ========== COMING UP CALENDAR ========== */
+.cal-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.cal-row:last-child { border-bottom: none; }
+.cal-date {
+  width: 48px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.cal-date .month {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fb7185;
+  letter-spacing: 0.06em;
+}
+.cal-date .day {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e0e0e8;
+}
+.cal-desc {
+  font-size: 13px;
+  color: #c9cdd5;
+  line-height: 1.4;
+}
+
+/* ========== NARRATIVE BLOCK ========== */
+.narrative {
+  font-size: 14px;
+  color: #c9cdd5;
+  line-height: 1.7;
+  padding: 16px 0;
+}
+.narrative strong { color: #e0e0e8; }
+
+/* ========== GROWTH SIGNALS ========== */
+.signal-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+}
+.signal-icon {
+  font-size: 13px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.signal-text {
+  font-size: 13px;
+  color: #c9cdd5;
+  line-height: 1.5;
+}
+
+/* ========== NEXT MOVE OPTION ========== */
+.move-option {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.move-option:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+.move-option-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0e8;
+  margin-bottom: 4px;
+}
+.move-option-desc {
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.5;
+}
+.move-option .detail-expand {
+  display: none;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.5;
+}
+.move-option.open .detail-expand { display: block; }
+
+/* ========== CONVO STARTERS ========== */
+.convo-starter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(129,140,248,0.04);
+  border: 1px solid rgba(129,140,248,0.1);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #c4b5fd;
+  font-style: italic;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.convo-starter:hover { background: rgba(129,140,248,0.08); }
+
+/* ========== TEAM TRENDS ========== */
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+.trend-item {
+  padding: 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  text-align: center;
+}
+.trend-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e0e0e8;
+}
+.trend-label {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* ========== UTILITY ========== */
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mb-8 { margin-bottom: 8px; }
+.flex-gap-8 { display: flex; gap: 8px; flex-wrap: wrap; }
+.text-muted { color: #666; }
+.text-sm { font-size: 12px; }
+.hidden { display: none; }
+
+/* ========== LOADING SHIMMER ========== */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,11,15,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  flex-direction: column;
+  gap: 16px;
+  transition: opacity 0.4s;
+}
+.loading-overlay.fade-out { opacity: 0; pointer-events: none; }
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(52,211,153,0.15);
+  border-top-color: #34d399;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+  font-size: 14px;
+  color: #888;
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading employee graph...</div>
+</div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <h1>Employee Lifecycle Explorer</h1>
+    <div class="version-switcher">
+      <a href="employee-lifecycle.html">v1</a>
+      <span>|</span>
+      <a href="employee-lifecycle-v2.html">v2</a>
+      <span>|</span>
+      <a href="employee-lifecycle-v3.html" class="active">v3</a>
+    </div>
+  </div>
+  <div class="top-bar-right">
+    <span class="paradigm-badge">Agentic</span>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="oneonone">1:1 Prep Agent</button>
+  <button class="tab-btn" data-tab="onboarding">Onboarding Autopilot</button>
+  <button class="tab-btn" data-tab="career">Career Conversation</button>
+  <button class="tab-btn" data-tab="teamhealth">Team Health</button>
+  <button class="tab-btn" data-tab="briefing">People Briefing</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- ============================================ -->
+  <!-- MOCK A: 1:1 PREP AGENT                       -->
+  <!-- ============================================ -->
+  <div class="tab-panel active" id="panel-oneonone">
+    <div class="person-selector-row">
+      <label>Prepare for</label>
+      <select class="person-select" id="person-select-oneonone"></select>
+    </div>
+    <div id="oneonone-content"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MOCK B: ONBOARDING AUTOPILOT                 -->
+  <!-- ============================================ -->
+  <div class="tab-panel" id="panel-onboarding">
+    <div class="person-selector-row">
+      <label>Onboarding</label>
+      <select class="person-select" id="person-select-onboarding"></select>
+    </div>
+    <div id="onboarding-content"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MOCK C: CAREER CONVERSATION PARTNER          -->
+  <!-- ============================================ -->
+  <div class="tab-panel" id="panel-career">
+    <div class="person-selector-row">
+      <label>Career Development</label>
+      <select class="person-select" id="person-select-career"></select>
+    </div>
+    <div id="career-content"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MOCK D: TEAM HEALTH AGENT                    -->
+  <!-- ============================================ -->
+  <div class="tab-panel" id="panel-teamhealth">
+    <div class="person-selector-row">
+      <label>Manager</label>
+      <select class="person-select" id="person-select-teamhealth"></select>
+    </div>
+    <div id="teamhealth-content"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MOCK E: PEOPLE INTELLIGENCE BRIEFING         -->
+  <!-- ============================================ -->
+  <div class="tab-panel" id="panel-briefing">
+    <div id="briefing-content"></div>
+  </div>
+
+</div>
+
+<script>
+/* ===============================================
+   DATA LOADING & GLOBAL STATE
+   =============================================== */
+let NODES = [], EDGES = [];
+const nodeMap = {};
+const edgesBySource = {};
+const edgesByTarget = {};
+
+async function loadData() {
+  try {
+    const [nodesResp, edgesResp] = await Promise.all([
+      fetch('../data/nodes.json').then(r => r.json()),
+      fetch('../data/edges.json').then(r => r.json())
+    ]);
+    NODES = nodesResp.nodes || [];
+    EDGES = edgesResp.edges || [];
+
+    NODES.forEach(n => nodeMap[n.id] = n);
+    EDGES.forEach(e => {
+      if (!edgesBySource[e.source]) edgesBySource[e.source] = [];
+      edgesBySource[e.source].push(e);
+      if (!edgesByTarget[e.target]) edgesByTarget[e.target] = [];
+      edgesByTarget[e.target].push(e);
+    });
+
+    initAll();
+    setTimeout(() => {
+      document.getElementById('loading').classList.add('fade-out');
+      setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
+    }, 400);
+  } catch (err) {
+    console.error('Data load error:', err);
+    document.getElementById('loading').innerHTML = '<div class="loading-text" style="color:#fb7185;">Failed to load data. Make sure to serve from project root.</div>';
+  }
+}
+
+/* ===============================================
+   HELPER FUNCTIONS
+   =============================================== */
+function people() { return NODES.filter(n => n.type === 'person'); }
+function node(id) { return nodeMap[id]; }
+function prop(id, key) { const n = node(id); return n ? (n.properties || {})[key] : undefined; }
+function edgesFrom(id, type) { return (edgesBySource[id] || []).filter(e => !type || e.type === type); }
+function edgesTo(id, type) { return (edgesByTarget[id] || []).filter(e => !type || e.type === type); }
+function directReports(managerId) {
+  return edgesTo(managerId, 'reports_to').map(e => e.source).filter(id => {
+    const p = node(id);
+    return p && p.properties && p.properties.status !== 'terminated';
+  });
+}
+function monthsBetween(d1, d2) {
+  const a = new Date(d1), b = new Date(d2);
+  return Math.round((b - a) / (1000*60*60*24*30));
+}
+function daysBetween(d1, d2) {
+  const a = new Date(d1), b = new Date(d2);
+  return Math.round((b - a) / (1000*60*60*24));
+}
+function formatDate(d) {
+  if (!d) return 'N/A';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+function formatMoney(n) { return '$' + Number(n).toLocaleString(); }
+
+/* ===============================================
+   TAB SWITCHING
+   =============================================== */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ===============================================
+   PERSON SELECTOR POPULATION
+   =============================================== */
+function populateSelect(selectEl, defaultId, filterFn) {
+  const ppl = people().filter(filterFn || (() => true)).sort((a,b) => a.properties.name.localeCompare(b.properties.name));
+  selectEl.innerHTML = '';
+  ppl.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `${p.properties.name} — ${p.properties.role}`;
+    if (p.id === defaultId) opt.selected = true;
+    selectEl.appendChild(opt);
+  });
+}
+
+/* ===============================================
+   INIT ALL TABS
+   =============================================== */
+function initAll() {
+  // 1:1 Prep
+  const selOO = document.getElementById('person-select-oneonone');
+  populateSelect(selOO, 'person-008', p => p.properties.status === 'active');
+  selOO.addEventListener('change', () => renderOneOnOne(selOO.value));
+  renderOneOnOne('person-008');
+
+  // Onboarding
+  const selOB = document.getElementById('person-select-onboarding');
+  const preparingPerson = people().find(p => p.properties.status === 'preparing' || p.properties.status === 'onboarding');
+  const obDefault = preparingPerson ? preparingPerson.id : 'person-013';
+  populateSelect(selOB, obDefault);
+  selOB.addEventListener('change', () => renderOnboarding(selOB.value));
+  renderOnboarding(obDefault);
+
+  // Career
+  const selCR = document.getElementById('person-select-career');
+  populateSelect(selCR, 'person-008', p => p.properties.status === 'active');
+  selCR.addEventListener('change', () => renderCareer(selCR.value));
+  renderCareer('person-008');
+
+  // Team Health
+  const selTH = document.getElementById('person-select-teamhealth');
+  // Only show people who have direct reports
+  populateSelect(selTH, 'person-008', p => {
+    if (p.properties.status !== 'active') return false;
+    return directReports(p.id).length > 0;
+  });
+  selTH.addEventListener('change', () => renderTeamHealth(selTH.value));
+  renderTeamHealth('person-008');
+
+  // Briefing — no selector
+  renderBriefing();
+}
+
+/* ===============================================
+   MOCK A: 1:1 PREP AGENT
+   =============================================== */
+function renderOneOnOne(personId) {
+  const p = node(personId);
+  if (!p) return;
+  const pr = p.properties;
+  const container = document.getElementById('oneonone-content');
+
+  // gather data
+  const reports = directReports(personId);
+  const projects = edgesFrom(personId, 'works_on').map(e => node(e.target)).filter(Boolean);
+  const reviews = edgesFrom(personId, 'has_review').map(e => node(e.target)).filter(Boolean);
+  const comps = edgesFrom(personId, 'has_comp').map(e => node(e.target)).filter(Boolean);
+  const salaryComp = comps.find(c => c && c.properties && c.properties.type === 'salary');
+  const equityComp = comps.find(c => c && c.properties && c.properties.type === 'equity');
+  const recognitions = edgesTo(personId, 'recognized');
+  const timeOffs = edgesFrom(personId, 'has_time_off').map(e => node(e.target)).filter(Boolean);
+  const expenses = edgesFrom(personId, 'submitted_expense').map(e => node(e.target)).filter(Boolean);
+  const position = edgesFrom(personId, 'holds_position').map(e => node(e.target)).filter(Boolean)[0];
+  const benefits = edgesFrom(personId, 'has_benefits').map(e => ({ edge: e, node: node(e.target) })).filter(b => b.node);
+  const dependent = edgesFrom(personId, 'has_dependent').map(e => node(e.target)).filter(Boolean);
+  const mentoring = edgesFrom(personId, 'mentors').map(e => node(e.target)).filter(Boolean);
+  const teams = edgesFrom(personId, 'member_of').map(e => node(e.target)).filter(Boolean);
+
+  const tenure = monthsBetween(pr.startDate, '2026-03-06');
+  const latestReview = reviews.sort((a,b) => (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''))[0];
+  const latestRecDate = recognitions.length ? recognitions.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''))[0].timestamp : null;
+  const daysSinceRec = latestRecDate ? daysBetween(latestRecDate.split('T')[0], '2026-03-06') : null;
+
+  const salaryAmt = salaryComp ? salaryComp.properties.amount : null;
+  const salaryDate = salaryComp ? salaryComp.properties.effectiveDate : null;
+  const monthsSinceComp = salaryDate ? monthsBetween(salaryDate, '2026-03-06') : null;
+
+  // salary band %
+  let bandPct = null;
+  if (position && position.properties && salaryAmt) {
+    const min = position.properties.salaryBandMin;
+    const max = position.properties.salaryBandMax;
+    if (min && max && max > min) {
+      bandPct = Math.round(((salaryAmt - min) / (max - min)) * 100);
+    }
+  }
+
+  // upcoming PTO
+  const upcomingPTO = timeOffs.filter(t => t.properties && t.properties.startDate >= '2026-03-06');
+  const recentPTO = timeOffs.filter(t => t.properties && t.properties.startDate < '2026-03-06');
+
+  // total expense amount
+  const expenseTotal = expenses.reduce((s, e) => s + (e.properties.amount || 0), 0);
+
+  // reports needing attention
+  const reportsData = reports.map(rid => {
+    const rn = node(rid);
+    if (!rn) return null;
+    const rReviews = edgesFrom(rid, 'has_review').map(e => node(e.target)).filter(Boolean);
+    const rRecs = edgesTo(rid, 'recognized');
+    const latestRev = rReviews.sort((a,b) => (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''))[0];
+    const revAge = latestRev && latestRev.properties.completedDate ? daysBetween(latestRev.properties.completedDate, '2026-03-06') : 999;
+    const newHire = daysBetween(rn.properties.startDate, '2026-03-06') < 90;
+    return { id: rid, name: rn.properties.name, role: rn.properties.role, revAge, newHire, startDate: rn.properties.startDate };
+  }).filter(Boolean);
+
+  const flaggedReports = reportsData.filter(r => r.revAge > 365 || r.newHire);
+
+  container.innerHTML = `
+    <div class="agent-header">
+      <div class="agent-avatar"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5v1a5 5 0 01-10 0V7a5 5 0 015-5zm-7 18a7 7 0 0114 0H5z"/></svg></div>
+      <div class="agent-msg">I've prepared your 1:1 notes for <strong>${pr.name}</strong>. ${pr.role}, ${pr.level} &mdash; ${tenure} months tenure. Here's everything you need.</div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <!-- What's New -->
+        <div class="card">
+          <div class="card-header"><span class="card-title green">What's New Since Last Check</span></div>
+          <div class="agent-item">
+            <div class="agent-bullet done"></div>
+            <div class="agent-item-text">${pr.name} completed ${latestReview ? 'their ' + latestReview.properties.type + ' review' : 'a review'} ${latestReview ? '(<strong>' + latestReview.properties.rating + '</strong>) on ' + formatDate(latestReview.properties.completedDate) : ''}</div>
+          </div>
+          ${recentPTO.length ? recentPTO.map(t => `
+          <div class="agent-item">
+            <div class="agent-bullet blue"></div>
+            <div class="agent-item-text">Took ${t.properties.hours/8} ${t.properties.type} day${t.properties.hours > 8 ? 's' : ''} on ${formatDate(t.properties.startDate)} <span class="meta">${t.properties.notes ? '(' + t.properties.notes.split('\u2014')[1]?.trim() + ')' : ''}</span></div>
+          </div>
+          `).join('') : ''}
+          ${expenses.length ? `
+          <div class="agent-item">
+            <div class="agent-bullet done"></div>
+            <div class="agent-item-text">Submitted and got reimbursed for expenses totaling <strong>${formatMoney(expenseTotal)}</strong> <span class="meta">${expenses.map(e => e.properties.description.split('\u2014')[1]?.trim()).filter(Boolean).join(', ')}</span></div>
+          </div>
+          ` : ''}
+          ${monthsSinceComp && monthsSinceComp > 12 ? `
+          <div class="agent-item">
+            <div class="agent-bullet amber"></div>
+            <div class="agent-item-text"><span class="highlight">No comp change in ${monthsSinceComp} months</span> &mdash; last adjustment was ${formatDate(salaryDate)}</div>
+          </div>
+          ` : ''}
+        </div>
+
+        <!-- Talking Points -->
+        <div class="card">
+          <div class="card-header"><span class="card-title blue">Suggested Talking Points</span></div>
+          <div class="agent-item">
+            <div class="agent-bullet blue"></div>
+            <div class="agent-item-text"><strong>Workload distribution</strong> &mdash; ${pr.name} is on <strong>${projects.length} active projects</strong>${projects.length > 2 ? ', up from 2 last year' : ''}. ${projects.length >= 4 ? 'Discuss whether this is sustainable.' : ''} <span class="meta">(${projects.map(p => p.properties.name).join(', ')})</span></div>
+          </div>
+          <div class="agent-item">
+            <div class="agent-bullet blue"></div>
+            <div class="agent-item-text"><strong>Career growth</strong> &mdash; ${pr.name} has been at ${pr.level} for ${tenure} months. ${tenure > 24 ? 'Consider discussing timeline for next level.' : 'Still building into the role.'}</div>
+          </div>
+          ${daysSinceRec && daysSinceRec > 60 ? `
+          <div class="agent-item">
+            <div class="agent-bullet amber"></div>
+            <div class="agent-item-text"><strong>Recognition</strong> &mdash; Last recognized <strong>${daysSinceRec} days ago</strong>. ${latestReview && latestReview.properties.rating === 'exceeds' ? 'Given Exceeds review, consider acknowledging recent contributions.' : 'Consider acknowledging recent work.'}</div>
+          </div>
+          ` : ''}
+          ${bandPct !== null ? `
+          <div class="agent-item">
+            <div class="agent-bullet ${bandPct > 80 ? 'done' : bandPct < 40 ? 'rose' : 'amber'}"></div>
+            <div class="agent-item-text"><strong>Compensation</strong> &mdash; Salary is at <strong>${bandPct}%</strong> of band${salaryAmt ? ' (' + formatMoney(salaryAmt) + ')' : ''}. ${latestReview && latestReview.properties.rating === 'exceeds' && bandPct < 80 ? 'Given Exceeds review, comp discussion may be warranted.' : ''}</div>
+          </div>
+          ` : ''}
+          ${mentoring.length ? `
+          <div class="agent-item">
+            <div class="agent-bullet done"></div>
+            <div class="agent-item-text"><strong>Mentoring</strong> &mdash; Currently mentoring <strong>${mentoring.map(m => m.properties.name).join(', ')}</strong>. Ask how it's going and whether it's manageable with current workload.</div>
+          </div>
+          ` : ''}
+        </div>
+
+        <!-- Actions -->
+        <div class="action-row">
+          <button class="action-btn primary" onclick="this.classList.add('done'); this.textContent='Scheduled';">Schedule Follow-up</button>
+          <button class="action-btn primary" onclick="this.classList.add('done'); this.textContent='Draft Sent';">Draft Recognition</button>
+          <button class="action-btn secondary" onclick="this.classList.add('done'); this.textContent='Flagged';">Request Comp Review</button>
+        </div>
+
+        <!-- Graph Advantage -->
+        <div class="graph-advantage mt-20">
+          <div class="graph-advantage-title">Graph Advantage</div>
+          <p>This prep was assembled by connecting ${pr.name}'s review history, compensation timeline, ${projects.length} project assignments, time-off records, recognition history, ${teams.length} team memberships, and mentoring relationships. In a traditional HRIS, a manager would need to check 5-6 different screens across Performance, Compensation, Time Off, and Projects modules to gather the same information. The graph links all of these into a single connected view in milliseconds.</p>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div>
+        <div class="card">
+          <div class="card-header"><span class="card-title slate">Quick Reference</span></div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-label">Direct Reports (${reports.length})</div>
+            <div class="sidebar-value">
+              ${reportsData.slice(0, 12).map(r => `${r.name} <span class="text-muted text-sm">${r.role}</span>${r.newHire ? ' <span class="flag">new hire</span>' : ''}${r.revAge > 365 ? ' <span class="flag">review overdue</span>' : ''}<br>`).join('')}
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-label">Current Projects</div>
+            <div class="sidebar-value">
+              ${projects.map(p => `${p.properties.name} <span class="text-muted text-sm">${p.properties.priority} priority</span><br>`).join('')}
+            </div>
+          </div>
+
+          ${upcomingPTO.length ? `
+          <div class="sidebar-section">
+            <div class="sidebar-label">Upcoming PTO</div>
+            <div class="sidebar-value">
+              ${upcomingPTO.map(t => `${formatDate(t.properties.startDate)}${t.properties.endDate !== t.properties.startDate ? ' - ' + formatDate(t.properties.endDate) : ''} (${t.properties.type})<br>`).join('')}
+            </div>
+          </div>
+          ` : `
+          <div class="sidebar-section">
+            <div class="sidebar-label">Upcoming PTO</div>
+            <div class="sidebar-value text-muted">None scheduled</div>
+          </div>
+          `}
+
+          <div class="sidebar-section">
+            <div class="sidebar-label">Teams</div>
+            <div class="sidebar-value">
+              ${teams.map(t => `${t.properties.name} <span class="text-muted text-sm">${t.properties.teamType}</span><br>`).join('')}
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-label">Benefits</div>
+            <div class="sidebar-value">
+              ${benefits.slice(0, 4).map(b => `${b.node.properties.name || b.node.properties.type} <span class="text-muted text-sm">${b.edge.metadata?.tier || ''}</span><br>`).join('')}
+              ${benefits.length > 4 ? `<span class="text-muted text-sm">+${benefits.length - 4} more</span>` : ''}
+            </div>
+          </div>
+
+          ${dependent.length ? `
+          <div class="sidebar-section">
+            <div class="sidebar-label">Dependents</div>
+            <div class="sidebar-value">
+              ${dependent.map(d => `${d.properties.name} (${d.properties.relationship})<br>`).join('')}
+            </div>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ===============================================
+   MOCK B: ONBOARDING AUTOPILOT
+   =============================================== */
+function renderOnboarding(personId) {
+  const p = node(personId);
+  if (!p) return;
+  const pr = p.properties;
+  const container = document.getElementById('onboarding-content');
+
+  const startDate = pr.startDate;
+  const daysUntilStart = daysBetween('2026-03-06', startDate);
+  const dayLabel = daysUntilStart > 0 ? `Day -${daysUntilStart}` : daysUntilStart === 0 ? 'Day 1' : `Day ${Math.abs(daysUntilStart)}`;
+
+  // Gather onboarding data
+  const docs = edgesFrom(personId, 'signed').map(e => node(e.target)).filter(Boolean);
+  const equip = edgesFrom(personId, 'assigned_equipment').map(e => ({ edge: e, node: node(e.target) })).filter(b => b.node);
+  const training = edgesFrom(personId, 'onboarding_step').map(e => ({ edge: e, node: node(e.target) })).filter(b => b.node);
+  const teams = edgesFrom(personId, 'member_of').map(e => node(e.target)).filter(Boolean);
+  const position = edgesFrom(personId, 'holds_position').map(e => node(e.target)).filter(Boolean)[0];
+  const comps = edgesFrom(personId, 'has_comp').map(e => node(e.target)).filter(Boolean);
+  const manager = edgesFrom(personId, 'reports_to').map(e => node(e.target)).filter(Boolean)[0];
+  const dept = edgesFrom(personId, 'in_department').map(e => node(e.target)).filter(Boolean)[0];
+
+  const signedDocs = docs.filter(d => d.properties && d.properties.status === 'signed');
+  const queuedDocs = docs.filter(d => d.properties && d.properties.status === 'queued');
+  const equipReady = equip.filter(e => e.node.properties.status === 'delivered' || e.node.properties.status === 'ready');
+  const equipPending = equip.filter(e => e.node.properties.status === 'requested' || e.node.properties.status === 'ordered');
+
+  const totalTasks = docs.length + equip.length + training.length + 5; // +5 for implicit tasks
+  const completedTasks = signedDocs.length + equipReady.length + 3; // offer, bg check, buddy assumed
+  const blockedTasks = queuedDocs.length > 0 ? 2 : 0;
+
+  // Progress phases
+  const phases = [
+    { name: 'Pre-boarding', pct: Math.min(100, Math.round((completedTasks / totalTasks) * 100 * 1.8)) },
+    { name: 'Day 1', pct: daysUntilStart <= 0 ? 50 : 0 },
+    { name: 'Week 1', pct: 0 },
+    { name: 'Month 1', pct: 0 },
+    { name: '90 Days', pct: 0 }
+  ];
+  const currentPhaseIdx = daysUntilStart > 0 ? 0 : daysUntilStart > -7 ? 1 : daysUntilStart > -30 ? 2 : 3;
+
+  container.innerHTML = `
+    <div class="agent-header">
+      <div class="agent-avatar"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5v1a5 5 0 01-10 0V7a5 5 0 015-5zm-7 18a7 7 0 0114 0H5z"/></svg></div>
+      <div class="agent-msg">I'm running <strong>${pr.name}'s</strong> onboarding. <strong>${dayLabel}</strong> (starts ${formatDate(startDate)}). ${completedTasks} of ${totalTasks} tasks complete. ${blockedTasks > 0 ? blockedTasks + ' need your input.' : 'Everything on track.'}</div>
+    </div>
+
+    <div class="status-bar">
+      <div class="pulse"></div>
+      <span>Onboarding ${pr.name} &mdash; ${pr.role}${dept ? ', ' + dept.properties.name : ''}. ${completedTasks} of ${totalTasks} tasks complete.${blockedTasks > 0 ? ' ' + blockedTasks + ' blocked.' : ''} I'm handling it.</span>
+    </div>
+
+    <!-- Progress phases -->
+    <div class="progress-track">
+      ${phases.map((ph, i) => `
+        <div class="progress-phase ${i === currentPhaseIdx ? 'active' : ''}">
+          <div class="progress-phase-bar"><div class="progress-phase-fill" style="width:${ph.pct}%"></div></div>
+          <div class="progress-phase-label">${ph.name}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="two-col" style="grid-template-columns: 1fr 1fr;">
+      <!-- What I've Done -->
+      <div class="card">
+        <div class="card-header"><span class="card-title green">What I've Done</span></div>
+        ${signedDocs.map(d => `
+          <div class="agent-item">
+            <div class="agent-bullet done"></div>
+            <div class="agent-item-text">${d.properties.title ? d.properties.title.replace(/\s*\u2014.*/, '') : d.properties.type} &mdash; ${d.properties.status === 'signed' ? 'Signed ' + formatDate(d.properties.signedDate) : d.properties.status} <span style="color:#34d399;">&#10003;</span></div>
+          </div>
+        `).join('')}
+        ${equipReady.length ? equipReady.map(e => `
+          <div class="agent-item">
+            <div class="agent-bullet done"></div>
+            <div class="agent-item-text">${e.node.properties.name || e.node.properties.type} &mdash; Ready <span style="color:#34d399;">&#10003;</span></div>
+          </div>
+        `).join('') : ''}
+        <div class="agent-item">
+          <div class="agent-bullet done"></div>
+          <div class="agent-item-text">Background check initiated &mdash; Cleared <span style="color:#34d399;">&#10003;</span></div>
+        </div>
+        ${manager ? `
+        <div class="agent-item">
+          <div class="agent-bullet done"></div>
+          <div class="agent-item-text">Manager assignment: ${manager.properties.name} &mdash; Confirmed <span style="color:#34d399;">&#10003;</span></div>
+        </div>
+        ` : ''}
+        <div class="agent-item">
+          <div class="agent-bullet done"></div>
+          <div class="agent-item-text">Day 1 orientation scheduled &mdash; ${formatDate(startDate)}, 9am <span style="color:#34d399;">&#10003;</span></div>
+        </div>
+      </div>
+
+      <!-- What I Need From You -->
+      <div class="card">
+        <div class="card-header"><span class="card-title amber">What I Need From You</span></div>
+        ${queuedDocs.length > 0 ? `
+          <div class="attention-card">
+            <div class="attention-card-title">${queuedDocs.length} documents pending signature</div>
+            <div class="attention-card-body">${queuedDocs.map(d => (d.properties.title || d.properties.type).replace(/\s*\u2014.*/, '')).join(', ')}. I sent reminders. <strong>Should I send another or wait?</strong></div>
+            <div class="action-row">
+              <button class="action-btn primary" onclick="handleAction(this, 'Reminder Sent')">Send Reminder</button>
+              <button class="action-btn secondary" onclick="handleAction(this, 'OK, Waiting')">I'll Handle It</button>
+            </div>
+          </div>
+        ` : ''}
+        ${equipPending.length > 0 ? `
+          <div class="attention-card">
+            <div class="attention-card-title">Equipment pending</div>
+            <div class="attention-card-body">${equipPending.map(e => e.node.properties.name || e.node.properties.type).join(', ')} &mdash; requested but not confirmed by IT. I'll escalate if not shipped by ${formatDate(new Date(new Date(startDate).getTime() - 3*24*60*60*1000).toISOString().split('T')[0])}.</div>
+            <div class="action-row">
+              <button class="action-btn primary" onclick="handleAction(this, 'Escalated')">Escalate Now</button>
+              <button class="action-btn secondary" onclick="handleAction(this, 'OK')">Wait for Deadline</button>
+            </div>
+          </div>
+        ` : ''}
+        ${teams.length ? `
+          <div class="attention-card info">
+            <div class="attention-card-title">Team assignment</div>
+            <div class="attention-card-body">${pr.name} is assigned to <strong>${teams[0].properties.name}</strong> based on role match. Confirm or choose a different team.</div>
+            <div class="action-row">
+              <button class="action-btn primary" onclick="handleAction(this, 'Confirmed')">Confirm ${teams[0].properties.name}</button>
+              <button class="action-btn secondary" onclick="handleAction(this, 'Choosing...')">Choose Different Team</button>
+            </div>
+          </div>
+        ` : ''}
+        ${training.length ? `
+          <div class="attention-card info">
+            <div class="attention-card-title">${training.length} training modules queued</div>
+            <div class="attention-card-body">${training.map(t => t.node.properties.name).join(', ')} &mdash; these will be assigned on Day 1. No action needed yet.</div>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+
+    <!-- Coming Up -->
+    <div class="card">
+      <div class="card-header"><span class="card-title slate">Coming Up &mdash; On Autopilot</span></div>
+      <div class="cal-row">
+        <div class="cal-date"><div class="month">${new Date(startDate).toLocaleString('en-US', {month:'short'}).toUpperCase()}</div><div class="day">${new Date(startDate).getDate()}</div></div>
+        <div class="cal-desc"><strong>Day 1</strong> &mdash; Send welcome email to team, orientation at 9am, IT setup, first meeting with ${manager ? manager.properties.name : 'manager'}</div>
+      </div>
+      <div class="cal-row">
+        <div class="cal-date"><div class="month">${new Date(new Date(startDate).getTime() + 3*24*60*60*1000).toLocaleString('en-US', {month:'short'}).toUpperCase()}</div><div class="day">${new Date(new Date(startDate).getTime() + 3*24*60*60*1000).getDate()}</div></div>
+        <div class="cal-desc"><strong>Day 3</strong> &mdash; Schedule Week 1 check-in with manager</div>
+      </div>
+      <div class="cal-row">
+        <div class="cal-date"><div class="month">${new Date(new Date(startDate).getTime() + 30*24*60*60*1000).toLocaleString('en-US', {month:'short'}).toUpperCase()}</div><div class="day">${new Date(new Date(startDate).getTime() + 30*24*60*60*1000).getDate()}</div></div>
+        <div class="cal-desc"><strong>30-day review</strong> &mdash; I'll draft the review template and send a reminder 1 week before</div>
+      </div>
+      <div class="cal-row">
+        <div class="cal-date"><div class="month">${new Date(new Date(startDate).getTime() + 90*24*60*60*1000).toLocaleString('en-US', {month:'short'}).toUpperCase()}</div><div class="day">${new Date(new Date(startDate).getTime() + 90*24*60*60*1000).getDate()}</div></div>
+        <div class="cal-desc"><strong>90-day review</strong> &mdash; Full performance check-in. I'll prepare the template and compile feedback from team.</div>
+      </div>
+    </div>
+
+    <!-- Graph Advantage -->
+    <div class="graph-advantage">
+      <div class="graph-advantage-title">Graph Advantage</div>
+      <p>The graph knows ${pr.name}'s role (${pr.role}), department (${dept ? dept.properties.name : 'N/A'}), location (${pr.location}), and manager (${manager ? manager.properties.name : 'N/A'}) &mdash; so it auto-generates a personalized onboarding plan. ${pr.role.includes('Support') ? `The Support Lead role triggered ${teams[0] ? teams[0].properties.name + ' team' : 'team'} assignment, Zendesk certification training, and customer-facing compliance documents.` : `The role triggered role-specific equipment ordering, team invitations, and compliance training assignments.`} A traditional HRIS uses the same generic checklist for every hire. The graph connects position requirements, team context, compliance obligations, and equipment needs into a personalized, role-aware onboarding sequence.</p>
+    </div>
+  `;
+}
+
+/* ===============================================
+   MOCK C: CAREER CONVERSATION PARTNER
+   =============================================== */
+function renderCareer(personId) {
+  const p = node(personId);
+  if (!p) return;
+  const pr = p.properties;
+  const container = document.getElementById('career-content');
+
+  const reviews = edgesFrom(personId, 'has_review').map(e => node(e.target)).filter(Boolean);
+  const comps = edgesFrom(personId, 'has_comp').map(e => node(e.target)).filter(Boolean);
+  const salaryComp = comps.find(c => c && c.properties && c.properties.type === 'salary');
+  const equityComp = comps.find(c => c && c.properties && c.properties.type === 'equity');
+  const projects = edgesFrom(personId, 'works_on').map(e => node(e.target)).filter(Boolean);
+  const recognitions = edgesTo(personId, 'recognized');
+  const teams = edgesFrom(personId, 'member_of').map(e => node(e.target)).filter(Boolean);
+  const reports = directReports(personId);
+  const mentoring = edgesFrom(personId, 'mentors').map(e => node(e.target)).filter(Boolean);
+  const position = edgesFrom(personId, 'holds_position').map(e => node(e.target)).filter(Boolean)[0];
+  const skills = edgesFrom(personId, 'has_skill').map(e => ({ edge: e, node: node(e.target) })).filter(b => b.node);
+
+  const tenure = monthsBetween(pr.startDate, '2026-03-06');
+  const salaryAmt = salaryComp ? salaryComp.properties.amount : null;
+  const latestReview = reviews.sort((a,b) => (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''))[0];
+  const latestRecDate = recognitions.length ? recognitions.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''))[0].timestamp : null;
+
+  let bandPct = null, bandMin = null, bandMax = null;
+  if (position && position.properties && salaryAmt) {
+    bandMin = position.properties.salaryBandMin;
+    bandMax = position.properties.salaryBandMax;
+    if (bandMin && bandMax && bandMax > bandMin) {
+      bandPct = Math.round(((salaryAmt - bandMin) / (bandMax - bandMin)) * 100);
+    }
+  }
+
+  // Career narrative
+  const startRole = salaryComp && salaryComp.properties.notes ? salaryComp.properties.notes.split('\u2014')[1]?.trim() : pr.role;
+  const exceedsCount = reviews.filter(r => r.properties.rating === 'exceeds').length;
+
+  container.innerHTML = `
+    <div class="agent-header">
+      <div class="agent-avatar"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5v1a5 5 0 01-10 0V7a5 5 0 015-5zm-7 18a7 7 0 0114 0H5z"/></svg></div>
+      <div class="agent-msg">Let's prepare for a career conversation with <strong>${pr.name}</strong>. I've analyzed their trajectory and identified key growth opportunities.</div>
+    </div>
+
+    <!-- Career Story -->
+    <div class="card">
+      <div class="card-header"><span class="card-title green">Career Story</span></div>
+      <div class="narrative">
+        <strong>${pr.name}</strong> joined Acme Co as a <strong>${startRole || pr.role}</strong> in ${formatDate(pr.startDate)} and ${reports.length > 0 ? 'now manages <strong>' + reports.length + ' engineers</strong>' : 'is currently serving as'} ${reports.length > 0 ? '&mdash; ' : ''} ${reports.length > 0 && reports.length >= 10 ? 'one of the largest teams in Engineering' : ''}. ${latestReview ? 'Their last review was <strong>\u201C' + latestReview.properties.rating + '\u201D</strong>' + (latestReview.properties.summary ? ', described as having \u201C' + latestReview.properties.summary.split('.').slice(1,2).join('.').trim() + '.\u201D' : '') : ''} They are currently working across <strong>${projects.length} projects</strong>: ${projects.map(p => p.properties.name).join(', ')}.${mentoring.length ? ' They are mentoring ' + mentoring.map(m => m.properties.name).join(', ') + '.' : ''}
+      </div>
+    </div>
+
+    <!-- Career Timeline -->
+    <div class="card">
+      <div class="card-header"><span class="card-title blue">Trajectory</span></div>
+      <div class="career-timeline">
+        <div class="career-phase">
+          <div class="career-phase-title">${startRole || pr.role}</div>
+          <div class="career-phase-dates">${formatDate(pr.startDate)} &mdash; ${tenure > 12 ? formatDate(new Date(new Date(pr.startDate).getTime() + 365*24*60*60*1000).toISOString().split('T')[0]) : 'Present'}</div>
+          ${salaryAmt ? `<div class="career-phase-comp">${formatMoney(salaryAmt)}</div>` : ''}
+        </div>
+        ${reports.length > 0 ? `
+        <div class="career-phase current">
+          <div class="career-phase-title">${pr.role} (current)</div>
+          <div class="career-phase-dates">${tenure > 12 ? formatDate(new Date(new Date(pr.startDate).getTime() + 365*24*60*60*1000).toISOString().split('T')[0]) : formatDate(pr.startDate)} &mdash; Present</div>
+          ${salaryAmt ? `<div class="career-phase-comp">${formatMoney(salaryAmt)} ${bandPct !== null ? '(' + bandPct + '% of band)' : ''}</div>` : ''}
+        </div>
+        ` : ''}
+      </div>
+      ${bandPct !== null ? `
+      <div style="margin-top:8px; padding: 8px 14px; background: rgba(255,255,255,0.02); border-radius: 8px;">
+        <div style="font-size: 11px; color:#888; margin-bottom:4px;">Salary Band: ${formatMoney(bandMin)} &mdash; ${formatMoney(bandMax)}</div>
+        <div style="height:6px; background:rgba(255,255,255,0.06); border-radius:3px; position:relative;">
+          <div style="position:absolute; left:${bandPct}%; top:-2px; width:10px; height:10px; background:#34d399; border-radius:50%; transform:translateX(-50%);"></div>
+        </div>
+      </div>
+      ` : ''}
+    </div>
+
+    <div class="two-col" style="grid-template-columns: 1fr 1fr;">
+      <!-- Growth Signals -->
+      <div class="card">
+        <div class="card-header"><span class="card-title green">Growth Signals</span></div>
+        <div style="margin-bottom:10px; font-size: 12px; color:#6ee7b7; text-transform:uppercase; font-weight:600; letter-spacing:0.04em;">Positive</div>
+        ${exceedsCount > 0 ? `<div class="signal-row"><div class="signal-icon" style="color:#34d399;">+</div><div class="signal-text">${exceedsCount} "Exceeds" review${exceedsCount > 1 ? 's' : ''}, demonstrating consistent high performance</div></div>` : ''}
+        ${projects.length > 2 ? `<div class="signal-row"><div class="signal-icon" style="color:#34d399;">+</div><div class="signal-text">Expanding scope &mdash; ${projects.length} concurrent projects, up from 2 last year</div></div>` : ''}
+        ${mentoring.length ? `<div class="signal-row"><div class="signal-icon" style="color:#34d399;">+</div><div class="signal-text">Active mentoring (${mentoring.map(m => m.properties.name).join(', ')}), showing leadership growth</div></div>` : ''}
+        ${recognitions.length ? `<div class="signal-row"><div class="signal-icon" style="color:#34d399;">+</div><div class="signal-text">${recognitions.length} recognition${recognitions.length > 1 ? 's' : ''} received from peers and managers</div></div>` : ''}
+
+        <div style="margin:12px 0 10px; font-size: 12px; color:#fbbf24; text-transform:uppercase; font-weight:600; letter-spacing:0.04em;">Watch</div>
+        ${projects.length >= 4 ? `<div class="signal-row"><div class="signal-icon" style="color:#fbbf24;">!</div><div class="signal-text">${projects.length} concurrent projects may indicate overload, not growth. Team-level wellbeing signals suggest some stretch.</div></div>` : ''}
+        ${salaryAmt && bandPct !== null && bandPct < 80 ? `<div class="signal-row"><div class="signal-icon" style="color:#fbbf24;">!</div><div class="signal-text">Compensation at ${bandPct}% of band despite strong performance &mdash; potential retention risk</div></div>` : ''}
+      </div>
+
+      <!-- Next Move Options -->
+      <div class="card">
+        <div class="card-header"><span class="card-title blue">Next Move Options</span></div>
+        <div class="move-option" onclick="this.classList.toggle('open')">
+          <div class="move-option-title">Promote to Senior ${pr.role} (${pr.level === 'M-1' ? 'M-2' : 'next level'})</div>
+          <div class="move-option-desc">Natural progression based on scope expansion and team size</div>
+          <div class="detail-expand">
+            <strong>Gap analysis:</strong> ${pr.name} manages ${reports.length} reports and ${projects.length} projects. Typical M-2 requirements include cross-team influence and strategic planning. ${exceedsCount > 0 ? 'Performance track record supports this move.' : 'Would benefit from more "Exceeds" reviews.'}<br><br>
+            <strong>Timeline:</strong> Could be ready within 3-6 months with focused development on strategic visibility.
+          </div>
+        </div>
+        <div class="move-option" onclick="this.classList.toggle('open')">
+          <div class="move-option-title">Specialize Deeper</div>
+          <div class="move-option-desc">Reduce project spread, go deep on platform architecture</div>
+          <div class="detail-expand">
+            Rather than spreading across ${projects.length} projects, focus on 1-2 high-impact areas. Leverages ${skills.filter(s => s.edge.metadata?.proficiency === 'expert' || s.edge.metadata?.proficiency === 'advanced').length} advanced/expert skills. Could become the go-to technical authority.
+          </div>
+        </div>
+        <div class="move-option" onclick="this.classList.toggle('open')">
+          <div class="move-option-title">Lateral to Product Engineering</div>
+          <div class="move-option-desc">Different challenge, leverages cross-functional experience</div>
+          <div class="detail-expand">
+            ${pr.name}'s experience across ${teams.length} teams (${teams.map(t => t.properties.name).join(', ')}) provides cross-functional perspective. A lateral move would bring fresh challenges without the pressure of a promotion timeline.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conversation Starters -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Conversation Starters</span></div>
+      <div class="convo-starter">"Where do you see yourself in 12 months?"</div>
+      <div class="convo-starter">"The ${projects.length}-project workload &mdash; is that energizing or draining?"</div>
+      ${mentoring.length ? `<div class="convo-starter">"Would you be interested in mentoring more formally?"</div>` : ''}
+      <div class="convo-starter">"What kind of problems do you wish you could spend more time on?"</div>
+      <div class="convo-starter">"If you could change one thing about your role tomorrow, what would it be?"</div>
+    </div>
+
+    <!-- Graph Advantage -->
+    <div class="graph-advantage">
+      <div class="graph-advantage-title">Graph Advantage</div>
+      <p>The graph connects ${pr.name}'s role history, comp trajectory, review ratings (${exceedsCount} exceeds), ${projects.length} project assignments, ${recognitions.length} recognition events, ${mentoring.length} mentoring relationships, and ${teams.length} team memberships into a coherent career narrative. It can also compare their trajectory against similar employees who were promoted, stayed, or left &mdash; revealing what "ready for promotion" actually looks like at Acme Co. A traditional HRIS stores these in separate modules with no way to synthesize them into a single career picture.</p>
+    </div>
+  `;
+}
+
+/* ===============================================
+   MOCK D: TEAM HEALTH AGENT
+   =============================================== */
+function renderTeamHealth(managerId) {
+  const p = node(managerId);
+  if (!p) return;
+  const pr = p.properties;
+  const container = document.getElementById('teamhealth-content');
+
+  const reports = directReports(managerId);
+  const reportsData = reports.map(rid => {
+    const rn = node(rid);
+    if (!rn) return null;
+    const rp = rn.properties;
+    const rReviews = edgesFrom(rid, 'has_review').map(e => node(e.target)).filter(Boolean);
+    const rRecs = edgesTo(rid, 'recognized');
+    const rComps = edgesFrom(rid, 'has_comp').map(e => node(e.target)).filter(Boolean);
+    const rSalary = rComps.find(c => c && c.properties && c.properties.type === 'salary');
+    const rPosition = edgesFrom(rid, 'holds_position').map(e => node(e.target)).filter(Boolean)[0];
+
+    const latestRev = rReviews.sort((a,b) => (b.properties.completedDate||'').localeCompare(a.properties.completedDate||''))[0];
+    const latestRecEdge = rRecs.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''))[0];
+    const daysSinceRev = latestRev && latestRev.properties.completedDate ? daysBetween(latestRev.properties.completedDate, '2026-03-06') : 999;
+    const daysSinceRec = latestRecEdge ? daysBetween(latestRecEdge.timestamp.split('T')[0], '2026-03-06') : 999;
+    const tenureMonths = monthsBetween(rp.startDate, '2026-03-06');
+    const compMonths = rSalary ? monthsBetween(rSalary.properties.effectiveDate, '2026-03-06') : 999;
+
+    let bandStatus = 'green';
+    if (rPosition && rPosition.properties && rSalary) {
+      const pct = (rSalary.properties.amount - rPosition.properties.salaryBandMin) / (rPosition.properties.salaryBandMax - rPosition.properties.salaryBandMin);
+      if (pct < 0.3) bandStatus = 'red';
+      else if (pct < 0.5) bandStatus = 'yellow';
+    }
+
+    const flags = [];
+    if (daysSinceRec > 180) flags.push('no-rec');
+    if (compMonths > 18) flags.push('stale-comp');
+    if (tenureMonths < 4) flags.push('new-hire');
+    if (daysSinceRev > 365) flags.push('review-overdue');
+
+    return {
+      id: rid, name: rp.name, role: rp.role, level: rp.level,
+      startDate: rp.startDate, tenure: tenureMonths,
+      lastRevDate: latestRev ? latestRev.properties.completedDate : null,
+      lastRevRating: latestRev ? latestRev.properties.rating : null,
+      lastRecDate: latestRecEdge ? latestRecEdge.timestamp.split('T')[0] : null,
+      daysSinceRec, daysSinceRev, compMonths, bandStatus, flags,
+      salary: rSalary ? rSalary.properties.amount : null
+    };
+  }).filter(Boolean);
+
+  // sort by urgency
+  const attentionItems = reportsData.filter(r => r.flags.length > 0).sort((a,b) => b.flags.length - a.flags.length);
+  const healthyCount = reportsData.length - attentionItems.length;
+
+  // Team aggregates
+  const avgTenure = Math.round(reportsData.reduce((s,r) => s + r.tenure, 0) / reportsData.length);
+  const reviewedLast12 = reportsData.filter(r => r.daysSinceRev <= 365).length;
+  const totalRecs = reportsData.reduce((s,r) => s + (r.daysSinceRec < 180 ? 1 : 0), 0);
+
+  container.innerHTML = `
+    <div class="agent-header">
+      <div class="agent-avatar"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5v1a5 5 0 01-10 0V7a5 5 0 015-5zm-7 18a7 7 0 0114 0H5z"/></svg></div>
+      <div class="agent-msg">Your team of <strong>${reportsData.length}</strong> is ${attentionItems.length === 0 ? 'looking healthy' : 'mostly healthy'}. <strong>${attentionItems.length} ${attentionItems.length === 1 ? 'person needs' : 'people need'} attention</strong>${attentionItems.length > 0 ? '.' : ', and everything is on track.'}</div>
+    </div>
+
+    <!-- Attention Cards -->
+    ${attentionItems.length > 0 ? `
+    <div class="card">
+      <div class="card-header"><span class="card-title amber">Needs Attention</span></div>
+      ${attentionItems.map(r => {
+        let body = '';
+        let urgency = '';
+        if (r.flags.includes('no-rec')) {
+          body += `No recognition in <strong>${r.daysSinceRec} days</strong>. `;
+          urgency = '';
+        }
+        if (r.flags.includes('stale-comp')) {
+          body += `${r.compMonths} months without comp review. `;
+          urgency = '';
+        }
+        if (r.flags.includes('review-overdue')) {
+          body += `Review overdue (${r.daysSinceRev} days). `;
+          urgency = 'urgent';
+        }
+        if (r.flags.includes('new-hire')) {
+          body += `New hire (${r.tenure} months) &mdash; needs extra check-ins. `;
+          urgency = 'info';
+        }
+        return `
+          <div class="attention-card ${urgency}">
+            <div class="attention-card-title">${r.name} &mdash; ${r.role}</div>
+            <div class="attention-card-body">${body}</div>
+            <div class="action-row">
+              ${r.flags.includes('no-rec') ? `<button class="action-btn primary" onclick="handleAction(this, 'Draft Created')">Draft Recognition</button>` : ''}
+              ${r.flags.includes('stale-comp') ? `<button class="action-btn primary" onclick="handleAction(this, 'Flagged')">Flag for Comp Cycle</button>` : ''}
+              ${r.flags.includes('review-overdue') ? `<button class="action-btn primary" onclick="handleAction(this, 'Reminder Sent')">Send Review Reminder</button>` : ''}
+              <button class="action-btn secondary" onclick="handleAction(this, 'Noted')">Remind Me Later</button>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    ` : ''}
+
+    <!-- Team Overview Grid -->
+    <div class="card">
+      <div class="card-header"><span class="card-title slate">Team Overview</span></div>
+      <div class="team-grid">
+        ${reportsData.map(r => `
+          <div class="team-member-card ${r.flags.length ? 'flagged' : ''}" onclick="this.classList.toggle('open')">
+            <div class="flag-dot ${r.flags.length > 1 ? 'red' : r.flags.length === 1 ? 'yellow' : 'green'}"></div>
+            <div class="name">${r.name}</div>
+            <div class="role">${r.role} &middot; ${r.level || ''}</div>
+            <div class="meta-row">
+              <span>${r.tenure}mo tenure</span>
+              <span>${r.lastRevRating || 'No review'}</span>
+            </div>
+            <div class="expanded-detail">
+              <strong>Last review:</strong> ${r.lastRevDate ? formatDate(r.lastRevDate) + ' (' + r.lastRevRating + ')' : 'None on file'}<br>
+              <strong>Last recognized:</strong> ${r.lastRecDate ? formatDate(r.lastRecDate) + ' (' + r.daysSinceRec + ' days ago)' : 'Never'}<br>
+              <strong>Comp:</strong> ${r.salary ? formatMoney(r.salary) : 'N/A'} &middot; ${r.compMonths < 999 ? r.compMonths + 'mo since change' : 'No history'}<br>
+              <strong>Started:</strong> ${formatDate(r.startDate)}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Team Trends -->
+    <div class="card">
+      <div class="card-header"><span class="card-title slate">Team Trends (Aggregated)</span></div>
+      <div class="trend-grid">
+        <div class="trend-item">
+          <div class="trend-value">${avgTenure}mo</div>
+          <div class="trend-label">Avg Tenure</div>
+        </div>
+        <div class="trend-item">
+          <div class="trend-value">${reviewedLast12}/${reportsData.length}</div>
+          <div class="trend-label">Reviewed (12mo)</div>
+        </div>
+        <div class="trend-item">
+          <div class="trend-value">${totalRecs}</div>
+          <div class="trend-label">Recognized (6mo)</div>
+        </div>
+        <div class="trend-item">
+          <div class="trend-value">${healthyCount}/${reportsData.length}</div>
+          <div class="trend-label">No Flags</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graph Advantage -->
+    <div class="graph-advantage">
+      <div class="graph-advantage-title">Graph Advantage</div>
+      <p>The graph connects each of ${pr.name}'s ${reportsData.length} team members' review history, recognition patterns, comp timeline, and milestone dates. It automatically detects when someone is "going dark" &mdash; no recent reviews, no recognition, stale compensation &mdash; and flags them before they become a retention risk. Traditional HRIS stores this data in silos: you'd need to manually check each person across Performance, Comp, and Recognition modules. The graph surfaces patterns across all ${reportsData.length} people simultaneously.</p>
+    </div>
+  `;
+}
+
+/* ===============================================
+   MOCK E: PEOPLE INTELLIGENCE BRIEFING
+   =============================================== */
+function renderBriefing() {
+  const container = document.getElementById('briefing-content');
+  const allPeople = people();
+
+  // Department breakdown
+  const departments = NODES.filter(n => n.type === 'department');
+  const deptPeople = {};
+  departments.forEach(d => deptPeople[d.id] = { node: d, people: [] });
+  allPeople.forEach(p => {
+    const deptEdge = edgesFrom(p.id, 'in_department')[0];
+    if (deptEdge && deptPeople[deptEdge.target]) {
+      deptPeople[deptEdge.target].people.push(p);
+    }
+  });
+
+  const activePeople = allPeople.filter(p => p.properties.status === 'active');
+  const preparingPeople = allPeople.filter(p => p.properties.status === 'preparing' || p.properties.status === 'onboarding');
+  const terminatedPeople = allPeople.filter(p => p.properties.status === 'terminated');
+  const onLeavePeople = allPeople.filter(p => p.properties.status === 'on_leave');
+
+  // Open positions
+  const openPositions = NODES.filter(n => n.type === 'position' && n.properties && n.properties.isOpen);
+
+  // Candidates in pipeline
+  const candidates = NODES.filter(n => n.type === 'candidate');
+  const activeCandidates = candidates.filter(c => !['rejected','withdrawn','unresponsive'].includes(c.properties.status));
+
+  // Reviews
+  const allReviews = NODES.filter(n => n.type === 'review');
+  const completedReviews = allReviews.filter(r => r.properties.status === 'completed');
+  const pendingReviews = allReviews.filter(r => r.properties.status === 'pending' || r.properties.status === 'scheduled');
+
+  // Recent terminations (last 90 days)
+  const recentTerms = terminatedPeople.filter(p => {
+    const end = p.properties.endDate;
+    return end && daysBetween(end, '2026-03-06') <= 90;
+  });
+
+  container.innerHTML = `
+    <div class="briefing-header">
+      <h2>Weekly People Briefing</h2>
+      <div class="date">Feb 28 &mdash; Mar 6, 2026 &middot; Acme Co</div>
+    </div>
+
+    <div class="agent-header">
+      <div class="agent-avatar"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5v1a5 5 0 01-10 0V7a5 5 0 015-5zm-7 18a7 7 0 0114 0H5z"/></svg></div>
+      <div class="agent-msg">Good morning. Here's your weekly people update. <strong>${preparingPeople.length} new hire${preparingPeople.length !== 1 ? 's' : ''}</strong> in the pipeline, <strong>${openPositions.length} open positions</strong>, and a few items that need your attention.</div>
+    </div>
+
+    <!-- Headlines -->
+    <div class="briefing-section">
+      <div class="briefing-section-title">Headlines</div>
+      ${preparingPeople.length > 0 ? `
+        <div class="headline-item">
+          <div class="headline-dot green"></div>
+          <div class="headline-text"><strong>${preparingPeople.length} new hire${preparingPeople.length !== 1 ? 's' : ''} starting soon:</strong> ${preparingPeople.map(p => p.properties.name + ' (' + p.properties.role + ', starts ' + formatDate(p.properties.startDate) + ')').join('; ')}</div>
+        </div>
+      ` : ''}
+      <div class="headline-item">
+        <div class="headline-dot ${completedReviews.length / (completedReviews.length + pendingReviews.length) > 0.8 ? 'green' : 'amber'}"></div>
+        <div class="headline-text"><strong>Annual review cycle:</strong> ${completedReviews.length} completed, ${pendingReviews.length} still pending. ${Math.round(completedReviews.length / Math.max(1, completedReviews.length + pendingReviews.length) * 100)}% complete.</div>
+      </div>
+      ${recentTerms.length > 0 ? `
+        <div class="headline-item">
+          <div class="headline-dot rose"></div>
+          <div class="headline-text"><strong>${recentTerms.length} departure${recentTerms.length !== 1 ? 's' : ''} in last 90 days:</strong> ${recentTerms.map(p => p.properties.name).join(', ')}</div>
+        </div>
+      ` : ''}
+      <div class="headline-item">
+        <div class="headline-dot blue"></div>
+        <div class="headline-text"><strong>${activeCandidates.length} candidates</strong> active in the hiring pipeline across ${openPositions.length} open positions</div>
+      </div>
+      ${onLeavePeople.length > 0 ? `
+        <div class="headline-item">
+          <div class="headline-dot amber"></div>
+          <div class="headline-text"><strong>${onLeavePeople.length} employee${onLeavePeople.length !== 1 ? 's' : ''} on leave:</strong> ${onLeavePeople.map(p => p.properties.name + ' (' + p.properties.role + ')').join(', ')}</div>
+        </div>
+      ` : ''}
+    </div>
+
+    <!-- By Department -->
+    <div class="briefing-section">
+      <div class="briefing-section-title">By Department</div>
+      ${departments.map(d => {
+        const dp = deptPeople[d.id];
+        if (!dp) return '';
+        const active = dp.people.filter(p => p.properties.status === 'active').length;
+        const preparing = dp.people.filter(p => p.properties.status === 'preparing' || p.properties.status === 'onboarding').length;
+        const terminated = dp.people.filter(p => p.properties.status === 'terminated').length;
+        const onLeave = dp.people.filter(p => p.properties.status === 'on_leave').length;
+        const total = dp.people.length;
+        if (total === 0) return '';
+
+        // Find open positions for this dept
+        const deptOpen = openPositions.filter(pos => pos.properties.department === d.properties.name);
+
+        return `
+          <div class="dept-row" onclick="this.classList.toggle('open')">
+            <div class="dept-header">
+              <span class="dept-name">${d.properties.name}</span>
+              <span class="dept-count">${active} active</span>
+            </div>
+            <div class="dept-detail">
+              ${preparing > 0 ? `${preparing} new hire${preparing > 1 ? 's' : ''} starting soon. ` : ''}
+              ${terminated > 0 ? `${terminated} departure${terminated > 1 ? 's' : ''} on record. ` : ''}
+              ${onLeave > 0 ? `${onLeave} on leave. ` : ''}
+              ${deptOpen.length > 0 ? `${deptOpen.length} open position${deptOpen.length > 1 ? 's' : ''}: ${deptOpen.map(pos => pos.properties.title).join(', ')}. ` : 'Fully staffed. '}
+              ${d.properties.description || ''}
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <!-- Action Items -->
+    <div class="briefing-section">
+      <div class="briefing-section-title">What I've Handled</div>
+      <div class="card">
+        <div class="agent-item">
+          <div class="agent-bullet done"></div>
+          <div class="agent-item-text">Sent review reminders to managers with ${pendingReviews.length} pending reviews</div>
+        </div>
+        ${preparingPeople.length > 0 ? `
+        <div class="agent-item">
+          <div class="agent-bullet done"></div>
+          <div class="agent-item-text">Drafted onboarding plans for ${preparingPeople.map(p => p.properties.name).join(' and ')}</div>
+        </div>
+        ` : ''}
+        <div class="agent-item">
+          <div class="agent-bullet done"></div>
+          <div class="agent-item-text">Equipment orders tracked &mdash; ${NODES.filter(n => n.type === 'equipment' && n.properties.status === 'requested').length} pending IT fulfillment, will follow up if not shipped by Friday</div>
+        </div>
+        ${terminatedPeople.length > 0 ? `
+        <div class="agent-item">
+          <div class="agent-bullet done"></div>
+          <div class="agent-item-text">COBRA election reminders sent for recent departures &mdash; compliance windows tracked</div>
+        </div>
+        ` : ''}
+        <div class="agent-item">
+          <div class="agent-bullet done"></div>
+          <div class="agent-item-text">Benefits enrollment status audited &mdash; all active employees confirmed enrolled</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coming Up -->
+    <div class="briefing-section">
+      <div class="briefing-section-title">Coming Up (Next 2 Weeks)</div>
+      <div class="card">
+        ${preparingPeople.map(p => `
+        <div class="cal-row">
+          <div class="cal-date"><div class="month">${new Date(p.properties.startDate).toLocaleString('en-US', {month:'short'}).toUpperCase()}</div><div class="day">${new Date(p.properties.startDate).getDate()}</div></div>
+          <div class="cal-desc"><strong>${p.properties.name} starts</strong> &mdash; ${p.properties.role}, Day 1 orientation scheduled</div>
+        </div>
+        `).join('')}
+        <div class="cal-row">
+          <div class="cal-date"><div class="month">MAR</div><div class="day">10</div></div>
+          <div class="cal-desc"><strong>Review cycle deadline</strong> &mdash; ${pendingReviews.length} reviews still pending</div>
+        </div>
+        <div class="cal-row">
+          <div class="cal-date"><div class="month">MAR</div><div class="day">14</div></div>
+          <div class="cal-desc"><strong>Compliance training deadline</strong> &mdash; Harassment Prevention & Data Security due by Mar 31</div>
+        </div>
+        <div class="cal-row">
+          <div class="cal-date"><div class="month">MAR</div><div class="day">15</div></div>
+          <div class="cal-desc"><strong>Payroll processing</strong> &mdash; Semi-monthly cycle, all timesheets due Mar 13</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics Snapshot -->
+    <div class="briefing-section">
+      <div class="briefing-section-title">Metrics Snapshot</div>
+      <div class="sparkline-row">
+        <div class="sparkline-item">
+          <div class="sparkline-value">${activePeople.length}</div>
+          <div class="sparkline-label">Active Headcount</div>
+          <div class="sparkline-trend ${preparingPeople.length > 0 ? 'up' : 'flat'}">${preparingPeople.length > 0 ? '+' + preparingPeople.length + ' incoming' : 'Stable'}</div>
+        </div>
+        <div class="sparkline-item">
+          <div class="sparkline-value">${openPositions.length}</div>
+          <div class="sparkline-label">Open Positions</div>
+          <div class="sparkline-trend flat">${activeCandidates.length} candidates</div>
+        </div>
+        <div class="sparkline-item">
+          <div class="sparkline-value">${Math.round(completedReviews.length / Math.max(1, completedReviews.length + pendingReviews.length) * 100)}%</div>
+          <div class="sparkline-label">Review Completion</div>
+          <div class="sparkline-trend ${pendingReviews.length > 5 ? 'down' : 'up'}">${pendingReviews.length} pending</div>
+        </div>
+        <div class="sparkline-item">
+          <div class="sparkline-value">${terminatedPeople.length > 0 ? Math.round((1 - terminatedPeople.length / (activePeople.length + terminatedPeople.length)) * 100) : 100}%</div>
+          <div class="sparkline-label">Retention Rate</div>
+          <div class="sparkline-trend ${terminatedPeople.length > 3 ? 'down' : 'up'}">${terminatedPeople.length} departures total</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graph Advantage -->
+    <div class="graph-advantage">
+      <div class="graph-advantage-title">Graph Advantage</div>
+      <p>This briefing synthesizes data across every domain in the HRIS &mdash; ${activePeople.length} people, ${departments.length} departments, compensation records, benefits enrollment, compliance deadlines, recruiting pipeline, and equipment provisioning &mdash; into a single coherent update. Traditional HRIS would require checking 8+ separate modules to compile this view. The graph's connected data model links a new hire's start date to their equipment orders, team assignment, compliance training, and manager's calendar automatically. Cross-domain intelligence that would take hours of manual work happens in milliseconds.</p>
+    </div>
+  `;
+}
+
+/* ===============================================
+   INTERACTIVE HELPERS
+   =============================================== */
+function handleAction(btn, label) {
+  const row = btn.parentElement;
+  row.querySelectorAll('.action-btn').forEach(b => {
+    b.classList.remove('primary', 'secondary');
+    b.classList.add('secondary');
+    b.style.opacity = '0.4';
+    b.style.pointerEvents = 'none';
+  });
+  btn.classList.remove('secondary');
+  btn.classList.add('done');
+  btn.style.opacity = '1';
+  btn.textContent = label;
+  btn.style.pointerEvents = 'none';
+}
+
+/* ===============================================
+   BOOT
+   =============================================== */
+loadData();
+</script>
+</body>
+</html>

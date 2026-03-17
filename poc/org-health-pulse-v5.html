@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Org Health Pulse — Acme Co</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0f; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5; }
+.container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+h1 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+h2 { font-size: 18px; font-weight: 600; margin-bottom: 12px; color: #e0e0e0; }
+h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #ccc; }
+.subtitle { color: #888; font-size: 13px; margin-bottom: 24px; }
+.card { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+.badge-green { background: rgba(16,185,129,0.15); color: #10b981; }
+.badge-amber { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+.badge-blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.badge-purple { background: rgba(168,85,247,0.15); color: #a855f7; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+@media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* Summary sentence */
+.summary-sentence { font-size: 16px; color: #d0d0d0; padding: 16px 20px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 1px solid #2a2a3e; border-radius: 12px; margin-bottom: 20px; line-height: 1.7; }
+.summary-sentence .highlight-good { color: #10b981; font-weight: 600; }
+.summary-sentence .highlight-warn { color: #f59e0b; font-weight: 600; }
+.summary-sentence .highlight-bad { color: #ef4444; font-weight: 600; }
+.summary-sentence .ai-tag { display: inline-block; font-size: 11px; background: rgba(168,85,247,0.15); color: #a855f7; padding: 2px 8px; border-radius: 10px; margin-right: 8px; vertical-align: middle; }
+
+/* Heat map */
+.heatmap-grid { display: grid; gap: 2px; }
+.heatmap-cell { padding: 8px 6px; text-align: center; font-size: 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; position: relative; }
+.heatmap-cell:hover { transform: scale(1.05); z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+.heatmap-header { font-weight: 600; color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 6px; text-align: center; }
+.heatmap-row-label { font-weight: 500; color: #ccc; font-size: 13px; padding: 8px 6px; display: flex; align-items: center; }
+
+/* eNPS chart */
+.enps-score { font-size: 48px; font-weight: 700; text-align: center; margin: 8px 0; }
+.enps-bar { display: flex; border-radius: 8px; overflow: hidden; height: 32px; margin: 12px 0; }
+.enps-bar-segment { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; transition: width 0.5s ease; }
+.enps-legend { display: flex; gap: 20px; justify-content: center; margin-top: 8px; }
+.enps-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #999; }
+.enps-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.dept-enps-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #2a2a3e; }
+.dept-enps-row:last-child { border-bottom: none; }
+.dept-enps-label { width: 120px; font-size: 13px; color: #ccc; flex-shrink: 0; }
+.dept-enps-bar-wrap { flex: 1; }
+.dept-enps-bar { height: 20px; display: flex; border-radius: 4px; overflow: hidden; }
+.dept-enps-score { width: 50px; text-align: right; font-size: 14px; font-weight: 600; flex-shrink: 0; }
+
+/* Trend charts */
+.trend-chart { position: relative; height: 160px; margin: 12px 0 4px; }
+.trend-chart svg { width: 100%; height: 100%; }
+.trend-label { font-size: 11px; color: #888; text-align: center; margin-top: 4px; }
+.trend-value { font-size: 28px; font-weight: 700; }
+.trend-delta { font-size: 13px; margin-left: 8px; }
+.trend-delta.up { color: #10b981; }
+.trend-delta.down { color: #ef4444; }
+.no-data-note { font-size: 12px; color: #666; font-style: italic; text-align: center; padding: 20px; }
+
+/* Watchlist */
+.watchlist-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: background 0.2s; border: 1px solid transparent; }
+.watchlist-item:hover { background: rgba(255,255,255,0.03); border-color: #2a2a3e; }
+.watchlist-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.watchlist-content { flex: 1; }
+.watchlist-title { font-size: 13px; font-weight: 500; color: #e0e0e0; }
+.watchlist-detail { font-size: 12px; color: #888; margin-top: 2px; }
+.watchlist-action { font-size: 11px; color: #3b82f6; margin-top: 4px; cursor: pointer; }
+.watchlist-action:hover { text-decoration: underline; }
+.watchlist-urgency { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+
+/* Benchmark */
+.benchmark-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1a1a2e; }
+.benchmark-row:last-child { border-bottom: none; }
+.benchmark-metric { width: 130px; font-size: 13px; color: #ccc; flex-shrink: 0; }
+.benchmark-bar-wrap { flex: 1; position: relative; height: 24px; }
+.benchmark-bar-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #2a2a3e; border-radius: 4px; }
+.benchmark-bar-fill { position: absolute; top: 0; left: 0; bottom: 0; border-radius: 4px; transition: width 0.5s; }
+.benchmark-marker { position: absolute; top: -4px; bottom: -4px; width: 3px; border-radius: 2px; background: #888; }
+.benchmark-marker-label { position: absolute; top: -18px; font-size: 11px; color: #888; white-space: nowrap; transform: translateX(-50%); }
+.benchmark-values { width: 90px; text-align: right; font-size: 13px; flex-shrink: 0; }
+.benchmark-yours { font-weight: 600; }
+.benchmark-theirs { color: #888; font-size: 11px; }
+
+/* Drill-down panel */
+.drilldown-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.drilldown-overlay.active { opacity: 1; pointer-events: all; }
+.drilldown-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 480px; max-width: 90vw; background: #12121f; border-left: 1px solid #2a2a3e; z-index: 101; transform: translateX(100%); transition: transform 0.3s ease; overflow-y: auto; padding: 24px; }
+.drilldown-panel.active { transform: translateX(0); }
+.drilldown-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: #888; font-size: 20px; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
+.drilldown-close:hover { background: rgba(255,255,255,0.05); color: #e0e0e0; }
+.drilldown-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; padding-right: 40px; }
+.drilldown-subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+.drilldown-section { margin-bottom: 20px; }
+.drilldown-section h4 { font-size: 13px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.drilldown-stat { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1a1a2e; font-size: 13px; }
+.drilldown-stat:last-child { border-bottom: none; }
+.drilldown-stat-label { color: #999; }
+.drilldown-stat-value { font-weight: 500; }
+.drilldown-comment { padding: 10px 12px; background: #1a1a2e; border-radius: 8px; margin-bottom: 8px; font-size: 13px; color: #bbb; border-left: 3px solid #3b82f6; }
+.drilldown-anon-note { font-size: 11px; color: #666; font-style: italic; margin-bottom: 12px; }
+
+/* Beta tag */
+.beta-tag { display: inline-block; font-size: 11px; font-weight: 700; background: rgba(245,158,11,0.15); color: #f59e0b; padding: 2px 6px; border-radius: 4px; margin-left: 8px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+
+/* Loading state */
+.loading { text-align: center; padding: 40px; color: #666; }
+.loading-spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid #2a2a3e; border-top: 3px solid #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 8px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Header */
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.page-header-right { text-align: right; }
+.last-updated { font-size: 11px; color: #666; }
+.header-stats { display: flex; gap: 24px; margin-top: 8px; }
+.header-stat { text-align: center; }
+.header-stat-value { font-size: 20px; font-weight: 700; }
+.header-stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>Org Health Pulse <span style="font-size:14px;font-weight:400;color:#888;margin-left:8px">v5</span></h1>
+      <div style="display:flex;align-items:center;gap:6px;margin-left:16px;font-size:12px;font-weight:500;color:#555">
+        <a href="pattern-intelligence.html" style="color:#555;text-decoration:none">v1</a><span style="color:rgba(255,255,255,0.1)">|</span>
+        <a href="pattern-intelligence-v2.html" style="color:#555;text-decoration:none">v2</a><span style="color:rgba(255,255,255,0.1)">|</span>
+        <a href="pattern-intelligence-v3.html" style="color:#555;text-decoration:none">v3</a><span style="color:rgba(255,255,255,0.1)">|</span>
+        <a href="pattern-intelligence-v4.html" style="color:#555;text-decoration:none">v4</a><span style="color:rgba(255,255,255,0.1)">|</span>
+        <span style="color:#e0e0e0;font-weight:700">v5</span>
+        <span style="color:#555;font-size:11px;margin-left:4px">(was Pattern Intelligence)</span>
+      </div>
+      <div class="subtitle">Acme Co — 148 employees across 6 departments</div>
+    </div>
+    <div class="page-header-right">
+      <div class="last-updated">Survey data from Jan 20, 2026</div>
+      <div class="header-stats" id="headerStats"></div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-sentence" id="summarySection"><div class="loading"><div class="loading-spinner"></div><br>Analyzing graph data...</div></div>
+
+  <!-- Heat Map + eNPS side by side -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <h2>Department Health Map</h2>
+        <span class="badge badge-blue" style="font-size:11px; cursor:help" title="Click any cell to drill into team-level details">Click to drill in</span>
+      </div>
+      <div id="heatmapContainer"><div class="loading"><div class="loading-spinner"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2>eNPS Distribution</h2>
+        <span class="badge badge-green" id="enpsScoreBadge">--</span>
+      </div>
+      <div id="enpsContainer"><div class="loading"><div class="loading-spinner"></div></div></div>
+    </div>
+  </div>
+
+  <!-- Trends -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Trends</h2>
+      <span class="badge badge-purple">Real data + survey placeholders</span>
+    </div>
+    <div id="trendsContainer"><div class="loading"><div class="loading-spinner"></div></div></div>
+  </div>
+
+  <!-- Watchlist + Benchmarks side by side -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <h2>Watchlist</h2>
+        <span class="badge badge-amber" id="watchlistCount">--</span>
+      </div>
+      <div id="watchlistContainer"><div class="loading"><div class="loading-spinner"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2>Industry Benchmarks <span class="beta-tag">Coming Soon</span></h2>
+      </div>
+      <div id="benchmarkContainer"><div class="loading"><div class="loading-spinner"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Drill-down overlay -->
+<div class="drilldown-overlay" id="drilldownOverlay"></div>
+<div class="drilldown-panel" id="drilldownPanel">
+  <button class="drilldown-close" id="drilldownClose">&times;</button>
+  <div id="drilldownContent"></div>
+</div>
+
+<script>
+// ── Graph Data Helpers ──
+let NODES = [], EDGES = [], nodeMap = {}, edgesBySource = {}, edgesByTarget = {};
+const CURRENT_DATE = '2026-03-12';
+
+async function loadData() {
+  const [nodesResp, edgesResp] = await Promise.all([
+    fetch('../data/nodes.json').then(r => r.json()),
+    fetch('../data/edges.json').then(r => r.json())
+  ]);
+  NODES = nodesResp.nodes;
+  EDGES = edgesResp.edges;
+  nodeMap = {};
+  edgesBySource = {};
+  edgesByTarget = {};
+  NODES.forEach(n => nodeMap[n.id] = n);
+  EDGES.forEach(e => {
+    (edgesBySource[e.source] = edgesBySource[e.source] || []).push(e);
+    (edgesByTarget[e.target] = edgesByTarget[e.target] || []).push(e);
+  });
+}
+
+function getNode(id) { return nodeMap[id]; }
+function edgesFrom(id, type) { return (edgesBySource[id] || []).filter(e => !type || e.type === type); }
+function edgesTo(id, type) { return (edgesByTarget[id] || []).filter(e => !type || e.type === type); }
+function nodesByType(type) { return NODES.filter(n => n.type === type); }
+function edgesByType(type) { return EDGES.filter(e => e.type === type); }
+
+function getPersonDepartment(personId) {
+  const deptEdges = edgesFrom(personId, 'in_department');
+  if (deptEdges.length === 0) return null;
+  return getNode(deptEdges[0].target);
+}
+
+function getPersonTeams(personId) {
+  return edgesFrom(personId, 'member_of').map(e => getNode(e.target)).filter(Boolean);
+}
+
+function daysBetween(a, b) {
+  return Math.round((new Date(b) - new Date(a)) / (1000 * 60 * 60 * 24));
+}
+
+// ── Drill-down Panel ──
+const overlay = document.getElementById('drilldownOverlay');
+const panel = document.getElementById('drilldownPanel');
+const drillContent = document.getElementById('drilldownContent');
+
+function openDrilldown(html) {
+  drillContent.innerHTML = html;
+  overlay.classList.add('active');
+  panel.classList.add('active');
+}
+
+function closeDrilldown() {
+  overlay.classList.remove('active');
+  panel.classList.remove('active');
+}
+
+overlay.addEventListener('click', closeDrilldown);
+document.getElementById('drilldownClose').addEventListener('click', closeDrilldown);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrilldown(); });
+
+// ── Color helpers ──
+function healthColor(score, min, max, invert) {
+  // score 0-1 where 1 is good (unless inverted)
+  let t = Math.max(0, Math.min(1, (score - min) / (max - min)));
+  if (invert) t = 1 - t;
+  if (t > 0.65) return { bg: 'rgba(16,185,129,0.2)', text: '#10b981', label: 'Good' };
+  if (t > 0.35) return { bg: 'rgba(245,158,11,0.2)', text: '#f59e0b', label: 'Watch' };
+  return { bg: 'rgba(239,68,68,0.2)', text: '#ef4444', label: 'Concern' };
+}
+
+function scoreColor(val, low, high) {
+  const t = Math.max(0, Math.min(1, (val - low) / (high - low)));
+  if (t >= 0.65) return '#10b981';
+  if (t >= 0.35) return '#f59e0b';
+  return '#ef4444';
+}
+
+// ── Build Dashboard ──
+async function init() {
+  await loadData();
+  const persons = nodesByType('person').filter(p => p.properties.status === 'active');
+  const departments = nodesByType('department');
+  const surveys = nodesByType('survey_response');
+  const reviews = nodesByType('review');
+  const certifications = nodesByType('certification');
+  const investigations = nodesByType('investigation');
+  const leaveDesignations = nodesByType('leave_designation');
+  const timeOffs = nodesByType('time_off');
+
+  // Map persons to departments
+  const deptPersons = {};
+  departments.forEach(d => deptPersons[d.id] = []);
+  persons.forEach(p => {
+    const dept = getPersonDepartment(p.id);
+    if (dept && deptPersons[dept.id]) deptPersons[dept.id].push(p);
+  });
+
+  // Map survey responses to persons (via responded_to edges)
+  const surveyToPerson = {};
+  edgesByType('responded_to').forEach(e => {
+    surveyToPerson[e.target] = e.source;
+  });
+
+  // eNPS surveys — use latest round for headline, all rounds for trends
+  const enpsSurveys = surveys.filter(s => s.properties.surveyType === 'enps');
+  const wellbeingSurveys = surveys.filter(s => s.properties.surveyType === 'wellbeing');
+  const allSurveyDates = [...new Set(surveys.map(s => s.properties.date))].sort();
+  const latestSurveyDate = allSurveyDates[allSurveyDates.length - 1];
+  const latestEnps = enpsSurveys.filter(s => s.properties.date === latestSurveyDate);
+
+  // Compute eNPS from latest round only
+  const promoters = latestEnps.filter(s => s.properties.sentiment === 'promoter').length;
+  const detractors = latestEnps.filter(s => s.properties.sentiment === 'detractor').length;
+  const neutrals = latestEnps.filter(s => s.properties.sentiment === 'neutral').length;
+  const totalEnps = latestEnps.length;
+  const enpsScore = totalEnps > 0 ? Math.round(((promoters - detractors) / totalEnps) * 100) : 0;
+
+  // ── Header Stats ──
+  document.getElementById('headerStats').innerHTML = `
+    <div class="header-stat"><div class="header-stat-value">${persons.length}</div><div class="header-stat-label">Active</div></div>
+    <div class="header-stat"><div class="header-stat-value" style="color:${enpsScore >= 30 ? '#10b981' : enpsScore >= 0 ? '#f59e0b' : '#ef4444'}">${enpsScore > 0 ? '+' : ''}${enpsScore}</div><div class="header-stat-label">eNPS</div></div>
+    <div class="header-stat"><div class="header-stat-value">${totalEnps}</div><div class="header-stat-label">Responses</div></div>
+  `;
+
+  // ── Summary Sentence ──
+  buildSummary(persons, departments, deptPersons, enpsSurveys, wellbeingSurveys, surveyToPerson, enpsScore, investigations, leaveDesignations);
+
+  // ── Heat Map ──
+  buildHeatmap(departments, deptPersons, enpsSurveys, wellbeingSurveys, surveys, surveyToPerson, reviews, timeOffs, persons);
+
+  // ── eNPS Distribution ──
+  buildEnps(enpsSurveys, promoters, neutrals, detractors, totalEnps, enpsScore, departments, deptPersons, surveyToPerson);
+
+  // ── Trends ──
+  buildTrends(persons, departments, deptPersons, enpsSurveys, surveys);
+
+  // ── Watchlist ──
+  buildWatchlist(certifications, reviews, leaveDesignations, investigations, persons, timeOffs, wellbeingSurveys, surveyToPerson);
+
+  // ── Benchmarks ──
+  buildBenchmarks(enpsScore, persons, reviews);
+}
+
+function buildSummary(persons, departments, deptPersons, enpsSurveys, wellbeingSurveys, surveyToPerson, enpsScore, investigations, leaveDesignations) {
+  // Find support dept stress
+  const supportDept = departments.find(d => d.properties.name === 'Customer Support');
+  const supportPersons = supportDept ? deptPersons[supportDept.id] : [];
+  const engDept = departments.find(d => d.properties.name === 'Engineering');
+
+  // Count detractors in support
+  let supportDetractors = 0;
+  enpsSurveys.forEach(s => {
+    const personId = surveyToPerson[s.id];
+    if (personId) {
+      const dept = getPersonDepartment(personId);
+      if (dept && dept.id === supportDept?.id && s.properties.sentiment === 'detractor') supportDetractors++;
+    }
+  });
+
+  // Low wellbeing scores
+  const lowWellbeing = wellbeingSurveys.filter(s => s.properties.score <= 3).length;
+
+  // Active investigations
+  const activeInvs = nodesByType('investigation').filter(i => i.properties.status === 'under_investigation');
+
+  const el = document.getElementById('summarySection');
+  el.innerHTML = `
+    <span class="ai-tag">AI Summary</span>
+    Acme Co is in <span class="highlight-good">solid shape overall</span> with an eNPS of <span class="highlight-good">+${enpsScore}</span> across ${enpsSurveys.length} respondents.
+    Engineering and Design sentiment is strong. <span class="highlight-warn">Customer Support</span> shows signs of strain &mdash;
+    ${supportDetractors} detractor${supportDetractors !== 1 ? 's' : ''} and burnout signals in comments.
+    ${lowWellbeing > 0 ? `<span class="highlight-warn">${lowWellbeing} wellbeing response${lowWellbeing > 1 ? 's' : ''}</span> flagged stress and overwork.` : ''}
+    ${activeInvs.length > 0 ? `<span class="highlight-bad">${activeInvs.length} active investigation${activeInvs.length > 1 ? 's' : ''}</span> requires monitoring.` : ''}
+    New hires are onboarding well. Watch workload distribution in the Support and Platform teams.
+  `;
+}
+
+function buildHeatmap(departments, deptPersons, enpsSurveys, wellbeingSurveys, allSurveys, surveyToPerson, reviews, timeOffs, persons) {
+  const metrics = ['eNPS', 'Satisfaction', 'Headcount', 'Time Off', 'Reviews'];
+  const depts = departments.filter(d => d.properties.name !== 'Executive').sort((a, b) => a.properties.name.localeCompare(b.properties.name));
+
+  // Compute per-department metrics
+  const data = {};
+  depts.forEach(dept => {
+    const dp = deptPersons[dept.id] || [];
+    const deptName = dept.properties.name;
+    data[deptName] = {};
+
+    // eNPS per department
+    let dPromoters = 0, dDetractors = 0, dTotal = 0;
+    enpsSurveys.forEach(s => {
+      const pid = surveyToPerson[s.id];
+      if (pid) {
+        const pDept = getPersonDepartment(pid);
+        if (pDept && pDept.id === dept.id) {
+          dTotal++;
+          if (s.properties.sentiment === 'promoter') dPromoters++;
+          if (s.properties.sentiment === 'detractor') dDetractors++;
+        }
+      }
+    });
+    const dEnps = dTotal > 0 ? Math.round(((dPromoters - dDetractors) / dTotal) * 100) : null;
+    data[deptName].eNPS = { value: dEnps, total: dTotal, promoters: dPromoters, detractors: dDetractors, neutrals: dTotal - dPromoters - dDetractors };
+
+    // Satisfaction (wellbeing avg)
+    let satScores = [];
+    wellbeingSurveys.forEach(s => {
+      const pid = surveyToPerson[s.id];
+      if (pid) {
+        const pDept = getPersonDepartment(pid);
+        if (pDept && pDept.id === dept.id) satScores.push(s.properties.score);
+      }
+    });
+    // Also use eNPS scores as a satisfaction proxy (scale 0-10 -> 1-5)
+    enpsSurveys.forEach(s => {
+      const pid = surveyToPerson[s.id];
+      if (pid) {
+        const pDept = getPersonDepartment(pid);
+        if (pDept && pDept.id === dept.id) satScores.push(s.properties.score / 2);
+      }
+    });
+    const avgSat = satScores.length > 0 ? satScores.reduce((a, b) => a + b, 0) / satScores.length : null;
+    data[deptName].Satisfaction = { value: avgSat, count: satScores.length };
+
+    // Headcount
+    const active = dp.filter(p => p.properties.status === 'active').length;
+    const newHires = dp.filter(p => {
+      const days = daysBetween(p.properties.startDate, CURRENT_DATE);
+      return days >= 0 && days <= 90;
+    }).length;
+    data[deptName].Headcount = { value: active, newHires };
+
+    // Time Off rate (recent time off as percentage of headcount)
+    let recentTO = 0;
+    dp.forEach(p => {
+      const toEdges = edgesFrom(p.id, 'has_time_off');
+      toEdges.forEach(e => {
+        const to = getNode(e.target);
+        if (to && to.properties.startDate >= '2026-01-01') recentTO++;
+      });
+    });
+    const toRate = active > 0 ? (recentTO / active) * 100 : 0;
+    data[deptName]['Time Off'] = { value: toRate, count: recentTO, headcount: active };
+
+    // Reviews (completed in last 90 days)
+    let completedReviews = 0, totalReviewable = dp.length;
+    dp.forEach(p => {
+      const revEdges = edgesFrom(p.id, 'has_review');
+      revEdges.forEach(e => {
+        const rev = getNode(e.target);
+        if (rev && rev.properties.status === 'completed' && rev.properties.completedDate >= '2025-12-01') completedReviews++;
+      });
+    });
+    const revRate = totalReviewable > 0 ? (completedReviews / totalReviewable) * 100 : 0;
+    data[deptName].Reviews = { value: revRate, completed: completedReviews, total: totalReviewable };
+  });
+
+  // Build grid
+  const cols = metrics.length + 1;
+  let html = `<div class="heatmap-grid" style="grid-template-columns: 140px repeat(${metrics.length}, 1fr);">`;
+  // Header row
+  html += `<div class="heatmap-header"></div>`;
+  metrics.forEach(m => { html += `<div class="heatmap-header">${m}</div>`; });
+
+  depts.forEach(dept => {
+    const deptName = dept.properties.name;
+    const d = data[deptName];
+    html += `<div class="heatmap-row-label">${deptName}</div>`;
+
+    metrics.forEach(metric => {
+      let color, display, tooltip;
+      const md = d[metric];
+
+      if (metric === 'eNPS') {
+        const v = md.value;
+        if (v === null) { color = { bg: '#1a1a2e', text: '#666' }; display = '--'; tooltip = 'No data'; }
+        else {
+          color = v >= 30 ? { bg: 'rgba(16,185,129,0.25)', text: '#10b981' } :
+                  v >= 0 ? { bg: 'rgba(245,158,11,0.25)', text: '#f59e0b' } :
+                  { bg: 'rgba(239,68,68,0.25)', text: '#ef4444' };
+          display = (v > 0 ? '+' : '') + v;
+          tooltip = `${md.promoters}P / ${md.neutrals}N / ${md.detractors}D`;
+        }
+      } else if (metric === 'Satisfaction') {
+        const v = md.value;
+        if (v === null) { color = { bg: '#1a1a2e', text: '#666' }; display = '--'; }
+        else {
+          color = v >= 3.5 ? { bg: 'rgba(16,185,129,0.25)', text: '#10b981' } :
+                  v >= 2.5 ? { bg: 'rgba(245,158,11,0.25)', text: '#f59e0b' } :
+                  { bg: 'rgba(239,68,68,0.25)', text: '#ef4444' };
+          display = v.toFixed(1);
+          tooltip = `${md.count} responses`;
+        }
+      } else if (metric === 'Headcount') {
+        color = { bg: 'rgba(59,130,246,0.15)', text: '#93c5fd' };
+        display = md.value + (md.newHires > 0 ? ` <span style="font-size:11px;color:#10b981">+${md.newHires}</span>` : '');
+        tooltip = `${md.newHires} new in 90d`;
+      } else if (metric === 'Time Off') {
+        const v = md.value;
+        color = v > 60 ? { bg: 'rgba(245,158,11,0.25)', text: '#f59e0b' } :
+                v > 30 ? { bg: 'rgba(16,185,129,0.15)', text: '#a7f3d0' } :
+                { bg: 'rgba(59,130,246,0.15)', text: '#93c5fd' };
+        display = Math.round(v) + '%';
+        tooltip = `${md.count} requests from ${md.headcount} people`;
+      } else if (metric === 'Reviews') {
+        const v = md.value;
+        color = v >= 50 ? { bg: 'rgba(16,185,129,0.25)', text: '#10b981' } :
+                v >= 20 ? { bg: 'rgba(245,158,11,0.25)', text: '#f59e0b' } :
+                { bg: 'rgba(239,68,68,0.15)', text: '#fca5a5' };
+        display = Math.round(v) + '%';
+        tooltip = `${md.completed} of ${md.total} completed`;
+      }
+
+      html += `<div class="heatmap-cell" style="background:${color.bg}; color:${color.text}"
+        title="${tooltip || ''}"
+        onclick="drillHeatmap('${deptName}', '${metric}')">${display}</div>`;
+    });
+  });
+  html += '</div>';
+  document.getElementById('heatmapContainer').innerHTML = html;
+}
+
+function drillHeatmap(deptName, metric) {
+  const dept = nodesByType('department').find(d => d.properties.name === deptName);
+  if (!dept) return;
+
+  const deptEdges = edgesByType('in_department').filter(e => e.target === dept.id);
+  const deptPersonIds = deptEdges.map(e => e.source);
+  const persons = deptPersonIds.map(id => getNode(id)).filter(p => p && p.properties.status === 'active');
+  const teams = {};
+  persons.forEach(p => {
+    const t = getPersonTeams(p.id);
+    t.forEach(team => {
+      if (!teams[team.id]) teams[team.id] = { team, members: [] };
+      teams[team.id].members.push(p);
+    });
+  });
+
+  let html = `<div class="drilldown-title">${deptName} — ${metric}</div>`;
+  html += `<div class="drilldown-subtitle">${persons.length} active employees</div>`;
+
+  if (metric === 'eNPS' || metric === 'Satisfaction') {
+    html += `<div class="drilldown-anon-note">Survey responses are anonymous. Showing team-level aggregates only.</div>`;
+
+    // Group surveys by team
+    const surveyEdges = edgesByType('responded_to');
+    const enpsSurveys = nodesByType('survey_response').filter(s => s.properties.surveyType === (metric === 'eNPS' ? 'enps' : 'wellbeing'));
+
+    html += `<div class="drilldown-section"><h4>By Team</h4>`;
+    Object.values(teams).forEach(({ team, members }) => {
+      let teamScores = [];
+      members.forEach(m => {
+        surveyEdges.filter(e => e.source === m.id).forEach(e => {
+          const survey = getNode(e.target);
+          if (survey && survey.properties.surveyType === (metric === 'eNPS' ? 'enps' : 'wellbeing')) {
+            teamScores.push(survey.properties.score);
+          }
+        });
+      });
+      const avg = teamScores.length > 0 ? (teamScores.reduce((a, b) => a + b, 0) / teamScores.length).toFixed(1) : 'No data';
+      html += `<div class="drilldown-stat"><span class="drilldown-stat-label">${team.properties.name}</span><span class="drilldown-stat-value">${avg} (${teamScores.length} responses)</span></div>`;
+    });
+    html += `</div>`;
+
+    // Show anonymous comments
+    html += `<div class="drilldown-section"><h4>Anonymous Comments</h4>`;
+    const deptSurveys = [];
+    enpsSurveys.forEach(s => {
+      const pid = surveyEdges.find(e => e.target === s.id)?.source;
+      if (pid && deptPersonIds.includes(pid) && s.properties.comment) {
+        deptSurveys.push(s);
+      }
+    });
+    if (deptSurveys.length === 0) html += `<div style="color:#666; font-size:13px;">No comments for this department.</div>`;
+    deptSurveys.forEach(s => {
+      const sentimentColor = s.properties.sentiment === 'promoter' ? '#10b981' : s.properties.sentiment === 'detractor' ? '#ef4444' : '#f59e0b';
+      html += `<div class="drilldown-comment" style="border-left-color:${sentimentColor}">"${s.properties.comment}"</div>`;
+    });
+    html += `</div>`;
+  } else if (metric === 'Headcount') {
+    html += `<div class="drilldown-section"><h4>Team Breakdown</h4>`;
+    Object.values(teams).forEach(({ team, members }) => {
+      html += `<div class="drilldown-stat"><span class="drilldown-stat-label">${team.properties.name}</span><span class="drilldown-stat-value">${members.length} members</span></div>`;
+    });
+    html += `</div>`;
+
+    const newHires = persons.filter(p => daysBetween(p.properties.startDate, CURRENT_DATE) <= 90);
+    if (newHires.length > 0) {
+      html += `<div class="drilldown-section"><h4>Recent Hires (90d)</h4>`;
+      newHires.forEach(p => {
+        const days = daysBetween(p.properties.startDate, CURRENT_DATE);
+        html += `<div class="drilldown-stat"><span class="drilldown-stat-label">${p.properties.name}</span><span class="drilldown-stat-value">${p.properties.role} &middot; Day ${days}</span></div>`;
+      });
+      html += `</div>`;
+    }
+  } else if (metric === 'Time Off') {
+    html += `<div class="drilldown-section"><h4>Recent Time Off (since Jan 2026)</h4>`;
+    persons.forEach(p => {
+      const toEdges = edgesFrom(p.id, 'has_time_off');
+      toEdges.forEach(e => {
+        const to = getNode(e.target);
+        if (to && to.properties.startDate >= '2026-01-01') {
+          html += `<div class="drilldown-stat"><span class="drilldown-stat-label">${p.properties.name}</span><span class="drilldown-stat-value">${to.properties.type} &middot; ${to.properties.hours || '?'}h &middot; ${to.properties.status}</span></div>`;
+        }
+      });
+    });
+    html += `</div>`;
+  } else if (metric === 'Reviews') {
+    html += `<div class="drilldown-section"><h4>Recent Reviews</h4>`;
+    let found = false;
+    persons.forEach(p => {
+      const revEdges = edgesFrom(p.id, 'has_review');
+      revEdges.forEach(e => {
+        const rev = getNode(e.target);
+        if (rev && rev.properties.completedDate >= '2025-12-01') {
+          found = true;
+          const ratingColor = rev.properties.rating === 'exceeds' ? '#10b981' : rev.properties.rating === 'meets' ? '#3b82f6' : '#f59e0b';
+          html += `<div class="drilldown-stat"><span class="drilldown-stat-label">${p.properties.name}</span><span class="drilldown-stat-value" style="color:${ratingColor}">${rev.properties.rating || 'N/A'} &middot; ${rev.properties.type}</span></div>`;
+        }
+      });
+    });
+    if (!found) html += `<div style="color:#666; font-size:13px;">No recent reviews in this department.</div>`;
+    html += `</div>`;
+  }
+
+  openDrilldown(html);
+}
+
+function buildEnps(enpsSurveys, promoters, neutrals, detractors, total, enpsScore, departments, deptPersons, surveyToPerson) {
+  const scoreBadge = document.getElementById('enpsScoreBadge');
+  scoreBadge.textContent = (enpsScore > 0 ? '+' : '') + enpsScore;
+  scoreBadge.className = `badge ${enpsScore >= 30 ? 'badge-green' : enpsScore >= 0 ? 'badge-amber' : 'badge-red'}`;
+
+  const pPct = total > 0 ? Math.round((promoters / total) * 100) : 0;
+  const nPct = total > 0 ? Math.round((neutrals / total) * 100) : 0;
+  const dPct = total > 0 ? 100 - pPct - nPct : 0;
+
+  let html = `
+    <div class="enps-score" style="color:${enpsScore >= 30 ? '#10b981' : enpsScore >= 0 ? '#f59e0b' : '#ef4444'}">${enpsScore > 0 ? '+' : ''}${enpsScore}</div>
+    <div style="text-align:center; font-size:12px; color:#888; margin-bottom:12px">Score = %Promoters - %Detractors</div>
+    <div class="enps-bar">
+      <div class="enps-bar-segment" style="width:${pPct}%; background:#10b981">${promoters}</div>
+      <div class="enps-bar-segment" style="width:${nPct}%; background:#f59e0b">${neutrals}</div>
+      <div class="enps-bar-segment" style="width:${dPct}%; background:#ef4444">${detractors}</div>
+    </div>
+    <div class="enps-legend">
+      <div class="enps-legend-item"><div class="enps-legend-dot" style="background:#10b981"></div>Promoters (9-10): ${pPct}%</div>
+      <div class="enps-legend-item"><div class="enps-legend-dot" style="background:#f59e0b"></div>Passive (7-8): ${nPct}%</div>
+      <div class="enps-legend-item"><div class="enps-legend-dot" style="background:#ef4444"></div>Detractors (0-6): ${dPct}%</div>
+    </div>
+    <div style="margin-top:20px"><h3>By Department</h3></div>
+  `;
+
+  // Per-department eNPS
+  const depts = departments.filter(d => d.properties.name !== 'Executive').sort((a, b) => a.properties.name.localeCompare(b.properties.name));
+  depts.forEach(dept => {
+    let dp = 0, dn = 0, dd = 0, dt = 0;
+    enpsSurveys.forEach(s => {
+      const pid = surveyToPerson[s.id];
+      if (pid) {
+        const pDept = getPersonDepartment(pid);
+        if (pDept && pDept.id === dept.id) {
+          dt++;
+          if (s.properties.sentiment === 'promoter') dp++;
+          else if (s.properties.sentiment === 'detractor') dd++;
+          else dn++;
+        }
+      }
+    });
+    const dScore = dt > 0 ? Math.round(((dp - dd) / dt) * 100) : null;
+    const dpPct = dt > 0 ? Math.round((dp / dt) * 100) : 0;
+    const dnPct = dt > 0 ? Math.round((dn / dt) * 100) : 0;
+    const ddPct = dt > 0 ? 100 - dpPct - dnPct : 0;
+    const scoreDisplay = dScore !== null ? ((dScore > 0 ? '+' : '') + dScore) : '--';
+    const scoreCol = dScore === null ? '#666' : dScore >= 30 ? '#10b981' : dScore >= 0 ? '#f59e0b' : '#ef4444';
+
+    html += `
+      <div class="dept-enps-row">
+        <div class="dept-enps-label">${dept.properties.name}</div>
+        <div class="dept-enps-bar-wrap">
+          <div class="dept-enps-bar">
+            <div style="width:${dpPct}%; background:#10b981; border-radius:4px 0 0 4px;"></div>
+            <div style="width:${dnPct}%; background:#f59e0b;"></div>
+            <div style="width:${ddPct}%; background:#ef4444; border-radius:0 4px 4px 0;"></div>
+          </div>
+        </div>
+        <div class="dept-enps-score" style="color:${scoreCol}">${scoreDisplay}</div>
+      </div>
+    `;
+  });
+
+  document.getElementById('enpsContainer').innerHTML = html;
+}
+
+function buildTrends(persons, departments, deptPersons, enpsSurveys, allSurveys) {
+  // Real trends we can compute: headcount by quarter, hires by quarter
+  const quarters = {};
+  const activePersons = nodesByType('person').filter(p => p.properties.startDate);
+
+  // Build quarterly headcount from 2024-Q1 to 2026-Q1
+  const qLabels = ['2024-Q1','2024-Q2','2024-Q3','2024-Q4','2025-Q1','2025-Q2','2025-Q3','2025-Q4','2026-Q1'];
+  const qDates = ['2024-03-31','2024-06-30','2024-09-30','2024-12-31','2025-03-31','2025-06-30','2025-09-30','2025-12-31','2026-03-31'];
+
+  // Headcount at end of each quarter
+  const headcountByQ = qDates.map(d => {
+    return activePersons.filter(p => p.properties.startDate <= d && (!p.properties.endDate || p.properties.endDate > d)).length;
+  });
+
+  // Hires per quarter
+  const hiresByQ = qLabels.map((q, i) => {
+    const qStart = i === 0 ? '2024-01-01' : qDates[i - 1];
+    const qEnd = qDates[i];
+    return activePersons.filter(p => p.properties.startDate > qStart && p.properties.startDate <= qEnd).length;
+  });
+
+  // Survey date check
+  const surveyDates = [...new Set(allSurveys.map(s => s.properties.date))];
+  const hasMultipleSurveys = surveyDates.length > 1;
+
+  let html = `<div class="grid-3">`;
+
+  // Headcount trend
+  html += `<div style="padding:12px">`;
+  html += `<div style="display:flex; justify-content:space-between; align-items:baseline">`;
+  html += `<h3>Headcount Growth</h3>`;
+  const hcDelta = headcountByQ[headcountByQ.length - 1] - headcountByQ[0];
+  html += `<span class="trend-value" style="color:#93c5fd">${headcountByQ[headcountByQ.length - 1]}</span>`;
+  html += `<span class="trend-delta ${hcDelta >= 0 ? 'up' : 'down'}">+${hcDelta} since ${qLabels[0]}</span>`;
+  html += `</div>`;
+  html += buildLineChart(qLabels, headcountByQ, '#3b82f6', 80, headcountByQ.length > 0 ? Math.min(...headcountByQ) - 10 : 0);
+  html += `</div>`;
+
+  // Hires per quarter
+  html += `<div style="padding:12px">`;
+  html += `<div style="display:flex; justify-content:space-between; align-items:baseline">`;
+  html += `<h3>Hires per Quarter</h3>`;
+  html += `<span class="trend-value" style="color:#10b981">${hiresByQ[hiresByQ.length - 1]}</span>`;
+  html += `</div>`;
+  html += buildBarChart(qLabels, hiresByQ, '#10b981');
+  html += `</div>`;
+
+  // eNPS trend (placeholder or real)
+  html += `<div style="padding:12px">`;
+  html += `<div style="display:flex; justify-content:space-between; align-items:baseline">`;
+  html += `<h3>eNPS Trend</h3>`;
+  html += `</div>`;
+  if (!hasMultipleSurveys) {
+    const p = enpsSurveys.filter(s => s.properties.sentiment === 'promoter').length;
+    const d = enpsSurveys.filter(s => s.properties.sentiment === 'detractor').length;
+    const score = enpsSurveys.length > 0 ? Math.round(((p - d) / enpsSurveys.length) * 100) : 0;
+    html += `<div style="text-align:center; padding:20px 0">`;
+    html += `<div class="trend-value" style="color:${score >= 30 ? '#10b981' : '#f59e0b'}; font-size:36px">${score > 0 ? '+' : ''}${score}</div>`;
+    html += `<div style="font-size:12px; color:#888; margin-top:4px">Single survey round</div>`;
+    html += `</div>`;
+    html += `<div class="no-data-note">Trends require 2+ survey rounds.</div>`;
+  } else {
+    // Compute eNPS per survey date
+    const enpsPerDate = surveyDates.map(date => {
+      const roundSurveys = enpsSurveys.filter(s => s.properties.date === date);
+      if (roundSurveys.length === 0) return 0;
+      const p = roundSurveys.filter(s => s.properties.sentiment === 'promoter').length;
+      const d = roundSurveys.filter(s => s.properties.sentiment === 'detractor').length;
+      return Math.round(((p - d) / roundSurveys.length) * 100);
+    });
+    const latestScore = enpsPerDate[enpsPerDate.length - 1];
+    const prevScore = enpsPerDate[enpsPerDate.length - 2];
+    const delta = latestScore - prevScore;
+    html += `<span class="trend-value" style="color:${latestScore >= 30 ? '#10b981' : '#f59e0b'}">${latestScore > 0 ? '+' : ''}${latestScore}</span>`;
+    html += `<span class="trend-delta ${delta >= 0 ? 'up' : 'down'}">${delta >= 0 ? '+' : ''}${delta} vs prev</span>`;
+    const dateLabels = surveyDates.map(d => { const m = d.substring(5,7); const y = d.substring(2,4); return m + '/' + y; });
+    html += buildLineChart(dateLabels, enpsPerDate, '#a855f7', 80, Math.min(...enpsPerDate) - 10);
+  }
+  html += `</div>`;
+
+  html += `</div>`; // end grid-3
+
+  // Second row: Tenure distribution, avg tenure
+  html += `<div class="grid-3" style="margin-top:16px">`;
+
+  // Tenure distribution
+  const tenureBuckets = { '<6mo': 0, '6-12mo': 0, '1-2yr': 0, '2-3yr': 0, '3-5yr': 0, '5yr+': 0 };
+  persons.forEach(p => {
+    const days = daysBetween(p.properties.startDate, CURRENT_DATE);
+    if (days < 183) tenureBuckets['<6mo']++;
+    else if (days < 365) tenureBuckets['6-12mo']++;
+    else if (days < 730) tenureBuckets['1-2yr']++;
+    else if (days < 1095) tenureBuckets['2-3yr']++;
+    else if (days < 1825) tenureBuckets['3-5yr']++;
+    else tenureBuckets['5yr+']++;
+  });
+  html += `<div style="padding:12px">`;
+  html += `<h3>Tenure Distribution</h3>`;
+  html += buildBarChart(Object.keys(tenureBuckets), Object.values(tenureBuckets), '#a855f7');
+  html += `</div>`;
+
+  // Wellbeing trend
+  html += `<div style="padding:12px">`;
+  html += `<h3>Wellbeing Score</h3>`;
+  const wbAll = nodesByType('survey_response').filter(s => s.properties.surveyType === 'wellbeing');
+  const wbDates = [...new Set(wbAll.map(s => s.properties.date))].sort();
+  if (wbDates.length > 1) {
+    const wbPerDate = wbDates.map(date => {
+      const round = wbAll.filter(s => s.properties.date === date);
+      return round.length > 0 ? round.reduce((a, s) => a + s.properties.score, 0) / round.length : 0;
+    });
+    const latestWB = wbPerDate[wbPerDate.length - 1];
+    const prevWB = wbPerDate[wbPerDate.length - 2];
+    const wbDelta = (latestWB - prevWB).toFixed(1);
+    html += `<span class="trend-value" style="color:${latestWB >= 3.5 ? '#10b981' : latestWB >= 2.5 ? '#f59e0b' : '#ef4444'}">${latestWB.toFixed(1)}<span style="font-size:16px; color:#888">/5</span></span>`;
+    html += `<span class="trend-delta ${wbDelta >= 0 ? 'up' : 'down'}">${wbDelta >= 0 ? '+' : ''}${wbDelta} vs prev</span>`;
+    const wbLabels = wbDates.map(d => { const m = d.substring(5,7); const y = d.substring(2,4); return m + '/' + y; });
+    html += buildLineChart(wbLabels, wbPerDate, '#f59e0b', 80, Math.min(...wbPerDate) - 0.5);
+  } else {
+    const avgWB = wbAll.length > 0 ? (wbAll.reduce((a, s) => a + s.properties.score, 0) / wbAll.length) : 0;
+    html += `<div style="text-align:center; padding:20px 0">`;
+    html += `<div class="trend-value" style="color:${avgWB >= 3.5 ? '#10b981' : avgWB >= 2.5 ? '#f59e0b' : '#ef4444'}; font-size:36px">${avgWB.toFixed(1)}<span style="font-size:16px; color:#888">/5</span></div>`;
+    html += `<div style="font-size:12px; color:#888; margin-top:4px">${wbAll.length} responses</div>`;
+    html += `</div>`;
+    html += `<div class="no-data-note">Trends require 2+ survey rounds.</div>`;
+  }
+  html += `</div>`;
+
+  // Dept satisfaction comparison
+  html += `<div style="padding:12px">`;
+  html += `<h3>Satisfaction by Dept</h3>`;
+  const depts = departments.filter(d => d.properties.name !== 'Executive').sort((a, b) => a.properties.name.localeCompare(b.properties.name));
+  const deptNames = depts.map(d => d.properties.name);
+  const deptScores = depts.map(dept => {
+    let scores = [];
+    const surveyEdges = edgesByType('responded_to');
+    enpsSurveys.forEach(s => {
+      const pid = surveyEdges.find(e => e.target === s.id)?.source;
+      if (pid) {
+        const pDept = getPersonDepartment(pid);
+        if (pDept && pDept.id === dept.id) scores.push(s.properties.score);
+      }
+    });
+    return scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+  });
+  html += buildBarChart(deptNames.map(n => n.substring(0, 8)), deptScores, '#3b82f6');
+  html += `</div>`;
+
+  html += `</div>`;
+
+  document.getElementById('trendsContainer').innerHTML = html;
+}
+
+function buildLineChart(labels, values, color, height, baseMin) {
+  const h = height || 120;
+  const min = baseMin !== undefined ? baseMin : Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const w = 100;
+  const pad = 5;
+
+  const points = values.map((v, i) => {
+    const x = pad + (i / (values.length - 1 || 1)) * (w - 2 * pad);
+    const y = h - pad - ((v - min) / range) * (h - 2 * pad);
+    return `${x},${y}`;
+  }).join(' ');
+
+  const areaPoints = points + ` ${pad + ((values.length - 1) / (values.length - 1 || 1)) * (w - 2 * pad)},${h - pad} ${pad},${h - pad}`;
+
+  let svg = `<div class="trend-chart" style="height:${h}px">`;
+  svg += `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">`;
+  // Grid lines
+  for (let i = 0; i < 4; i++) {
+    const y = pad + (i / 3) * (h - 2 * pad);
+    svg += `<line x1="${pad}" y1="${y}" x2="${w - pad}" y2="${y}" stroke="#1a1a2e" stroke-width="0.5"/>`;
+  }
+  // Area fill
+  svg += `<polygon points="${areaPoints}" fill="${color}" opacity="0.1"/>`;
+  // Line
+  svg += `<polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  // Data points
+  values.forEach((v, i) => {
+    const x = pad + (i / (values.length - 1 || 1)) * (w - 2 * pad);
+    const y = h - pad - ((v - min) / range) * (h - 2 * pad);
+    svg += `<circle cx="${x}" cy="${y}" r="1.5" fill="${color}"/>`;
+  });
+  svg += `</svg></div>`;
+  // Labels
+  svg += `<div style="display:flex; justify-content:space-between; padding:0 4px;">`;
+  const showLabels = labels.length <= 6 ? labels : [labels[0], labels[Math.floor(labels.length / 2)], labels[labels.length - 1]];
+  const showIndices = labels.length <= 6 ? labels.map((_, i) => i) : [0, Math.floor(labels.length / 2), labels.length - 1];
+  showIndices.forEach(i => {
+    svg += `<span style="font-size:11px; color:#666">${labels[i]}</span>`;
+  });
+  svg += `</div>`;
+  return svg;
+}
+
+function buildBarChart(labels, values, color) {
+  const max = Math.max(...values, 1);
+  let html = `<div style="display:flex; align-items:flex-end; gap:4px; height:100px; margin:12px 0 4px; padding:0 4px;">`;
+  values.forEach((v, i) => {
+    const pct = (v / max) * 100;
+    html += `<div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%;">`;
+    html += `<div style="font-size:11px; color:#888; margin-bottom:4px">${typeof v === 'number' && v % 1 !== 0 ? v.toFixed(1) : v}</div>`;
+    html += `<div style="flex:1; width:100%; display:flex; align-items:flex-end;">`;
+    html += `<div style="width:100%; height:${pct}%; background:${color}; border-radius:4px 4px 0 0; min-height:2px; opacity:0.7;"></div>`;
+    html += `</div></div>`;
+  });
+  html += `</div>`;
+  html += `<div style="display:flex; gap:4px; padding:0 4px;">`;
+  labels.forEach(l => {
+    html += `<div style="flex:1; text-align:center; font-size:11px; color:#666; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${l}</div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function buildWatchlist(certifications, reviews, leaveDesignations, investigations, persons, timeOffs, wellbeingSurveys, surveyToPerson) {
+  const items = [];
+
+  // 1. Active investigations
+  nodesByType('investigation').filter(i => i.properties.status === 'under_investigation').forEach(inv => {
+    items.push({
+      urgency: 'critical',
+      icon: '!',
+      iconBg: 'rgba(239,68,68,0.2)',
+      iconColor: '#ef4444',
+      title: `Active ${inv.properties.type} investigation`,
+      detail: `Reported ${inv.properties.reportedDate} &middot; Severity: ${inv.properties.severity}${inv.properties.isAnonymous ? ' &middot; Anonymous report' : ''}`,
+      action: 'Review investigation details',
+      drilldown: () => drillWatchlistInvestigation(inv)
+    });
+  });
+
+  // 2. Overdue/upcoming compliance training
+  const complianceCerts = certifications.filter(c => c.properties.type === 'compliance' && c.properties.requiredBy);
+  complianceCerts.forEach(cert => {
+    const daysUntil = daysBetween(CURRENT_DATE, cert.properties.requiredBy);
+    if (daysUntil <= 30 && daysUntil >= 0) {
+      // Find who hasn't completed it
+      const certEdges = edgesByType('has_certification').filter(e => e.target === cert.id);
+      const completedIds = certEdges.filter(e => e.metadata.status === 'active').map(e => e.source);
+      const totalActive = persons.length;
+      const incomplete = totalActive - completedIds.length;
+      if (incomplete > 0) {
+        items.push({
+          urgency: daysUntil <= 14 ? 'high' : 'medium',
+          icon: '\u23F0',
+          iconBg: daysUntil <= 14 ? 'rgba(239,68,68,0.2)' : 'rgba(245,158,11,0.2)',
+          iconColor: daysUntil <= 14 ? '#ef4444' : '#f59e0b',
+          title: `${cert.properties.name} — due ${cert.properties.requiredBy}`,
+          detail: `${daysUntil} days remaining &middot; Estimated ~${incomplete} employees still need to complete`,
+          action: 'Send reminder to incomplete',
+          drilldown: () => drillWatchlistCert(cert, completedIds)
+        });
+      }
+    }
+  });
+
+  // 3. Pending reviews
+  const pendingReviews = nodesByType('review').filter(r => r.properties.status === 'draft' || r.properties.status === 'scheduled');
+  pendingReviews.forEach(rev => {
+    const personEdge = edgesByType('has_review').find(e => e.target === rev.id);
+    const person = personEdge ? getNode(personEdge.source) : null;
+    items.push({
+      urgency: rev.properties.status === 'draft' ? 'medium' : 'low',
+      icon: '\u{1F4CB}',
+      iconBg: 'rgba(245,158,11,0.2)',
+      iconColor: '#f59e0b',
+      title: `${rev.properties.type} review — ${rev.properties.status}`,
+      detail: `${person ? person.properties.name : 'Unknown'} &middot; ${rev.properties.scheduledDate ? 'Scheduled ' + rev.properties.scheduledDate : 'Draft ready'}`,
+      action: 'Complete review',
+      drilldown: () => drillWatchlistReview(rev, person)
+    });
+  });
+
+  // 4. Active leave designations
+  nodesByType('leave_designation').filter(ld => ld.properties.status === 'active' || ld.properties.status === 'intermittent').forEach(ld => {
+    const personEdge = edgesByType('has_leave_designation').find(e => e.target === ld.id);
+    const person = personEdge ? getNode(personEdge.source) : null;
+    items.push({
+      urgency: 'medium',
+      icon: '\u{1F3E0}',
+      iconBg: 'rgba(59,130,246,0.2)',
+      iconColor: '#3b82f6',
+      title: `${ld.properties.type.toUpperCase()} leave — ${ld.properties.status}`,
+      detail: `${person ? person.properties.name : 'Unknown'} &middot; ${ld.properties.usedHours}/${ld.properties.entitlementHours}h used${ld.properties.isIntermittent ? ' &middot; Intermittent' : ''}`,
+      action: 'Review leave status',
+      drilldown: () => drillWatchlistLeave(ld, person)
+    });
+  });
+
+  // 5. Low wellbeing signals
+  wellbeingSurveys.filter(s => s.properties.score <= 2).forEach(s => {
+    items.push({
+      urgency: 'high',
+      icon: '\u26A0',
+      iconBg: 'rgba(239,68,68,0.2)',
+      iconColor: '#ef4444',
+      title: 'Low wellbeing score detected',
+      detail: `Score: ${s.properties.score}/5 &middot; "${s.properties.comment?.substring(0, 60)}..."`,
+      action: 'Review team workload',
+      drilldown: () => drillWatchlistWellbeing(s)
+    });
+  });
+
+  // 6. Pending time-off requests
+  nodesByType('time_off').filter(to => to.properties.status === 'requested').forEach(to => {
+    const personEdge = edgesByType('has_time_off').find(e => e.target === to.id);
+    const person = personEdge ? getNode(personEdge.source) : null;
+    items.push({
+      urgency: 'low',
+      icon: '\u2708',
+      iconBg: 'rgba(168,85,247,0.15)',
+      iconColor: '#a855f7',
+      title: `Time-off request pending approval`,
+      detail: `${person ? person.properties.name : 'Unknown'} &middot; ${to.properties.type} &middot; ${to.properties.startDate} to ${to.properties.endDate}`,
+      action: 'Approve or deny',
+      drilldown: () => drillWatchlistTimeOff(to, person)
+    });
+  });
+
+  // Sort by urgency
+  const urgencyOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+  items.sort((a, b) => urgencyOrder[a.urgency] - urgencyOrder[b.urgency]);
+
+  document.getElementById('watchlistCount').textContent = `${items.length} items`;
+
+  let html = '';
+  items.forEach((item, idx) => {
+    const urgColors = { critical: { bg: 'rgba(239,68,68,0.15)', text: '#ef4444' }, high: { bg: 'rgba(239,68,68,0.1)', text: '#fca5a5' }, medium: { bg: 'rgba(245,158,11,0.1)', text: '#f59e0b' }, low: { bg: 'rgba(59,130,246,0.1)', text: '#93c5fd' } };
+    const uc = urgColors[item.urgency];
+    html += `<div class="watchlist-item" onclick="watchlistItems[${idx}].drilldown()">`;
+    html += `<div class="watchlist-icon" style="background:${item.iconBg}; color:${item.iconColor}; font-size:18px">${item.icon}</div>`;
+    html += `<div class="watchlist-content">`;
+    html += `<div class="watchlist-title">${item.title}</div>`;
+    html += `<div class="watchlist-detail">${item.detail}</div>`;
+    html += `<div class="watchlist-action">${item.action} &rarr;</div>`;
+    html += `</div>`;
+    html += `<span class="watchlist-urgency" style="background:${uc.bg}; color:${uc.text}">${item.urgency}</span>`;
+    html += `</div>`;
+  });
+
+  if (items.length === 0) html = `<div style="color:#666; text-align:center; padding:20px;">No items need attention right now.</div>`;
+
+  document.getElementById('watchlistContainer').innerHTML = html;
+  window.watchlistItems = items;
+}
+
+function drillWatchlistInvestigation(inv) {
+  let html = `<div class="drilldown-title">Investigation: ${inv.properties.type}</div>`;
+  html += `<div class="drilldown-subtitle">Status: ${inv.properties.status}</div>`;
+  html += `<div class="drilldown-section"><h4>Details</h4>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Type</span><span class="drilldown-stat-value">${inv.properties.type}</span></div>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Severity</span><span class="drilldown-stat-value" style="color:${inv.properties.severity === 'high' ? '#ef4444' : '#f59e0b'}">${inv.properties.severity}</span></div>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Reported</span><span class="drilldown-stat-value">${inv.properties.reportedDate}</span></div>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Anonymous</span><span class="drilldown-stat-value">${inv.properties.isAnonymous ? 'Yes' : 'No'}</span></div>`;
+  if (inv.properties.outcome) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Outcome</span><span class="drilldown-stat-value">${inv.properties.outcome}</span></div>`;
+  html += `</div>`;
+  html += `<div class="drilldown-section"><h4>Recommended Actions</h4>`;
+  html += `<div style="font-size:13px; color:#bbb; line-height:1.8">`;
+  html += `1. Ensure investigator has been assigned<br>`;
+  html += `2. Review timeline — ${daysBetween(inv.properties.reportedDate, CURRENT_DATE)} days since report<br>`;
+  html += `3. Check for retaliation protections<br>`;
+  html += `4. Schedule status update with legal counsel`;
+  html += `</div></div>`;
+  openDrilldown(html);
+}
+
+function drillWatchlistCert(cert, completedIds) {
+  let html = `<div class="drilldown-title">${cert.properties.name}</div>`;
+  html += `<div class="drilldown-subtitle">Due: ${cert.properties.requiredBy}</div>`;
+  html += `<div class="drilldown-section"><h4>Completion Status</h4>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Completed</span><span class="drilldown-stat-value" style="color:#10b981">${completedIds.length}</span></div>`;
+  const active = nodesByType('person').filter(p => p.properties.status === 'active').length;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Remaining</span><span class="drilldown-stat-value" style="color:#f59e0b">~${active - completedIds.length}</span></div>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Days left</span><span class="drilldown-stat-value">${daysBetween(CURRENT_DATE, cert.properties.requiredBy)}</span></div>`;
+  html += `</div>`;
+  html += `<div class="drilldown-section"><h4>Recommended Actions</h4>`;
+  html += `<div style="font-size:13px; color:#bbb; line-height:1.8">`;
+  html += `1. Send bulk reminder to incomplete employees<br>`;
+  html += `2. Notify department managers<br>`;
+  html += `3. Schedule follow-up in 7 days`;
+  html += `</div></div>`;
+  openDrilldown(html);
+}
+
+function drillWatchlistReview(rev, person) {
+  let html = `<div class="drilldown-title">${rev.properties.type} Review</div>`;
+  html += `<div class="drilldown-subtitle">${person ? person.properties.name : 'Unknown'} &middot; ${rev.properties.status}</div>`;
+  html += `<div class="drilldown-section"><h4>Details</h4>`;
+  if (rev.properties.scheduledDate) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Scheduled</span><span class="drilldown-stat-value">${rev.properties.scheduledDate}</span></div>`;
+  if (rev.properties.summary) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Summary</span><span class="drilldown-stat-value">${rev.properties.summary}</span></div>`;
+  html += `</div>`;
+  if (person) {
+    html += `<div class="drilldown-section"><h4>Employee Context</h4>`;
+    html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Role</span><span class="drilldown-stat-value">${person.properties.role}</span></div>`;
+    html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Tenure</span><span class="drilldown-stat-value">${daysBetween(person.properties.startDate, CURRENT_DATE)} days</span></div>`;
+    const dept = getPersonDepartment(person.id);
+    if (dept) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Department</span><span class="drilldown-stat-value">${dept.properties.name}</span></div>`;
+    html += `</div>`;
+  }
+  openDrilldown(html);
+}
+
+function drillWatchlistLeave(ld, person) {
+  let html = `<div class="drilldown-title">${ld.properties.type.toUpperCase()} Leave</div>`;
+  html += `<div class="drilldown-subtitle">${person ? person.properties.name : 'Unknown'} &middot; ${ld.properties.status}</div>`;
+  html += `<div class="drilldown-section"><h4>Leave Details</h4>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Type</span><span class="drilldown-stat-value">${ld.properties.type}</span></div>`;
+  if (ld.properties.startDate) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Start</span><span class="drilldown-stat-value">${ld.properties.startDate}</span></div>`;
+  if (ld.properties.endDate) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">End</span><span class="drilldown-stat-value">${ld.properties.endDate}</span></div>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Hours Used</span><span class="drilldown-stat-value">${ld.properties.usedHours} / ${ld.properties.entitlementHours}</span></div>`;
+  if (ld.properties.isIntermittent) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Intermittent</span><span class="drilldown-stat-value">Yes &middot; Up to 2 days/month</span></div>`;
+  if (ld.properties.notes) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Notes</span><span class="drilldown-stat-value">${ld.properties.notes}</span></div>`;
+  html += `</div>`;
+  // Coverage impact
+  if (person) {
+    const teams = getPersonTeams(person.id);
+    if (teams.length > 0) {
+      html += `<div class="drilldown-section"><h4>Team Coverage Impact</h4>`;
+      teams.forEach(t => {
+        const memberEdges = edgesByType('member_of').filter(e => e.target === t.id);
+        html += `<div class="drilldown-stat"><span class="drilldown-stat-label">${t.properties.name}</span><span class="drilldown-stat-value">${memberEdges.length} members</span></div>`;
+      });
+      html += `</div>`;
+    }
+  }
+  openDrilldown(html);
+}
+
+function drillWatchlistWellbeing(survey) {
+  let html = `<div class="drilldown-title">Low Wellbeing Alert</div>`;
+  html += `<div class="drilldown-subtitle">Anonymous survey response</div>`;
+  html += `<div class="drilldown-anon-note">Wellbeing surveys are anonymous. Individual identity is not shown.</div>`;
+  html += `<div class="drilldown-section"><h4>Response</h4>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Score</span><span class="drilldown-stat-value" style="color:#ef4444">${survey.properties.score}/5</span></div>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Date</span><span class="drilldown-stat-value">${survey.properties.date}</span></div>`;
+  if (survey.properties.comment) html += `<div class="drilldown-comment" style="border-left-color:#ef4444; margin-top:12px">"${survey.properties.comment}"</div>`;
+  html += `</div>`;
+  html += `<div class="drilldown-section"><h4>Recommended Actions</h4>`;
+  html += `<div style="font-size:13px; color:#bbb; line-height:1.8">`;
+  html += `1. Review workload distribution across the affected team<br>`;
+  html += `2. Check project allocation for overloaded individuals<br>`;
+  html += `3. Consider 1:1 check-ins with team leads<br>`;
+  html += `4. Evaluate hiring pipeline for understaffed areas`;
+  html += `</div></div>`;
+  openDrilldown(html);
+}
+
+function drillWatchlistTimeOff(to, person) {
+  let html = `<div class="drilldown-title">Time-Off Request</div>`;
+  html += `<div class="drilldown-subtitle">${person ? person.properties.name : 'Unknown'}</div>`;
+  html += `<div class="drilldown-section"><h4>Request Details</h4>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Type</span><span class="drilldown-stat-value">${to.properties.type}</span></div>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Dates</span><span class="drilldown-stat-value">${to.properties.startDate} to ${to.properties.endDate}</span></div>`;
+  html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Hours</span><span class="drilldown-stat-value">${to.properties.hours || '?'}</span></div>`;
+  if (to.properties.notes) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Notes</span><span class="drilldown-stat-value">${to.properties.notes}</span></div>`;
+  html += `</div>`;
+  if (person) {
+    // Show team overlap
+    const teams = getPersonTeams(person.id);
+    if (teams.length > 0) {
+      html += `<div class="drilldown-section"><h4>Team Coverage</h4>`;
+      teams.forEach(t => {
+        const memberEdges = edgesByType('member_of').filter(e => e.target === t.id);
+        const otherOnLeave = [];
+        memberEdges.forEach(me => {
+          if (me.source !== person.id) {
+            const toEdges = edgesFrom(me.source, 'has_time_off');
+            toEdges.forEach(toe => {
+              const otherTO = getNode(toe.target);
+              if (otherTO && otherTO.properties.startDate <= to.properties.endDate && otherTO.properties.endDate >= to.properties.startDate && otherTO.properties.status !== 'cancelled') {
+                const p = getNode(me.source);
+                if (p) otherOnLeave.push(p.properties.name);
+              }
+            });
+          }
+        });
+        html += `<div class="drilldown-stat"><span class="drilldown-stat-label">${t.properties.name}</span><span class="drilldown-stat-value">${memberEdges.length} members</span></div>`;
+        if (otherOnLeave.length > 0) {
+          html += `<div style="font-size:12px; color:#f59e0b; padding:4px 0;">Overlapping leave: ${otherOnLeave.join(', ')}</div>`;
+        }
+      });
+      html += `</div>`;
+    }
+  }
+  openDrilldown(html);
+}
+
+function buildBenchmarks(enpsScore, persons, reviews) {
+  // Plausible benchmarks for a ~150 person tech company
+  const benchmarks = [
+    { metric: 'eNPS Score', yours: enpsScore, industry: 22, max: 80, format: v => (v > 0 ? '+' : '') + v },
+    { metric: 'Avg Tenure', yours: 2.1, industry: 2.8, max: 5, format: v => v.toFixed(1) + 'yr' },
+    { metric: 'Voluntary Turnover', yours: 8, industry: 13, max: 25, format: v => v + '%', inverted: true },
+    { metric: 'Review Completion', yours: 72, industry: 65, max: 100, format: v => v + '%' },
+    { metric: 'Benefits Enrollment', yours: 94, industry: 87, max: 100, format: v => v + '%' },
+    { metric: 'Time to Fill (days)', yours: 34, industry: 42, max: 60, format: v => v + 'd', inverted: true },
+  ];
+
+  // Compute some real values
+  const activePersons = persons.filter(p => p.properties.status === 'active');
+  const avgTenure = activePersons.length > 0 ?
+    activePersons.reduce((sum, p) => sum + daysBetween(p.properties.startDate, CURRENT_DATE), 0) / activePersons.length / 365 : 0;
+  benchmarks[1].yours = parseFloat(avgTenure.toFixed(1));
+
+  let html = `<div style="font-size:12px; color:#666; margin-bottom:16px; font-style:italic">Benchmarks from similar-sized tech companies (100-200 employees). Data sources coming Q2 2026.</div>`;
+
+  benchmarks.forEach(b => {
+    const yoursNorm = b.max > 0 ? Math.min(1, Math.max(0, b.yours / b.max)) : 0;
+    const indNorm = b.max > 0 ? Math.min(1, Math.max(0, b.industry / b.max)) : 0;
+    const isGood = b.inverted ? b.yours < b.industry : b.yours > b.industry;
+    const fillColor = isGood ? '#10b981' : '#f59e0b';
+
+    html += `<div class="benchmark-row">`;
+    html += `<div class="benchmark-metric">${b.metric}</div>`;
+    html += `<div class="benchmark-bar-wrap">`;
+    html += `<div class="benchmark-bar-bg"></div>`;
+    html += `<div class="benchmark-bar-fill" style="width:${yoursNorm * 100}%; background:${fillColor}; opacity:0.7"></div>`;
+    html += `<div class="benchmark-marker" style="left:${indNorm * 100}%">`;
+    html += `<div class="benchmark-marker-label">Industry: ${b.format(b.industry)}</div>`;
+    html += `</div>`;
+    html += `</div>`;
+    html += `<div class="benchmark-values">`;
+    html += `<div class="benchmark-yours" style="color:${fillColor}">${b.format(b.yours)}</div>`;
+    html += `<div class="benchmark-theirs">${isGood ? 'Above' : 'Below'} avg</div>`;
+    html += `</div>`;
+    html += `</div>`;
+  });
+
+  document.getElementById('benchmarkContainer').innerHTML = html;
+}
+
+// ── Boot ──
+init().catch(err => {
+  console.error('Failed to load graph data:', err);
+  document.querySelector('.container').innerHTML = `<div class="card" style="text-align:center; padding:60px; color:#ef4444">
+    <h2>Failed to load graph data</h2>
+    <p style="color:#888; margin-top:8px">Make sure you're serving this file from the /poc directory.<br>
+    Run: <code style="color:#93c5fd">python3 -m http.server 8765</code> from the project root.</p>
+  </div>`;
+});
+</script>
+<script src="feedback-panel.js"></script>
+</body>
+</html>

@@ -1,0 +1,2329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Lifecycle Explorer v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: #0a0b0f;
+  color: #e0e0e8;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== TOP CHROME ========== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: linear-gradient(180deg, rgba(20,22,30,0.98) 0%, rgba(14,15,22,0.95) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+}
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.top-bar h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #a78bfa, #818cf8, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.version-switcher {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  align-items: center;
+}
+.version-switcher a {
+  color: #666;
+  text-decoration: none;
+  padding: 3px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.version-switcher a:hover { color: #aaa; background: rgba(255,255,255,0.05); }
+.version-switcher a.active {
+  color: #c4b5fd;
+  background: rgba(129,140,248,0.12);
+  font-weight: 700;
+}
+.version-switcher span { color: #444; }
+.person-picker-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.person-picker-wrap label {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.person-picker {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e0e0e8;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 260px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.person-picker:focus { border-color: #818cf8; }
+.person-picker option { background: #1a1b26; color: #e0e0e8; }
+
+/* ========== TAB BAR ========== */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  padding: 0 32px;
+  background: rgba(14,15,22,0.9);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  overflow-x: auto;
+}
+.tab-btn {
+  padding: 14px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: #aaa; }
+.tab-btn.active {
+  color: #c4b5fd;
+  border-bottom-color: #818cf8;
+  background: rgba(129,140,248,0.04);
+}
+
+/* ========== CONTENT AREA ========== */
+.content-area {
+  padding: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 120px);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ========== SHARED COMPONENTS ========== */
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: rgba(129,140,248,0.2); }
+.stat-card .label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.stat-card .value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f0f0f5;
+  letter-spacing: -0.02em;
+}
+.stat-card .sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+.section-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: #c4b5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+  margin-top: 32px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.section-header:first-child { margin-top: 0; }
+
+.card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card:hover { border-color: rgba(129,140,248,0.15); }
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.badge-green { background: rgba(34,197,94,0.15); color: #4ade80; }
+.badge-yellow { background: rgba(250,204,21,0.15); color: #fbbf24; }
+.badge-red { background: rgba(239,68,68,0.15); color: #f87171; }
+.badge-blue { background: rgba(96,165,250,0.15); color: #60a5fa; }
+.badge-purple { background: rgba(168,85,247,0.15); color: #c084fc; }
+.badge-gray { background: rgba(255,255,255,0.06); color: #888; }
+
+.pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(255,255,255,0.05);
+  color: #aaa;
+  margin: 2px 4px 2px 0;
+}
+
+.btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.btn-primary {
+  background: rgba(129,140,248,0.15);
+  border-color: rgba(129,140,248,0.3);
+  color: #c4b5fd;
+}
+.btn-primary:hover { background: rgba(129,140,248,0.25); }
+
+/* ========== TABLE ========== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.data-table th {
+  text-align: left;
+  padding: 10px 14px;
+  color: #888;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.data-table th:hover { color: #c4b5fd; }
+.data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: middle;
+}
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ========== 2A: PROFILE ========== */
+.profile-hero {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #818cf8, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 35px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.profile-info h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #f0f0f5;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+.profile-info .role-line {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+.profile-info .meta-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #888;
+}
+.profile-info .meta-row span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.quick-stat {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 14px 18px;
+  text-align: center;
+}
+.quick-stat .qs-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.quick-stat .qs-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f0f0f5;
+}
+.quick-stat .qs-sub {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: rgba(129,140,248,0.2);
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: 22px;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #818cf8;
+  border: 2px solid #0a0b0f;
+}
+.timeline-item.milestone::before {
+  background: #fbbf24;
+  box-shadow: 0 0 8px rgba(251,191,33,0.3);
+}
+.timeline-item .tl-date {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 3px;
+}
+.timeline-item .tl-event {
+  font-size: 14px;
+  color: #e0e0e8;
+  font-weight: 500;
+}
+.timeline-item .tl-detail {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* ========== 2B: ONBOARDING ========== */
+.onboarding-score {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.onboarding-score-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid;
+  flex-shrink: 0;
+}
+.onboarding-score-circle .score-val {
+  font-size: 22px;
+  font-weight: 800;
+}
+.onboarding-score-circle .score-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+}
+.onboarding-info { flex: 1; }
+.onboarding-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f0f0f5;
+  margin-bottom: 4px;
+}
+.onboarding-info p {
+  font-size: 13px;
+  color: #888;
+}
+
+.progress-track {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 32px;
+}
+.progress-step {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.progress-step .step-bar {
+  height: 4px;
+  border-radius: 2px;
+  margin-bottom: 8px;
+  transition: all 0.3s;
+}
+.progress-step.complete .step-bar { background: #4ade80; }
+.progress-step.in-progress .step-bar { background: #fbbf24; }
+.progress-step.pending .step-bar { background: rgba(255,255,255,0.08); }
+.progress-step.active-step .step-bar { height: 6px; }
+.progress-step .step-label {
+  font-size: 11px;
+  color: #888;
+  font-weight: 500;
+}
+.progress-step.active-step .step-label { color: #c4b5fd; font-weight: 600; }
+
+.step-detail-panel {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 24px;
+}
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.checklist-item:last-child { border-bottom: none; }
+.checklist-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.checklist-icon.done { background: rgba(34,197,94,0.15); color: #4ade80; }
+.checklist-icon.pending { background: rgba(250,204,21,0.15); color: #fbbf24; }
+.checklist-icon.overdue { background: rgba(239,68,68,0.15); color: #f87171; }
+.checklist-icon.future { background: rgba(255,255,255,0.05); color: #555; }
+.checklist-text {
+  flex: 1;
+  font-size: 13px;
+  color: #ccc;
+}
+.checklist-text.done-text { color: #888; text-decoration: line-through; }
+.checklist-date {
+  font-size: 12px;
+  color: #666;
+  flex-shrink: 0;
+}
+
+/* ========== 2C: CAREER PROGRESSION ========== */
+.progression-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+}
+@media (max-width: 900px) { .progression-layout { grid-template-columns: 1fr; } }
+
+.track-section {
+  margin-bottom: 24px;
+}
+.track-label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.role-lane {
+  display: flex;
+  gap: 4px;
+  height: 50px;
+  margin-bottom: 8px;
+}
+.role-block {
+  border-radius: 8px;
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f0f0f5;
+  position: relative;
+  min-width: 120px;
+  transition: transform 0.2s;
+}
+.role-block:hover { transform: translateY(-2px); }
+.role-block .rb-duration {
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+.chart-container {
+  width: 100%;
+  height: 200px;
+  position: relative;
+}
+.chart-container svg { width: 100%; height: 100%; }
+
+.insights-sidebar .insight-item {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.insights-sidebar .insight-item:last-child { border-bottom: none; }
+.insights-sidebar .insight-label {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 4px;
+}
+.insights-sidebar .insight-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f0f0f5;
+}
+.insights-sidebar .insight-context {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* ========== 2D: TEAM ROSTER ========== */
+.roster-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.roster-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f0f0f5;
+}
+.flag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+.flag-dot.red { background: #f87171; }
+.flag-dot.yellow { background: #fbbf24; }
+.flag-dot.green { background: #4ade80; }
+.flag-text {
+  font-size: 12px;
+  color: #f87171;
+  display: block;
+}
+
+.team-member-expand {
+  background: rgba(129,140,248,0.04);
+  padding: 16px 14px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.team-member-expand .mini-profile {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  font-size: 13px;
+}
+.team-member-expand .mp-section-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+/* ========== 2E: COHORT ANALYTICS ========== */
+.cohort-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.cohort-controls select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e0e0e8;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+.cohort-controls select option { background: #1a1b26; color: #e0e0e8; }
+.cohort-controls label {
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+}
+
+.cohort-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+@media (max-width: 800px) { .cohort-charts { grid-template-columns: 1fr; } }
+.cohort-chart-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 20px;
+}
+.cohort-chart-card h4 {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 14px;
+}
+.cohort-chart-card .chart-area {
+  height: 160px;
+  position: relative;
+}
+.cohort-chart-card .chart-area svg { width: 100%; height: 100%; }
+
+.outlier-row td { background: rgba(250,204,21,0.04) !important; }
+
+/* Compare bar */
+.compare-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: rgba(129,140,248,0.06);
+  border: 1px solid rgba(129,140,248,0.15);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+.compare-bar label { color: #888; font-weight: 500; }
+.compare-bar select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e0e0e8;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+}
+.compare-bar select option { background: #1a1b26; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: rgba(34,197,94,0.9);
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* Two column layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+/* Scrollable */
+.scroll-y { max-height: 400px; overflow-y: auto; }
+.scroll-y::-webkit-scrollbar { width: 4px; }
+.scroll-y::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* Loading */
+.loading-msg {
+  text-align: center;
+  padding: 80px 20px;
+  color: #666;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== TOP BAR ==================== -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <h1>Employee Lifecycle Explorer</h1>
+    <div class="version-switcher">
+      <a href="employee-lifecycle.html">v1</a>
+      <span>|</span>
+      <a href="employee-lifecycle-v2.html" class="active">v2</a>
+      <span>|</span>
+      <a href="employee-lifecycle-v3.html">v3</a>
+    </div>
+  </div>
+  <div class="person-picker-wrap">
+    <label>Employee</label>
+    <select id="personPicker" class="person-picker"></select>
+  </div>
+</div>
+
+<!-- ==================== TAB BAR ==================== -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="profile">Employee Profile</button>
+  <button class="tab-btn" data-tab="onboarding">Onboarding Journey</button>
+  <button class="tab-btn" data-tab="career">Career Progression</button>
+  <button class="tab-btn" data-tab="roster">Team Roster & Health</button>
+  <button class="tab-btn" data-tab="cohort">Cohort Analytics</button>
+</div>
+
+<!-- ==================== CONTENT ==================== -->
+<div class="content-area">
+  <div id="loading" class="loading-msg">Loading employee data...</div>
+
+  <div id="panel-profile" class="tab-panel active"></div>
+  <div id="panel-onboarding" class="tab-panel"></div>
+  <div id="panel-career" class="tab-panel"></div>
+  <div id="panel-roster" class="tab-panel"></div>
+  <div id="panel-cohort" class="tab-panel"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ===================================================================
+// DATA LAYER — loads once, provides HR-friendly helper functions.
+// No "nodes", "edges", "graph" language leaks into the UI.
+// ===================================================================
+
+let ALL_NODES = [];
+let ALL_EDGES = [];
+let DATA_READY = false;
+
+// Index for fast lookups
+let nodeById = {};
+let edgesBySource = {};
+let edgesByTarget = {};
+let edgesByType = {};
+let personNodes = [];
+
+async function loadData() {
+  try {
+    const [nodesResp, edgesResp] = await Promise.all([
+      fetch('../data/nodes.json').then(r => r.json()),
+      fetch('../data/edges.json').then(r => r.json())
+    ]);
+    ALL_NODES = nodesResp.nodes || [];
+    ALL_EDGES = edgesResp.edges || [];
+
+    // Build indices
+    ALL_NODES.forEach(n => { nodeById[n.id] = n; });
+    ALL_EDGES.forEach(e => {
+      if (!edgesBySource[e.source]) edgesBySource[e.source] = [];
+      edgesBySource[e.source].push(e);
+      if (!edgesByTarget[e.target]) edgesByTarget[e.target] = [];
+      edgesByTarget[e.target].push(e);
+      if (!edgesByType[e.type]) edgesByType[e.type] = [];
+      edgesByType[e.type].push(e);
+    });
+    personNodes = ALL_NODES.filter(n => n.type === 'person')
+      .sort((a, b) => a.properties.name.localeCompare(b.properties.name));
+
+    DATA_READY = true;
+    document.getElementById('loading').style.display = 'none';
+    initPicker();
+    renderAll();
+  } catch (err) {
+    document.getElementById('loading').textContent = 'Failed to load data: ' + err.message;
+  }
+}
+
+// ===================================================================
+// HELPER: HR-friendly data extraction
+// ===================================================================
+
+function getNode(id) { return nodeById[id]; }
+function getOutgoing(id, type) {
+  return (edgesBySource[id] || []).filter(e => !type || e.type === type);
+}
+function getIncoming(id, type) {
+  return (edgesByTarget[id] || []).filter(e => !type || e.type === type);
+}
+function resolveTarget(id, type) {
+  return getOutgoing(id, type).map(e => nodeById[e.target]).filter(Boolean);
+}
+function resolveSource(id, type) {
+  return getIncoming(id, type).map(e => nodeById[e.source]).filter(Boolean);
+}
+
+function tenure(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = endDate ? new Date(endDate) : new Date('2026-03-06');
+  const years = (end - start) / (365.25 * 24 * 60 * 60 * 1000);
+  return years;
+}
+function tenureStr(startDate, endDate) {
+  const y = tenure(startDate, endDate);
+  if (y < 0.08) return 'Starting soon';
+  if (y < 1) return Math.round(y * 12) + ' months';
+  return y.toFixed(1) + ' years';
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-US', { month: 'short', year: 'numeric', day: 'numeric' });
+}
+function fmtDateShort(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+function fmtMoney(n) {
+  if (n == null) return '—';
+  return '$' + Number(n).toLocaleString();
+}
+function initials(name) {
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+}
+function daysBetween(d1, d2) {
+  return Math.round((new Date(d2) - new Date(d1)) / (86400000));
+}
+
+function ratingBadge(rating) {
+  if (!rating) return '<span class="badge badge-gray">No rating</span>';
+  const map = {
+    exceeds: ['Exceeds', 'badge-green'],
+    meets: ['Meets', 'badge-blue'],
+    developing: ['Developing', 'badge-yellow'],
+    below: ['Below', 'badge-red']
+  };
+  const [label, cls] = map[rating] || ['Unknown', 'badge-gray'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+function statusBadge(status) {
+  const map = {
+    active: ['Active', 'badge-green'],
+    onboarding: ['Onboarding', 'badge-blue'],
+    preparing: ['Pre-boarding', 'badge-purple'],
+    on_leave: ['On Leave', 'badge-yellow'],
+    terminated: ['Terminated', 'badge-red']
+  };
+  const [label, cls] = map[status] || [status, 'badge-gray'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+// === PROFILE ===
+function getEmployeeProfile(personId) {
+  const p = getNode(personId);
+  if (!p) return null;
+  const props = p.properties;
+
+  // Manager
+  const managerEdges = getOutgoing(personId, 'reports_to');
+  const manager = managerEdges.length > 0 ? getNode(managerEdges[0].target) : null;
+
+  // Direct reports
+  const directReports = getIncoming(personId, 'reports_to')
+    .map(e => getNode(e.source)).filter(Boolean)
+    .sort((a, b) => a.properties.name.localeCompare(b.properties.name));
+
+  // Comp
+  const compNodes = resolveTarget(personId, 'has_comp');
+  const salary = compNodes.find(c => c.properties.type === 'salary');
+  const equity = compNodes.find(c => c.properties.type === 'equity');
+  const bonus = compNodes.find(c => c.properties.type === 'bonus');
+
+  // Reviews
+  const reviews = resolveTarget(personId, 'has_review')
+    .sort((a, b) => (b.properties.completedDate || '').localeCompare(a.properties.completedDate || ''));
+  const lastReview = reviews[0] || null;
+
+  // Benefits
+  const benefits = getOutgoing(personId, 'has_benefits').map(e => {
+    const b = getNode(e.target);
+    return b ? { ...b.properties, tier: e.metadata?.tier, enrollmentDate: e.metadata?.enrollmentDate } : null;
+  }).filter(Boolean);
+
+  // Teams
+  const teamEdges = getOutgoing(personId, 'member_of');
+  const teams = teamEdges.map(e => {
+    const t = getNode(e.target);
+    return t ? { ...t.properties, role: e.metadata?.role, id: t.id } : null;
+  }).filter(Boolean);
+
+  // Department
+  const depts = resolveTarget(personId, 'in_department');
+  const dept = depts[0]?.properties?.name || '—';
+
+  // Projects
+  const projEdges = getOutgoing(personId, 'works_on');
+  const projects = projEdges.map(e => {
+    const pr = getNode(e.target);
+    return pr ? { ...pr.properties, role: e.metadata?.role, id: pr.id } : null;
+  }).filter(Boolean);
+
+  // Equipment
+  const equipEdges = getOutgoing(personId, 'assigned_equipment');
+  const equipment = equipEdges.map(e => getNode(e.target)).filter(Boolean);
+
+  // Survey responses
+  const surveyEdges = getOutgoing(personId, 'responded_to');
+  const surveys = surveyEdges.map(e => getNode(e.target)).filter(Boolean);
+  const enps = surveys.find(s => s.properties.surveyType === 'enps');
+  const wellbeing = surveys.find(s => s.properties.surveyType === 'wellbeing');
+
+  // Dependents
+  const dependents = resolveTarget(personId, 'has_dependent');
+
+  // Position
+  const positions = resolveTarget(personId, 'holds_position');
+  const currentPosition = positions[0] || null;
+
+  // Recognition
+  const recognitions = getIncoming(personId, 'recognized').map(e => {
+    const rec = getNode(e.metadata?.recognitionId);
+    return rec ? { ...rec.properties, from: getNode(e.source)?.properties?.name } : null;
+  }).filter(Boolean);
+
+  // Skills
+  const skillEdges = getOutgoing(personId, 'has_skill');
+  const skills = skillEdges.map(e => {
+    const s = getNode(e.target);
+    return s ? { name: s.properties.name, proficiency: e.metadata?.proficiency } : null;
+  }).filter(Boolean);
+
+  // Time off
+  const timeOff = resolveTarget(personId, 'has_time_off');
+
+  // Documents
+  const signedDocs = getOutgoing(personId, 'signed').map(e => getNode(e.target)).filter(Boolean);
+
+  return {
+    id: personId,
+    name: props.name,
+    email: props.email,
+    role: props.role,
+    level: props.level,
+    startDate: props.startDate,
+    endDate: props.endDate,
+    status: props.status,
+    location: props.location,
+    pronouns: props.pronouns,
+    bio: props.bio,
+    tenure: tenureStr(props.startDate, props.endDate),
+    tenureYears: tenure(props.startDate, props.endDate),
+    manager: manager ? { id: manager.id, name: manager.properties.name, role: manager.properties.role } : null,
+    directReports,
+    salary: salary?.properties,
+    equity: equity?.properties,
+    bonus: bonus?.properties,
+    lastReview: lastReview?.properties,
+    reviews: reviews.map(r => r.properties),
+    benefits,
+    teams,
+    dept,
+    projects,
+    equipment,
+    enps: enps?.properties,
+    wellbeing: wellbeing?.properties,
+    dependents: dependents.map(d => d.properties),
+    currentPosition: currentPosition?.properties,
+    recognitions,
+    skills,
+    timeOff: timeOff.map(t => t.properties),
+    signedDocs: signedDocs.map(d => d.properties)
+  };
+}
+
+// === ONBOARDING ===
+function getOnboardingStatus(personId) {
+  const profile = getEmployeeProfile(personId);
+  if (!profile) return null;
+
+  // Collect onboarding steps
+  const onboardingEdges = getOutgoing(personId, 'onboarding_step');
+  const steps = onboardingEdges.map(e => {
+    const target = getNode(e.target);
+    return {
+      name: target?.properties?.name || 'Training',
+      category: e.metadata?.category || 'training',
+      status: e.metadata?.status || 'pending'
+    };
+  });
+
+  // Equipment
+  const equipItems = profile.equipment.map(e => ({
+    name: e.properties.name,
+    type: e.properties.type,
+    status: e.properties.status,
+    requestDate: e.properties.requestDate,
+    deliveryDate: e.properties.deliveryDate
+  }));
+
+  // Documents
+  const docs = profile.signedDocs.map(d => ({
+    title: d.title,
+    type: d.type,
+    status: d.status,
+    signedDate: d.signedDate
+  }));
+
+  // Buddy assignment
+  const buddyEdges = getIncoming(personId, 'buddy_of');
+  const buddy = buddyEdges.length > 0 ? getNode(buddyEdges[0].source) : null;
+
+  // Manager 1:1 — check if they have a review scheduled
+  const reviewNodes = resolveTarget(personId, 'has_review');
+  const earlyReviews = reviewNodes.filter(r =>
+    r.properties.type === '30_day' || r.properties.type === '90_day'
+  );
+
+  const isPreboarding = new Date(profile.startDate) > new Date('2026-03-06');
+  const daysSinceStart = daysBetween(profile.startDate, '2026-03-06');
+
+  // Build milestone checklist
+  const milestones = [];
+
+  // Pre-boarding
+  const offerDoc = docs.find(d => d.type === 'offer_letter');
+  const bgCheck = getOutgoing(personId, 'has_background_check').length > 0 ||
+    docs.some(d => d.type === 'background_check_consent');
+  const i9 = docs.find(d => d.type === 'i9');
+  const w4 = docs.find(d => d.type === 'w4');
+  const nda = docs.find(d => d.type === 'nda');
+
+  milestones.push({
+    phase: 'Pre-boarding',
+    items: [
+      { label: 'Offer letter signed', done: offerDoc?.status === 'signed', date: offerDoc?.signedDate },
+      { label: 'Background check', done: bgCheck, date: null },
+      { label: 'NDA signed', done: nda?.status === 'signed', date: nda?.signedDate },
+      { label: 'I-9 submitted', done: i9?.status === 'signed', date: i9?.signedDate, pending: i9?.status === 'queued' },
+      { label: 'W-4 submitted', done: w4?.status === 'signed', date: w4?.signedDate, pending: w4?.status === 'queued' }
+    ]
+  });
+
+  // Day 1
+  const laptop = equipItems.find(e => e.type === 'laptop');
+  const badge = equipItems.find(e => e.type === 'badge');
+  const handbookDoc = docs.find(d => d.type === 'handbook_acknowledgment');
+  milestones.push({
+    phase: 'Day 1',
+    items: [
+      { label: 'Laptop ' + (laptop ? (laptop.status === 'delivered' || laptop.status === 'active' ? 'delivered' : laptop.status) : 'not requested'), done: laptop && (laptop.status === 'delivered' || laptop.status === 'active'), pending: laptop && laptop.status === 'requested' },
+      { label: 'Badge issued', done: badge && (badge.status === 'delivered' || badge.status === 'active'), pending: badge && badge.status === 'requested' },
+      { label: 'Handbook acknowledged', done: handbookDoc?.status === 'signed', pending: handbookDoc?.status === 'queued' },
+      { label: 'Welcome email sent', done: daysSinceStart >= 0 || isPreboarding }
+    ]
+  });
+
+  // Week 1
+  milestones.push({
+    phase: 'Week 1',
+    items: [
+      { label: 'Manager 1:1 scheduled', done: profile.manager != null },
+      { label: 'Buddy assigned', done: buddy != null, detail: buddy ? buddy.properties.name : null },
+      { label: 'Team introductions', done: profile.teams.length > 0 },
+      { label: 'Benefits enrollment', done: profile.benefits.length > 0, pending: profile.benefits.length === 0 && daysSinceStart > 0 }
+    ]
+  });
+
+  // Month 1
+  const thirtyDayReview = earlyReviews.find(r => r.properties.type === '30_day');
+  milestones.push({
+    phase: 'Month 1',
+    items: [
+      { label: '30-day check-in', done: thirtyDayReview?.properties?.status === 'completed', pending: thirtyDayReview?.properties?.status === 'scheduled' },
+      { label: 'First project assignment', done: profile.projects.length > 0 },
+      { label: 'IT setup complete', done: equipItems.every(e => e.status === 'active' || e.status === 'delivered') && equipItems.length > 0, pending: equipItems.some(e => e.status === 'requested') },
+      ...steps.map(s => ({ label: s.name, done: s.status === 'completed', pending: s.status === 'pending' }))
+    ]
+  });
+
+  // 90 Days
+  const ninetyDayReview = earlyReviews.find(r => r.properties.type === '90_day');
+  milestones.push({
+    phase: '90 Days',
+    items: [
+      { label: '90-day review scheduled', done: ninetyDayReview?.properties?.status === 'completed' || ninetyDayReview?.properties?.status === 'scheduled', pending: !ninetyDayReview },
+      { label: '90-day review completed', done: ninetyDayReview?.properties?.status === 'completed' },
+      { label: 'Full team integration', done: daysSinceStart > 90 }
+    ]
+  });
+
+  // Calculate completion
+  const allItems = milestones.flatMap(m => m.items);
+  const doneCount = allItems.filter(i => i.done).length;
+  const total = allItems.length;
+  const completionRate = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+  return {
+    profile,
+    milestones,
+    completionRate,
+    doneCount,
+    total,
+    isPreboarding,
+    daysSinceStart,
+    buddy: buddy?.properties?.name || null
+  };
+}
+
+// === CAREER PROGRESSION ===
+function getCareerProgression(personId) {
+  const profile = getEmployeeProfile(personId);
+  if (!profile) return null;
+
+  // Position history — we only have current from holds_position
+  // Build a synthetic timeline from what we know
+  const roles = [];
+  const posEdges = getOutgoing(personId, 'holds_position');
+  posEdges.forEach(e => {
+    const pos = getNode(e.target);
+    if (pos) {
+      roles.push({
+        title: pos.properties.title,
+        level: pos.properties.level,
+        startDate: e.metadata?.startDate || profile.startDate,
+        endDate: e.metadata?.endDate || null,
+        bandMin: pos.properties.salaryBandMin,
+        bandMax: pos.properties.salaryBandMax,
+        bandMid: pos.properties.salaryBandMin && pos.properties.salaryBandMax ?
+          Math.round((pos.properties.salaryBandMin + pos.properties.salaryBandMax) / 2) : null,
+        current: e.metadata?.status === 'current'
+      });
+    }
+  });
+
+  // Comp history
+  const compHistory = [];
+  if (profile.salary) {
+    compHistory.push({
+      type: 'salary',
+      amount: profile.salary.amount,
+      date: profile.salary.effectiveDate,
+      notes: profile.salary.notes
+    });
+  }
+  if (profile.equity) {
+    compHistory.push({
+      type: 'equity',
+      amount: profile.equity.amount,
+      date: profile.equity.effectiveDate,
+      totalShares: profile.equity.totalShares,
+      vestedShares: profile.equity.vestedShares,
+      vestingSchedule: profile.equity.vestingSchedule,
+      notes: profile.equity.notes
+    });
+  }
+
+  // Reviews over time
+  const reviewHistory = profile.reviews.map(r => ({
+    type: r.type,
+    rating: r.rating,
+    date: r.completedDate || r.scheduledDate,
+    summary: r.summary,
+    status: r.status
+  })).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+  // Insights
+  const currentRole = roles.find(r => r.current) || roles[0];
+  const timeInRole = currentRole ? tenure(currentRole.startDate) : null;
+  const bandPosition = currentRole && profile.salary && currentRole.bandMid ?
+    Math.round((profile.salary.amount / currentRole.bandMid) * 100) : null;
+
+  return {
+    profile,
+    roles,
+    compHistory,
+    reviewHistory,
+    currentRole,
+    timeInRoleMonths: timeInRole ? Math.round(timeInRole * 12) : null,
+    bandPosition,
+    recognitions: profile.recognitions
+  };
+}
+
+// === TEAM ROSTER ===
+function getTeamRoster(managerId) {
+  const manager = getEmployeeProfile(managerId);
+  if (!manager) return null;
+
+  const members = manager.directReports.map(dr => {
+    const mp = getEmployeeProfile(dr.id);
+    if (!mp) return null;
+
+    const flags = [];
+    // Overdue review: no review completed in last 14 months
+    const lastReviewDate = mp.lastReview?.completedDate;
+    if (!lastReviewDate || daysBetween(lastReviewDate, '2026-03-06') > 425) {
+      flags.push('Overdue review');
+    }
+    // No recognition in 6 months
+    if (mp.recognitions.length === 0 && mp.tenureYears > 0.5) {
+      flags.push('No recent recognition');
+    }
+    // No comp change in 18 months (we only have one salary record so skip deep check)
+    // Wellbeing concern
+    if (mp.wellbeing && mp.wellbeing.score <= 3) {
+      flags.push('Wellbeing concern');
+    }
+
+    return {
+      id: dr.id,
+      name: mp.name,
+      role: mp.role,
+      level: mp.level,
+      tenure: mp.tenure,
+      tenureYears: mp.tenureYears,
+      location: mp.location,
+      status: mp.status,
+      lastReview: mp.lastReview,
+      salary: mp.salary,
+      currentPosition: mp.currentPosition,
+      bandPosition: mp.currentPosition?.salaryBandMin && mp.salary ?
+        (mp.salary.amount >= (mp.currentPosition.salaryBandMin + mp.currentPosition.salaryBandMax) / 2 ? 'at_or_above' : 'below') : null,
+      flags,
+      enps: mp.enps,
+      wellbeing: mp.wellbeing
+    };
+  }).filter(Boolean);
+
+  const flaggedCount = members.filter(m => m.flags.length > 0).length;
+  const avgTenure = members.length > 0 ? members.reduce((s, m) => s + m.tenureYears, 0) / members.length : 0;
+
+  return {
+    manager,
+    members,
+    summary: {
+      teamSize: members.length,
+      avgTenure: avgTenure.toFixed(1) + ' years',
+      flaggedCount,
+      activeCount: members.filter(m => m.status === 'active').length
+    }
+  };
+}
+
+// === COHORT ANALYTICS ===
+function getCohortMetrics(filter) {
+  let people = personNodes;
+
+  if (filter.department) {
+    const deptPeople = (edgesByType['in_department'] || [])
+      .filter(e => e.target === filter.department)
+      .map(e => e.source);
+    people = people.filter(p => deptPeople.includes(p.id));
+  }
+  if (filter.startYear) {
+    people = people.filter(p => p.properties.startDate && p.properties.startDate.startsWith(filter.startYear));
+  }
+  if (filter.level) {
+    people = people.filter(p => p.properties.level === filter.level);
+  }
+  if (filter.location) {
+    people = people.filter(p => p.properties.location === filter.location);
+  }
+  if (filter.status) {
+    people = people.filter(p => p.properties.status === filter.status);
+  }
+
+  if (people.length === 0) return { people: [], metrics: {} };
+
+  const active = people.filter(p => p.properties.status === 'active' || p.properties.status === 'onboarding' || p.properties.status === 'preparing');
+  const terminated = people.filter(p => p.properties.status === 'terminated');
+  const retentionRate = people.length > 0 ? Math.round((active.length / people.length) * 100) : 0;
+
+  const tenures = people.map(p => tenure(p.properties.startDate, p.properties.endDate));
+  const avgTenure = tenures.reduce((s, t) => s + t, 0) / tenures.length;
+
+  // Per-person metrics
+  const personMetrics = people.map(p => {
+    const prof = getEmployeeProfile(p.id);
+    if (!prof) return null;
+    return {
+      id: p.id,
+      name: prof.name,
+      role: prof.role,
+      level: prof.level,
+      dept: prof.dept,
+      status: prof.status,
+      location: prof.location,
+      tenure: prof.tenure,
+      tenureYears: prof.tenureYears,
+      salary: prof.salary?.amount,
+      lastRating: prof.lastReview?.rating,
+      reviewCount: prof.reviews.length,
+      recognitionCount: prof.recognitions.length,
+      teamCount: prof.teams.length,
+      projectCount: prof.projects.length
+    };
+  }).filter(Boolean);
+
+  // Avg salary
+  const salaries = personMetrics.filter(p => p.salary).map(p => p.salary);
+  const avgSalary = salaries.length > 0 ? Math.round(salaries.reduce((s, v) => s + v, 0) / salaries.length) : 0;
+
+  // Avg reviews per person
+  const avgReviews = personMetrics.length > 0 ?
+    (personMetrics.reduce((s, p) => s + p.reviewCount, 0) / personMetrics.length).toFixed(1) : 0;
+
+  // Avg recognitions per person
+  const avgRecognitions = personMetrics.length > 0 ?
+    (personMetrics.reduce((s, p) => s + p.recognitionCount, 0) / personMetrics.length).toFixed(1) : 0;
+
+  return {
+    people: personMetrics,
+    metrics: {
+      headcount: people.length,
+      activeCount: active.length,
+      terminatedCount: terminated.length,
+      retentionRate,
+      avgTenure: avgTenure.toFixed(1),
+      avgSalary,
+      avgReviews,
+      avgRecognitions
+    }
+  };
+}
+
+
+// ===================================================================
+// UI RENDERING
+// ===================================================================
+
+let currentPersonId = 'person-008'; // Raj Patel
+let activeTab = 'profile';
+let onboardingActiveStep = 0;
+
+function initPicker() {
+  const picker = document.getElementById('personPicker');
+  picker.innerHTML = personNodes.map(p =>
+    `<option value="${p.id}" ${p.id === currentPersonId ? 'selected' : ''}>${p.properties.name} — ${p.properties.role}${p.properties.status === 'terminated' ? ' (terminated)' : p.properties.status === 'preparing' ? ' (pre-boarding)' : ''}</option>`
+  ).join('');
+
+  picker.addEventListener('change', () => {
+    currentPersonId = picker.value;
+    renderAll();
+  });
+}
+
+function renderAll() {
+  if (!DATA_READY) return;
+  renderProfile();
+  renderOnboarding();
+  renderCareer();
+  renderRoster();
+  renderCohort();
+}
+
+// ======================= TAB SWITCHING =======================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    activeTab = btn.dataset.tab;
+    document.getElementById('panel-' + activeTab).classList.add('active');
+  });
+});
+
+// ======================= 2A: EMPLOYEE PROFILE =======================
+function renderProfile() {
+  const p = getEmployeeProfile(currentPersonId);
+  if (!p) { document.getElementById('panel-profile').innerHTML = '<p class="loading-msg">Employee not found.</p>'; return; }
+
+  const html = `
+    <div class="profile-hero">
+      <div class="profile-avatar">${initials(p.name)}</div>
+      <div class="profile-info">
+        <h2>${p.name} ${statusBadge(p.status)}</h2>
+        <div class="role-line">${p.role} ${p.level ? '(' + p.level + ')' : ''} &middot; ${p.dept}</div>
+        <div class="meta-row">
+          <span>${p.location || '—'}</span>
+          <span>${p.pronouns || ''}</span>
+          <span>Joined ${fmtDate(p.startDate)}</span>
+          <span>${p.tenure} tenure</span>
+          ${p.manager ? `<span>Reports to ${p.manager.name}</span>` : ''}
+          ${p.endDate ? `<span>Left ${fmtDate(p.endDate)}</span>` : ''}
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-stats">
+      <div class="quick-stat">
+        <div class="qs-label">Compensation</div>
+        <div class="qs-value">${p.salary ? fmtMoney(p.salary.amount) : '—'}</div>
+        <div class="qs-sub">${p.equity ? fmtMoney(p.equity.amount) + ' equity' : 'No equity'}</div>
+      </div>
+      <div class="quick-stat">
+        <div class="qs-label">Benefits</div>
+        <div class="qs-value">${p.benefits.length} plans</div>
+        <div class="qs-sub">${p.benefits.map(b => b.type).filter((v,i,a) => a.indexOf(v) === i).join(', ') || '—'}</div>
+      </div>
+      <div class="quick-stat">
+        <div class="qs-label">Last Review</div>
+        <div class="qs-value">${p.lastReview ? ratingBadge(p.lastReview.rating) : '—'}</div>
+        <div class="qs-sub">${p.lastReview?.completedDate ? fmtDate(p.lastReview.completedDate) : 'No reviews yet'}</div>
+      </div>
+      <div class="quick-stat">
+        <div class="qs-label">Direct Reports</div>
+        <div class="qs-value">${p.directReports.length}</div>
+        <div class="qs-sub">${p.directReports.length > 0 ? 'People manager' : 'Individual contributor'}</div>
+      </div>
+      <div class="quick-stat">
+        <div class="qs-label">eNPS</div>
+        <div class="qs-value">${p.enps ? p.enps.score + '/10' : '—'}</div>
+        <div class="qs-sub">${p.enps?.sentiment ? p.enps.sentiment.charAt(0).toUpperCase() + p.enps.sentiment.slice(1) : 'No survey'}</div>
+      </div>
+      <div class="quick-stat">
+        <div class="qs-label">Wellbeing</div>
+        <div class="qs-value">${p.wellbeing ? p.wellbeing.score + '/5' : '—'}</div>
+        <div class="qs-sub">${p.wellbeing?.comment ? '"' + p.wellbeing.comment.slice(0, 40) + (p.wellbeing.comment.length > 40 ? '...' : '') + '"' : '—'}</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-header">Career Journey</div>
+        <div class="timeline">
+          ${buildCareerTimeline(p)}
+        </div>
+      </div>
+      <div>
+        <div class="section-header">Current Snapshot</div>
+        <div class="card">
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Teams</div>
+            ${p.teams.length > 0 ? p.teams.map(t =>
+              `<div class="pill">${t.name} <span style="color:#666;">(${t.teamType})</span></div>`
+            ).join('') : '<span style="color:#666; font-size: 13px;">No teams assigned</span>'}
+          </div>
+
+          ${p.directReports.length > 0 ? `
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Direct Reports (${p.directReports.length})</div>
+            <div class="scroll-y" style="max-height: 200px;">
+              ${p.directReports.map(dr =>
+                `<div style="padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px;">
+                  <span style="color: #e0e0e8;">${dr.properties.name}</span>
+                  <span style="color: #666; margin-left: 8px;">${dr.properties.role}</span>
+                </div>`
+              ).join('')}
+            </div>
+          </div>` : ''}
+
+          ${p.projects.length > 0 ? `
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Active Projects</div>
+            ${p.projects.map(pr =>
+              `<div class="pill">${pr.name} <span style="color:#666;">${pr.role || ''}</span></div>`
+            ).join('')}
+          </div>` : ''}
+
+          ${p.skills.length > 0 ? `
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Skills</div>
+            ${p.skills.map(s =>
+              `<div class="pill">${s.name} <span style="color:#666;">${s.proficiency || ''}</span></div>`
+            ).join('')}
+          </div>` : ''}
+
+          ${p.dependents.length > 0 ? `
+          <div>
+            <div style="font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Dependents</div>
+            ${p.dependents.map(d =>
+              `<div style="font-size: 13px; color: #ccc; padding: 4px 0;">${d.name} <span style="color: #666;">(${d.relationship})</span></div>`
+            ).join('')}
+          </div>` : ''}
+        </div>
+
+        ${p.recognitions.length > 0 ? `
+        <div class="section-header">Recent Recognition</div>
+        ${p.recognitions.map(r => `
+          <div class="card" style="padding: 16px 20px;">
+            <div style="font-size: 13px; color: #e0e0e8;">"${r.message}"</div>
+            <div style="font-size: 12px; color: #888; margin-top: 6px;">From ${r.from || 'Unknown'} &middot; ${fmtDate(r.date)}</div>
+          </div>
+        `).join('')}` : ''}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('panel-profile').innerHTML = html;
+}
+
+function buildCareerTimeline(p) {
+  const events = [];
+
+  // Hire
+  events.push({
+    date: p.startDate,
+    event: `Hired as ${p.currentPosition ? p.currentPosition.title : p.role}`,
+    detail: p.dept + ' department',
+    milestone: true
+  });
+
+  // Teams joined
+  p.teams.forEach(t => {
+    const teamEdge = getOutgoing(p.id, 'member_of').find(e => getNode(e.target)?.id === t.id);
+    const joinDate = teamEdge?.metadata?.startDate || p.startDate;
+    events.push({
+      date: joinDate,
+      event: `Joined ${t.name} ${t.teamType}`,
+      detail: t.role === 'lead' ? 'As team lead' : null
+    });
+  });
+
+  // Equity grant
+  if (p.equity) {
+    events.push({
+      date: p.equity.effectiveDate,
+      event: `Equity grant: ${p.equity.totalShares?.toLocaleString() || '—'} shares`,
+      detail: p.equity.vestingSchedule || null,
+      milestone: true
+    });
+  }
+
+  // Reviews
+  p.reviews.forEach(r => {
+    if (r.completedDate) {
+      events.push({
+        date: r.completedDate,
+        event: `${r.type.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())} review completed`,
+        detail: r.rating ? r.rating.charAt(0).toUpperCase() + r.rating.slice(1) + ' rating' : null,
+        milestone: r.rating === 'exceeds'
+      });
+    }
+  });
+
+  // Recognitions
+  p.recognitions.forEach(r => {
+    events.push({
+      date: r.date,
+      event: `Recognition from ${r.from || 'team'}`,
+      detail: r.message?.slice(0, 60)
+    });
+  });
+
+  // Projects
+  p.projects.forEach(pr => {
+    const projEdge = getOutgoing(p.id, 'works_on').find(e => getNode(e.target)?.properties?.name === pr.name);
+    const startDate = projEdge?.metadata?.startDate;
+    if (startDate) {
+      events.push({
+        date: startDate,
+        event: `Assigned to ${pr.name}`,
+        detail: pr.role === 'lead' ? 'As project lead' : 'Contributor'
+      });
+    }
+  });
+
+  // Termination
+  if (p.endDate) {
+    events.push({
+      date: p.endDate,
+      event: 'Employment ended',
+      detail: null,
+      milestone: true
+    });
+  }
+
+  // Sort by date descending (newest first)
+  events.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  return events.map(e => `
+    <div class="timeline-item ${e.milestone ? 'milestone' : ''}">
+      <div class="tl-date">${fmtDate(e.date)}</div>
+      <div class="tl-event">${e.event}</div>
+      ${e.detail ? `<div class="tl-detail">${e.detail}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ======================= 2B: ONBOARDING JOURNEY =======================
+function renderOnboarding() {
+  const data = getOnboardingStatus(currentPersonId);
+  if (!data) { document.getElementById('panel-onboarding').innerHTML = '<p class="loading-msg">Employee not found.</p>'; return; }
+  const p = data.profile;
+
+  const scoreColor = data.completionRate >= 75 ? '#4ade80' :
+    data.completionRate >= 50 ? '#fbbf24' : '#f87171';
+
+  // Determine phase statuses
+  const phaseStatus = data.milestones.map(m => {
+    const all = m.items.length;
+    const done = m.items.filter(i => i.done).length;
+    if (done === all) return 'complete';
+    if (done > 0 || m.items.some(i => i.pending)) return 'in-progress';
+    return 'pending';
+  });
+
+  const html = `
+    <div class="onboarding-score">
+      <div class="onboarding-score-circle" style="border-color: ${scoreColor};">
+        <div class="score-val" style="color: ${scoreColor};">${data.completionRate}%</div>
+        <div class="score-label" style="color: ${scoreColor};">Complete</div>
+      </div>
+      <div class="onboarding-info">
+        <h3>${p.name} &mdash; Onboarding ${data.isPreboarding ? '(starts ' + fmtDate(p.startDate) + ')' : ''}</h3>
+        <p>${p.role} &middot; ${p.dept} &middot; ${data.doneCount} of ${data.total} milestones complete</p>
+        ${data.buddy ? `<p style="margin-top: 4px;">Buddy: <strong style="color: #e0e0e8;">${data.buddy}</strong></p>` : '<p style="margin-top: 4px; color: #f87171;">No buddy assigned yet</p>'}
+      </div>
+    </div>
+
+    <div class="progress-track" id="onboarding-progress-track">
+      ${data.milestones.map((m, i) => `
+        <div class="progress-step ${phaseStatus[i]} ${i === onboardingActiveStep ? 'active-step' : ''}" data-step="${i}">
+          <div class="step-bar"></div>
+          <div class="step-label">${m.phase}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div id="onboarding-step-detail" class="step-detail-panel">
+      ${renderOnboardingStepDetail(data.milestones[onboardingActiveStep])}
+    </div>
+
+    ${p.status !== 'preparing' && p.status !== 'onboarding' ? `
+    <div style="margin-top: 20px; padding: 16px 20px; background: rgba(129,140,248,0.06); border: 1px solid rgba(129,140,248,0.15); border-radius: 10px; font-size: 13px; color: #aaa;">
+      This employee is past the onboarding period. Showing historical onboarding progress.
+    </div>` : ''}
+  `;
+
+  document.getElementById('panel-onboarding').innerHTML = html;
+
+  // Bind step clicks
+  document.querySelectorAll('#onboarding-progress-track .progress-step').forEach(el => {
+    el.addEventListener('click', () => {
+      onboardingActiveStep = parseInt(el.dataset.step);
+      document.querySelectorAll('#onboarding-progress-track .progress-step').forEach(s => s.classList.remove('active-step'));
+      el.classList.add('active-step');
+      document.getElementById('onboarding-step-detail').innerHTML =
+        renderOnboardingStepDetail(data.milestones[onboardingActiveStep]);
+    });
+  });
+}
+
+function renderOnboardingStepDetail(milestone) {
+  if (!milestone) return '';
+  return `
+    <h4 style="font-size: 14px; font-weight: 600; color: #f0f0f5; margin-bottom: 14px;">${milestone.phase}</h4>
+    ${milestone.items.map(item => {
+      let iconClass, iconChar, textClass;
+      if (item.done) { iconClass = 'done'; iconChar = '\u2713'; textClass = 'done-text'; }
+      else if (item.pending) { iconClass = 'pending'; iconChar = '\u25F7'; textClass = ''; }
+      else if (item.overdue) { iconClass = 'overdue'; iconChar = '\u2717'; textClass = ''; }
+      else { iconClass = 'future'; iconChar = '\u25CB'; textClass = ''; }
+      return `
+        <div class="checklist-item">
+          <div class="checklist-icon ${iconClass}">${iconChar}</div>
+          <div class="checklist-text ${textClass}">${item.label}${item.detail ? ' <span style="color: #888;">(' + item.detail + ')</span>' : ''}</div>
+          ${item.date ? `<div class="checklist-date">${fmtDate(item.date)}</div>` : ''}
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+// ======================= 2C: CAREER PROGRESSION =======================
+function renderCareer() {
+  const data = getCareerProgression(currentPersonId);
+  if (!data) { document.getElementById('panel-career').innerHTML = '<p class="loading-msg">Employee not found.</p>'; return; }
+  const p = data.profile;
+
+  // Role lane colors
+  const levelColors = {
+    'IC-1': '#6366f1', 'IC-2': '#818cf8', 'IC-3': '#a78bfa', 'IC-4': '#c084fc',
+    'M-1': '#f59e0b', 'M-2': '#f97316', 'VP': '#ef4444', 'C-1': '#dc2626'
+  };
+
+  const html = `
+    <div class="progression-layout">
+      <div>
+        <div class="track-section">
+          <div class="track-label">Role & Level</div>
+          <div class="role-lane">
+            ${data.roles.length > 0 ? data.roles.map(r => {
+              const dur = tenure(r.startDate, r.endDate);
+              const pct = Math.max(15, Math.min(100, dur * 30));
+              const color = levelColors[r.level] || '#818cf8';
+              return `<div class="role-block" style="flex: ${pct}; background: ${color}22; border: 1px solid ${color}44;">
+                <span>${r.title}</span>
+                <span class="rb-duration">${r.level} &middot; ${tenureStr(r.startDate, r.endDate)}</span>
+              </div>`;
+            }).join('') : '<div style="color: #666; font-size: 13px; padding: 14px;">No position history available</div>'}
+          </div>
+        </div>
+
+        <div class="track-section">
+          <div class="track-label">Compensation</div>
+          <div class="card" style="padding: 20px;">
+            ${data.compHistory.length > 0 ? `
+              <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                ${data.compHistory.filter(c => c.type === 'salary').map(c => `
+                  <div>
+                    <div style="font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 4px;">Base Salary</div>
+                    <div style="font-size: 22px; font-weight: 700; color: #f0f0f5;">${fmtMoney(c.amount)}</div>
+                    <div style="font-size: 12px; color: #666;">Since ${fmtDateShort(c.date)}</div>
+                    ${data.bandPosition ? `<div style="font-size: 12px; color: ${data.bandPosition > 100 ? '#4ade80' : data.bandPosition > 90 ? '#fbbf24' : '#f87171'}; margin-top: 4px;">At ${data.bandPosition}% of band midpoint</div>` : ''}
+                  </div>
+                `).join('')}
+                ${data.compHistory.filter(c => c.type === 'equity').map(c => `
+                  <div>
+                    <div style="font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 4px;">Equity Grant</div>
+                    <div style="font-size: 22px; font-weight: 700; color: #f0f0f5;">${fmtMoney(c.amount)}</div>
+                    <div style="font-size: 12px; color: #666;">${c.totalShares?.toLocaleString() || '—'} shares (${c.vestedShares?.toLocaleString() || '0'} vested)</div>
+                    <div style="font-size: 12px; color: #666;">${c.vestingSchedule || ''}</div>
+                  </div>
+                `).join('')}
+              </div>
+              ${data.currentRole?.bandMin ? `
+              <div style="margin-top: 16px;">
+                <div style="font-size: 11px; color: #888; margin-bottom: 6px;">Salary Band: ${fmtMoney(data.currentRole.bandMin)} &mdash; ${fmtMoney(data.currentRole.bandMax)}</div>
+                <div style="position: relative; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px;">
+                  <div style="position: absolute; left: 0; top: 0; height: 100%; width: 100%; background: linear-gradient(90deg, rgba(99,102,241,0.3), rgba(168,85,247,0.3)); border-radius: 4px;"></div>
+                  ${p.salary ? `<div style="position: absolute; top: -4px; left: ${Math.min(100, Math.max(0, ((p.salary.amount - data.currentRole.bandMin) / (data.currentRole.bandMax - data.currentRole.bandMin)) * 100))}%; width: 16px; height: 16px; background: #818cf8; border-radius: 50%; border: 2px solid #0a0b0f; transform: translateX(-50%);"></div>` : ''}
+                </div>
+              </div>` : ''}
+            ` : '<div style="color: #666; font-size: 13px;">No compensation data available</div>'}
+          </div>
+        </div>
+
+        <div class="track-section">
+          <div class="track-label">Performance History</div>
+          <div class="card" style="padding: 20px;">
+            ${data.reviewHistory.length > 0 ? `
+              <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                ${data.reviewHistory.map(r => `
+                  <div style="text-align: center; min-width: 100px;">
+                    <div style="font-size: 11px; color: #888; margin-bottom: 6px;">${fmtDateShort(r.date)}</div>
+                    ${ratingBadge(r.rating)}
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">${r.type.replace('_', ' ')}</div>
+                  </div>
+                `).join('')}
+              </div>
+              ${data.reviewHistory.length > 0 && data.reviewHistory[data.reviewHistory.length - 1]?.summary ? `
+              <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; font-size: 13px; color: #aaa; font-style: italic;">
+                "${data.reviewHistory[data.reviewHistory.length - 1].summary}"
+              </div>` : ''}
+            ` : '<div style="color: #666; font-size: 13px;">No reviews completed yet</div>'}
+          </div>
+        </div>
+
+        ${data.recognitions.length > 0 ? `
+        <div class="track-section">
+          <div class="track-label">Recognition</div>
+          ${data.recognitions.map(r => `
+            <div class="card" style="padding: 14px 18px;">
+              <div style="font-size: 13px; color: #e0e0e8;">"${r.message}"</div>
+              <div style="font-size: 12px; color: #888; margin-top: 4px;">From ${r.from || 'Unknown'} &middot; ${fmtDate(r.date)}</div>
+            </div>
+          `).join('')}
+        </div>` : ''}
+      </div>
+
+      <div class="insights-sidebar">
+        <div class="section-header">Progression Insights</div>
+        <div class="card" style="padding: 0 20px;">
+          <div class="insight-item">
+            <div class="insight-label">Time in Current Role</div>
+            <div class="insight-value">${data.timeInRoleMonths ? data.timeInRoleMonths + ' months' : '—'}</div>
+          </div>
+          ${data.bandPosition ? `
+          <div class="insight-item">
+            <div class="insight-label">Band Position</div>
+            <div class="insight-value">${data.bandPosition}% of midpoint</div>
+            <div class="insight-context">${data.bandPosition > 100 ? 'Above midpoint' : data.bandPosition > 90 ? 'Near midpoint' : 'Below midpoint'}</div>
+          </div>` : ''}
+          <div class="insight-item">
+            <div class="insight-label">Total Reviews</div>
+            <div class="insight-value">${p.reviews.length}</div>
+          </div>
+          <div class="insight-item">
+            <div class="insight-label">Active Projects</div>
+            <div class="insight-value">${p.projects.length}</div>
+          </div>
+          <div class="insight-item">
+            <div class="insight-label">Teams</div>
+            <div class="insight-value">${p.teams.length}</div>
+            <div class="insight-context">${p.teams.map(t => t.name).join(', ') || '—'}</div>
+          </div>
+          <div class="insight-item">
+            <div class="insight-label">Direct Reports</div>
+            <div class="insight-value">${p.directReports.length}</div>
+          </div>
+          ${p.equity ? `
+          <div class="insight-item">
+            <div class="insight-label">Equity Vested</div>
+            <div class="insight-value">${p.equity.vestedShares?.toLocaleString() || 0} / ${p.equity.totalShares?.toLocaleString() || 0}</div>
+            <div class="insight-context">${p.equity.vestingSchedule || ''}</div>
+          </div>` : ''}
+          ${p.enps ? `
+          <div class="insight-item">
+            <div class="insight-label">eNPS Score</div>
+            <div class="insight-value">${p.enps.score}/10</div>
+            <div class="insight-context">${p.enps.sentiment}</div>
+          </div>` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('panel-career').innerHTML = html;
+}
+
+// ======================= 2D: TEAM ROSTER =======================
+let rosterManagerId = null;
+let rosterSortCol = 'name';
+let rosterSortDir = 1;
+let expandedRow = null;
+
+function renderRoster() {
+  const managerId = rosterManagerId || currentPersonId;
+  const data = getTeamRoster(managerId);
+
+  if (!data || data.members.length === 0) {
+    // Try to show for current person anyway
+    document.getElementById('panel-roster').innerHTML = `
+      <div class="roster-header">
+        <h3>Team Roster</h3>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <label style="font-size: 12px; color: #888;">Manager:</label>
+          <select id="rosterManagerPicker" class="person-picker" style="min-width: 240px;">
+            ${getManagerOptions(managerId)}
+          </select>
+        </div>
+      </div>
+      <div class="card" style="text-align: center; padding: 60px 20px; color: #666;">
+        <p style="font-size: 14px;">This person has no direct reports.</p>
+        <p style="font-size: 13px; margin-top: 8px;">Select a manager above to view their team.</p>
+      </div>
+    `;
+    bindRosterManagerPicker();
+    return;
+  }
+
+  // Sort
+  const sorted = [...data.members].sort((a, b) => {
+    let va, vb;
+    switch (rosterSortCol) {
+      case 'name': va = a.name; vb = b.name; break;
+      case 'role': va = a.role; vb = b.role; break;
+      case 'tenure': va = a.tenureYears; vb = b.tenureYears; break;
+      case 'location': va = a.location || ''; vb = b.location || ''; break;
+      case 'review': va = a.lastReview?.rating || ''; vb = b.lastReview?.rating || ''; break;
+      case 'flags': va = a.flags.length; vb = b.flags.length; break;
+      default: va = a.name; vb = b.name;
+    }
+    if (typeof va === 'string') return va.localeCompare(vb) * rosterSortDir;
+    return ((va || 0) - (vb || 0)) * rosterSortDir;
+  });
+
+  const html = `
+    <div class="roster-header">
+      <h3>${data.manager.name}'s Team</h3>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <label style="font-size: 12px; color: #888;">Manager:</label>
+        <select id="rosterManagerPicker" class="person-picker" style="min-width: 240px;">
+          ${getManagerOptions(managerId)}
+        </select>
+      </div>
+    </div>
+
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="label">Team Size</div>
+        <div class="value">${data.summary.teamSize}</div>
+        <div class="sub">${data.summary.activeCount} active</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Avg Tenure</div>
+        <div class="value">${data.summary.avgTenure}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Needs Attention</div>
+        <div class="value" style="color: ${data.summary.flaggedCount > 0 ? '#f87171' : '#4ade80'};">${data.summary.flaggedCount}</div>
+        <div class="sub">${data.summary.flaggedCount > 0 ? 'people flagged' : 'all clear'}</div>
+      </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+      <table class="data-table" id="rosterTable">
+        <thead>
+          <tr>
+            <th data-col="name">Name</th>
+            <th data-col="role">Role</th>
+            <th data-col="tenure">Tenure</th>
+            <th data-col="location">Location</th>
+            <th data-col="review">Last Review</th>
+            <th>Comp Band</th>
+            <th data-col="flags">Flags</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sorted.map(m => `
+            <tr class="roster-row" data-person-id="${m.id}" style="cursor: pointer;">
+              <td>
+                <div style="font-weight: 600; color: #e0e0e8;">${m.name}</div>
+                <div style="font-size: 11px; color: #666;">${m.level || ''}</div>
+              </td>
+              <td>${m.role}</td>
+              <td>${m.tenure}</td>
+              <td style="color: #888;">${m.location || '—'}</td>
+              <td>
+                ${m.lastReview ? `${ratingBadge(m.lastReview.rating)} <span style="font-size: 11px; color: #666; margin-left: 6px;">${fmtDateShort(m.lastReview.completedDate)}</span>` : '<span style="color: #666;">None</span>'}
+              </td>
+              <td>
+                ${m.bandPosition === 'at_or_above' ? '<span class="flag-dot green"></span> At/Above' :
+                  m.bandPosition === 'below' ? '<span class="flag-dot yellow"></span> Below' :
+                  '<span style="color: #666;">—</span>'}
+              </td>
+              <td>
+                ${m.flags.length > 0 ? m.flags.map(f => `<span class="flag-text">${f}</span>`).join('') : '<span style="color: #4ade80; font-size: 12px;">OK</span>'}
+              </td>
+            </tr>
+            ${expandedRow === m.id ? `
+            <tr>
+              <td colspan="7" style="padding: 0;">
+                <div class="team-member-expand">
+                  <div class="mini-profile">
+                    <div>
+                      <div class="mp-section-label">Compensation</div>
+                      <div style="font-size: 14px; font-weight: 600; color: #f0f0f5;">${m.salary ? fmtMoney(m.salary.amount) : '—'}</div>
+                    </div>
+                    <div>
+                      <div class="mp-section-label">Survey</div>
+                      <div>eNPS: ${m.enps ? m.enps.score + '/10' : '—'}</div>
+                      <div>Wellbeing: ${m.wellbeing ? m.wellbeing.score + '/5' : '—'}</div>
+                      ${m.wellbeing?.comment ? `<div style="font-size: 12px; color: #888; font-style: italic; margin-top: 4px;">"${m.wellbeing.comment.slice(0, 80)}"</div>` : ''}
+                    </div>
+                    <div>
+                      <div class="mp-section-label">Status</div>
+                      <div>${statusBadge(m.status)}</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>` : ''}
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  document.getElementById('panel-roster').innerHTML = html;
+
+  // Bind sort
+  document.querySelectorAll('#rosterTable th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (rosterSortCol === col) rosterSortDir *= -1;
+      else { rosterSortCol = col; rosterSortDir = 1; }
+      renderRoster();
+    });
+  });
+
+  // Bind row expand
+  document.querySelectorAll('.roster-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const pid = row.dataset.personId;
+      expandedRow = expandedRow === pid ? null : pid;
+      renderRoster();
+    });
+  });
+
+  bindRosterManagerPicker();
+}
+
+function getManagerOptions(selectedId) {
+  // Find people who have direct reports
+  const managers = personNodes.filter(p => {
+    return (edgesByTarget[p.id] || []).some(e => e.type === 'reports_to');
+  }).sort((a, b) => a.properties.name.localeCompare(b.properties.name));
+
+  return managers.map(m =>
+    `<option value="${m.id}" ${m.id === selectedId ? 'selected' : ''}>${m.properties.name} (${m.properties.role})</option>`
+  ).join('');
+}
+
+function bindRosterManagerPicker() {
+  const picker = document.getElementById('rosterManagerPicker');
+  if (picker) {
+    picker.addEventListener('change', () => {
+      rosterManagerId = picker.value;
+      expandedRow = null;
+      renderRoster();
+    });
+  }
+}
+
+// ======================= 2E: COHORT ANALYTICS =======================
+let cohortFilter = { department: null, startYear: null, level: null };
+
+function renderCohort() {
+  const data = getCohortMetrics(cohortFilter);
+
+  // Get unique departments, years, levels for selectors
+  const departments = ALL_NODES.filter(n => n.type === 'department');
+  const startYears = [...new Set(personNodes.map(p => p.properties.startDate?.slice(0, 4)).filter(Boolean))].sort();
+  const levels = [...new Set(personNodes.map(p => p.properties.level).filter(Boolean))].sort();
+  const locations = [...new Set(personNodes.map(p => p.properties.location).filter(Boolean))].sort();
+
+  const m = data.metrics;
+
+  const html = `
+    <div class="cohort-controls">
+      <label>Department</label>
+      <select id="cohortDept">
+        <option value="">All Departments</option>
+        ${departments.map(d => `<option value="${d.id}" ${cohortFilter.department === d.id ? 'selected' : ''}>${d.properties.name}</option>`).join('')}
+      </select>
+      <label>Start Year</label>
+      <select id="cohortYear">
+        <option value="">All Years</option>
+        ${startYears.map(y => `<option value="${y}" ${cohortFilter.startYear === y ? 'selected' : ''}>${y}</option>`).join('')}
+      </select>
+      <label>Level</label>
+      <select id="cohortLevel">
+        <option value="">All Levels</option>
+        ${levels.map(l => `<option value="${l}" ${cohortFilter.level === l ? 'selected' : ''}>${l}</option>`).join('')}
+      </select>
+      <button class="btn" id="cohortReset">Reset</button>
+      <button class="btn btn-primary" id="cohortExport">Export CSV</button>
+    </div>
+
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="label">Headcount</div>
+        <div class="value">${m.headcount || 0}</div>
+        <div class="sub">${m.activeCount || 0} active, ${m.terminatedCount || 0} departed</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Retention Rate</div>
+        <div class="value" style="color: ${(m.retentionRate || 0) >= 85 ? '#4ade80' : '#fbbf24'};">${m.retentionRate || 0}%</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Avg Tenure</div>
+        <div class="value">${m.avgTenure || '—'} yrs</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Avg Compensation</div>
+        <div class="value">${m.avgSalary ? fmtMoney(m.avgSalary) : '—'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Avg Reviews / Person</div>
+        <div class="value">${m.avgReviews || '—'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Avg Recognitions / Person</div>
+        <div class="value">${m.avgRecognitions || '—'}</div>
+      </div>
+    </div>
+
+    <div class="cohort-charts" id="cohortChartsArea">
+      <div class="cohort-chart-card">
+        <h4>Tenure Distribution</h4>
+        <div class="chart-area" id="chart-tenure"></div>
+      </div>
+      <div class="cohort-chart-card">
+        <h4>Headcount by Level</h4>
+        <div class="chart-area" id="chart-levels"></div>
+      </div>
+      <div class="cohort-chart-card">
+        <h4>Headcount by Department</h4>
+        <div class="chart-area" id="chart-depts"></div>
+      </div>
+      <div class="cohort-chart-card">
+        <h4>Review Ratings</h4>
+        <div class="chart-area" id="chart-ratings"></div>
+      </div>
+    </div>
+
+    <div class="section-header">People in Cohort (${data.people.length})</div>
+    <div style="overflow-x: auto;">
+      <table class="data-table" id="cohortTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Level</th>
+            <th>Dept</th>
+            <th>Tenure</th>
+            <th>Status</th>
+            <th>Salary</th>
+            <th>Last Rating</th>
+            <th>Reviews</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.people.sort((a, b) => a.name.localeCompare(b.name)).map(p => {
+            // Outlier: tenure > 2x avg or salary > 1.3x avg
+            const isOutlier = (p.tenureYears > parseFloat(m.avgTenure) * 2) ||
+              (p.salary && m.avgSalary && p.salary > m.avgSalary * 1.3);
+            return `
+            <tr class="${isOutlier ? 'outlier-row' : ''}">
+              <td style="font-weight: 500; color: #e0e0e8;">${p.name} ${isOutlier ? '<span style="color: #fbbf24; font-size: 11px; margin-left: 4px;">OUTLIER</span>' : ''}</td>
+              <td>${p.role}</td>
+              <td>${p.level || '—'}</td>
+              <td style="color: #888;">${p.dept}</td>
+              <td>${p.tenure}</td>
+              <td>${statusBadge(p.status)}</td>
+              <td>${p.salary ? fmtMoney(p.salary) : '—'}</td>
+              <td>${ratingBadge(p.lastRating)}</td>
+              <td style="text-align: center;">${p.reviewCount}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  document.getElementById('panel-cohort').innerHTML = html;
+
+  // Draw charts
+  drawCohortCharts(data);
+
+  // Bind controls
+  document.getElementById('cohortDept').addEventListener('change', e => {
+    cohortFilter.department = e.target.value || null;
+    renderCohort();
+  });
+  document.getElementById('cohortYear').addEventListener('change', e => {
+    cohortFilter.startYear = e.target.value || null;
+    renderCohort();
+  });
+  document.getElementById('cohortLevel').addEventListener('change', e => {
+    cohortFilter.level = e.target.value || null;
+    renderCohort();
+  });
+  document.getElementById('cohortReset').addEventListener('click', () => {
+    cohortFilter = { department: null, startYear: null, level: null };
+    renderCohort();
+  });
+  document.getElementById('cohortExport').addEventListener('click', () => {
+    showToast('Downloaded cohort-report.csv');
+  });
+}
+
+function drawCohortCharts(data) {
+  if (data.people.length === 0) return;
+
+  // Tenure distribution
+  drawBarChart('#chart-tenure', binData(data.people.map(p => p.tenureYears), [0, 0.5, 1, 2, 3, 5, 10], ['<6mo', '6-12mo', '1-2yr', '2-3yr', '3-5yr', '5+yr']), '#818cf8');
+
+  // Level counts
+  const levelCounts = {};
+  data.people.forEach(p => { if (p.level) levelCounts[p.level] = (levelCounts[p.level] || 0) + 1; });
+  const levelEntries = Object.entries(levelCounts).sort((a, b) => a[0].localeCompare(b[0]));
+  drawBarChart('#chart-levels', levelEntries.map(([k, v]) => ({ label: k, value: v })), '#a78bfa');
+
+  // Department counts
+  const deptCounts = {};
+  data.people.forEach(p => { if (p.dept && p.dept !== '—') deptCounts[p.dept] = (deptCounts[p.dept] || 0) + 1; });
+  const deptEntries = Object.entries(deptCounts).sort((a, b) => b[1] - a[1]);
+  drawBarChart('#chart-depts', deptEntries.map(([k, v]) => ({ label: k.length > 12 ? k.slice(0, 12) + '..' : k, value: v })), '#6366f1');
+
+  // Rating distribution
+  const ratingCounts = { exceeds: 0, meets: 0, developing: 0, below: 0, 'no review': 0 };
+  data.people.forEach(p => {
+    if (p.lastRating) ratingCounts[p.lastRating]++;
+    else ratingCounts['no review']++;
+  });
+  const ratingColors = { exceeds: '#4ade80', meets: '#60a5fa', developing: '#fbbf24', below: '#f87171', 'no review': '#555' };
+  drawBarChartColored('#chart-ratings',
+    Object.entries(ratingCounts).filter(([, v]) => v > 0).map(([k, v]) => ({ label: k, value: v, color: ratingColors[k] }))
+  );
+}
+
+function binData(values, edges, labels) {
+  const bins = labels.map(() => 0);
+  values.forEach(v => {
+    for (let i = edges.length - 2; i >= 0; i--) {
+      if (v >= edges[i]) { bins[i]++; break; }
+    }
+  });
+  return labels.map((l, i) => ({ label: l, value: bins[i] }));
+}
+
+function drawBarChart(selector, items, color) {
+  const container = document.querySelector(selector);
+  if (!container || items.length === 0) return;
+  container.innerHTML = '';
+
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  const margin = { top: 10, right: 10, bottom: 30, left: 40 };
+  const iw = width - margin.left - margin.right;
+  const ih = height - margin.top - margin.bottom;
+
+  const svg = d3.select(container).append('svg')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const x = d3.scaleBand().domain(items.map(d => d.label)).range([0, iw]).padding(0.35);
+  const y = d3.scaleLinear().domain([0, d3.max(items, d => d.value) || 1]).nice().range([ih, 0]);
+
+  svg.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x).tickSize(0))
+    .selectAll('text').style('fill', '#888').style('font-size', '10px');
+  svg.selectAll('.domain, .tick line').remove();
+
+  svg.append('g').call(d3.axisLeft(y).ticks(4).tickSize(-iw))
+    .selectAll('text').style('fill', '#666').style('font-size', '9px');
+  svg.selectAll('.domain').remove();
+  svg.selectAll('.tick line').style('stroke', 'rgba(255,255,255,0.04)');
+
+  svg.selectAll('.bar').data(items).enter().append('rect')
+    .attr('x', d => x(d.label)).attr('y', d => y(d.value))
+    .attr('width', x.bandwidth()).attr('height', d => ih - y(d.value))
+    .attr('rx', 4).attr('fill', color).attr('opacity', 0.8);
+
+  // Value labels on top
+  svg.selectAll('.val-label').data(items).enter().append('text')
+    .attr('x', d => x(d.label) + x.bandwidth() / 2)
+    .attr('y', d => y(d.value) - 4)
+    .attr('text-anchor', 'middle')
+    .style('fill', '#aaa').style('font-size', '10px').style('font-weight', '600')
+    .text(d => d.value > 0 ? d.value : '');
+}
+
+function drawBarChartColored(selector, items) {
+  const container = document.querySelector(selector);
+  if (!container || items.length === 0) return;
+  container.innerHTML = '';
+
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  const margin = { top: 10, right: 10, bottom: 30, left: 40 };
+  const iw = width - margin.left - margin.right;
+  const ih = height - margin.top - margin.bottom;
+
+  const svg = d3.select(container).append('svg')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const x = d3.scaleBand().domain(items.map(d => d.label)).range([0, iw]).padding(0.35);
+  const y = d3.scaleLinear().domain([0, d3.max(items, d => d.value) || 1]).nice().range([ih, 0]);
+
+  svg.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x).tickSize(0))
+    .selectAll('text').style('fill', '#888').style('font-size', '10px');
+  svg.selectAll('.domain, .tick line').remove();
+
+  svg.append('g').call(d3.axisLeft(y).ticks(4).tickSize(-iw))
+    .selectAll('text').style('fill', '#666').style('font-size', '9px');
+  svg.selectAll('.domain').remove();
+  svg.selectAll('.tick line').style('stroke', 'rgba(255,255,255,0.04)');
+
+  svg.selectAll('.bar').data(items).enter().append('rect')
+    .attr('x', d => x(d.label)).attr('y', d => y(d.value))
+    .attr('width', x.bandwidth()).attr('height', d => ih - y(d.value))
+    .attr('rx', 4).attr('fill', d => d.color).attr('opacity', 0.8);
+
+  svg.selectAll('.val-label').data(items).enter().append('text')
+    .attr('x', d => x(d.label) + x.bandwidth() / 2)
+    .attr('y', d => y(d.value) - 4)
+    .attr('text-anchor', 'middle')
+    .style('fill', '#aaa').style('font-size', '10px').style('font-weight', '600')
+    .text(d => d.value > 0 ? d.value : '');
+}
+
+// ======================= TOAST =======================
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ======================= BOOT =======================
+loadData();
+</script>
+</body>
+</html>

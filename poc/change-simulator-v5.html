@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Change Simulator | Acme Co Employee Graph</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0f; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+.app { display: flex; flex-direction: column; height: 100vh; }
+header { padding: 16px 24px; border-bottom: 1px solid #2a2a3e; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+header h1 { font-size: 20px; font-weight: 600; color: #fff; }
+header .subtitle { color: #888; font-size: 13px; }
+.nav-tabs { display: flex; gap: 2px; padding: 0 24px; border-bottom: 1px solid #2a2a3e; flex-shrink: 0; background: #0e0e18; }
+.nav-tab { padding: 10px 18px; font-size: 13px; cursor: pointer; color: #888; border-bottom: 2px solid transparent; transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none; }
+.nav-tab:hover { color: #ccc; }
+.nav-tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+.main { flex: 1; overflow: auto; }
+
+/* Scenario Builder */
+.scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 16px; padding: 24px; }
+.scenario-card { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 10px; padding: 20px; cursor: pointer; transition: all 0.2s; }
+.scenario-card:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 20px rgba(59,130,246,0.15); }
+.scenario-card h3 { font-size: 16px; color: #fff; margin-bottom: 8px; }
+.scenario-card .desc { font-size: 13px; color: #999; line-height: 1.5; margin-bottom: 12px; }
+.scenario-card .affected { display: flex; flex-wrap: wrap; gap: 6px; }
+.scenario-card .tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #1e293b; color: #94a3b8; }
+.scenario-card .tag.people { background: #1e3a5f; color: #60a5fa; }
+.scenario-card .tag.teams { background: #2d1f3d; color: #a78bfa; }
+.scenario-card .count { font-size: 12px; color: #666; margin-top: 10px; }
+.back-btn { background: #1a1a2e; border: 1px solid #2a2a3e; color: #94a3b8; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; margin: 16px 24px; display: inline-flex; align-items: center; gap: 6px; }
+.back-btn:hover { border-color: #3b82f6; color: #fff; }
+
+/* Effect Cascade */
+.cascade-view { padding: 24px; }
+.cascade-header { margin-bottom: 20px; }
+.cascade-header h2 { font-size: 22px; color: #fff; margin-bottom: 4px; }
+.cascade-header p { color: #888; font-size: 14px; }
+.order-section { margin-bottom: 28px; }
+.order-label { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #1a1a2e; }
+.order-dot { width: 10px; height: 10px; border-radius: 50%; }
+.order-dot.first { background: #3b82f6; }
+.order-dot.second { background: #f59e0b; }
+.order-dot.third { background: #a855f7; }
+.order-label h3 { font-size: 16px; font-weight: 600; }
+.order-label .hop { font-size: 12px; color: #666; }
+.effect-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.effect-card { background: #1a1a2e; border-radius: 8px; padding: 14px; border-left: 3px solid transparent; }
+.effect-card.first { border-left-color: #3b82f6; }
+.effect-card.second { border-left-color: #f59e0b; }
+.effect-card.third { border-left-color: #a855f7; }
+.effect-card .title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+.effect-card .detail { font-size: 12px; color: #999; line-height: 1.5; }
+.effect-card .detail strong { color: #ccc; font-weight: 500; }
+.effect-card .names { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+.effect-card .name-tag { font-size: 11px; padding: 2px 6px; border-radius: 3px; background: #0f172a; color: #94a3b8; }
+
+/* Graph Viz */
+.graph-container { position: relative; height: calc(100vh - 120px); }
+.graph-svg { width: 100%; height: 100%; }
+.graph-controls { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
+.graph-btn { background: #1a1a2e; border: 1px solid #2a2a3e; color: #e0e0e0; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+.graph-btn:hover { border-color: #3b82f6; }
+.graph-btn.active { background: #1e3a5f; border-color: #3b82f6; }
+.graph-legend { position: absolute; bottom: 16px; left: 16px; background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 8px; padding: 12px; }
+.legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 11px; color: #999; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* Flowchart */
+.flowchart-container { padding: 24px; overflow: auto; }
+.flowchart-svg { width: 100%; min-height: 500px; }
+
+/* Shared */
+.view { display: none; }
+.view.active { display: block; }
+.section-intro { padding: 24px 24px 0; }
+.section-intro h2 { font-size: 20px; color: #fff; margin-bottom: 6px; }
+.section-intro p { color: #888; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Change Simulator <span style="font-size:14px;font-weight:400;color:#888;margin-left:4px">v5</span></h1>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#555">
+      <a href="pattern-intelligence.html" style="color:#555;text-decoration:none">v1</a><span style="color:rgba(255,255,255,0.1)">|</span>
+      <a href="pattern-intelligence-v2.html" style="color:#555;text-decoration:none">v2</a><span style="color:rgba(255,255,255,0.1)">|</span>
+      <a href="pattern-intelligence-v3.html" style="color:#555;text-decoration:none">v3</a><span style="color:rgba(255,255,255,0.1)">|</span>
+      <a href="pattern-intelligence-v4.html" style="color:#555;text-decoration:none">v4</a><span style="color:rgba(255,255,255,0.1)">|</span>
+      <span style="color:#e0e0e0;font-weight:700">v5</span>
+      <span style="color:#555;font-size:11px;margin-left:4px">(was Pattern Intelligence)</span>
+    </div>
+    <span class="subtitle">Model org changes. See every ripple across the graph.</span>
+  </header>
+
+  <div class="nav-tabs" id="nav-tabs">
+    <button class="nav-tab active" data-view="scenarios">Scenarios</button>
+    <button class="nav-tab" data-view="cascade" style="display:none">Effect Cascade</button>
+    <button class="nav-tab" data-view="graph" style="display:none">Graph View</button>
+    <button class="nav-tab" data-view="flowchart" style="display:none">Flowchart</button>
+  </div>
+
+  <div class="main">
+    <div class="view active" id="view-scenarios">
+      <div class="section-intro">
+        <h2>What change do you want to model?</h2>
+        <p>Pick a scenario below. The simulator walks the employee graph to surface 1st, 2nd, and 3rd order effects.</p>
+      </div>
+      <div class="scenario-grid" id="scenario-grid"></div>
+    </div>
+
+    <div class="view" id="view-cascade">
+      <button class="back-btn" onclick="goBack()">Back to scenarios</button>
+      <div class="cascade-view" id="cascade-content"></div>
+    </div>
+
+    <div class="view" id="view-graph">
+      <button class="back-btn" onclick="goBack()">Back to scenarios</button>
+      <div class="graph-container" id="graph-container">
+        <svg class="graph-svg" id="graph-svg"></svg>
+        <div class="graph-controls">
+          <button class="graph-btn" id="btn-play" onclick="playAnimation()">Play Change</button>
+          <button class="graph-btn" id="btn-reset" onclick="resetAnimation()">Reset</button>
+        </div>
+        <div class="graph-legend" id="graph-legend"></div>
+      </div>
+    </div>
+
+    <div class="view" id="view-flowchart">
+      <button class="back-btn" onclick="goBack()">Back to scenarios</button>
+      <div class="flowchart-container">
+        <svg class="flowchart-svg" id="flowchart-svg"></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Data & Graph Helpers ──
+let allNodes = [], allEdges = [], nodeMap = {}, edgesBySource = {}, edgesByTarget = {};
+let currentScenario = null, graphSim = null;
+
+async function loadData() {
+  const [nRes, eRes] = await Promise.all([fetch('../data/nodes.json'), fetch('../data/edges.json')]);
+  const nData = await nRes.json(); const eData = await eRes.json();
+  allNodes = nData.nodes; allEdges = eData.edges;
+  allNodes.forEach(n => nodeMap[n.id] = n);
+  allEdges.forEach(e => {
+    if (!edgesBySource[e.source]) edgesBySource[e.source] = [];
+    edgesBySource[e.source].push(e);
+    if (!edgesByTarget[e.target]) edgesByTarget[e.target] = [];
+    edgesByTarget[e.target].push(e);
+  });
+}
+
+function getNode(id) { return nodeMap[id]; }
+function edgesFrom(id, type) { return (edgesBySource[id] || []).filter(e => !type || e.type === type); }
+function edgesTo(id, type) { return (edgesByTarget[id] || []).filter(e => !type || e.type === type); }
+function name(id) { const n = getNode(id); return n ? n.properties.name : id; }
+function role(id) { const n = getNode(id); return n ? n.properties.role : ''; }
+function level(id) { const n = getNode(id); return n ? (n.properties.level || '') : ''; }
+function teamName(id) { const n = getNode(id); return n ? n.properties.name : id; }
+function isActive(id) { const n = getNode(id); return n && n.type === 'person' && ['active','preparing','onboarding'].includes(n.properties.status); }
+function getDirectReports(managerId) { return edgesTo(managerId, 'reports_to').map(e => e.source).filter(isActive); }
+function getManager(personId) { const e = edgesFrom(personId, 'reports_to')[0]; return e ? e.target : null; }
+function getTeams(personId) { return edgesFrom(personId, 'member_of').map(e => e.target); }
+function getTeamMembers(teamId) { return edgesTo(teamId, 'member_of').map(e => e.source).filter(isActive); }
+function getSkills(personId) { return edgesFrom(personId, 'has_skill').map(e => ({ id: e.target, proficiency: e.metadata.proficiency, name: name(e.target) || getNode(e.target)?.properties?.name })); }
+function getCerts(personId) { return edgesFrom(personId, 'has_certification').map(e => ({ id: e.target, status: e.metadata.status, name: getNode(e.target)?.properties?.name })); }
+function getComp(personId) { const ce = edgesFrom(personId, 'has_comp'); if (!ce.length) return null; const c = getNode(ce[0].target); return c ? c.properties : null; }
+function getMentees(personId) { return edgesFrom(personId, 'mentors').filter(e => e.metadata.status === 'active').map(e => e.target); }
+
+// ── Scenario Definitions ──
+function buildScenarios() {
+  return [
+    {
+      id: 'split-engineering',
+      title: 'Split Engineering into Platform & Product divisions',
+      desc: 'Engineering is one org under James Wright. Split it into two VP-level divisions: Platform Engineering (Lisa Huang promoted to VP) and Product Engineering (David Park stays as EM). Karen Cho\'s QA team reports to Product.',
+      compute: computeSplitEngineering
+    },
+    {
+      id: 'new-aiml-team',
+      title: 'Create a new AI/ML team from existing engineers',
+      desc: 'Pull engineers with Python, data, and infrastructure skills from Platform and Product Engineering to form a new AI/ML team. Raj Patel leads it.',
+      compute: computeNewAIMLTeam
+    },
+    {
+      id: 'merge-support',
+      title: 'Merge Tier 1 and Tier 2 Support into one team',
+      desc: 'Combine Rachel Kim\'s Tier 1 team and Jamie Chen\'s Tier 2 specialists under one unified Support Ops team led by Rachel Kim. Jamie Chen focuses on Customer Success escalations.',
+      compute: computeMergeSupport
+    },
+    {
+      id: 'promote-sarah',
+      title: 'Promote Sarah Chen to Engineering Manager',
+      desc: 'Sarah Chen (Engineering Lead, M-1) becomes the second Engineering Manager alongside David Park. She takes half of David\'s direct reports and her current reports, reducing his span of control.',
+      compute: computePromoteSarah
+    }
+  ];
+}
+
+// ── Scenario Computations (real graph traversals) ──
+
+function computeSplitEngineering() {
+  const james = 'person-002', lisa = 'person-003', david = 'person-004', karen = 'person-023';
+  const platformMembers = getTeamMembers('team-001'); // Platform team
+  const prodMembers = getTeamMembers('team-002'); // Product Engineering
+  const qaMembers = getTeamMembers('team-003'); // Quality
+
+  // 1st order: reporting line changes
+  const first = [];
+  first.push({ title: 'Lisa Huang promoted to VP Platform Engineering', detail: `Lisa moves from reporting to James Wright to reporting directly to Elena Voss. She becomes VP-level, owning all platform infrastructure.`, names: [name(lisa)] });
+  first.push({ title: 'Platform team unchanged, new reporting chain', detail: `${platformMembers.length} engineers continue under Lisa: ${platformMembers.map(name).join(', ')}. No day-to-day disruption.`, names: platformMembers.map(name) });
+  first.push({ title: 'James Wright becomes VP Product Engineering only', detail: `James\'s scope narrows from all engineering (${platformMembers.length + prodMembers.length + qaMembers.length} people) to Product + QA (${prodMembers.length + qaMembers.length} people). David Park and Karen Cho continue reporting to James.`, names: [name(james)] });
+  first.push({ title: 'Karen Cho\'s QA team stays under James', detail: `Quality team (${qaMembers.length} people) remains in Product Engineering division. Karen Cho continues reporting to James.`, names: qaMembers.map(name) });
+
+  // 2nd order: span of control, skills
+  const second = [];
+  const jamesCurrentReports = getDirectReports(james);
+  second.push({ title: `James\'s span of control drops from ${jamesCurrentReports.length} direct to ${jamesCurrentReports.length - 1}`, detail: `Lisa no longer reports to James. His directs become: ${jamesCurrentReports.filter(id => id !== lisa).map(name).join(', ')}. More bandwidth for strategic product work.`, names: jamesCurrentReports.filter(id => id !== lisa).map(name) });
+  second.push({ title: 'Elena Voss gains a direct report', detail: `CEO goes from ${getDirectReports('person-001').length} to ${getDirectReports('person-001').length + 1} directs. New VP-level meeting needed for Platform alignment.`, names: [name('person-001'), name(lisa)] });
+
+  // Skills concentration on Platform
+  const platformSkills = {};
+  platformMembers.forEach(pid => { getSkills(pid).forEach(s => { if (!platformSkills[s.name]) platformSkills[s.name] = []; platformSkills[s.name].push({ person: name(pid), proficiency: s.proficiency }); }); });
+  const uniqueSkills = Object.entries(platformSkills).filter(([,holders]) => holders.length === 1);
+  if (uniqueSkills.length > 0) {
+    second.push({ title: `${uniqueSkills.length} skills held by only one person on Platform`, detail: `Knowledge concentration risk: ${uniqueSkills.slice(0, 4).map(([skill, holders]) => `${skill} (only ${holders[0].person})`).join('; ')}. No cross-pollination with Product side after split.`, names: uniqueSkills.map(([,h]) => h[0].person) });
+  }
+  second.push({ title: 'Comp implications: Lisa Huang needs VP-level compensation', detail: `Current band: M-1 ($160K-$210K). VP band: $200K-$280K. Budget impact: ~$40K-$70K increase plus equity refresh.`, names: [name(lisa)] });
+
+  // 3rd order
+  const third = [];
+  // Cross-functional impact - who mentors across the divide?
+  const crossMentoring = [];
+  platformMembers.forEach(pid => {
+    getMentees(pid).forEach(mentee => {
+      if (prodMembers.includes(mentee) || qaMembers.includes(mentee)) crossMentoring.push({ mentor: name(pid), mentee: name(mentee) });
+    });
+  });
+  prodMembers.forEach(pid => {
+    getMentees(pid).forEach(mentee => {
+      if (platformMembers.includes(mentee)) crossMentoring.push({ mentor: name(pid), mentee: name(mentee) });
+    });
+  });
+  if (crossMentoring.length > 0) {
+    third.push({ title: 'Cross-division mentoring relationships at risk', detail: `${crossMentoring.length} active mentoring pairs span the new divide: ${crossMentoring.map(m => `${m.mentor} mentors ${m.mentee}`).join('; ')}. These informal knowledge channels need formal preservation.`, names: crossMentoring.flatMap(m => [m.mentor, m.mentee]) });
+  }
+  // CKA certification - platform needs it, will Product side lose access?
+  const platformCerts = {};
+  platformMembers.forEach(pid => { getCerts(pid).forEach(c => { if (c.status === 'active') { if (!platformCerts[c.name]) platformCerts[c.name] = []; platformCerts[c.name].push(name(pid)); } }); });
+  const prodCerts = {};
+  prodMembers.forEach(pid => { getCerts(pid).forEach(c => { if (c.status === 'active') { if (!prodCerts[c.name]) prodCerts[c.name] = []; prodCerts[c.name].push(name(pid)); } }); });
+
+  third.push({ title: 'Hiring pipeline needs split into two tracks', detail: `Current engineering candidates (candidate-003 at offer stage, candidate-004 interviewing, candidate-006 interviewing) need re-assignment to the correct division. Interview panels may need restructuring.`, names: [] });
+  third.push({ title: 'Two engineering budget lines replace one', detail: `Finance (Robert Chen) needs to split the engineering budget into Platform and Product. Headcount planning, tooling costs, and conference budgets all need reallocation.`, names: [name('person-058')] });
+
+  return {
+    title: 'Split Engineering into Platform & Product Divisions',
+    affectedPeople: [...new Set([james, lisa, david, karen, ...platformMembers, ...prodMembers, ...qaMembers])],
+    affectedTeams: ['team-001', 'team-002', 'team-003'],
+    first, second, third,
+    graphNodes: buildGraphData([james, lisa, david, karen, 'person-001', ...platformMembers.slice(0,4), ...prodMembers.slice(0,4), ...qaMembers.slice(0,3)], ['team-001', 'team-002', 'team-003']),
+  };
+}
+
+function computeNewAIMLTeam() {
+  // Find engineers with Python, data-related, or infrastructure skills
+  const raj = 'person-008';
+  const platformMembers = getTeamMembers('team-001');
+  const prodMembers = getTeamMembers('team-002');
+  // Candidates: people with Python, ML-adjacent skills, or data skills
+  const candidates = [];
+  [...platformMembers, ...prodMembers].forEach(pid => {
+    const skills = getSkills(pid);
+    const skillNames = skills.map(s => (s.name || '').toLowerCase());
+    if (skillNames.some(s => s.includes('python') || s.includes('elasticsearch') || s.includes('distributed') || s.includes('observability') || s.includes('postgresql'))) {
+      candidates.push(pid);
+    }
+  });
+  // Also include Raj explicitly and some strong ICs
+  const team = [...new Set([raj, ...candidates, 'person-010', 'person-069'])].filter(isActive);
+  const movingFromPlatform = team.filter(p => platformMembers.includes(p));
+  const movingFromProduct = team.filter(p => prodMembers.includes(p));
+
+  const first = [];
+  first.push({ title: `Raj Patel leads new AI/ML team (${team.length} engineers)`, detail: `Raj moves from Engineering Lead on Platform to AI/ML Team Lead. He brings deep API and infrastructure knowledge. Current reports (Derek Lin, Andrew Wilson) need reassignment.`, names: [name(raj)] });
+  first.push({ title: `Platform loses ${movingFromPlatform.length} engineers`, detail: `Moving to AI/ML: ${movingFromPlatform.map(name).join(', ')}. Platform team drops from ${platformMembers.length} to ${platformMembers.length - movingFromPlatform.length} members.`, names: movingFromPlatform.map(name) });
+  if (movingFromProduct.length > 0) {
+    first.push({ title: `Product Engineering loses ${movingFromProduct.length} engineers`, detail: `Moving to AI/ML: ${movingFromProduct.map(name).join(', ')}. Product team drops from ${prodMembers.length} to ${prodMembers.length - movingFromProduct.length}.`, names: movingFromProduct.map(name) });
+  }
+  first.push({ title: 'New reporting lines established', detail: `All AI/ML team members report to Raj Patel. Raj reports to James Wright (VP Engineering). New team-level Slack channel, standup, and sprint cadence needed.`, names: team.map(name) });
+
+  const second = [];
+  // Raj's current reports need new manager
+  const rajReports = getDirectReports(raj);
+  const stayingReports = rajReports.filter(r => !team.includes(r));
+  if (stayingReports.length > 0) {
+    second.push({ title: `${stayingReports.length} of Raj\'s reports need new manager`, detail: `${stayingReports.map(r => `${name(r)} (${role(r)})`).join(', ')} can\'t follow Raj to AI/ML. Lisa Huang or another Platform lead needs to absorb them.`, names: stayingReports.map(name) });
+  }
+  // Skills gap on Platform
+  const leavingSkills = [];
+  movingFromPlatform.forEach(pid => { getSkills(pid).forEach(s => { if (s.proficiency === 'expert' || s.proficiency === 'advanced') leavingSkills.push({ skill: s.name, person: name(pid), prof: s.proficiency }); }); });
+  if (leavingSkills.length > 0) {
+    second.push({ title: `Platform loses ${leavingSkills.length} advanced/expert skill edges`, detail: `Key skills leaving: ${[...new Set(leavingSkills.map(s => s.skill))].slice(0,5).join(', ')}. Held by: ${[...new Set(leavingSkills.map(s => s.person))].join(', ')}.`, names: [...new Set(leavingSkills.map(s => s.person))] });
+  }
+  second.push({ title: 'Lisa Huang\'s span of control drops', detail: `Platform team shrinks from ${platformMembers.length} to ${platformMembers.length - movingFromPlatform.length}. Lisa may need to absorb Raj\'s orphaned reports, net effect on her workload is uncertain.`, names: [name('person-003')] });
+  // Mentoring disruption
+  const mentorDisruption = [];
+  team.forEach(pid => {
+    getMentees(pid).forEach(mentee => {
+      if (!team.includes(mentee)) mentorDisruption.push({ mentor: name(pid), mentee: name(mentee) });
+    });
+  });
+  if (mentorDisruption.length > 0) {
+    second.push({ title: `${mentorDisruption.length} mentoring relationships disrupted`, detail: mentorDisruption.map(m => `${m.mentor} mentors ${m.mentee}`).join('; ') + '. New team boundary makes informal pairing harder.', names: mentorDisruption.flatMap(m => [m.mentor, m.mentee]) });
+  }
+
+  const third = [];
+  third.push({ title: 'On-call rotation thins for Platform', detail: `Fewer engineers means tighter on-call. With ${platformMembers.length - movingFromPlatform.length} remaining, rotation frequency increases. Burnout risk rises for Lisa Huang\'s reduced team.`, names: platformMembers.filter(p => !team.includes(p)).map(name) });
+  third.push({ title: 'New budget line needed for AI/ML', detail: `Comp for ${team.length} engineers plus compute costs (GPU instances, training data). Robert Chen (Finance) needs to model this. Estimate: $${team.length * 12}K-$${team.length * 15}K monthly fully loaded.`, names: [name('person-058')] });
+  third.push({ title: 'Recruiting pipeline impact', detail: `Current engineering candidates may be better fits for AI/ML than their original target teams. Candidate-003 (offer stage, strong Go + infra) and Candidate-004 (strong across dimensions) should be re-evaluated.`, names: [] });
+
+  return {
+    title: 'Create AI/ML Team from Existing Engineers',
+    affectedPeople: [...new Set([raj, 'person-003', 'person-002', ...team, ...stayingReports])],
+    affectedTeams: ['team-001', 'team-002'],
+    first, second, third,
+    graphNodes: buildGraphData([raj, 'person-003', 'person-002', ...team.slice(0,5), ...stayingReports.slice(0,3)], ['team-001', 'team-002']),
+  };
+}
+
+function computeMergeSupport() {
+  const maria = 'person-005', rachel = 'person-042', jamie = 'person-013', ava = 'person-079';
+  const supportMembers = getTeamMembers('team-004');
+  // Tier 1 reports to Rachel Kim (person-042)
+  const tier1 = getDirectReports(rachel);
+  // Tier 2 reports to Jamie Chen (person-013)
+  const tier2 = getDirectReports(jamie);
+  // Ava Thompson's team
+  const avaReports = getDirectReports(ava);
+
+  const first = [];
+  first.push({ title: `Merge ${tier1.length + tier2.length} support staff under Rachel Kim`, detail: `Rachel Kim (Support Team Lead) absorbs Jamie Chen\'s Tier 2 specialists. Combined team: ${[...tier1, ...tier2].map(name).join(', ')}. Rachel\'s span goes from ${tier1.length} to ${tier1.length + tier2.length} direct reports.`, names: [...tier1, ...tier2].map(name) });
+  first.push({ title: 'Jamie Chen refocuses on Customer Success escalations', detail: `Jamie shifts from managing Tier 2 to handling complex escalations and VIP accounts alongside Ava Thompson\'s Customer Success team. No direct reports in the new structure.`, names: [name(jamie)] });
+  first.push({ title: 'Tier 1/2 distinction eliminated', detail: `All support staff become "Support Specialists" with unified queue. Cross-training required so former Tier 1 agents can handle Tier 2 complexity.`, names: [...tier1, ...tier2].map(name) });
+
+  const second = [];
+  second.push({ title: `Rachel Kim\'s span of control: ${tier1.length + tier2.length} directs`, detail: `This is high for a team lead. Industry standard is 6-8 for support. May need a senior specialist promoted to team lead to split the load.`, names: [name(rachel)] });
+  // Skills gap - Tier 2 has specialized skills
+  const tier2Skills = [];
+  tier2.forEach(pid => { getSkills(pid).forEach(s => tier2Skills.push({ skill: s.name, person: name(pid) })); });
+  const tier1Skills = [];
+  tier1.forEach(pid => { getSkills(pid).forEach(s => tier1Skills.push(s.name)); });
+  const skillGaps = [...new Set(tier2Skills.map(s => s.skill))].filter(s => !tier1Skills.includes(s));
+  if (skillGaps.length > 0) {
+    second.push({ title: `${skillGaps.length} Tier 2 skills not present in Tier 1`, detail: `Cross-training needed for: ${skillGaps.join(', ')}. Until training completes, former Tier 2 staff handle escalations informally.`, names: [] });
+  }
+  second.push({ title: 'Zendesk queue restructuring required', detail: `Two separate queues merge into one. Routing rules, SLA tiers, and auto-assignment need reconfiguration. Ava Thompson\'s team (${avaReports.map(name).join(', ')}) handles Success, not support.`, names: avaReports.map(name) });
+
+  const third = [];
+  third.push({ title: 'Comp equity review needed', detail: `Tier 1 (IC-1, hourly) and Tier 2 (IC-3, mixed) have different pay bands. Merging into one team with same work creates equity issues. Patricia Gomez (Payroll) flags this.`, names: [name('person-059')] });
+  third.push({ title: 'Customer Success team gains Jamie Chen\'s expertise', detail: `Jamie\'s deep product knowledge and Tier 2 experience makes Customer Success more proactive. VIP accounts get faster resolution. But Jamie goes from 8+ reports to 0 -- retention risk if she feels demoted.`, names: [name(jamie)] });
+  third.push({ title: 'FLSA classification mismatch', detail: `Tier 1 agents are nonexempt/hourly. Tier 2 specialists are mixed (some exempt, some nonexempt). Merged team needs consistent classification. Diane Crawford (VP Ops) must review.`, names: [name('person-022')] });
+
+  return {
+    title: 'Merge Tier 1 & Tier 2 Support',
+    affectedPeople: [...new Set([maria, rachel, jamie, ava, ...tier1, ...tier2, ...avaReports])],
+    affectedTeams: ['team-004'],
+    first, second, third,
+    graphNodes: buildGraphData([maria, rachel, jamie, ava, ...tier1.slice(0,4), ...tier2.slice(0,4), ...avaReports.slice(0,2)], ['team-004']),
+  };
+}
+
+function computePromoteSarah() {
+  const sarah = 'person-019', david = 'person-004', james = 'person-002';
+  const davidReports = getDirectReports(david);
+  const sarahReports = getDirectReports(sarah);
+  const prodMembers = getTeamMembers('team-002');
+
+  // Sarah takes her current reports + half of David's other reports
+  const otherReports = davidReports.filter(r => r !== sarah);
+  const halfIdx = Math.ceil(otherReports.length / 2);
+  const movingToSarah = otherReports.slice(0, halfIdx);
+  const stayingWithDavid = otherReports.slice(halfIdx);
+
+  const first = [];
+  first.push({ title: 'Sarah Chen promoted to Engineering Manager (M-1)', detail: `Sarah moves from Engineering Lead to Engineering Manager, same level but expanded scope. She keeps her current reports (${sarahReports.map(name).join(', ')}) and gains: ${movingToSarah.map(name).join(', ')}.`, names: [name(sarah), ...sarahReports.map(name), ...movingToSarah.map(name)] });
+  first.push({ title: `David Park\'s span drops from ${davidReports.length} to ${stayingWithDavid.length + 1}`, detail: `David keeps: ${[sarah, ...stayingWithDavid].map(name).join(', ')}. Both EMs report to James Wright. David gains bandwidth for strategic work.`, names: [name(david), ...stayingWithDavid.map(name)] });
+  first.push({ title: `${movingToSarah.length} engineers change managers`, detail: `${movingToSarah.map(r => `${name(r)} (${role(r)})`).join(', ')} move from David to Sarah. 1:1 cadence, review cycles, and growth plans transfer.`, names: movingToSarah.map(name) });
+
+  const second = [];
+  second.push({ title: 'Sarah\'s IC role needs backfill', detail: `Sarah is currently a key contributor on Payment Migration (critical priority). Her allocation drops as management duties increase. The team needs another strong IC to absorb her technical work.`, names: [name(sarah)] });
+  // Sarah's pregnancy is a factor
+  second.push({ title: 'Parental leave planning needed', detail: `Sarah has a baby due Aug 15, 2026. As a new manager, she\'ll need coverage during FMLA leave (est. 12 weeks). David Park or a senior IC needs to be designated acting manager.`, names: [name(sarah), name(david)] });
+  const sarahSkills = getSkills(sarah);
+  second.push({ title: 'Sarah\'s technical skills shift to coaching', detail: `Sarah has ${sarahSkills.length} tracked skills. As EM, her hands-on contribution drops. Payment Migration loses a contributor; her mentoring capacity increases.`, names: [name(sarah)] });
+  second.push({ title: 'Comp adjustment required', detail: `Sarah is already M-1 level. Promotion may warrant a comp review within the $160K-$210K EM band. Current comp vs. band position needs assessment.`, names: [name(sarah)] });
+
+  const third = [];
+  third.push({ title: 'Two-EM structure creates coordination overhead', detail: `David and Sarah need weekly EM sync. Sprint planning spans two sub-teams. James Wright facilitates but the Product Engineering team now has an internal seam that didn\'t exist before.`, names: [name(david), name(sarah), name(james)] });
+  third.push({ title: 'Performance review cycle impact', detail: `${movingToSarah.length} engineers\' upcoming annual reviews need to be co-authored by David (history) and Sarah (going forward). Transition notes critical.`, names: movingToSarah.map(name) });
+  third.push({ title: 'Career path signal to the org', detail: `Sarah\'s promotion shows IC-to-EM path is real at Acme. Jordan Liu, Tom Walsh, and James Liu (all M-1 leads) may see this as precedent and request similar transitions.`, names: ['person-027', 'person-024', 'person-041'].map(name) });
+
+  return {
+    title: 'Promote Sarah Chen to Engineering Manager',
+    affectedPeople: [...new Set([sarah, david, james, ...davidReports, ...sarahReports, ...movingToSarah])],
+    affectedTeams: ['team-002'],
+    first, second, third,
+    graphNodes: buildGraphData([sarah, david, james, ...sarahReports, ...movingToSarah.slice(0,3), ...stayingWithDavid.slice(0,3)], ['team-002']),
+  };
+}
+
+// ── Graph Data Builder ──
+function buildGraphData(personIds, teamIds) {
+  const nodes = [], edges = [], seen = new Set();
+  personIds.forEach(pid => {
+    if (seen.has(pid)) return; seen.add(pid);
+    const n = getNode(pid); if (!n) return;
+    nodes.push({ id: pid, label: n.properties.name, type: 'person', role: n.properties.role, level: n.properties.level });
+  });
+  teamIds.forEach(tid => {
+    if (seen.has(tid)) return; seen.add(tid);
+    const n = getNode(tid); if (!n) return;
+    nodes.push({ id: tid, label: n.properties.name, type: 'team' });
+  });
+  // Add edges between included nodes
+  allEdges.forEach(e => {
+    if (seen.has(e.source) && seen.has(e.target) && (e.type === 'reports_to' || e.type === 'member_of')) {
+      edges.push({ source: e.source, target: e.target, type: e.type });
+    }
+  });
+  return { nodes, edges };
+}
+
+// ── UI Rendering ──
+function renderScenarios() {
+  const grid = document.getElementById('scenario-grid');
+  const scenarios = buildScenarios();
+  grid.innerHTML = scenarios.map(s => {
+    const result = s.compute();
+    const peopleCount = result.affectedPeople.length;
+    const teamCount = result.affectedTeams.length;
+    const effectCount = result.first.length + result.second.length + result.third.length;
+    return `<div class="scenario-card" onclick="selectScenario('${s.id}')">
+      <h3>${s.title}</h3>
+      <div class="desc">${s.desc}</div>
+      <div class="affected">
+        <span class="tag people">${peopleCount} people affected</span>
+        <span class="tag teams">${teamCount} team${teamCount > 1 ? 's' : ''}</span>
+        <span class="tag">${effectCount} cascading effects</span>
+      </div>
+      <div class="count">${result.first.length} direct + ${result.second.length} second-order + ${result.third.length} third-order effects</div>
+    </div>`;
+  }).join('');
+}
+
+function selectScenario(id) {
+  const scenarios = buildScenarios();
+  const s = scenarios.find(x => x.id === id);
+  currentScenario = s.compute();
+  currentScenario.id = id;
+  showTabs();
+  switchView('cascade');
+  renderCascade();
+  renderGraph();
+  renderFlowchart();
+}
+
+function showTabs() {
+  document.querySelectorAll('.nav-tab').forEach(t => t.style.display = '');
+}
+
+function goBack() {
+  currentScenario = null;
+  document.querySelectorAll('.nav-tab').forEach(t => { if (t.dataset.view !== 'scenarios') t.style.display = 'none'; });
+  switchView('scenarios');
+}
+
+function switchView(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + viewId).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.view === viewId));
+}
+
+document.getElementById('nav-tabs').addEventListener('click', e => {
+  if (e.target.classList.contains('nav-tab')) {
+    const view = e.target.dataset.view;
+    if (view === 'scenarios' || currentScenario) switchView(view);
+  }
+});
+
+function renderCascade() {
+  const c = currentScenario;
+  const html = `
+    <div class="cascade-header"><h2>${c.title}</h2><p>${c.affectedPeople.length} people, ${c.affectedTeams.length} teams, ${c.first.length + c.second.length + c.third.length} effects traced through the graph</p></div>
+    <div class="order-section">
+      <div class="order-label"><div class="order-dot first"></div><h3 style="color:#3b82f6">1st Order Effects</h3><span class="hop">Direct changes</span></div>
+      <div class="effect-cards">${c.first.map(e => effectCard(e, 'first')).join('')}</div>
+    </div>
+    <div class="order-section">
+      <div class="order-label"><div class="order-dot second"></div><h3 style="color:#f59e0b">2nd Order Effects</h3><span class="hop">One hop out</span></div>
+      <div class="effect-cards">${c.second.map(e => effectCard(e, 'second')).join('')}</div>
+    </div>
+    <div class="order-section">
+      <div class="order-label"><div class="order-dot third"></div><h3 style="color:#a855f7">3rd Order Effects</h3><span class="hop">Two hops out</span></div>
+      <div class="effect-cards">${c.third.map(e => effectCard(e, 'third')).join('')}</div>
+    </div>`;
+  document.getElementById('cascade-content').innerHTML = html;
+}
+
+function effectCard(e, order) {
+  return `<div class="effect-card ${order}">
+    <div class="title">${e.title}</div>
+    <div class="detail">${e.detail}</div>
+    ${e.names && e.names.length ? `<div class="names">${e.names.slice(0, 8).map(n => `<span class="name-tag">${n}</span>`).join('')}${e.names.length > 8 ? `<span class="name-tag">+${e.names.length - 8} more</span>` : ''}</div>` : ''}
+  </div>`;
+}
+
+// ── D3 Force Graph ──
+function renderGraph() {
+  const svg = d3.select('#graph-svg');
+  svg.selectAll('*').remove();
+  const container = document.getElementById('graph-container');
+  const w = container.clientWidth, h = container.clientHeight;
+  svg.attr('viewBox', `0 0 ${w} ${h}`);
+
+  const data = currentScenario.graphNodes;
+  if (!data || !data.nodes.length) return;
+
+  const g = svg.append('g');
+  // Zoom
+  svg.call(d3.zoom().scaleExtent([0.3, 3]).on('zoom', e => g.attr('transform', e.transform)));
+
+  const nodeColors = { person: '#4b5563', team: '#1e3a5f' };
+  const changeColors = { moving: '#3b82f6', gaining: '#22c55e', losing: '#ef4444', unchanged: '#4b5563', newNode: '#10b981' };
+
+  // Determine node statuses based on scenario
+  const nodeStatus = {};
+  data.nodes.forEach(n => {
+    if (n.type === 'team') { nodeStatus[n.id] = 'unchanged'; }
+    else { nodeStatus[n.id] = currentScenario.affectedPeople.includes(n.id) ? 'moving' : 'unchanged'; }
+  });
+
+  // Simulation
+  const sim = d3.forceSimulation(data.nodes)
+    .force('link', d3.forceLink(data.edges).id(d => d.id).distance(80))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(w / 2, h / 2))
+    .force('collision', d3.forceCollide(30));
+  graphSim = sim;
+
+  // Edges
+  const link = g.selectAll('.link').data(data.edges).join('line')
+    .attr('class', 'link')
+    .attr('stroke', d => d.type === 'reports_to' ? '#334155' : '#1e293b')
+    .attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', d => d.type === 'member_of' ? '4,4' : 'none')
+    .attr('opacity', 0.6);
+
+  // Nodes
+  const node = g.selectAll('.node').data(data.nodes).join('g')
+    .attr('class', 'node')
+    .call(d3.drag().on('start', dragStart).on('drag', dragging).on('end', dragEnd));
+
+  node.append('circle')
+    .attr('r', d => d.type === 'team' ? 22 : 16)
+    .attr('fill', d => {
+      const status = nodeStatus[d.id];
+      if (d.type === 'team') return '#1e3a5f';
+      return status === 'moving' ? changeColors.moving : changeColors.unchanged;
+    })
+    .attr('stroke', d => {
+      if (d.type === 'team') return '#3b82f6';
+      return nodeStatus[d.id] === 'moving' ? '#60a5fa' : '#6b7280';
+    })
+    .attr('stroke-width', d => nodeStatus[d.id] === 'moving' ? 2 : 1);
+
+  node.append('text')
+    .attr('dy', d => d.type === 'team' ? 35 : 28)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#999')
+    .attr('font-size', d => d.type === 'team' ? 11 : 10)
+    .text(d => d.label.length > 18 ? d.label.slice(0,16) + '...' : d.label);
+
+  // Role labels for people
+  node.filter(d => d.type === 'person').append('text')
+    .attr('dy', 40)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#666')
+    .attr('font-size', 8)
+    .text(d => d.level || '');
+
+  // Initials inside circles
+  node.append('text')
+    .attr('dy', 5)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#fff')
+    .attr('font-size', d => d.type === 'team' ? 9 : 10)
+    .attr('font-weight', 600)
+    .text(d => d.type === 'team' ? d.label.slice(0,3).toUpperCase() : d.label.split(' ').map(w => w[0]).join(''));
+
+  sim.on('tick', () => {
+    link.attr('x1', d => d.source.x).attr('y1', d => d.source.y).attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    node.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  function dragStart(e, d) { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
+  function dragging(e, d) { d.fx = e.x; d.fy = e.y; }
+  function dragEnd(e, d) { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }
+
+  // Legend
+  document.getElementById('graph-legend').innerHTML = `
+    <div class="legend-item"><div class="legend-dot" style="background:${changeColors.moving}"></div>Affected person</div>
+    <div class="legend-item"><div class="legend-dot" style="background:${changeColors.unchanged}"></div>Unchanged</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Team</div>
+    <div class="legend-item" style="margin-top:6px;color:#666">Solid line = reports_to</div>
+    <div class="legend-item" style="color:#666">Dashed = member_of</div>`;
+}
+
+let animationPlayed = false;
+function playAnimation() {
+  if (!currentScenario || animationPlayed) return;
+  animationPlayed = true;
+  const svg = d3.select('#graph-svg');
+
+  // Pulse affected nodes
+  svg.selectAll('.node circle')
+    .filter(d => currentScenario.affectedPeople.includes(d.id))
+    .transition().duration(400)
+    .attr('r', d => d.type === 'team' ? 28 : 22)
+    .attr('fill', '#2563eb')
+    .attr('stroke', '#93c5fd')
+    .attr('stroke-width', 3)
+    .transition().duration(600)
+    .attr('r', d => d.type === 'team' ? 22 : 16)
+    .attr('fill', '#22c55e')
+    .attr('stroke', '#4ade80')
+    .attr('stroke-width', 2);
+
+  // Flash edges
+  svg.selectAll('.link')
+    .transition().duration(300).delay(400)
+    .attr('stroke', '#f59e0b').attr('opacity', 1).attr('stroke-width', 2.5)
+    .transition().duration(800)
+    .attr('stroke', '#334155').attr('opacity', 0.6).attr('stroke-width', 1.5);
+
+  document.getElementById('btn-play').classList.add('active');
+}
+
+function resetAnimation() {
+  animationPlayed = false;
+  document.getElementById('btn-play').classList.remove('active');
+  renderGraph();
+}
+
+// ── Flowchart ──
+function renderFlowchart() {
+  const svg = d3.select('#flowchart-svg');
+  svg.selectAll('*').remove();
+  const c = currentScenario;
+  if (!c) return;
+
+  const allEffects = [
+    ...c.first.map((e, i) => ({ ...e, order: 1, idx: i })),
+    ...c.second.map((e, i) => ({ ...e, order: 2, idx: i })),
+    ...c.third.map((e, i) => ({ ...e, order: 3, idx: i }))
+  ];
+
+  const padding = 40, nodeW = 260, nodeH = 60, gapX = 40, gapY = 30;
+  const cols = [c.first.length, c.second.length, c.third.length];
+  const maxCol = Math.max(...cols);
+  const totalW = 3 * nodeW + 4 * gapX + 200;
+  const totalH = Math.max(maxCol * (nodeH + gapY) + padding * 2 + 100, 500);
+
+  svg.attr('width', totalW).attr('height', totalH).attr('viewBox', `0 0 ${totalW} ${totalH}`);
+  const g = svg.append('g').attr('transform', `translate(${padding}, ${padding})`);
+
+  // Root node
+  const rootX = totalW / 2 - 120, rootY = 10;
+  g.append('rect').attr('x', rootX).attr('y', rootY).attr('width', 240).attr('height', 44).attr('rx', 8).attr('fill', '#1e293b').attr('stroke', '#3b82f6').attr('stroke-width', 2);
+  g.append('text').attr('x', rootX + 120).attr('y', rootY + 27).attr('text-anchor', 'middle').attr('fill', '#fff').attr('font-size', 13).attr('font-weight', 600).text(c.title.length > 35 ? c.title.slice(0,33) + '...' : c.title);
+
+  const orderColors = { 1: '#3b82f6', 2: '#f59e0b', 3: '#a855f7' };
+  const orderLabels = { 1: '1st Order', 2: '2nd Order', 3: '3rd Order' };
+  const startY = rootY + 44 + 40;
+
+  [1, 2, 3].forEach((order, colIdx) => {
+    const effects = allEffects.filter(e => e.order === order);
+    const colX = colIdx * (nodeW + gapX + 20) + 20;
+    const color = orderColors[order];
+
+    // Column header
+    g.append('rect').attr('x', colX).attr('y', startY - 30).attr('width', nodeW).attr('height', 24).attr('rx', 4).attr('fill', color).attr('opacity', 0.15);
+    g.append('text').attr('x', colX + nodeW / 2).attr('y', startY - 14).attr('text-anchor', 'middle').attr('fill', color).attr('font-size', 12).attr('font-weight', 600).text(orderLabels[order]);
+
+    // Connector from root
+    const midX = colX + nodeW / 2;
+    g.append('path')
+      .attr('d', `M${rootX + 120},${rootY + 44} C${rootX + 120},${startY - 40} ${midX},${startY - 50} ${midX},${startY}`)
+      .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 1.5).attr('opacity', 0.4).attr('stroke-dasharray', '4,4');
+
+    effects.forEach((effect, i) => {
+      const y = startY + i * (nodeH + gapY);
+      // Card
+      g.append('rect').attr('x', colX).attr('y', y).attr('width', nodeW).attr('height', nodeH).attr('rx', 6).attr('fill', '#1a1a2e').attr('stroke', color).attr('stroke-width', 1).attr('opacity', 0.8);
+      // Title
+      const titleText = effect.title.length > 38 ? effect.title.slice(0, 36) + '...' : effect.title;
+      g.append('text').attr('x', colX + 10).attr('y', y + 20).attr('fill', '#e0e0e0').attr('font-size', 11).attr('font-weight', 500).text(titleText);
+      // Detail snippet
+      const detailText = effect.detail.length > 55 ? effect.detail.slice(0, 53) + '...' : effect.detail;
+      g.append('text').attr('x', colX + 10).attr('y', y + 38).attr('fill', '#888').attr('font-size', 9).text(detailText);
+      // Name count
+      if (effect.names && effect.names.length) {
+        g.append('text').attr('x', colX + 10).attr('y', y + 52).attr('fill', '#666').attr('font-size', 8).text(`${effect.names.length} people`);
+      }
+      // Vertical connector between cards in same column
+      if (i > 0) {
+        const prevY = startY + (i - 1) * (nodeH + gapY) + nodeH;
+        g.append('line').attr('x1', colX + nodeW / 2).attr('y1', prevY).attr('x2', colX + nodeW / 2).attr('y2', y).attr('stroke', color).attr('stroke-width', 1).attr('opacity', 0.2);
+      }
+    });
+  });
+
+  // Cross-order connectors (1st -> 2nd, 2nd -> 3rd)
+  [1, 2].forEach(order => {
+    const fromEffects = allEffects.filter(e => e.order === order);
+    const toEffects = allEffects.filter(e => e.order === order + 1);
+    if (fromEffects.length && toEffects.length) {
+      const fromCol = (order - 1) * (nodeW + gapX + 20) + 20;
+      const toCol = order * (nodeW + gapX + 20) + 20;
+      const fromY = startY + Math.floor(fromEffects.length / 2) * (nodeH + gapY) + nodeH / 2;
+      const toY = startY + Math.floor(toEffects.length / 2) * (nodeH + gapY) + nodeH / 2;
+      g.append('path')
+        .attr('d', `M${fromCol + nodeW},${fromY} C${fromCol + nodeW + 30},${fromY} ${toCol - 30},${toY} ${toCol},${toY}`)
+        .attr('fill', 'none').attr('stroke', '#444').attr('stroke-width', 1).attr('stroke-dasharray', '3,3').attr('opacity', 0.5)
+        .attr('marker-end', 'url(#arrow)');
+    }
+  });
+
+  // Arrow marker
+  svg.append('defs').append('marker').attr('id', 'arrow').attr('viewBox', '0 0 10 10').attr('refX', 5).attr('refY', 5).attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto-start-reverse')
+    .append('path').attr('d', 'M 0 0 L 10 5 L 0 10 z').attr('fill', '#444');
+}
+
+// ── Init ──
+loadData().then(() => { renderScenarios(); });
+</script>
+<script src="feedback-panel.js"></script>
+</body>
+</html>

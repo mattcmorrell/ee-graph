@@ -1,0 +1,2786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifecycle Pattern Intelligence | Acme Co</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   GLOBAL RESET & BASE
+   ================================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base: #0a0b0f;
+  --bg-surface: #111318;
+  --bg-elevated: #181a22;
+  --bg-overlay: rgba(255,255,255,0.04);
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.12);
+  --text-primary: #f0f0f5;
+  --text-secondary: #8b8fa3;
+  --text-tertiary: #5a5e72;
+  --accent-green: #34d399;
+  --accent-green-dim: rgba(52,211,153,0.15);
+  --accent-yellow: #fbbf24;
+  --accent-yellow-dim: rgba(251,191,36,0.15);
+  --accent-red: #f87171;
+  --accent-red-dim: rgba(248,113,113,0.15);
+  --accent-blue: #60a5fa;
+  --accent-blue-dim: rgba(96,165,250,0.15);
+  --accent-purple: #a78bfa;
+  --accent-purple-dim: rgba(167,139,250,0.15);
+  --accent-cyan: #22d3ee;
+  --accent-cyan-dim: rgba(34,211,238,0.15);
+  --accent-orange: #fb923c;
+  --accent-orange-dim: rgba(251,146,60,0.15);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --glass: rgba(255,255,255,0.03);
+  --glass-border: rgba(255,255,255,0.08);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ================================================================
+   TAB BAR
+   ================================================================ */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  padding: 12px 24px 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.tab-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  transition: all 0.2s ease;
+  position: relative;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  color: var(--text-secondary);
+  background: var(--bg-overlay);
+}
+
+.tab-btn.active {
+  color: var(--text-primary);
+  background: var(--bg-surface);
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+  border-radius: 2px 2px 0 0;
+}
+
+.tab-content {
+  display: none;
+  padding: 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================================================
+   LOADING STATE
+   ================================================================ */
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-subtle);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ================================================================
+   MOCK 3A: HIRING SIGNAL SCORECARD
+   ================================================================ */
+#tab-hiring .header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+#tab-hiring h1 {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#tab-hiring .subtitle {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+.candidate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
+}
+
+.candidate-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.candidate-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-medium);
+}
+
+.candidate-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.candidate-card.score-high::before {
+  background: linear-gradient(90deg, #34d399, #22d3ee);
+}
+.candidate-card.score-mid::before {
+  background: linear-gradient(90deg, #fbbf24, #fb923c);
+}
+.candidate-card.score-low::before {
+  background: linear-gradient(90deg, #f87171, #ef4444);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.card-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.card-role {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.card-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--bg-overlay);
+  color: var(--text-secondary);
+}
+
+.meta-tag.referral { background: var(--accent-green-dim); color: var(--accent-green); }
+.meta-tag.linkedin { background: var(--accent-blue-dim); color: var(--accent-blue); }
+.meta-tag.website { background: var(--accent-purple-dim); color: var(--accent-purple); }
+.meta-tag.interviewing { background: var(--accent-cyan-dim); color: var(--accent-cyan); }
+.meta-tag.offer { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+.meta-tag.accepted { background: var(--accent-green-dim); color: var(--accent-green); }
+.meta-tag.unresponsive { background: var(--accent-red-dim); color: var(--accent-red); }
+
+.score-ring {
+  width: 72px;
+  height: 72px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.score-ring svg {
+  width: 72px;
+  height: 72px;
+  transform: rotate(-90deg);
+}
+
+.score-ring .bg-circle {
+  fill: none;
+  stroke: var(--border-subtle);
+  stroke-width: 5;
+}
+
+.score-ring .fg-circle {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease;
+}
+
+.score-ring .score-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.factors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.factor-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.factor-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.factor-icon.positive { background: var(--accent-green-dim); color: var(--accent-green); }
+.factor-icon.neutral { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+.factor-icon.negative { background: var(--accent-red-dim); color: var(--accent-red); }
+
+.factor-label { color: var(--text-secondary); flex: 1; }
+.factor-value { font-weight: 600; }
+
+.similar-section {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.similar-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.similar-names {
+  font-size: 12px;
+  color: var(--accent-blue);
+}
+
+/* ================================================================
+   MOCK 3B: CORRELATION EXPLORER
+   ================================================================ */
+#tab-correlation {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+#tab-correlation h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+#tab-correlation .subtitle {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  margin-bottom: 24px;
+}
+
+.corr-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.corr-controls label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.corr-controls select {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 8px 32px 8px 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b8fa3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.corr-controls select:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+.axis-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.presets-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.preset-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border: 1px solid var(--border-medium);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preset-btn:hover {
+  background: var(--accent-blue-dim);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.preset-btn.active {
+  background: var(--accent-blue-dim);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.chart-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  min-height: 380px;
+  position: relative;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 260px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.bar-fill {
+  width: 100%;
+  max-width: 64px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: height 0.6s ease;
+  position: relative;
+  cursor: pointer;
+  min-height: 4px;
+}
+
+.bar-fill:hover { filter: brightness(1.2); }
+
+.bar-fill::after {
+  content: attr(data-value);
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.bar-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+  text-align: center;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.heatmap-grid {
+  display: grid;
+  gap: 3px;
+  padding: 0 16px;
+}
+
+.heatmap-cell {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  min-height: 42px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.heatmap-cell:hover { transform: scale(1.05); }
+
+.heatmap-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 4px;
+}
+
+.heatmap-row-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.scatter-plot {
+  width: 100%;
+  height: 280px;
+}
+
+.scatter-dot {
+  transition: r 0.2s ease;
+}
+
+.scatter-dot:hover {
+  r: 7;
+}
+
+.corr-insight {
+  margin-top: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--accent-blue-dim), var(--accent-purple-dim));
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(96,165,250,0.15);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.corr-insight strong { color: var(--text-primary); }
+
+/* ================================================================
+   MOCK 3C: MANAGER REPORT CARD
+   ================================================================ */
+#tab-manager h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+#tab-manager .subtitle {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  margin-bottom: 24px;
+}
+
+.manager-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.sort-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border: 1px solid var(--border-medium);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sort-btn:hover, .sort-btn.active {
+  background: var(--accent-purple-dim);
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+}
+
+.compare-mode-toggle {
+  margin-left: auto;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border: 1px solid var(--accent-cyan);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--accent-cyan);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.compare-mode-toggle.active {
+  background: var(--accent-cyan-dim);
+}
+
+.manager-list { display: flex; flex-direction: column; gap: 8px; }
+
+.manager-row {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: grid;
+  grid-template-columns: 32px 200px repeat(5, 1fr) 100px;
+  align-items: center;
+  gap: 12px;
+}
+
+.manager-row:hover {
+  border-color: var(--border-medium);
+  background: var(--bg-elevated);
+}
+
+.manager-row.expanded {
+  border-color: var(--accent-purple);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.manager-row.compare-selected {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 1px var(--accent-cyan-dim);
+}
+
+.mgr-rank {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.mgr-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mgr-role {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.mgr-stat {
+  text-align: center;
+}
+
+.mgr-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.mgr-stat-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mgr-score-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.mgr-score-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.mgr-score-val {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.manager-detail {
+  display: none;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-purple);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  padding: 20px;
+  margin-top: -8px;
+  margin-bottom: 4px;
+}
+
+.manager-detail.show { display: block; }
+
+.detail-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.report-table td {
+  font-size: 12px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.report-table tr:last-child td { border-bottom: none; }
+
+.mgr-insight {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--accent-purple-dim);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--accent-purple);
+  font-weight: 500;
+}
+
+.compare-panel {
+  display: none;
+  margin-top: 24px;
+  background: var(--bg-surface);
+  border: 1px solid var(--accent-cyan);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.compare-panel.show { display: block; }
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 140px 1fr 1fr;
+  gap: 1px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.compare-cell {
+  padding: 10px 14px;
+  background: var(--bg-elevated);
+  font-size: 13px;
+}
+
+.compare-cell.header {
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+}
+
+.compare-cell.label {
+  font-weight: 500;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  background: var(--bg-surface);
+}
+
+.compare-better {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.compare-worse {
+  color: var(--accent-red);
+  font-weight: 600;
+}
+
+.mgr-list-header {
+  display: grid;
+  grid-template-columns: 32px 200px repeat(5, 1fr) 100px;
+  gap: 12px;
+  padding: 0 20px 8px;
+}
+
+.mgr-list-header span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.mgr-list-header span:nth-child(1),
+.mgr-list-header span:nth-child(2) { text-align: left; }
+
+/* ================================================================
+   MOCK 3D: ATTRITION AUTOPSY
+   ================================================================ */
+#tab-attrition {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+#tab-attrition h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent-red);
+  margin-bottom: 4px;
+}
+
+#tab-attrition .subtitle {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  margin-bottom: 28px;
+}
+
+.autopsy-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.autopsy-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--accent-red), var(--accent-orange));
+}
+
+.autopsy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-left: 12px;
+}
+
+.autopsy-name {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.autopsy-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.autopsy-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: var(--accent-red-dim);
+  color: var(--accent-red);
+}
+
+.autopsy-tenure-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-orange);
+  margin-top: 8px;
+}
+
+.timeline-section {
+  padding-left: 12px;
+  margin-bottom: 24px;
+}
+
+.timeline-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent-red), var(--border-subtle));
+}
+
+.timeline-event {
+  position: relative;
+  padding: 0 0 20px 0;
+}
+
+.timeline-event:last-child { padding-bottom: 0; }
+
+.timeline-dot {
+  position: absolute;
+  left: -21px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid;
+}
+
+.timeline-dot.warning {
+  border-color: var(--accent-red);
+  background: var(--accent-red-dim);
+}
+
+.timeline-dot.neutral {
+  border-color: var(--text-tertiary);
+  background: var(--bg-elevated);
+}
+
+.timeline-dot.positive {
+  border-color: var(--accent-green);
+  background: var(--accent-green-dim);
+}
+
+.timeline-date {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.timeline-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.timeline-detail {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.gap-warnings {
+  padding-left: 12px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.gap-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--accent-red-dim);
+  border: 1px solid rgba(248,113,113,0.2);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-red);
+}
+
+.gap-badge .gap-icon {
+  font-size: 14px;
+}
+
+.pattern-section {
+  margin-top: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(248,113,113,0.05), rgba(251,146,60,0.05));
+  border: 1px solid rgba(248,113,113,0.15);
+  border-radius: var(--radius-lg);
+}
+
+.pattern-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-red);
+  margin-bottom: 4px;
+}
+
+.pattern-subtitle {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: 20px;
+}
+
+.pattern-signals {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.pattern-signal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.pattern-signal .sig-icon {
+  width: 6px;
+  height: 6px;
+  background: var(--accent-red);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.risk-list-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-orange);
+  margin-bottom: 12px;
+}
+
+.risk-employee {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  transition: border-color 0.2s ease;
+}
+
+.risk-employee:hover { border-color: var(--accent-orange); }
+
+.risk-name { font-size: 13px; font-weight: 600; flex: 1; }
+.risk-reasons { font-size: 11px; color: var(--text-tertiary); flex: 2; }
+
+.risk-level {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.risk-level.high { background: var(--accent-red-dim); color: var(--accent-red); }
+.risk-level.medium { background: var(--accent-orange-dim); color: var(--accent-orange); }
+.risk-level.low { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+
+/* ================================================================
+   MOCK 3E: ORG HEALTH DASHBOARD
+   ================================================================ */
+#tab-orghealth {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.oh-hero {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 32px;
+  background: linear-gradient(135deg, rgba(96,165,250,0.06), rgba(167,139,250,0.06), rgba(52,211,153,0.06));
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.oh-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 40%, rgba(96,165,250,0.05) 0%, transparent 50%),
+              radial-gradient(circle at 70% 60%, rgba(167,139,250,0.05) 0%, transparent 50%);
+  animation: shimmer 15s ease infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-5%, 5%); }
+}
+
+.oh-hero h1 {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.oh-score {
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.oh-score-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.oh-sub-scores {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 20px;
+  position: relative;
+}
+
+.oh-sub {
+  text-align: center;
+}
+
+.oh-sub-value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.oh-sub-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.oh-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.oh-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.oh-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.oh-card.retention::before { background: linear-gradient(90deg, var(--accent-red), var(--accent-orange)); }
+.oh-card.growth::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
+.oh-card.managers::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue)); }
+.oh-card.hiring::before { background: linear-gradient(90deg, var(--accent-yellow), var(--accent-orange)); }
+
+.oh-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.oh-card-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.oh-card-score {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.oh-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.oh-metric {
+  background: var(--bg-overlay);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.oh-metric-value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.oh-metric-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.oh-drilldown {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 12px;
+}
+
+.oh-drilldown-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.oh-person-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 12px;
+}
+
+.oh-person-name { font-weight: 500; flex: 1; }
+.oh-person-detail { color: var(--text-secondary); flex: 1; }
+
+.oh-person-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.oh-bar-mini {
+  height: 6px;
+  background: var(--bg-overlay);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.oh-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.oh-pipeline-stages {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.oh-stage {
+  flex: 1;
+  text-align: center;
+  padding: 8px 4px;
+  background: var(--bg-overlay);
+  border-radius: var(--radius-sm);
+}
+
+.oh-stage-count {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.oh-stage-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* ================================================================
+   UTILITY & SCROLLBAR
+   ================================================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+.text-green { color: var(--accent-green); }
+.text-red { color: var(--accent-red); }
+.text-yellow { color: var(--accent-yellow); }
+.text-blue { color: var(--accent-blue); }
+.text-purple { color: var(--accent-purple); }
+.text-cyan { color: var(--accent-cyan); }
+.text-orange { color: var(--accent-orange); }
+</style>
+</head>
+<body>
+
+<!-- VERSION + TAB BAR -->
+<div style="display:flex;align-items:center;gap:16px;padding:12px 24px 0;background:linear-gradient(180deg,rgba(255,255,255,0.02) 0%,transparent 100%);border-bottom:none;">
+  <div style="font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;">Pattern Intelligence</div>
+  <div style="font-size:12px;font-weight:500;display:flex;gap:6px;align-items:center;"><a href="pattern-intelligence.html" style="color:var(--accent-purple);text-decoration:none;font-weight:700;">v1</a><span style="color:var(--text-tertiary);">|</span><a href="pattern-intelligence-v2.html" style="color:var(--text-tertiary);text-decoration:none;">v2</a><span style="color:var(--text-tertiary);">|</span><a href="pattern-intelligence-v3.html" style="color:var(--text-tertiary);text-decoration:none;">v3</a></div>
+</div>
+<div class="tab-bar" style="padding-top:0;">
+  <button class="tab-btn active" data-tab="tab-hiring">Hiring Signals</button>
+  <button class="tab-btn" data-tab="tab-correlation">Correlation Explorer</button>
+  <button class="tab-btn" data-tab="tab-manager">Manager Report Card</button>
+  <button class="tab-btn" data-tab="tab-attrition">Attrition Autopsy</button>
+  <button class="tab-btn" data-tab="tab-orghealth">Org Health</button>
+</div>
+
+<!-- TAB PANELS -->
+<div id="tab-hiring" class="tab-content active">
+  <div class="loading-state"><div class="loading-spinner"></div><div style="color:var(--text-tertiary);font-size:13px;">Loading graph data...</div></div>
+</div>
+
+<div id="tab-correlation" class="tab-content">
+  <div class="loading-state"><div class="loading-spinner"></div><div style="color:var(--text-tertiary);font-size:13px;">Loading graph data...</div></div>
+</div>
+
+<div id="tab-manager" class="tab-content">
+  <div class="loading-state"><div class="loading-spinner"></div><div style="color:var(--text-tertiary);font-size:13px;">Loading graph data...</div></div>
+</div>
+
+<div id="tab-attrition" class="tab-content">
+  <div class="loading-state"><div class="loading-spinner"></div><div style="color:var(--text-tertiary);font-size:13px;">Loading graph data...</div></div>
+</div>
+
+<div id="tab-orghealth" class="tab-content">
+  <div class="loading-state"><div class="loading-spinner"></div><div style="color:var(--text-tertiary);font-size:13px;">Loading graph data...</div></div>
+</div>
+
+<script>
+// ================================================================
+// TAB SWITCHING
+// ================================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ================================================================
+// DATA LOADING & HELPERS
+// ================================================================
+const CURRENT_DATE = new Date('2026-02-06');
+
+let allNodes = [];
+let allEdges = [];
+let nodeMap = {};
+let edgesByType = {};
+let edgesBySource = {};
+let edgesByTarget = {};
+
+async function loadData() {
+  const [nodesResp, edgesResp] = await Promise.all([
+    fetch('../data/nodes.json').then(r => r.json()),
+    fetch('../data/edges.json').then(r => r.json())
+  ]);
+  allNodes = nodesResp.nodes;
+  allEdges = edgesResp.edges;
+
+  // Index nodes
+  allNodes.forEach(n => { nodeMap[n.id] = n; });
+
+  // Index edges
+  allEdges.forEach(e => {
+    if (!edgesByType[e.type]) edgesByType[e.type] = [];
+    edgesByType[e.type].push(e);
+    if (!edgesBySource[e.source]) edgesBySource[e.source] = [];
+    edgesBySource[e.source].push(e);
+    if (!edgesByTarget[e.target]) edgesByTarget[e.target] = [];
+    edgesByTarget[e.target].push(e);
+  });
+
+  // Render all tabs
+  renderHiringSignals();
+  renderCorrelationExplorer();
+  renderManagerReportCard();
+  renderAttritionAutopsy();
+  renderOrgHealth();
+}
+
+function getNodesByType(type) {
+  return allNodes.filter(n => n.type === type);
+}
+
+function getEdges(type) {
+  return edgesByType[type] || [];
+}
+
+function getOutEdges(nodeId, type) {
+  return (edgesBySource[nodeId] || []).filter(e => !type || e.type === type);
+}
+
+function getInEdges(nodeId, type) {
+  return (edgesByTarget[nodeId] || []).filter(e => !type || e.type === type);
+}
+
+function monthsBetween(d1, d2) {
+  const a = new Date(d1), b = new Date(d2);
+  return Math.max(0, (b.getFullYear() - a.getFullYear()) * 12 + b.getMonth() - a.getMonth() + (b.getDate() >= a.getDate() ? 0 : -1));
+}
+
+function daysBetween(d1, d2) {
+  return Math.max(0, Math.round((new Date(d2) - new Date(d1)) / (1000 * 60 * 60 * 24)));
+}
+
+function getPersonTenure(person) {
+  const end = person.properties.endDate ? new Date(person.properties.endDate) : CURRENT_DATE;
+  return monthsBetween(person.properties.startDate, end);
+}
+
+function getManagers() {
+  const managerIds = new Set();
+  getEdges('reports_to').forEach(e => managerIds.add(e.target));
+  return [...managerIds].map(id => nodeMap[id]).filter(n => n && n.type === 'person');
+}
+
+function getDirectReports(managerId) {
+  return getInEdges(managerId, 'reports_to').map(e => nodeMap[e.source]).filter(n => n);
+}
+
+function getPersonReviews(personId) {
+  return getOutEdges(personId, 'has_review').map(e => nodeMap[e.target]).filter(n => n);
+}
+
+function getPersonComp(personId) {
+  return getOutEdges(personId, 'has_comp').map(e => nodeMap[e.target]).filter(n => n);
+}
+
+function getPersonSurveys(personId) {
+  return getOutEdges(personId, 'responded_to').map(e => nodeMap[e.target]).filter(n => n);
+}
+
+function getRecognitionsGiven(personId) {
+  return getOutEdges(personId, 'recognized');
+}
+
+function getRecognitionsReceived(personId) {
+  return getInEdges(personId, 'recognized');
+}
+
+function getPersonTimeOff(personId) {
+  return getOutEdges(personId, 'has_time_off').map(e => nodeMap[e.target]).filter(n => n);
+}
+
+function getPersonPosition(personId) {
+  const edges = getOutEdges(personId, 'holds_position');
+  if (edges.length === 0) return null;
+  return nodeMap[edges[0].target];
+}
+
+function getPersonDepartment(personId) {
+  const edges = getOutEdges(personId, 'in_department');
+  if (edges.length === 0) return null;
+  return nodeMap[edges[0].target];
+}
+
+function getPersonTeams(personId) {
+  return getOutEdges(personId, 'member_of').map(e => nodeMap[e.target]).filter(n => n);
+}
+
+function getPersonManager(personId) {
+  const edges = getOutEdges(personId, 'reports_to');
+  if (edges.length === 0) return null;
+  return nodeMap[edges[0].target];
+}
+
+function getCandidateInterviews(candidateId) {
+  return getOutEdges(candidateId, 'interviewed_by').map(e => ({
+    interviewer: nodeMap[e.target],
+    metadata: e.metadata
+  }));
+}
+
+function getCandidatePosition(candidateId) {
+  const edges = getOutEdges(candidateId, 'candidate_for');
+  if (edges.length === 0) return null;
+  return nodeMap[edges[0].target];
+}
+
+function scoreToNum(score) {
+  const map = { strong_hire: 5, hire: 4, lean_hire: 3, lean_no_hire: 2, no_hire: 1 };
+  return map[score] || 0;
+}
+
+function ratingToNum(rating) {
+  const map = { exceeds: 4, meets: 3, developing: 2, below: 1 };
+  return map[rating] || 0;
+}
+
+function avg(arr) {
+  if (arr.length === 0) return 0;
+  return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
+
+function formatMoney(n) {
+  return '$' + Math.round(n).toLocaleString();
+}
+
+// ================================================================
+// MOCK 3A: HIRING SIGNAL SCORECARD
+// ================================================================
+function renderHiringSignals() {
+  const candidates = getNodesByType('candidate');
+  const people = getNodesByType('person').filter(p => p.properties.status === 'active');
+
+  // Compute avg tenure for referral vs non-referral employees
+  // We only have 1 referred_by edge, but we can still compute
+  const referralPersonIds = new Set(getEdges('referred_by').map(e => e.source));
+
+  // Compute candidate scores
+  const scoredCandidates = candidates.map(c => {
+    const pos = getCandidatePosition(c.id);
+    const interviews = getCandidateInterviews(c.id);
+    const interviewScores = interviews.map(i => scoreToNum(i.metadata?.score)).filter(s => s > 0);
+    const avgInterviewScore = avg(interviewScores);
+
+    let score = 50; // baseline
+    const factors = [];
+
+    // Factor 1: Interview scores
+    if (interviewScores.length > 0) {
+      const interviewFactor = ((avgInterviewScore - 1) / 4) * 30; // 0-30 points
+      score += interviewFactor - 15; // center around baseline
+      const level = avgInterviewScore >= 4 ? 'positive' : avgInterviewScore >= 3 ? 'neutral' : 'negative';
+      const labels = { strong_hire: 'Strong Hire', hire: 'Hire', lean_hire: 'Lean Hire', lean_no_hire: 'Lean No Hire', no_hire: 'No Hire' };
+      const avgLabel = avgInterviewScore >= 4.5 ? 'Strong Hire' : avgInterviewScore >= 3.5 ? 'Hire' : avgInterviewScore >= 2.5 ? 'Lean Hire' : 'No Hire';
+      factors.push({ label: `Interview avg: ${avgLabel}`, level, value: `${interviewScores.length} interviews` });
+    } else {
+      factors.push({ label: 'No interviews completed', level: 'neutral', value: 'Pending' });
+    }
+
+    // Factor 2: Comp alignment
+    if (pos && c.properties.expectedComp) {
+      const min = pos.properties.salaryBandMin;
+      const max = pos.properties.salaryBandMax;
+      const mid = (min + max) / 2;
+      const expected = c.properties.expectedComp;
+      if (expected <= max && expected >= min) {
+        score += 10;
+        factors.push({ label: `Comp within band (${formatMoney(min)}-${formatMoney(max)})`, level: 'positive', value: formatMoney(expected) });
+      } else if (expected > max) {
+        const overBy = ((expected - max) / max) * 100;
+        score -= Math.min(15, overBy);
+        factors.push({ label: `Comp ${Math.round(overBy)}% above band max`, level: 'negative', value: `${formatMoney(expected)} vs ${formatMoney(max)} max` });
+      } else {
+        score += 5;
+        factors.push({ label: `Comp below band min`, level: 'positive', value: formatMoney(expected) });
+      }
+    } else if (pos) {
+      factors.push({ label: 'Expected comp not provided', level: 'neutral', value: `Band: ${formatMoney(pos.properties.salaryBandMin)}-${formatMoney(pos.properties.salaryBandMax)}` });
+    }
+
+    // Factor 3: Source
+    const source = c.properties.source;
+    if (source === 'referral') {
+      score += 10;
+      factors.push({ label: 'Referral source (higher retention historically)', level: 'positive', value: 'Employee referral' });
+    } else if (source === 'linkedin') {
+      score += 0;
+      factors.push({ label: 'LinkedIn source (average outcomes)', level: 'neutral', value: 'LinkedIn' });
+    } else {
+      score -= 2;
+      factors.push({ label: 'Website source (lower conversion rate)', level: 'neutral', value: 'Website' });
+    }
+
+    // Factor 4: Pipeline velocity
+    const stageHistory = c.properties.stageHistory || [];
+    if (stageHistory.length >= 3) {
+      const firstStage = stageHistory[0];
+      const lastStage = stageHistory[stageHistory.length - 1];
+      const daysInPipeline = daysBetween(firstStage.enteredDate, lastStage.exitedDate || '2026-02-06');
+      if (daysInPipeline < 20) {
+        score += 5;
+        factors.push({ label: `Fast pipeline velocity (${daysInPipeline} days)`, level: 'positive', value: `${stageHistory.length} stages` });
+      } else if (daysInPipeline > 35) {
+        score -= 3;
+        factors.push({ label: `Slow pipeline (${daysInPipeline} days)`, level: 'negative', value: `${stageHistory.length} stages` });
+      } else {
+        factors.push({ label: `Pipeline: ${daysInPipeline} days`, level: 'neutral', value: `${stageHistory.length} stages` });
+      }
+    }
+
+    // Factor 5: Status
+    if (c.properties.status === 'accepted') {
+      score += 15;
+      factors.push({ label: 'Offer accepted', level: 'positive', value: 'Ready to start' });
+    } else if (c.properties.status === 'offer') {
+      score += 8;
+      factors.push({ label: 'Offer stage', level: 'positive', value: 'Awaiting response' });
+    } else if (c.properties.status === 'unresponsive') {
+      score -= 20;
+      factors.push({ label: 'Candidate unresponsive', level: 'negative', value: 'No response 48h+' });
+    }
+
+    score = Math.max(0, Math.min(100, Math.round(score)));
+
+    // Find similar employees in same position/department
+    const similarEmployees = [];
+    if (pos) {
+      const peopleInPosition = getEdges('holds_position')
+        .filter(e => e.target === pos.id)
+        .map(e => nodeMap[e.source])
+        .filter(p => p && p.type === 'person' && p.properties.status === 'active');
+      peopleInPosition.slice(0, 3).forEach(p => similarEmployees.push(p));
+    }
+
+    return { candidate: c, score, factors, position: pos, similarEmployees, interviews };
+  });
+
+  // Sort by score descending
+  scoredCandidates.sort((a, b) => b.score - a.score);
+
+  const container = document.getElementById('tab-hiring');
+  container.innerHTML = `
+    <div class="header-row">
+      <div>
+        <h1>Hiring Signal Scorecard</h1>
+        <div class="subtitle">${candidates.length} candidates in pipeline &mdash; Graph-derived success predictions</div>
+      </div>
+    </div>
+    <div class="candidate-grid" id="candidate-grid"></div>
+  `;
+
+  const grid = container.querySelector('#candidate-grid');
+
+  scoredCandidates.forEach(({ candidate: c, score, factors, position, similarEmployees }) => {
+    const scoreClass = score >= 80 ? 'score-high' : score >= 50 ? 'score-mid' : 'score-low';
+    const scoreColor = score >= 80 ? 'var(--accent-green)' : score >= 50 ? 'var(--accent-yellow)' : 'var(--accent-red)';
+    const circumference = 2 * Math.PI * 30;
+    const offset = circumference - (score / 100) * circumference;
+
+    const card = document.createElement('div');
+    card.className = `candidate-card ${scoreClass}`;
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <div class="card-name">${c.properties.name}</div>
+          <div class="card-role">${c.properties.appliedRole}${position ? ` &mdash; ${position.properties.title}` : ''}</div>
+          <div class="card-meta">
+            <span class="meta-tag ${c.properties.source}">${c.properties.source}</span>
+            <span class="meta-tag ${c.properties.status}">${c.properties.status}</span>
+          </div>
+        </div>
+        <div class="score-ring">
+          <svg viewBox="0 0 72 72">
+            <circle class="bg-circle" cx="36" cy="36" r="30"/>
+            <circle class="fg-circle" cx="36" cy="36" r="30"
+              stroke="${scoreColor}"
+              stroke-dasharray="${circumference}"
+              stroke-dashoffset="${offset}"/>
+          </svg>
+          <div class="score-label" style="color:${scoreColor}">${score}</div>
+        </div>
+      </div>
+      <div class="factors-list">
+        ${factors.map(f => `
+          <div class="factor-row">
+            <div class="factor-icon ${f.level}">${f.level === 'positive' ? '+' : f.level === 'negative' ? '-' : '~'}</div>
+            <span class="factor-label">${f.label}</span>
+            <span class="factor-value">${f.value}</span>
+          </div>
+        `).join('')}
+      </div>
+      ${similarEmployees.length > 0 ? `
+        <div class="similar-section">
+          <div class="similar-label">Similar Current Employees</div>
+          <div class="similar-names">${similarEmployees.map(e => e.properties.name).join(', ')}</div>
+        </div>
+      ` : ''}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ================================================================
+// MOCK 3B: CORRELATION EXPLORER
+// ================================================================
+function renderCorrelationExplorer() {
+  const container = document.getElementById('tab-correlation');
+
+  container.innerHTML = `
+    <h1>Correlation Explorer</h1>
+    <div class="subtitle">Discover hidden patterns between pre-hire signals and post-hire outcomes</div>
+
+    <div class="corr-controls">
+      <div class="axis-group">
+        <label>X Axis</label>
+        <select id="corr-x">
+          <option value="department">Department</option>
+          <option value="source">Hiring Source</option>
+          <option value="start_year">Start Year</option>
+          <option value="manager">Manager</option>
+          <option value="level">Level</option>
+          <option value="location">Location</option>
+        </select>
+      </div>
+      <div class="axis-group">
+        <label>Y Axis</label>
+        <select id="corr-y">
+          <option value="tenure">Tenure (months)</option>
+          <option value="edge_count">Graph Connectivity</option>
+          <option value="recognition_count">Recognition Count</option>
+          <option value="still_employed">Retention Rate</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="presets-row">
+      <button class="preset-btn" data-x="department" data-y="tenure">Dept vs Tenure</button>
+      <button class="preset-btn" data-x="start_year" data-y="still_employed">Cohort Retention</button>
+      <button class="preset-btn" data-x="level" data-y="edge_count">Level vs Connectivity</button>
+      <button class="preset-btn" data-x="location" data-y="tenure">Location vs Tenure</button>
+    </div>
+
+    <div class="chart-container" id="corr-chart"></div>
+    <div class="corr-insight" id="corr-insight"></div>
+  `;
+
+  const xSelect = container.querySelector('#corr-x');
+  const ySelect = container.querySelector('#corr-y');
+
+  function getXValue(person) {
+    const x = xSelect.value;
+    if (x === 'department') {
+      const dept = getPersonDepartment(person.id);
+      return dept ? dept.properties.name : 'Unknown';
+    }
+    if (x === 'source') {
+      // Not available for persons, simulate from referral edges
+      const isReferred = getInEdges(person.id, 'referred_by').length > 0;
+      const convertedFrom = getInEdges(person.id, 'converted_from');
+      if (convertedFrom.length > 0) {
+        const candidateNode = nodeMap[convertedFrom[0].target] || nodeMap[convertedFrom[0].source];
+        // Check if the candidate source is available
+        return 'Converted';
+      }
+      return isReferred ? 'Referral' : 'Direct';
+    }
+    if (x === 'start_year') {
+      return new Date(person.properties.startDate).getFullYear().toString();
+    }
+    if (x === 'manager') {
+      const mgr = getPersonManager(person.id);
+      return mgr ? mgr.properties.name : 'No Manager';
+    }
+    if (x === 'level') {
+      return person.properties.level || 'Unknown';
+    }
+    if (x === 'location') {
+      return person.properties.location || 'Unknown';
+    }
+    return 'Unknown';
+  }
+
+  function getYValue(person) {
+    const y = ySelect.value;
+    if (y === 'tenure') return getPersonTenure(person);
+    if (y === 'edge_count') {
+      return (edgesBySource[person.id] || []).length + (edgesByTarget[person.id] || []).length;
+    }
+    if (y === 'recognition_count') return getRecognitionsReceived(person.id).length;
+    if (y === 'still_employed') return person.properties.status === 'terminated' ? 0 : 1;
+    return 0;
+  }
+
+  function updateChart() {
+    const people = getNodesByType('person');
+    const chartEl = container.querySelector('#corr-chart');
+    const insightEl = container.querySelector('#corr-insight');
+
+    // Group by X value
+    const groups = {};
+    people.forEach(p => {
+      const xVal = getXValue(p);
+      if (!groups[xVal]) groups[xVal] = [];
+      groups[xVal].push(getYValue(p));
+    });
+
+    // Filter groups with too few entries
+    const validGroups = Object.entries(groups).filter(([_, vals]) => vals.length >= 2);
+    validGroups.sort((a, b) => avg(b[1]) - avg(a[1]));
+
+    // Take top 12
+    const displayGroups = validGroups.slice(0, 12);
+
+    const yLabel = ySelect.value;
+    const xLabel = xSelect.value;
+    const yIsRate = yLabel === 'still_employed';
+
+    // Compute max for bar scaling
+    const allAvgs = displayGroups.map(([_, vals]) => yIsRate ? avg(vals) * 100 : avg(vals));
+    const maxVal = Math.max(...allAvgs, 1);
+
+    const colors = [
+      'var(--accent-blue)', 'var(--accent-purple)', 'var(--accent-cyan)',
+      'var(--accent-green)', 'var(--accent-yellow)', 'var(--accent-orange)',
+      'var(--accent-red)', '#60a5fa', '#a78bfa', '#22d3ee', '#34d399', '#fbbf24'
+    ];
+
+    const yLabels = {
+      tenure: 'Avg Tenure (months)',
+      edge_count: 'Avg Graph Connections',
+      recognition_count: 'Avg Recognitions',
+      still_employed: 'Retention Rate (%)'
+    };
+
+    chartEl.innerHTML = `
+      <div class="chart-title">${xLabel.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} vs ${yLabels[yLabel] || yLabel}</div>
+      <div class="bar-chart">
+        ${displayGroups.map(([label, vals], i) => {
+          const value = yIsRate ? avg(vals) * 100 : avg(vals);
+          const height = (value / maxVal) * 100;
+          const displayVal = yIsRate ? Math.round(value) + '%' : value.toFixed(1);
+          return `
+            <div class="bar-group">
+              <div class="bar-fill" style="height:${height}%;background:${colors[i % colors.length]}" data-value="${displayVal} (n=${vals.length})"></div>
+              <div class="bar-label" title="${label}">${label}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+
+    // Generate insight
+    if (displayGroups.length >= 2) {
+      const best = displayGroups[0];
+      const worst = displayGroups[displayGroups.length - 1];
+      const bestVal = yIsRate ? (avg(best[1]) * 100).toFixed(0) + '%' : avg(best[1]).toFixed(1);
+      const worstVal = yIsRate ? (avg(worst[1]) * 100).toFixed(0) + '%' : avg(worst[1]).toFixed(1);
+
+      let diff;
+      if (yIsRate) {
+        diff = ((avg(best[1]) - avg(worst[1])) * 100).toFixed(0) + ' percentage points';
+      } else {
+        const pctDiff = avg(worst[1]) > 0 ? (((avg(best[1]) - avg(worst[1])) / avg(worst[1])) * 100).toFixed(0) : 'N/A';
+        diff = pctDiff + '%';
+      }
+
+      insightEl.innerHTML = `
+        <strong>${best[0]}</strong> leads with ${yLabels[yLabel]?.toLowerCase() || yLabel} of <strong>${bestVal}</strong> (n=${best[1].length}),
+        while <strong>${worst[0]}</strong> trails at <strong>${worstVal}</strong> (n=${worst[1].length}).
+        That's a <strong>${diff}</strong> gap &mdash; a signal worth investigating through graph traversal.
+      `;
+    }
+
+    // Update preset highlights
+    container.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.x === xSelect.value && btn.dataset.y === ySelect.value);
+    });
+  }
+
+  xSelect.addEventListener('change', updateChart);
+  ySelect.addEventListener('change', updateChart);
+
+  container.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      xSelect.value = btn.dataset.x;
+      ySelect.value = btn.dataset.y;
+      updateChart();
+    });
+  });
+
+  updateChart();
+}
+
+// ================================================================
+// MOCK 3C: MANAGER REPORT CARD
+// ================================================================
+function renderManagerReportCard() {
+  const container = document.getElementById('tab-manager');
+  const managers = getManagers();
+  const allPeople = getNodesByType('person');
+  const companyAvgTenure = avg(allPeople.filter(p => p.properties.status === 'active').map(p => getPersonTenure(p)));
+
+  // Compute manager metrics
+  const managerData = managers.map(mgr => {
+    const reports = getDirectReports(mgr.id);
+    const activeReports = reports.filter(r => r.properties.status === 'active');
+    const terminatedReports = reports.filter(r => r.properties.status === 'terminated');
+    const teamSize = reports.length;
+    const avgTenure = avg(activeReports.map(r => getPersonTenure(r)));
+    const termRate = teamSize > 0 ? terminatedReports.length / teamSize : 0;
+
+    // Reviews of reports
+    const reportReviews = [];
+    reports.forEach(r => {
+      getPersonReviews(r.id).forEach(rev => {
+        if (rev.properties.rating) reportReviews.push(ratingToNum(rev.properties.rating));
+      });
+    });
+    const avgReviewRating = avg(reportReviews);
+
+    // Recognition given
+    const recognitionsGiven = getRecognitionsGiven(mgr.id).length;
+
+    // Survey scores of reports
+    const reportSurveyScores = [];
+    reports.forEach(r => {
+      getPersonSurveys(r.id).forEach(s => {
+        if (s.properties.score !== undefined) reportSurveyScores.push(s.properties.score);
+      });
+    });
+    const avgSurveyScore = avg(reportSurveyScores);
+
+    // Composite effectiveness score (0-100)
+    let effectiveness = 50;
+    if (teamSize > 0) {
+      effectiveness += (avgTenure / companyAvgTenure - 1) * 15; // tenure bonus
+      effectiveness -= termRate * 30; // termination penalty
+      effectiveness += (avgReviewRating / 4) * 10; // review bonus
+      effectiveness += Math.min(recognitionsGiven * 5, 15); // recognition bonus
+      effectiveness += (avgSurveyScore / 10) * 10; // survey bonus
+    }
+    effectiveness = Math.max(0, Math.min(100, Math.round(effectiveness)));
+
+    return {
+      manager: mgr,
+      teamSize,
+      avgTenure,
+      termRate,
+      avgReviewRating,
+      recognitionsGiven,
+      avgSurveyScore,
+      effectiveness,
+      reports,
+      activeReports,
+      terminatedReports
+    };
+  });
+
+  // Sort by effectiveness
+  managerData.sort((a, b) => b.effectiveness - a.effectiveness);
+
+  let sortField = 'effectiveness';
+  let compareMode = false;
+  let compareSelected = [];
+
+  function render() {
+    let sorted = [...managerData];
+    if (sortField === 'team_size') sorted.sort((a, b) => b.teamSize - a.teamSize);
+    else if (sortField === 'tenure') sorted.sort((a, b) => b.avgTenure - a.avgTenure);
+    else if (sortField === 'recognition') sorted.sort((a, b) => b.recognitionsGiven - a.recognitionsGiven);
+    else sorted.sort((a, b) => b.effectiveness - a.effectiveness);
+
+    container.innerHTML = `
+      <h1>Manager Report Card</h1>
+      <div class="subtitle">${managers.length} managers evaluated on graph-derived team health metrics</div>
+
+      <div class="manager-controls">
+        <button class="sort-btn ${sortField === 'effectiveness' ? 'active' : ''}" data-sort="effectiveness">Effectiveness</button>
+        <button class="sort-btn ${sortField === 'team_size' ? 'active' : ''}" data-sort="team_size">Team Size</button>
+        <button class="sort-btn ${sortField === 'tenure' ? 'active' : ''}" data-sort="tenure">Avg Tenure</button>
+        <button class="sort-btn ${sortField === 'recognition' ? 'active' : ''}" data-sort="recognition">Recognition</button>
+        <button class="compare-mode-toggle ${compareMode ? 'active' : ''}">Compare Mode${compareMode ? ` (${compareSelected.length}/2)` : ''}</button>
+      </div>
+
+      <div class="mgr-list-header">
+        <span>#</span>
+        <span>Manager</span>
+        <span>Team</span>
+        <span>Avg Tenure</span>
+        <span>Term Rate</span>
+        <span>Recognitions</span>
+        <span>Survey</span>
+        <span>Score</span>
+      </div>
+
+      <div class="manager-list" id="manager-list"></div>
+      <div class="compare-panel" id="compare-panel"></div>
+    `;
+
+    const list = container.querySelector('#manager-list');
+
+    sorted.forEach((data, index) => {
+      const { manager: mgr, teamSize, avgTenure, termRate, recognitionsGiven, avgSurveyScore, effectiveness } = data;
+      const scoreColor = effectiveness >= 70 ? 'var(--accent-green)' : effectiveness >= 50 ? 'var(--accent-yellow)' : 'var(--accent-red)';
+      const isSelected = compareSelected.includes(mgr.id);
+
+      const row = document.createElement('div');
+      row.className = `manager-row${isSelected ? ' compare-selected' : ''}`;
+      row.dataset.id = mgr.id;
+      row.innerHTML = `
+        <div class="mgr-rank">${index + 1}</div>
+        <div>
+          <div class="mgr-name">${mgr.properties.name}</div>
+          <div class="mgr-role">${mgr.properties.role}</div>
+        </div>
+        <div class="mgr-stat">
+          <div class="mgr-stat-value">${teamSize}</div>
+          <div class="mgr-stat-label">Reports</div>
+        </div>
+        <div class="mgr-stat">
+          <div class="mgr-stat-value">${avgTenure.toFixed(1)}mo</div>
+          <div class="mgr-stat-label">Avg Tenure</div>
+        </div>
+        <div class="mgr-stat">
+          <div class="mgr-stat-value" style="color:${termRate > 0 ? 'var(--accent-red)' : 'var(--accent-green)'}">${(termRate * 100).toFixed(0)}%</div>
+          <div class="mgr-stat-label">Term Rate</div>
+        </div>
+        <div class="mgr-stat">
+          <div class="mgr-stat-value" style="color:var(--accent-purple)">${recognitionsGiven}</div>
+          <div class="mgr-stat-label">Given</div>
+        </div>
+        <div class="mgr-stat">
+          <div class="mgr-stat-value">${avgSurveyScore > 0 ? avgSurveyScore.toFixed(1) : '--'}</div>
+          <div class="mgr-stat-label">Survey Avg</div>
+        </div>
+        <div class="mgr-score-badge">
+          <div class="mgr-score-dot" style="background:${scoreColor}"></div>
+          <div class="mgr-score-val" style="color:${scoreColor}">${effectiveness}</div>
+        </div>
+      `;
+
+      const detail = document.createElement('div');
+      detail.className = 'manager-detail';
+      detail.innerHTML = `
+        <div class="detail-header">Direct Reports (${data.reports.length})</div>
+        <table class="report-table">
+          <thead><tr><th>Name</th><th>Role</th><th>Tenure</th><th>Start Date</th><th>Status</th></tr></thead>
+          <tbody>
+            ${data.reports.map(r => {
+              const tenure = getPersonTenure(r);
+              const statusColor = r.properties.status === 'terminated' ? 'var(--accent-red)' : 'var(--accent-green)';
+              return `<tr>
+                <td style="font-weight:500;color:var(--text-primary)">${r.properties.name}</td>
+                <td>${r.properties.role}</td>
+                <td>${tenure} months</td>
+                <td>${r.properties.startDate}</td>
+                <td style="color:${statusColor}">${r.properties.status}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+        ${avgTenure > companyAvgTenure ? `
+          <div class="mgr-insight">${mgr.properties.name}'s reports average ${avgTenure.toFixed(1)} months tenure vs company avg ${companyAvgTenure.toFixed(1)} months</div>
+        ` : avgTenure < companyAvgTenure * 0.8 ? `
+          <div class="mgr-insight" style="background:var(--accent-red-dim);color:var(--accent-red)">${mgr.properties.name}'s reports average ${avgTenure.toFixed(1)} months tenure &mdash; ${((1 - avgTenure / companyAvgTenure) * 100).toFixed(0)}% below company avg</div>
+        ` : ''}
+      `;
+
+      row.addEventListener('click', () => {
+        if (compareMode) {
+          // Toggle compare selection
+          const idx = compareSelected.indexOf(mgr.id);
+          if (idx >= 0) {
+            compareSelected.splice(idx, 1);
+          } else if (compareSelected.length < 2) {
+            compareSelected.push(mgr.id);
+          }
+          render();
+          if (compareSelected.length === 2) renderCompare();
+          return;
+        }
+        const isOpen = detail.classList.contains('show');
+        document.querySelectorAll('.manager-detail').forEach(d => d.classList.remove('show'));
+        document.querySelectorAll('.manager-row').forEach(r => r.classList.remove('expanded'));
+        if (!isOpen) {
+          detail.classList.add('show');
+          row.classList.add('expanded');
+        }
+      });
+
+      list.appendChild(row);
+      list.appendChild(detail);
+    });
+
+    // Sort buttons
+    container.querySelectorAll('.sort-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sortField = btn.dataset.sort;
+        render();
+      });
+    });
+
+    // Compare mode toggle
+    container.querySelector('.compare-mode-toggle').addEventListener('click', () => {
+      compareMode = !compareMode;
+      if (!compareMode) compareSelected = [];
+      render();
+    });
+  }
+
+  function renderCompare() {
+    const panel = container.querySelector('#compare-panel');
+    if (compareSelected.length < 2) {
+      panel.classList.remove('show');
+      return;
+    }
+    panel.classList.add('show');
+
+    const d1 = managerData.find(d => d.manager.id === compareSelected[0]);
+    const d2 = managerData.find(d => d.manager.id === compareSelected[1]);
+    if (!d1 || !d2) return;
+
+    function betterClass(v1, v2, higherIsBetter = true) {
+      if (higherIsBetter) return v1 > v2 ? 'compare-better' : v1 < v2 ? 'compare-worse' : '';
+      return v1 < v2 ? 'compare-better' : v1 > v2 ? 'compare-worse' : '';
+    }
+
+    const metrics = [
+      ['Effectiveness', d1.effectiveness, d2.effectiveness, true],
+      ['Team Size', d1.teamSize, d2.teamSize, true],
+      ['Avg Tenure', d1.avgTenure.toFixed(1) + ' mo', d2.avgTenure.toFixed(1) + ' mo', true, d1.avgTenure, d2.avgTenure],
+      ['Term Rate', (d1.termRate * 100).toFixed(0) + '%', (d2.termRate * 100).toFixed(0) + '%', false, d1.termRate, d2.termRate],
+      ['Recognitions Given', d1.recognitionsGiven, d2.recognitionsGiven, true],
+      ['Survey Avg', d1.avgSurveyScore > 0 ? d1.avgSurveyScore.toFixed(1) : '--', d2.avgSurveyScore > 0 ? d2.avgSurveyScore.toFixed(1) : '--', true, d1.avgSurveyScore, d2.avgSurveyScore],
+    ];
+
+    panel.innerHTML = `
+      <div style="font-size:16px;font-weight:700;margin-bottom:16px;color:var(--accent-cyan)">Manager Comparison</div>
+      <div class="compare-grid" style="grid-template-columns:160px 1fr 1fr">
+        <div class="compare-cell label">Metric</div>
+        <div class="compare-cell header">${d1.manager.properties.name}</div>
+        <div class="compare-cell header">${d2.manager.properties.name}</div>
+        ${metrics.map(([label, v1, v2, higher, n1, n2]) => {
+          const num1 = n1 !== undefined ? n1 : (typeof v1 === 'number' ? v1 : 0);
+          const num2 = n2 !== undefined ? n2 : (typeof v2 === 'number' ? v2 : 0);
+          const cls1 = betterClass(num1, num2, higher);
+          const cls2 = betterClass(num2, num1, higher);
+          return `
+            <div class="compare-cell label">${label}</div>
+            <div class="compare-cell ${cls1}">${v1}</div>
+            <div class="compare-cell ${cls2}">${v2}</div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  render();
+}
+
+// ================================================================
+// MOCK 3D: ATTRITION AUTOPSY
+// ================================================================
+function renderAttritionAutopsy() {
+  const container = document.getElementById('tab-attrition');
+  const terminated = getNodesByType('person').filter(p => p.properties.status === 'terminated');
+  const activePeople = getNodesByType('person').filter(p => p.properties.status === 'active');
+
+  // Company benchmarks
+  const avgRecognitionsPerPerson = avg(activePeople.map(p => getRecognitionsReceived(p.id).length));
+  const avgCompRecords = avg(activePeople.map(p => getPersonComp(p.id).length));
+  const avgTenure = avg(activePeople.map(p => getPersonTenure(p)));
+
+  container.innerHTML = `
+    <h1>Attrition Autopsy</h1>
+    <div class="subtitle">Forensic analysis of ${terminated.length} departures &mdash; working backwards from termination to find signals</div>
+    <div id="autopsy-cards"></div>
+    <div class="pattern-section" id="pattern-section"></div>
+  `;
+
+  const cardsContainer = container.querySelector('#autopsy-cards');
+
+  terminated.forEach(person => {
+    const tenure = getPersonTenure(person);
+    const mgr = getPersonManager(person.id);
+    const reviews = getPersonReviews(person.id);
+    const comp = getPersonComp(person.id);
+    const surveys = getPersonSurveys(person.id);
+    const recognitions = getRecognitionsReceived(person.id);
+    const timeOff = getPersonTimeOff(person.id);
+    const dept = getPersonDepartment(person.id);
+
+    // Build timeline events
+    const events = [];
+
+    events.push({
+      date: person.properties.endDate,
+      label: 'Departed',
+      detail: 'Termination effective',
+      type: 'warning'
+    });
+
+    events.push({
+      date: person.properties.startDate,
+      label: 'Joined Acme Co',
+      detail: `${person.properties.role}, ${person.properties.level}`,
+      type: 'positive'
+    });
+
+    reviews.forEach(r => {
+      const date = r.properties.completedDate || r.properties.scheduledDate;
+      if (date) {
+        events.push({
+          date,
+          label: `Review: ${r.properties.type}`,
+          detail: r.properties.rating ? `Rating: ${r.properties.rating}` : r.properties.summary,
+          type: r.properties.rating === 'exceeds' ? 'positive' : r.properties.rating === 'below' ? 'warning' : 'neutral'
+        });
+      }
+    });
+
+    comp.forEach(c => {
+      events.push({
+        date: c.properties.effectiveDate,
+        label: `Comp: ${c.properties.type}`,
+        detail: `${formatMoney(c.properties.amount)}`,
+        type: 'neutral'
+      });
+    });
+
+    surveys.forEach(s => {
+      events.push({
+        date: s.properties.date,
+        label: `Survey: ${s.properties.surveyType}`,
+        detail: `Score: ${s.properties.score}/10${s.properties.sentiment ? ` (${s.properties.sentiment})` : ''} &mdash; "${s.properties.comment}"`,
+        type: s.properties.score <= 5 ? 'warning' : 'positive'
+      });
+    });
+
+    recognitions.forEach(r => {
+      events.push({
+        date: r.timestamp ? r.timestamp.split('T')[0] : null,
+        label: 'Recognition received',
+        detail: r.metadata?.message ? r.metadata.message.substring(0, 80) + '...' : '',
+        type: 'positive'
+      });
+    });
+
+    timeOff.forEach(t => {
+      events.push({
+        date: t.properties.startDate,
+        label: `Time off: ${t.properties.type}`,
+        detail: `${t.properties.startDate} to ${t.properties.endDate}`,
+        type: 'neutral'
+      });
+    });
+
+    // Sort by date descending
+    events.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // Identify gaps/warnings
+    const gaps = [];
+    if (recognitions.length === 0) {
+      gaps.push('Zero recognitions during entire tenure');
+    }
+    if (reviews.length === 0) {
+      gaps.push('No performance reviews on record');
+    }
+
+    // Check for comp changes within last 6 months before departure
+    const sixMonthsBefore = new Date(person.properties.endDate);
+    sixMonthsBefore.setMonth(sixMonthsBefore.getMonth() - 6);
+    const recentComp = comp.filter(c => new Date(c.properties.effectiveDate) >= sixMonthsBefore);
+    if (recentComp.length === 0 && comp.length > 0) {
+      const lastComp = comp.sort((a, b) => new Date(b.properties.effectiveDate) - new Date(a.properties.effectiveDate))[0];
+      const monthsSinceComp = monthsBetween(lastComp.properties.effectiveDate, person.properties.endDate);
+      gaps.push(`No comp change in final ${monthsSinceComp} months`);
+    } else if (comp.length === 0) {
+      gaps.push('No compensation records found');
+    }
+
+    if (surveys.filter(s => s.properties.score <= 5).length > 0) {
+      gaps.push('Low survey scores before departure');
+    }
+
+    const card = document.createElement('div');
+    card.className = 'autopsy-card';
+    card.innerHTML = `
+      <div class="autopsy-header">
+        <div>
+          <div class="autopsy-name">${person.properties.name}</div>
+          <div class="autopsy-meta">${person.properties.role} &bull; ${person.properties.level} &bull; ${dept ? dept.properties.name : 'Unknown Dept'}${mgr ? ' &bull; Manager: ' + mgr.properties.name : ''}</div>
+          <div class="autopsy-tenure-badge">Tenure: ${tenure} months (${person.properties.startDate} &mdash; ${person.properties.endDate})</div>
+        </div>
+        <div class="autopsy-badge">TERMINATED</div>
+      </div>
+
+      ${gaps.length > 0 ? `
+        <div class="gap-warnings">
+          ${gaps.map(g => `<div class="gap-badge"><span class="gap-icon">!</span> ${g}</div>`).join('')}
+        </div>
+      ` : ''}
+
+      <div class="timeline-section">
+        <div class="timeline-title">Departure Timeline</div>
+        <div class="timeline">
+          ${events.filter(e => e.date).map(e => `
+            <div class="timeline-event">
+              <div class="timeline-dot ${e.type}"></div>
+              <div class="timeline-date">${e.date}</div>
+              <div class="timeline-label">${e.label}</div>
+              <div class="timeline-detail">${e.detail}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    cardsContainer.appendChild(card);
+  });
+
+  // Pattern detection and risk scanning
+  const patternSection = container.querySelector('#pattern-section');
+
+  // Common signals from terminated employees
+  const signals = [
+    'Short tenure (under 12 months)',
+    'No recognition events during employment',
+    'No performance review on record',
+    'IC-2 level (junior) without documented growth trajectory',
+    'Engineering department (both departed from Engineering)'
+  ];
+
+  // Scan active employees for matching risk patterns
+  const riskEmployees = [];
+  activePeople.forEach(person => {
+    const reasons = [];
+    const tenure = getPersonTenure(person);
+    const reviews = getPersonReviews(person.id);
+    const recognitions = getRecognitionsReceived(person.id);
+    const comp = getPersonComp(person.id);
+    const surveys = getPersonSurveys(person.id);
+
+    let riskScore = 0;
+
+    // Short tenure but not too new
+    if (tenure >= 6 && tenure <= 14) {
+      riskScore += 1;
+      reasons.push('Similar tenure range to departed');
+    }
+
+    // No recognition
+    if (recognitions.length === 0) {
+      riskScore += 2;
+      reasons.push('No recognition received');
+    }
+
+    // No review
+    if (reviews.length === 0 && tenure > 3) {
+      riskScore += 1;
+      reasons.push('No performance review');
+    }
+
+    // Low survey scores
+    const lowSurveys = surveys.filter(s => s.properties.score <= 5);
+    if (lowSurveys.length > 0) {
+      riskScore += 2;
+      reasons.push(`Low survey score (${lowSurveys[0].properties.score}/10)`);
+    }
+
+    // Wellbeing concern
+    const wellbeingSurveys = surveys.filter(s => s.properties.surveyType === 'wellbeing' && s.properties.score <= 3);
+    if (wellbeingSurveys.length > 0) {
+      riskScore += 2;
+      reasons.push('Wellbeing survey concern');
+    }
+
+    // No comp adjustment in 12+ months (for tenured employees)
+    if (tenure > 12) {
+      const recentComp = comp.filter(c => {
+        const monthsAgo = monthsBetween(c.properties.effectiveDate, '2026-02-06');
+        return monthsAgo <= 12;
+      });
+      if (recentComp.length === 0 && comp.length > 0) {
+        riskScore += 1;
+        reasons.push('No comp change in 12+ months');
+      }
+    }
+
+    if (riskScore >= 2) {
+      riskEmployees.push({
+        person,
+        riskScore,
+        level: riskScore >= 4 ? 'high' : riskScore >= 3 ? 'medium' : 'low',
+        reasons
+      });
+    }
+  });
+
+  riskEmployees.sort((a, b) => b.riskScore - a.riskScore);
+
+  patternSection.innerHTML = `
+    <div class="pattern-title">Departure Pattern Analysis</div>
+    <div class="pattern-subtitle">Signals derived from graph traversal of ${terminated.length} terminated employees</div>
+
+    <div class="pattern-signals">
+      ${signals.map(s => `
+        <div class="pattern-signal">
+          <div class="sig-icon"></div>
+          <span>${s}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="risk-list-title">Active Employees Matching Departure Patterns (${riskEmployees.length})</div>
+    ${riskEmployees.slice(0, 10).map(({ person, level, reasons }) => `
+      <div class="risk-employee">
+        <div class="risk-name">${person.properties.name}</div>
+        <div class="risk-reasons">${reasons.join(' &bull; ')}</div>
+        <div class="risk-level ${level}">${level}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// ================================================================
+// MOCK 3E: ORG HEALTH DASHBOARD
+// ================================================================
+function renderOrgHealth() {
+  const container = document.getElementById('tab-orghealth');
+  const activePeople = getNodesByType('person').filter(p => p.properties.status === 'active');
+  const terminated = getNodesByType('person').filter(p => p.properties.status === 'terminated');
+  const candidates = getNodesByType('candidate');
+  const managers = getManagers();
+
+  // ---- Section 1: Retention Risk ----
+  const riskEmployees = [];
+  activePeople.forEach(person => {
+    const tenure = getPersonTenure(person);
+    const reviews = getPersonReviews(person.id);
+    const recognitions = getRecognitionsReceived(person.id);
+    const surveys = getPersonSurveys(person.id);
+    const comp = getPersonComp(person.id);
+
+    let risk = 0;
+    const factors = [];
+
+    if (recognitions.length === 0 && tenure > 3) {
+      risk += 2;
+      factors.push('No recognition');
+    }
+    if (reviews.length === 0 && tenure > 6) {
+      risk += 1;
+      factors.push('No review');
+    }
+    const lowSurveys = surveys.filter(s => s.properties.score <= 5);
+    if (lowSurveys.length > 0) {
+      risk += 2;
+      factors.push('Low survey');
+    }
+    const wellbeing = surveys.filter(s => s.properties.surveyType === 'wellbeing' && s.properties.score <= 3);
+    if (wellbeing.length > 0) {
+      risk += 2;
+      factors.push('Wellbeing concern');
+    }
+    if (tenure > 12 && comp.length === 0) {
+      risk += 1;
+      factors.push('No comp records');
+    }
+
+    riskEmployees.push({ person, risk, factors });
+  });
+
+  riskEmployees.sort((a, b) => b.risk - a.risk);
+  const highRisk = riskEmployees.filter(r => r.risk >= 4).length;
+  const medRisk = riskEmployees.filter(r => r.risk >= 2 && r.risk < 4).length;
+  const lowRisk = riskEmployees.filter(r => r.risk < 2).length;
+  const retentionScore = Math.round(100 - (highRisk * 3 + medRisk * 1));
+
+  // ---- Section 2: Growth Pipeline ----
+  const noReviewOver12 = activePeople.filter(p => {
+    const tenure = getPersonTenure(p);
+    const reviews = getPersonReviews(p.id);
+    return tenure > 12 && reviews.length === 0;
+  });
+
+  const noRecognition6Mo = activePeople.filter(p => {
+    const tenure = getPersonTenure(p);
+    const recs = getRecognitionsReceived(p.id);
+    return tenure > 6 && recs.length === 0;
+  });
+
+  const promotionTrack = activePeople.filter(p => {
+    const reviews = getPersonReviews(p.id);
+    const hasExceeds = reviews.some(r => r.properties.rating === 'exceeds');
+    const edgeCount = (edgesBySource[p.id] || []).length + (edgesByTarget[p.id] || []).length;
+    return hasExceeds || edgeCount > 20;
+  });
+
+  const growthScore = Math.round(70 + promotionTrack.length * 2 - noReviewOver12.length - noRecognition6Mo.length * 0.5);
+
+  // ---- Section 3: Manager Effectiveness ----
+  const managerMetrics = managers.map(mgr => {
+    const reports = getDirectReports(mgr.id);
+    const avgTenure = avg(reports.filter(r => r.properties.status === 'active').map(r => getPersonTenure(r)));
+    const termRate = reports.length > 0 ? reports.filter(r => r.properties.status === 'terminated').length / reports.length : 0;
+    const recsGiven = getRecognitionsGiven(mgr.id).length;
+    let score = 50 + (avgTenure / 40) * 20 - termRate * 30 + recsGiven * 5;
+    score = Math.max(0, Math.min(100, Math.round(score)));
+    return { manager: mgr, reports, avgTenure, termRate, recsGiven, score, teamSize: reports.length };
+  });
+  managerMetrics.sort((a, b) => b.score - a.score);
+
+  const spanConcerns = managerMetrics.filter(m => m.teamSize > 10);
+  const mgrScore = Math.round(avg(managerMetrics.map(m => m.score)));
+
+  // ---- Section 4: Hiring Funnel ----
+  const byStatus = {};
+  candidates.forEach(c => {
+    const s = c.properties.status;
+    if (!byStatus[s]) byStatus[s] = [];
+    byStatus[s].push(c);
+  });
+
+  const bySource = {};
+  candidates.forEach(c => {
+    const s = c.properties.source || 'unknown';
+    if (!bySource[s]) bySource[s] = [];
+    bySource[s].push(c);
+  });
+
+  // Avg days in pipeline
+  const pipelineDays = candidates.map(c => {
+    const history = c.properties.stageHistory || [];
+    if (history.length < 2) return 0;
+    return daysBetween(history[0].enteredDate, history[history.length - 1].exitedDate || '2026-02-06');
+  }).filter(d => d > 0);
+  const avgPipelineDays = avg(pipelineDays);
+
+  const hiringScore = Math.round(60 + (byStatus['accepted'] || []).length * 10 + (byStatus['offer'] || []).length * 5 - (byStatus['unresponsive'] || []).length * 5);
+
+  // ---- Overall Score ----
+  const overallScore = Math.round(avg([retentionScore, growthScore, mgrScore, hiringScore].map(s => Math.max(0, Math.min(100, s)))));
+  const overallColor = overallScore >= 75 ? 'var(--accent-green)' : overallScore >= 55 ? 'var(--accent-yellow)' : 'var(--accent-red)';
+
+  container.innerHTML = `
+    <div class="oh-hero">
+      <h1>Organization Health Score</h1>
+      <div class="oh-score" style="color:${overallColor}">${overallScore}</div>
+      <div class="oh-score-label">Acme Co &bull; ${activePeople.length} active employees &bull; ${candidates.length} candidates</div>
+      <div class="oh-sub-scores">
+        <div class="oh-sub">
+          <div class="oh-sub-value" style="color:${retentionScore >= 70 ? 'var(--accent-green)' : 'var(--accent-yellow)'}">${Math.max(0, Math.min(100, retentionScore))}</div>
+          <div class="oh-sub-label">Retention</div>
+        </div>
+        <div class="oh-sub">
+          <div class="oh-sub-value" style="color:${growthScore >= 70 ? 'var(--accent-green)' : 'var(--accent-yellow)'}">${Math.max(0, Math.min(100, growthScore))}</div>
+          <div class="oh-sub-label">Growth</div>
+        </div>
+        <div class="oh-sub">
+          <div class="oh-sub-value" style="color:${mgrScore >= 70 ? 'var(--accent-green)' : 'var(--accent-yellow)'}">${Math.max(0, Math.min(100, mgrScore))}</div>
+          <div class="oh-sub-label">Management</div>
+        </div>
+        <div class="oh-sub">
+          <div class="oh-sub-value" style="color:${hiringScore >= 70 ? 'var(--accent-green)' : 'var(--accent-yellow)'}">${Math.max(0, Math.min(100, hiringScore))}</div>
+          <div class="oh-sub-label">Hiring</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="oh-grid">
+      <!-- RETENTION RISK -->
+      <div class="oh-card retention">
+        <div class="oh-card-header">
+          <div class="oh-card-title">Retention Risk</div>
+          <div class="oh-card-score" style="color:${retentionScore >= 70 ? 'var(--accent-green)' : 'var(--accent-orange)'}">${Math.max(0, Math.min(100, retentionScore))}</div>
+        </div>
+        <div class="oh-metrics">
+          <div class="oh-metric">
+            <div class="oh-metric-value text-red">${highRisk}</div>
+            <div class="oh-metric-label">High Risk</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value text-orange">${medRisk}</div>
+            <div class="oh-metric-label">Medium Risk</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value text-green">${lowRisk}</div>
+            <div class="oh-metric-label">Low Risk</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value">${terminated.length}</div>
+            <div class="oh-metric-label">Departed YTD</div>
+          </div>
+        </div>
+        <div class="oh-bar-mini">
+          <div class="oh-bar-fill" style="width:${(lowRisk / activePeople.length) * 100}%;background:var(--accent-green)"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px">${((lowRisk / activePeople.length) * 100).toFixed(0)}% of workforce at low risk</div>
+        <div class="oh-drilldown">
+          <div class="oh-drilldown-title">Top At-Risk Employees</div>
+          ${riskEmployees.slice(0, 5).map(({ person, risk, factors }) => `
+            <div class="oh-person-row">
+              <div class="oh-person-name">${person.properties.name}</div>
+              <div class="oh-person-detail">${factors.join(', ')}</div>
+              <div class="oh-person-badge" style="background:${risk >= 4 ? 'var(--accent-red-dim)' : 'var(--accent-orange-dim)'};color:${risk >= 4 ? 'var(--accent-red)' : 'var(--accent-orange)'}">${risk >= 4 ? 'HIGH' : 'MED'}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- GROWTH PIPELINE -->
+      <div class="oh-card growth">
+        <div class="oh-card-header">
+          <div class="oh-card-title">Growth Pipeline</div>
+          <div class="oh-card-score" style="color:${growthScore >= 70 ? 'var(--accent-green)' : 'var(--accent-yellow)'}">${Math.max(0, Math.min(100, growthScore))}</div>
+        </div>
+        <div class="oh-metrics">
+          <div class="oh-metric">
+            <div class="oh-metric-value text-green">${promotionTrack.length}</div>
+            <div class="oh-metric-label">Promotion Track</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value text-orange">${noReviewOver12.length}</div>
+            <div class="oh-metric-label">No Review 12mo+</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value text-yellow">${noRecognition6Mo.length}</div>
+            <div class="oh-metric-label">No Recognition 6mo+</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value">${getNodesByType('review').length}</div>
+            <div class="oh-metric-label">Total Reviews</div>
+          </div>
+        </div>
+        <div class="oh-drilldown">
+          <div class="oh-drilldown-title">On Promotion Track</div>
+          ${promotionTrack.slice(0, 5).map(p => {
+            const reviews = getPersonReviews(p.id);
+            const topRating = reviews.find(r => r.properties.rating === 'exceeds');
+            return `
+              <div class="oh-person-row">
+                <div class="oh-person-name">${p.properties.name}</div>
+                <div class="oh-person-detail">${p.properties.role}${topRating ? ' &bull; Exceeds expectations' : ' &bull; High connectivity'}</div>
+                <div class="oh-person-badge" style="background:var(--accent-green-dim);color:var(--accent-green)">GROWTH</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- MANAGER EFFECTIVENESS -->
+      <div class="oh-card managers">
+        <div class="oh-card-header">
+          <div class="oh-card-title">Manager Effectiveness</div>
+          <div class="oh-card-score" style="color:${mgrScore >= 70 ? 'var(--accent-green)' : 'var(--accent-yellow)'}">${Math.max(0, Math.min(100, mgrScore))}</div>
+        </div>
+        <div class="oh-metrics">
+          <div class="oh-metric">
+            <div class="oh-metric-value">${managers.length}</div>
+            <div class="oh-metric-label">Total Managers</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value text-purple">${managerMetrics.filter(m => m.score >= 70).length}</div>
+            <div class="oh-metric-label">Top Performers</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value text-red">${managerMetrics.filter(m => m.score < 40).length}</div>
+            <div class="oh-metric-label">Underperforming</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value text-orange">${spanConcerns.length}</div>
+            <div class="oh-metric-label">Span Concerns (10+)</div>
+          </div>
+        </div>
+        <div class="oh-drilldown">
+          <div class="oh-drilldown-title">Top 3 Managers</div>
+          ${managerMetrics.slice(0, 3).map(m => `
+            <div class="oh-person-row">
+              <div class="oh-person-name">${m.manager.properties.name}</div>
+              <div class="oh-person-detail">${m.teamSize} reports &bull; ${m.avgTenure.toFixed(0)}mo avg tenure &bull; ${m.recsGiven} recognitions</div>
+              <div class="oh-person-badge" style="background:var(--accent-purple-dim);color:var(--accent-purple)">${m.score}</div>
+            </div>
+          `).join('')}
+          ${managerMetrics.length > 3 ? `
+            <div class="oh-drilldown-title" style="margin-top:12px">Bottom 3 Managers</div>
+            ${managerMetrics.slice(-3).reverse().map(m => `
+              <div class="oh-person-row">
+                <div class="oh-person-name">${m.manager.properties.name}</div>
+                <div class="oh-person-detail">${m.teamSize} reports &bull; ${m.avgTenure.toFixed(0)}mo avg tenure</div>
+                <div class="oh-person-badge" style="background:var(--accent-red-dim);color:var(--accent-red)">${m.score}</div>
+              </div>
+            `).join('')}
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- HIRING FUNNEL -->
+      <div class="oh-card hiring">
+        <div class="oh-card-header">
+          <div class="oh-card-title">Hiring Funnel Health</div>
+          <div class="oh-card-score" style="color:${hiringScore >= 70 ? 'var(--accent-green)' : 'var(--accent-yellow)'}">${Math.max(0, Math.min(100, hiringScore))}</div>
+        </div>
+        <div class="oh-pipeline-stages">
+          ${['interviewing', 'offer', 'accepted', 'unresponsive'].map(stage => {
+            const count = (byStatus[stage] || []).length;
+            const color = stage === 'accepted' ? 'var(--accent-green)' :
+                          stage === 'offer' ? 'var(--accent-yellow)' :
+                          stage === 'unresponsive' ? 'var(--accent-red)' : 'var(--accent-blue)';
+            return `
+              <div class="oh-stage">
+                <div class="oh-stage-count" style="color:${color}">${count}</div>
+                <div class="oh-stage-label">${stage}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div class="oh-metrics">
+          <div class="oh-metric">
+            <div class="oh-metric-value">${candidates.length}</div>
+            <div class="oh-metric-label">Total Candidates</div>
+          </div>
+          <div class="oh-metric">
+            <div class="oh-metric-value">${avgPipelineDays.toFixed(0)}d</div>
+            <div class="oh-metric-label">Avg Pipeline Time</div>
+          </div>
+        </div>
+        <div class="oh-drilldown">
+          <div class="oh-drilldown-title">Source Effectiveness</div>
+          ${Object.entries(bySource).map(([source, cands]) => {
+            const interviews = cands.flatMap(c => getCandidateInterviews(c.id));
+            const scores = interviews.map(i => scoreToNum(i.metadata?.score)).filter(s => s > 0);
+            const avgScore = avg(scores);
+            const color = source === 'referral' ? 'var(--accent-green)' : source === 'linkedin' ? 'var(--accent-blue)' : 'var(--accent-purple)';
+            return `
+              <div class="oh-person-row">
+                <div class="oh-person-name" style="color:${color}">${source}</div>
+                <div class="oh-person-detail">${cands.length} candidates &bull; Avg interview: ${avgScore > 0 ? avgScore.toFixed(1) + '/5' : 'N/A'}</div>
+              </div>
+            `;
+          }).join('')}
+
+          <div class="oh-drilldown-title" style="margin-top:12px">Converted Candidate Tracking</div>
+          ${getEdges('converted_from').map(e => {
+            const person = nodeMap[e.source];
+            const candidate = nodeMap[e.target];
+            if (!person) return '';
+            return `
+              <div class="oh-person-row">
+                <div class="oh-person-name">${person.properties.name}</div>
+                <div class="oh-person-detail">Converted ${e.metadata?.conversionDate || 'recently'} &bull; ${e.metadata?.edgesCarried || 0} edges carried forward</div>
+                <div class="oh-person-badge" style="background:var(--accent-green-dim);color:var(--accent-green)">ACTIVE</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ================================================================
+// BOOT
+// ================================================================
+loadData().catch(err => {
+  console.error('Failed to load graph data:', err);
+  document.querySelectorAll('.loading-state').forEach(el => {
+    el.innerHTML = `<div style="color:var(--accent-red);font-size:14px;">Failed to load data. Serve from project root: python3 -m http.server 8765</div>`;
+  });
+});
+</script>
+</body>
+</html>

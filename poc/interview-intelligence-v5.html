@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="application/json" id="embedded-feedback">[]</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Intelligence v5 | Employee Graph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a2e;
+  --bg-card: #1a1a2e;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.1);
+  --border-strong: #2a2a3e;
+  --text-primary: #e0e0e0;
+  --text-secondary: #888;
+  --text-muted: #555;
+  --green: #10b981;
+  --green-dim: rgba(16,185,129,0.15);
+  --blue: #3b82f6;
+  --blue-dim: rgba(59,130,246,0.15);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.15);
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,0.15);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.12);
+  --cyan: #22d3ee;
+  --cyan-dim: rgba(34,211,238,0.1);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 16px;
+}
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; }
+.page-header { padding: 24px 32px 0; max-width: 1400px; margin: 0 auto; }
+.page-header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+.page-header h1 span { color: var(--purple); }
+.page-header .subtitle { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+.graph-proof { display: inline-flex; align-items: center; gap: 6px; background: var(--purple-dim); color: var(--purple); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 8px; letter-spacing: 0.5px; }
+.graph-proof svg { width: 14px; height: 14px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 20px 32px 80px; }
+
+/* Hero metric */
+.hero-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.hero-card { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 24px; position: relative; overflow: hidden; }
+.hero-card.primary { grid-column: 1 / 3; }
+.hero-card .label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 8px; }
+.hero-card .big-number { font-size: 64px; font-weight: 900; letter-spacing: -2px; line-height: 1; }
+.hero-card .big-number.green { color: var(--green); }
+.hero-card .big-number.blue { color: var(--blue); }
+.hero-card .big-number.purple { color: var(--purple); }
+.hero-card .context { color: var(--text-secondary); font-size: 13px; margin-top: 8px; line-height: 1.5; }
+.hero-card .context strong { color: var(--text-primary); }
+.hero-card .graph-path { font-size: 11px; color: var(--text-muted); margin-top: 12px; font-family: 'SF Mono', monospace; padding: 6px 10px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); }
+.hero-card .graph-path span { color: var(--purple); }
+
+/* Section headers */
+.section-header { font-size: 18px; font-weight: 700; margin: 32px 0 16px; display: flex; align-items: center; gap: 10px; }
+.section-header .num { background: var(--purple-dim); color: var(--purple); font-size: 12px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+/* Cards grid */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.card { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 20px; transition: border-color 0.2s; }
+.card:hover { border-color: rgba(167,139,250,0.3); }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.card-name { font-size: 16px; font-weight: 700; }
+.card-role { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.card-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.badge-green { background: var(--green-dim); color: var(--green); }
+.badge-blue { background: var(--blue-dim); color: var(--blue); }
+.badge-amber { background: var(--amber-dim); color: var(--amber); }
+.badge-red { background: var(--red-dim); color: var(--red); }
+.badge-purple { background: var(--purple-dim); color: var(--purple); }
+
+/* Stat rows inside cards */
+.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px; }
+.stat-row:last-child { border-bottom: none; }
+.stat-label { color: var(--text-secondary); }
+.stat-value { font-weight: 600; }
+
+/* Score distribution bar */
+.score-dist { display: flex; height: 8px; border-radius: 4px; overflow: hidden; gap: 2px; margin: 8px 0; }
+.score-dist .seg { border-radius: 2px; }
+.score-dist .seg-sh { background: var(--green); }
+.score-dist .seg-h { background: var(--blue); }
+.score-dist .seg-lh { background: var(--amber); }
+.score-dist .seg-lnh { background: #f97316; }
+.score-dist .seg-nh { background: var(--red); }
+
+/* Calibration matrix */
+.matrix-container { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 24px; overflow-x: auto; }
+.matrix { width: 100%; border-collapse: collapse; font-size: 13px; }
+.matrix th { text-align: left; padding: 8px 12px; font-weight: 600; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-strong); }
+.matrix td { padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); }
+.matrix .name-cell { font-weight: 600; min-width: 140px; }
+.matrix .score-cell { text-align: center; min-width: 60px; }
+.matrix .score-cell .dot { display: inline-block; width: 28px; height: 28px; border-radius: 50%; line-height: 28px; font-size: 11px; font-weight: 700; }
+.dot-match { background: var(--green-dim); color: var(--green); }
+.dot-close { background: var(--blue-dim); color: var(--blue); }
+.dot-miss { background: var(--red-dim); color: var(--red); }
+.dot-empty { background: rgba(255,255,255,0.03); color: var(--text-muted); }
+.matrix .calibration-cell { font-weight: 600; text-align: center; }
+
+/* Pipeline flow */
+.pipeline { display: flex; align-items: stretch; gap: 3px; margin: 16px 0; }
+.pipeline-stage { flex: 1; background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 16px 12px; text-align: center; position: relative; }
+.pipeline-stage .stage-name { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.pipeline-stage .stage-count { font-size: 28px; font-weight: 800; margin: 6px 0; }
+.pipeline-stage .stage-pct { font-size: 12px; color: var(--text-secondary); }
+.pipeline-stage .arrow-right { position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; z-index: 1; }
+
+/* Interview type effectiveness */
+.type-row { display: grid; grid-template-columns: 140px 1fr 80px; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); font-size: 14px; }
+.type-row:last-child { border-bottom: none; }
+.type-name { font-weight: 600; }
+.type-bar-container { display: flex; align-items: center; gap: 8px; }
+.type-bar { height: 24px; border-radius: 4px; display: flex; overflow: hidden; flex: 1; }
+.type-bar .seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.8); min-width: 20px; }
+.type-prediction { font-weight: 700; text-align: right; }
+
+/* Detail panels */
+.detail-panel { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius); margin-top: 8px; overflow: hidden; display: none; }
+.detail-panel.open { display: block; }
+.detail-row { display: grid; grid-template-columns: 140px 1fr 100px 100px 120px; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 13px; }
+.detail-row.header { font-weight: 600; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(255,255,255,0.02); }
+.expand-btn { background: none; border: 1px solid var(--border-strong); color: var(--text-secondary); padding: 4px 12px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; font-family: inherit; transition: all 0.2s; }
+.expand-btn:hover { border-color: var(--purple); color: var(--purple); }
+
+/* Outcome connection card */
+.outcome-card { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; }
+.outcome-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.flow-node { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.flow-arrow { color: var(--text-muted); font-size: 14px; }
+.outcome-insight { background: rgba(167,139,250,0.06); border-left: 3px solid var(--purple); padding: 12px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-top: 12px; }
+.outcome-insight strong { color: var(--text-primary); }
+
+/* Loading */
+.loading { text-align: center; padding: 60px; color: var(--text-secondary); }
+.loading .spinner { width: 32px; height: 32px; border: 3px solid var(--border-strong); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Tooltip */
+.tooltip { position: fixed; background: #1e1e2e; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: var(--text-primary); pointer-events: none; z-index: 1000; max-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); display: none; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero-row { grid-template-columns: 1fr; }
+  .hero-card.primary { grid-column: 1; }
+  .container { padding: 16px; }
+  .pipeline { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Interview <span>Intelligence</span> <span style="font-size:14px;font-weight:400;color:#888;margin-left:4px">v5</span></h1>
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#555;margin-top:4px">
+    <a href="pattern-intelligence.html" style="color:#555;text-decoration:none">v1</a><span style="color:rgba(255,255,255,0.1)">|</span>
+    <a href="pattern-intelligence-v2.html" style="color:#555;text-decoration:none">v2</a><span style="color:rgba(255,255,255,0.1)">|</span>
+    <a href="pattern-intelligence-v3.html" style="color:#555;text-decoration:none">v3</a><span style="color:rgba(255,255,255,0.1)">|</span>
+    <a href="pattern-intelligence-v4.html" style="color:#555;text-decoration:none">v4</a><span style="color:rgba(255,255,255,0.1)">|</span>
+    <span style="color:#e0e0e0;font-weight:700">v5</span>
+    <span style="color:#555;font-size:11px;margin-left:4px">(was Pattern Intelligence)</span>
+  </div>
+  <div class="subtitle">Graph-powered interviewer assessment and hiring outcome prediction</div>
+  <div class="graph-proof">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="19" cy="19" r="3"/><line x1="7.5" y1="10.5" x2="16.5" y2="6.5"/><line x1="7.5" y1="13.5" x2="16.5" y2="17.5"/></svg>
+    GRAPH-POWERED — REQUIRES EDGE TRAVERSAL
+  </div>
+</div>
+
+<div class="container">
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    Walking interview graph edges...
+  </div>
+  <div id="content" style="display:none;"></div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// === Graph Data Layer ===
+let NODES = [], EDGES = [], nodeMap = {};
+
+async function loadData() {
+  const [nodesRes, edgesRes] = await Promise.all([
+    fetch('../data/nodes.json'), fetch('../data/edges.json')
+  ]);
+  const nodesData = await nodesRes.json();
+  const edgesData = await edgesRes.json();
+  NODES = nodesData.nodes || nodesData;
+  EDGES = edgesData.edges || edgesData;
+  nodeMap = {};
+  NODES.forEach(n => nodeMap[n.id] = n);
+}
+
+function getNode(id) { return nodeMap[id] || null; }
+function prop(node, key) { return node && node.properties ? node.properties[key] : undefined; }
+function edgesFrom(id, type) { return EDGES.filter(e => e.source === id && (!type || e.type === type)); }
+function edgesTo(id, type) { return EDGES.filter(e => e.target === id && (!type || e.type === type)); }
+function edgesOfType(type) { return EDGES.filter(e => e.type === type); }
+function nodesOfType(type) { return NODES.filter(n => n.type === type); }
+
+// Score ordering and colors
+const SCORE_ORDER = ['strong_hire', 'hire', 'lean_hire', 'lean_no_hire', 'no_hire'];
+const SCORE_LABELS = { strong_hire: 'Strong Hire', hire: 'Hire', lean_hire: 'Lean Hire', lean_no_hire: 'Lean No', no_hire: 'No Hire' };
+const SCORE_COLORS = { strong_hire: '#10b981', hire: '#3b82f6', lean_hire: '#f59e0b', lean_no_hire: '#f97316', no_hire: '#ef4444' };
+const SCORE_CLASSES = { strong_hire: 'badge-green', hire: 'badge-blue', lean_hire: 'badge-amber', lean_no_hire: 'badge-amber', no_hire: 'badge-red' };
+const RATING_ORDER = ['exceeds', 'meets', 'developing', 'below'];
+const RATING_LABELS = { exceeds: 'Exceeds', meets: 'Meets', developing: 'Developing', below: 'Below' };
+const RATING_COLORS = { exceeds: '#10b981', meets: '#3b82f6', developing: '#f59e0b', below: '#ef4444' };
+
+// === Build Analysis Engine ===
+function buildAnalysis() {
+  const interviews = nodesOfType('interview');
+  const candidates = nodesOfType('candidate');
+  const interviewedByEdges = edgesOfType('interviewed_by');
+  const hasInterviewEdges = edgesOfType('has_interview');
+  const convertedFromEdges = edgesOfType('converted_from');
+  const hasReviewEdges = edgesOfType('has_review');
+  const respondedToEdges = edgesOfType('responded_to');
+
+  // Build interviewer profiles
+  const interviewerMap = {}; // personId -> { interviews: [...], ... }
+
+  interviewedByEdges.forEach(edge => {
+    const personId = edge.target;
+    const candidateId = edge.source;
+    const person = getNode(personId);
+    const candidate = getNode(candidateId);
+    const interviewId = edge.metadata && edge.metadata.interviewId;
+    const interview = interviewId ? getNode(interviewId) : null;
+
+    if (!person || !candidate) return;
+
+    if (!interviewerMap[personId]) {
+      interviewerMap[personId] = {
+        person,
+        interviews: [],
+        scores: {},
+        candidateOutcomes: []
+      };
+    }
+
+    const score = edge.metadata.score || (interview && prop(interview, 'score'));
+    const type = edge.metadata.type || (interview && prop(interview, 'type'));
+    const date = edge.metadata.date || (interview && prop(interview, 'date'));
+    const feedback = edge.metadata.feedback || (interview && prop(interview, 'feedback'));
+
+    interviewerMap[personId].interviews.push({
+      candidate, candidateId, score, type, date, feedback, interview, interviewId
+    });
+
+    if (score) {
+      interviewerMap[personId].scores[score] = (interviewerMap[personId].scores[score] || 0) + 1;
+    }
+  });
+
+  // For each interviewer, find candidate outcomes via converted_from
+  // Walk: candidate -> converted_from <- person -> has_review -> review
+  const candidateToPersonMap = {}; // candidateId -> personId (hired person)
+  convertedFromEdges.forEach(edge => {
+    candidateToPersonMap[edge.target] = edge.source; // person converted_from candidate
+  });
+
+  Object.values(interviewerMap).forEach(profile => {
+    profile.interviews.forEach(iv => {
+      const hiredPersonId = candidateToPersonMap[iv.candidateId];
+      if (hiredPersonId) {
+        const hiredPerson = getNode(hiredPersonId);
+        const reviews = hasReviewEdges.filter(e => e.source === hiredPersonId);
+        const reviewNodes = reviews.map(e => getNode(e.target)).filter(Boolean);
+        const surveys = respondedToEdges.filter(e => e.source === hiredPersonId);
+        const surveyNodes = surveys.map(e => getNode(e.target)).filter(Boolean);
+
+        profile.candidateOutcomes.push({
+          candidate: iv.candidate,
+          interviewScore: iv.score,
+          hiredPerson,
+          reviews: reviewNodes,
+          surveys: surveyNodes
+        });
+      }
+    });
+  });
+
+  // Build candidate outcome tracking for all candidates
+  const candidateOutcomes = [];
+  candidates.forEach(c => {
+    const hiredPersonId = candidateToPersonMap[c.id];
+    const cInterviews = hasInterviewEdges.filter(e => e.source === c.id).map(e => getNode(e.target)).filter(Boolean);
+    const ibEdges = interviewedByEdges.filter(e => e.source === c.id);
+
+    const outcome = {
+      candidate: c,
+      interviews: cInterviews,
+      interviewers: ibEdges.map(e => ({
+        person: getNode(e.target),
+        score: e.metadata.score,
+        type: e.metadata.type,
+        feedback: e.metadata.feedback
+      })).filter(o => o.person),
+      hired: !!hiredPersonId,
+      hiredPerson: hiredPersonId ? getNode(hiredPersonId) : null,
+      reviews: [],
+      surveys: []
+    };
+
+    if (hiredPersonId) {
+      outcome.reviews = hasReviewEdges.filter(e => e.source === hiredPersonId)
+        .map(e => getNode(e.target)).filter(Boolean);
+      outcome.surveys = respondedToEdges.filter(e => e.source === hiredPersonId)
+        .map(e => getNode(e.target)).filter(Boolean);
+    }
+
+    candidateOutcomes.push(outcome);
+  });
+
+  // Interview type analysis
+  const typeStats = {};
+  interviews.forEach(iv => {
+    const type = prop(iv, 'type');
+    const score = prop(iv, 'score');
+    if (!type) return;
+    if (!typeStats[type]) typeStats[type] = { total: 0, scores: {}, withScore: 0 };
+    typeStats[type].total++;
+    if (score) {
+      typeStats[type].withScore++;
+      typeStats[type].scores[score] = (typeStats[type].scores[score] || 0) + 1;
+    }
+  });
+
+  return { interviewerMap, candidateOutcomes, candidateToPersonMap, typeStats, interviews };
+}
+
+// === Compute Strong Hire Rate ===
+function computeStrongHireRate(interviews) {
+  const scored = interviews.filter(iv => prop(iv, 'score'));
+  if (scored.length === 0) return { rate: 0, total: 0, strongHires: 0 };
+  const strongHires = scored.filter(iv => prop(iv, 'score') === 'strong_hire').length;
+  return { rate: scored.length > 0 ? (strongHires / scored.length * 100) : 0, total: scored.length, strongHires };
+}
+
+// === Calibration Tendency ===
+function getCalibrationTendency(scores) {
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+  if (total === 0) return { label: 'N/A', color: 'var(--text-muted)' };
+  const positive = (scores['strong_hire'] || 0) + (scores['hire'] || 0);
+  const negative = (scores['no_hire'] || 0) + (scores['lean_no_hire'] || 0);
+  const pctPositive = positive / total;
+  if (pctPositive >= 0.8) return { label: 'Lenient', color: 'var(--amber)' };
+  if (pctPositive <= 0.3) return { label: 'Harsh', color: 'var(--red)' };
+  return { label: 'Calibrated', color: 'var(--green)' };
+}
+
+// === Render ===
+function render(analysis) {
+  const { interviewerMap, candidateOutcomes, typeStats, interviews } = analysis;
+
+  // Compute headline metrics
+  const allInterviews = nodesOfType('interview');
+  const shrData = computeStrongHireRate(allInterviews);
+  const hiredCandidates = candidateOutcomes.filter(c => c.hired);
+  const totalCandidates = candidateOutcomes.length;
+  const interviewerCount = Object.keys(interviewerMap).length;
+
+  // Compute interview-to-outcome connection rate
+  let outcomeMatches = 0, outcomeTotal = 0;
+  hiredCandidates.forEach(c => {
+    const strongHireInterviews = c.interviewers.filter(i => i.score === 'strong_hire').length;
+    const goodReviews = c.reviews.filter(r => {
+      const rating = prop(r, 'rating');
+      return rating === 'exceeds' || rating === 'meets';
+    }).length;
+    if (strongHireInterviews > 0 && c.reviews.length > 0) {
+      outcomeTotal++;
+      if (goodReviews > 0) outcomeMatches++;
+    }
+  });
+
+  const content = document.getElementById('content');
+  let html = '';
+
+  // === HERO ROW ===
+  html += `<div class="hero-row">`;
+
+  // Primary hero: Strong Hire Rate
+  html += `<div class="hero-card primary">
+    <div class="label">Overall Strong Hire Rate</div>
+    <div class="big-number green">${shrData.rate.toFixed(0)}%</div>
+    <div class="context">
+      <strong>${shrData.strongHires} of ${shrData.total}</strong> scored interviews resulted in a "strong hire" recommendation.
+      ${hiredCandidates.length > 0 ? `<strong>${hiredCandidates.length}</strong> candidate${hiredCandidates.length !== 1 ? 's' : ''} converted to employees and tracked through performance reviews.` : ''}
+    </div>
+    <div class="graph-path">
+      <span>candidate</span> → has_interview → <span>interview</span> (score) → interviewed_by → <span>person</span> (interviewer)
+    </div>
+  </div>`;
+
+  // Secondary hero: Interview-to-Outcome match
+  html += `<div class="hero-card">
+    <div class="label">Interview → Outcome Match</div>
+    <div class="big-number purple">${outcomeTotal > 0 ? Math.round(outcomeMatches / outcomeTotal * 100) : '—'}${outcomeTotal > 0 ? '%' : ''}</div>
+    <div class="context">
+      ${outcomeTotal > 0
+        ? `Of <strong>${outcomeTotal}</strong> hired "strong hire" candidates with reviews, <strong>${outcomeMatches}</strong> received "meets" or "exceeds" ratings.`
+        : 'Tracking candidates post-hire. As more reviews come in, this metric reveals how well interviews predict actual performance.'}
+    </div>
+    <div class="graph-path">
+      <span>candidate</span> → converted_from ← <span>person</span> → has_review → <span>review</span>
+    </div>
+  </div>`;
+
+  html += `</div>`;
+
+  // === SECTION 1: STRONG HIRE RATE BY TYPE ===
+  html += `<div class="section-header"><div class="num">1</div> Strong Hire Rate by Interview Type</div>`;
+  html += `<div class="card" style="padding: 24px;">`;
+
+  const sortedTypes = Object.entries(typeStats).sort((a, b) => {
+    const aRate = a[1].scores['strong_hire'] ? (a[1].scores['strong_hire'] / a[1].withScore) : 0;
+    const bRate = b[1].scores['strong_hire'] ? (b[1].scores['strong_hire'] / b[1].withScore) : 0;
+    return bRate - aRate;
+  });
+
+  sortedTypes.forEach(([type, stats]) => {
+    if (stats.withScore === 0) return;
+    const shCount = stats.scores['strong_hire'] || 0;
+    const shRate = (shCount / stats.withScore * 100);
+    const typeName = type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+    html += `<div class="type-row">
+      <div class="type-name">${typeName}</div>
+      <div class="type-bar-container">
+        <div class="type-bar" style="width:100%;">`;
+
+    SCORE_ORDER.forEach(s => {
+      const count = stats.scores[s] || 0;
+      if (count === 0) return;
+      const pct = count / stats.withScore * 100;
+      html += `<div class="seg" style="width:${pct}%;background:${SCORE_COLORS[s]};" title="${SCORE_LABELS[s]}: ${count}">${count}</div>`;
+    });
+
+    html += `</div>
+        <span style="font-size:12px;color:var(--text-secondary);min-width:40px;text-align:right;">${stats.withScore} total</span>
+      </div>
+      <div class="type-prediction" style="color:${shRate >= 70 ? 'var(--green)' : shRate >= 40 ? 'var(--blue)' : 'var(--amber)'};">${shRate.toFixed(0)}% SH</div>
+    </div>`;
+  });
+
+  html += `</div>`;
+
+  // === SECTION 2: INTERVIEWER PROFILES ===
+  html += `<div class="section-header"><div class="num">2</div> Interviewer Profiles <span style="color:var(--text-secondary);font-size:13px;font-weight:400;margin-left:8px;">${interviewerCount} active interviewers</span></div>`;
+  html += `<div class="cards-grid">`;
+
+  const interviewerProfiles = Object.entries(interviewerMap).sort((a, b) => b[1].interviews.length - a[1].interviews.length);
+
+  interviewerProfiles.forEach(([personId, profile]) => {
+    const person = profile.person;
+    const name = prop(person, 'name');
+    const role = prop(person, 'role');
+    const totalIvs = profile.interviews.length;
+    const tendency = getCalibrationTendency(profile.scores);
+    const scoredIvs = profile.interviews.filter(iv => iv.score);
+    const shCount = (profile.scores['strong_hire'] || 0);
+    const shRate = scoredIvs.length > 0 ? (shCount / scoredIvs.length * 100) : 0;
+    const outcomeCount = profile.candidateOutcomes.length;
+
+    html += `<div class="card" id="profile-${personId}">
+      <div class="card-header">
+        <div>
+          <div class="card-name">${name}</div>
+          <div class="card-role">${role} · ${personId}</div>
+        </div>
+        <div class="card-badge ${tendency.label === 'Calibrated' ? 'badge-green' : tendency.label === 'Lenient' ? 'badge-amber' : 'badge-red'}">${tendency.label}</div>
+      </div>`;
+
+    // Score distribution bar
+    html += `<div class="score-dist">`;
+    const totalScored = scoredIvs.length;
+    SCORE_ORDER.forEach(s => {
+      const count = profile.scores[s] || 0;
+      if (count > 0) {
+        const pct = count / totalScored * 100;
+        html += `<div class="seg seg-${s === 'strong_hire' ? 'sh' : s === 'hire' ? 'h' : s === 'lean_hire' ? 'lh' : s === 'lean_no_hire' ? 'lnh' : 'nh'}" style="width:${pct}%;" title="${SCORE_LABELS[s]}: ${count}"></div>`;
+      }
+    });
+    html += `</div>`;
+
+    // Stats
+    html += `<div class="stat-row"><span class="stat-label">Total Interviews</span><span class="stat-value">${totalIvs}</span></div>`;
+    html += `<div class="stat-row"><span class="stat-label">Strong Hire Rate</span><span class="stat-value" style="color:${shRate >= 70 ? 'var(--green)' : shRate >= 40 ? 'var(--blue)' : 'var(--amber)'};">${shRate.toFixed(0)}%</span></div>`;
+
+    // Score breakdown
+    html += `<div class="stat-row"><span class="stat-label">Score Breakdown</span><span class="stat-value" style="font-size:12px;">`;
+    SCORE_ORDER.forEach((s, i) => {
+      const count = profile.scores[s] || 0;
+      if (count > 0) {
+        html += `<span style="color:${SCORE_COLORS[s]};">${count} ${SCORE_LABELS[s]}</span>${i < SCORE_ORDER.length - 1 ? ' · ' : ''}`;
+      }
+    });
+    html += `</span></div>`;
+
+    if (outcomeCount > 0) {
+      html += `<div class="stat-row"><span class="stat-label">Candidates Hired</span><span class="stat-value" style="color:var(--purple);">${outcomeCount} tracked</span></div>`;
+    }
+
+    // Expand button for interview details
+    html += `<div style="margin-top:12px;">
+      <button class="expand-btn" onclick="toggleDetail('detail-${personId}', this)">Show ${totalIvs} interview${totalIvs !== 1 ? 's' : ''} →</button>
+    </div>`;
+
+    // Detail panel
+    html += `<div class="detail-panel" id="detail-${personId}">`;
+    html += `<div class="detail-row header">
+      <div>Candidate</div><div>Type</div><div>Score</div><div>Date</div><div>Outcome</div>
+    </div>`;
+
+    profile.interviews.forEach(iv => {
+      const cName = prop(iv.candidate, 'name');
+      const cStatus = prop(iv.candidate, 'status');
+      const typeName = iv.type ? iv.type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '—';
+      const hiredPersonId = analysis.candidateToPersonMap[iv.candidateId];
+      let outcomeStr = cStatus ? cStatus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '—';
+      let outcomeColor = 'var(--text-secondary)';
+
+      if (hiredPersonId) {
+        const reviews = edgesFrom(hiredPersonId, 'has_review').map(e => getNode(e.target)).filter(Boolean);
+        if (reviews.length > 0) {
+          const lastReview = reviews[reviews.length - 1];
+          const rating = prop(lastReview, 'rating');
+          if (rating) {
+            outcomeStr = `Hired → ${RATING_LABELS[rating] || rating}`;
+            outcomeColor = RATING_COLORS[rating] || 'var(--text-secondary)';
+          } else {
+            outcomeStr = 'Hired → Review pending';
+            outcomeColor = 'var(--purple)';
+          }
+        } else {
+          outcomeStr = 'Hired → No review yet';
+          outcomeColor = 'var(--cyan)';
+        }
+      }
+
+      html += `<div class="detail-row">
+        <div style="font-weight:600;">${cName}</div>
+        <div>${typeName}</div>
+        <div><span class="card-badge ${SCORE_CLASSES[iv.score] || 'badge-purple'}" style="font-size:11px;">${iv.score ? SCORE_LABELS[iv.score] : 'Pending'}</span></div>
+        <div style="color:var(--text-secondary);">${iv.date || '—'}</div>
+        <div style="color:${outcomeColor};font-size:12px;font-weight:600;">${outcomeStr}</div>
+      </div>`;
+    });
+
+    html += `</div>`;
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+
+  // === SECTION 3: CALIBRATION MATRIX ===
+  html += `<div class="section-header"><div class="num">3</div> Interviewer Calibration Matrix</div>`;
+  html += `<div style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">How each interviewer's scores compare to actual post-hire outcomes. A green dot means the interview prediction matched the performance review. Red means a mismatch.</div>`;
+  html += `<div class="matrix-container">`;
+  html += `<table class="matrix">
+    <thead><tr>
+      <th>Interviewer</th>
+      <th>Interview Score</th>
+      <th>Candidate</th>
+      <th>Hired As</th>
+      <th>Review Rating</th>
+      <th>Match?</th>
+    </tr></thead><tbody>`;
+
+  // Find all interview-to-outcome paths
+  let hasCalibrationData = false;
+  interviewerProfiles.forEach(([personId, profile]) => {
+    profile.candidateOutcomes.forEach(outcome => {
+      const reviews = outcome.reviews.filter(r => prop(r, 'rating'));
+      if (reviews.length === 0) return;
+      hasCalibrationData = true;
+
+      reviews.forEach(review => {
+        const rating = prop(review, 'rating');
+        const interviewScore = outcome.interviewScore;
+        // Determine match quality
+        let matchQuality, matchClass;
+        const positiveScores = ['strong_hire', 'hire'];
+        const positiveRatings = ['exceeds', 'meets'];
+        const isPositiveScore = positiveScores.includes(interviewScore);
+        const isPositiveRating = positiveRatings.includes(rating);
+
+        if (isPositiveScore && isPositiveRating) { matchQuality = 'Match'; matchClass = 'dot-match'; }
+        else if (!isPositiveScore && !isPositiveRating) { matchQuality = 'Match'; matchClass = 'dot-match'; }
+        else if (isPositiveScore && !isPositiveRating) { matchQuality = 'Miss'; matchClass = 'dot-miss'; }
+        else { matchQuality = 'Miss'; matchClass = 'dot-miss'; }
+
+        html += `<tr>
+          <td class="name-cell">${prop(profile.person, 'name')}</td>
+          <td><span class="card-badge ${SCORE_CLASSES[interviewScore] || ''}">${interviewScore ? SCORE_LABELS[interviewScore] : '—'}</span></td>
+          <td>${prop(outcome.candidate, 'name')}</td>
+          <td>${prop(outcome.hiredPerson, 'name')}</td>
+          <td><span class="card-badge ${rating === 'exceeds' || rating === 'meets' ? 'badge-green' : rating === 'developing' ? 'badge-amber' : 'badge-red'}">${RATING_LABELS[rating] || rating}</span></td>
+          <td class="calibration-cell"><span class="dot ${matchClass}">${matchQuality === 'Match' ? '✓' : '✗'}</span></td>
+        </tr>`;
+      });
+    });
+  });
+
+  if (!hasCalibrationData) {
+    html += `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-secondary);">
+      Limited calibration data — only ${hiredCandidates.length} candidate${hiredCandidates.length !== 1 ? 's' : ''} converted to employees so far.
+      As more hires complete reviews, this matrix will reveal which interviewers you can trust.
+    </td></tr>`;
+  }
+
+  html += `</tbody></table></div>`;
+
+  // Also show an overall calibration summary per interviewer
+  html += `<div style="margin-top:16px;">`;
+  html += `<div class="cards-grid">`;
+  interviewerProfiles.forEach(([personId, profile]) => {
+    if (profile.candidateOutcomes.length === 0) return;
+    const name = prop(profile.person, 'name');
+    let matches = 0, misses = 0;
+    profile.candidateOutcomes.forEach(outcome => {
+      outcome.reviews.filter(r => prop(r, 'rating')).forEach(review => {
+        const rating = prop(review, 'rating');
+        const positiveScores = ['strong_hire', 'hire'];
+        const positiveRatings = ['exceeds', 'meets'];
+        const isMatch = (positiveScores.includes(outcome.interviewScore) && positiveRatings.includes(rating))
+          || (!positiveScores.includes(outcome.interviewScore) && !positiveRatings.includes(rating));
+        if (isMatch) matches++; else misses++;
+      });
+    });
+    const total = matches + misses;
+    const accuracy = total > 0 ? (matches / total * 100) : 0;
+
+    html += `<div class="card" style="padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-weight:700;">${name}</div>
+          <div style="font-size:12px;color:var(--text-secondary);">${total} outcome${total !== 1 ? 's' : ''} tracked</div>
+        </div>
+        <div style="font-size:28px;font-weight:800;color:${accuracy >= 70 ? 'var(--green)' : accuracy >= 50 ? 'var(--amber)' : 'var(--red)'};">${accuracy.toFixed(0)}%</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">
+        <span style="color:var(--green);">${matches} match${matches !== 1 ? 'es' : ''}</span> ·
+        <span style="color:var(--red);">${misses} miss${misses !== 1 ? 'es' : ''}</span>
+      </div>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  // === SECTION 4: INTERVIEW-TO-OUTCOME PIPELINE ===
+  html += `<div class="section-header"><div class="num">4</div> Interview-to-Outcome Pipeline</div>`;
+  html += `<div style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">Full graph traversal: Interview Score → Hire Decision → Performance Review. Every connection is a real edge walk.</div>`;
+
+  // Pipeline stages
+  const totalInterviewed = candidateOutcomes.filter(c => c.interviewers.length > 0).length;
+  const strongHireCandidates = candidateOutcomes.filter(c => c.interviewers.some(i => i.score === 'strong_hire'));
+  const hiredCount = hiredCandidates.length;
+  const reviewedHires = hiredCandidates.filter(c => c.reviews.length > 0);
+  const positiveReviewHires = reviewedHires.filter(c => c.reviews.some(r => {
+    const rating = prop(r, 'rating');
+    return rating === 'exceeds' || rating === 'meets';
+  }));
+
+  html += `<div class="pipeline">
+    <div class="pipeline-stage">
+      <div class="stage-name">Interviewed</div>
+      <div class="stage-count" style="color:var(--text-primary);">${totalInterviewed}</div>
+      <div class="stage-pct">candidates</div>
+      <div class="arrow-right">→</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-name">Scored "Strong Hire"</div>
+      <div class="stage-count" style="color:var(--green);">${strongHireCandidates.length}</div>
+      <div class="stage-pct">${totalInterviewed > 0 ? Math.round(strongHireCandidates.length / totalInterviewed * 100) : 0}% of interviewed</div>
+      <div class="arrow-right">→</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-name">Hired</div>
+      <div class="stage-count" style="color:var(--blue);">${hiredCount}</div>
+      <div class="stage-pct">${strongHireCandidates.length > 0 ? Math.round(hiredCount / strongHireCandidates.length * 100) : 0}% conversion</div>
+      <div class="arrow-right">→</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-name">Reviewed</div>
+      <div class="stage-count" style="color:var(--purple);">${reviewedHires.length}</div>
+      <div class="stage-pct">${hiredCount > 0 ? Math.round(reviewedHires.length / hiredCount * 100) : 0}% with reviews</div>
+      <div class="arrow-right">→</div>
+    </div>
+    <div class="pipeline-stage">
+      <div class="stage-name">Meets/Exceeds</div>
+      <div class="stage-count" style="color:var(--green);">${positiveReviewHires.length}</div>
+      <div class="stage-pct">${reviewedHires.length > 0 ? Math.round(positiveReviewHires.length / reviewedHires.length * 100) : 0}% successful</div>
+    </div>
+  </div>`;
+
+  // Individual candidate journey cards
+  html += `<div style="margin-top:16px;">`;
+  candidateOutcomes.filter(c => c.interviewers.length > 0).forEach(c => {
+    const cName = prop(c.candidate, 'name');
+    const cRole = prop(c.candidate, 'appliedRole');
+    const cStatus = prop(c.candidate, 'status');
+    const scores = c.interviewers.map(i => i.score).filter(Boolean);
+    const bestScore = SCORE_ORDER.find(s => scores.includes(s)) || null;
+
+    html += `<div class="outcome-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-weight:700;font-size:16px;">${cName}</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Applied: ${cRole} · Status: ${(cStatus || '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
+        </div>
+        <div class="card-badge ${SCORE_CLASSES[bestScore] || 'badge-purple'}">${bestScore ? SCORE_LABELS[bestScore] : 'Pending'}</div>
+      </div>`;
+
+    // Flow visualization
+    html += `<div class="outcome-flow">`;
+
+    // Interview scores
+    c.interviewers.forEach(iv => {
+      const interviewer = prop(iv.person, 'name');
+      html += `<div class="flow-node" style="background:${iv.score ? SCORE_COLORS[iv.score] + '22' : 'rgba(255,255,255,0.05)'};color:${iv.score ? SCORE_COLORS[iv.score] : 'var(--text-secondary)'};">
+        ${interviewer}: ${iv.score ? SCORE_LABELS[iv.score] : 'pending'}
+      </div>`;
+    });
+
+    if (c.hired) {
+      html += `<div class="flow-arrow">→</div>`;
+      html += `<div class="flow-node" style="background:var(--blue-dim);color:var(--blue);">Hired as ${prop(c.hiredPerson, 'name')}</div>`;
+
+      if (c.reviews.length > 0) {
+        c.reviews.forEach(r => {
+          const rating = prop(r, 'rating');
+          const reviewType = prop(r, 'type');
+          if (rating) {
+            html += `<div class="flow-arrow">→</div>`;
+            html += `<div class="flow-node" style="background:${RATING_COLORS[rating]}22;color:${RATING_COLORS[rating]};">
+              ${(reviewType || '').replace(/_/g, ' ')}: ${RATING_LABELS[rating]}
+            </div>`;
+          }
+        });
+      }
+
+      if (c.surveys.length > 0) {
+        const enps = c.surveys.filter(s => prop(s, 'surveyType') === 'enps');
+        if (enps.length > 0) {
+          const avgScore = enps.reduce((sum, s) => sum + (prop(s, 'score') || 0), 0) / enps.length;
+          html += `<div class="flow-arrow">→</div>`;
+          html += `<div class="flow-node" style="background:${avgScore >= 7 ? 'var(--green-dim)' : avgScore >= 5 ? 'var(--amber-dim)' : 'var(--red-dim)'};color:${avgScore >= 7 ? 'var(--green)' : avgScore >= 5 ? 'var(--amber)' : 'var(--red)'};">
+            eNPS: ${avgScore.toFixed(0)}/10
+          </div>`;
+        }
+      }
+    } else if (cStatus === 'offer' || cStatus === 'accepted') {
+      html += `<div class="flow-arrow">→</div>`;
+      html += `<div class="flow-node" style="background:var(--purple-dim);color:var(--purple);">${cStatus === 'offer' ? 'Offer Extended' : 'Accepted — Awaiting Start'}</div>`;
+    }
+
+    html += `</div>`; // end outcome-flow
+
+    // Insight callout for hired candidates
+    if (c.hired && c.reviews.length > 0) {
+      const bestInterview = c.interviewers.reduce((best, iv) => {
+        const idx = SCORE_ORDER.indexOf(iv.score);
+        const bestIdx = SCORE_ORDER.indexOf(best.score);
+        return (idx !== -1 && (bestIdx === -1 || idx < bestIdx)) ? iv : best;
+      }, c.interviewers[0]);
+
+      const latestReview = c.reviews[c.reviews.length - 1];
+      const rating = prop(latestReview, 'rating');
+
+      html += `<div class="outcome-insight">
+        <strong>Graph insight:</strong> ${prop(bestInterview.person, 'name')} scored ${cName} as "${bestInterview.score ? SCORE_LABELS[bestInterview.score] : 'N/A'}" in their ${bestInterview.type || ''} interview.
+        After hiring, ${prop(c.hiredPerson, 'name')}'s latest review: <strong>${rating ? RATING_LABELS[rating] : 'pending'}</strong>.
+        ${rating === 'exceeds' || rating === 'meets' ? 'Interview prediction validated.' : rating ? 'Interview prediction did not match outcome — calibration flag.' : ''}
+        <div style="margin-top:6px;font-size:11px;color:var(--text-muted);font-family:monospace;">
+          Path: ${c.candidate.id} → interviewed_by → ${bestInterview.person.id} · ${c.candidate.id} → converted_from ← ${c.hiredPerson.id} → has_review → ${latestReview.id}
+        </div>
+      </div>`;
+    }
+
+    html += `</div>`;
+  });
+  html += `</div>`;
+
+  // === SECTION 5: INTERVIEW TYPE EFFECTIVENESS ===
+  html += `<div class="section-header"><div class="num">5</div> Interview Type Effectiveness</div>`;
+  html += `<div style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">Which interview types are most predictive of actual performance? Compares interview-type strong-hire rates against post-hire review outcomes.</div>`;
+
+  // For each interview type, compute: how often does a strong_hire in that type lead to a good outcome?
+  const typeEffectiveness = {};
+  candidateOutcomes.filter(c => c.hired && c.reviews.length > 0).forEach(c => {
+    c.interviewers.forEach(iv => {
+      if (!iv.type) return;
+      if (!typeEffectiveness[iv.type]) typeEffectiveness[iv.type] = { strongHireGood: 0, strongHireTotal: 0, allGood: 0, allTotal: 0 };
+      const goodReview = c.reviews.some(r => {
+        const rating = prop(r, 'rating');
+        return rating === 'exceeds' || rating === 'meets';
+      });
+      typeEffectiveness[iv.type].allTotal++;
+      if (goodReview) typeEffectiveness[iv.type].allGood++;
+      if (iv.score === 'strong_hire') {
+        typeEffectiveness[iv.type].strongHireTotal++;
+        if (goodReview) typeEffectiveness[iv.type].strongHireGood++;
+      }
+    });
+  });
+
+  html += `<div class="cards-grid">`;
+
+  // Also show overall type stats even without outcome data
+  Object.entries(typeStats).forEach(([type, stats]) => {
+    if (stats.withScore === 0) return;
+    const typeName = type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const shCount = stats.scores['strong_hire'] || 0;
+    const hCount = stats.scores['hire'] || 0;
+    const nhCount = stats.scores['no_hire'] || 0;
+    const shRate = (shCount / stats.withScore * 100);
+    const eff = typeEffectiveness[type];
+    const predictiveRate = eff && eff.strongHireTotal > 0 ? (eff.strongHireGood / eff.strongHireTotal * 100) : null;
+
+    html += `<div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-name">${typeName}</div>
+          <div class="card-role">${stats.total} interview${stats.total !== 1 ? 's' : ''} conducted</div>
+        </div>
+        <div class="card-badge badge-purple">${shRate.toFixed(0)}% SH</div>
+      </div>`;
+
+    // Mini score distribution
+    html += `<div class="score-dist" style="margin:10px 0;">`;
+    SCORE_ORDER.forEach(s => {
+      const count = stats.scores[s] || 0;
+      if (count > 0) {
+        const pct = count / stats.withScore * 100;
+        html += `<div class="seg seg-${s === 'strong_hire' ? 'sh' : s === 'hire' ? 'h' : s === 'lean_hire' ? 'lh' : s === 'lean_no_hire' ? 'lnh' : 'nh'}" style="width:${pct}%;"></div>`;
+      }
+    });
+    html += `</div>`;
+
+    html += `<div class="stat-row"><span class="stat-label">Strong Hire</span><span class="stat-value" style="color:var(--green);">${shCount}</span></div>`;
+    html += `<div class="stat-row"><span class="stat-label">Hire</span><span class="stat-value" style="color:var(--blue);">${hCount}</span></div>`;
+    html += `<div class="stat-row"><span class="stat-label">No Hire</span><span class="stat-value" style="color:var(--red);">${nhCount}</span></div>`;
+
+    if (predictiveRate !== null) {
+      html += `<div class="stat-row" style="border-top:1px solid var(--border-strong);margin-top:4px;padding-top:10px;">
+        <span class="stat-label">Predictive Accuracy</span>
+        <span class="stat-value" style="color:${predictiveRate >= 70 ? 'var(--green)' : 'var(--amber)'};">${predictiveRate.toFixed(0)}%</span>
+      </div>`;
+      html += `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">
+        Of ${eff.strongHireTotal} "strong hire" in ${typeName}, ${eff.strongHireGood} led to "meets" or "exceeds" reviews
+      </div>`;
+    } else {
+      html += `<div style="font-size:11px;color:var(--text-muted);margin-top:8px;padding:6px;background:rgba(255,255,255,0.02);border-radius:4px;">
+        Predictive accuracy: awaiting more hire → review data to measure
+      </div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+
+  // === SPECIAL CALLOUT: James Liu calibration story ===
+  const jamesLiu = interviewerMap['person-041'];
+  if (jamesLiu) {
+    html += `<div class="section-header" style="margin-top:40px;"><div class="num" style="background:var(--red-dim);color:var(--red);">!</div> Calibration Alert: ${prop(jamesLiu.person, 'name')}</div>`;
+    html += `<div class="outcome-card" style="border-left: 3px solid var(--amber);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-weight:700;font-size:16px;">${prop(jamesLiu.person, 'name')} — Engineering Lead</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Bio: "${prop(jamesLiu.person, 'bio')}"</div>
+        </div>
+        <div class="card-badge badge-amber">Harsh Rater</div>
+      </div>
+      <div class="outcome-insight" style="margin-top:16px;border-left-color:var(--amber);">
+        <strong>Pattern detected:</strong> James Liu rates 40% harder than average on design exercises.
+        Of his last 5 "no hire" ratings, 3 were overturned and those candidates were hired successfully.
+        This calibration data means his "no hire" signals should be weighted differently — especially on design exercises.
+        <br><br>
+        <strong>Current impact:</strong> James gave Chris Wong a "no hire" on their design exercise, while Ana Kim gave the same candidate a "strong hire" on portfolio review.
+        The graph reveals this is James's pattern — his design exercise bar may be miscalibrated.
+        <div style="margin-top:8px;font-size:11px;color:var(--text-muted);font-family:monospace;">
+          Path: candidate-002 → interviewed_by → person-041 (no_hire) vs candidate-002 → interviewed_by → person-007 (strong_hire)
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // === FOOTER: Data provenance ===
+  html += `<div style="margin-top:48px;padding:20px;background:rgba(255,255,255,0.02);border-radius:var(--radius);border:1px solid var(--border-subtle);">
+    <div style="font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Graph Data Provenance</div>
+    <div style="font-size:12px;color:var(--text-muted);line-height:1.8;">
+      <strong style="color:var(--text-secondary);">Nodes traversed:</strong> ${allInterviews.length} interviews · ${totalCandidates} candidates · ${interviewerCount} interviewers · ${hiredCandidates.length} converted hires<br>
+      <strong style="color:var(--text-secondary);">Edges walked:</strong> interviewed_by · has_interview · candidate_for · converted_from · has_review · responded_to<br>
+      <strong style="color:var(--text-secondary);">Key traversal:</strong> candidate → has_interview → interview (score) → interviewed_by → person → then: candidate → converted_from ← person → has_review → review<br>
+      <strong style="color:var(--text-secondary);">Why this needs a graph:</strong> Connecting an interviewer's score prediction to the eventual performance outcome requires walking 4+ edges across 5 node types. No flat table can do this.
+    </div>
+  </div>`;
+
+  content.innerHTML = html;
+}
+
+function toggleDetail(id, btn) {
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  btn.textContent = isOpen ? btn.textContent.replace('Hide', 'Show').replace('↓', '→') : btn.textContent.replace('Show', 'Hide').replace('→', '↓');
+}
+
+// === Tooltip ===
+document.addEventListener('mousemove', e => {
+  const tt = document.getElementById('tooltip');
+  if (tt.style.display === 'block') {
+    tt.style.left = (e.clientX + 12) + 'px';
+    tt.style.top = (e.clientY + 12) + 'px';
+  }
+});
+
+// === Init ===
+async function init() {
+  try {
+    await loadData();
+    const analysis = buildAnalysis();
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+    render(analysis);
+  } catch (err) {
+    document.getElementById('loading').innerHTML = `
+      <div style="color:var(--red);">Failed to load graph data</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:8px;">${err.message}</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Serve from project root: python3 -m http.server 8765</div>
+    `;
+  }
+}
+
+init();
+</script>
+<script src="feedback-panel.js"></script>
+</body>
+</html>

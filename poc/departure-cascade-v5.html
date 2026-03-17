@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Departure Cascade v5 | Employee Graph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a28;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.1);
+  --text-primary: #e8e8ef;
+  --text-secondary: #8888a0;
+  --text-muted: #55556a;
+  --accent-red: #ff4d6a;
+  --accent-red-dim: rgba(255,77,106,0.15);
+  --accent-orange: #ff8c42;
+  --accent-orange-dim: rgba(255,140,66,0.15);
+  --accent-yellow: #ffd166;
+  --accent-yellow-dim: rgba(255,209,102,0.12);
+  --accent-green: #06d6a0;
+  --accent-green-dim: rgba(6,214,160,0.12);
+  --accent-blue: #4ea8de;
+  --accent-blue-dim: rgba(78,168,222,0.12);
+  --accent-purple: #b388ff;
+  --accent-purple-dim: rgba(179,136,255,0.12);
+  --accent-cyan: #64dfdf;
+  --accent-cyan-dim: rgba(100,223,223,0.1);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --agent-accent: #b388ff;
+  --agent-accent-dim: rgba(179,136,255,0.10);
+  --agent-glow: rgba(179,136,255,0.25);
+}
+html { font-size: 16px; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+
+.top-bar { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); padding: 16px 32px 0; }
+.top-bar-inner { max-width: 1400px; margin: 0 auto; }
+.header-row { display: flex; align-items: center; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; }
+.brand-text { font-size: 14px; font-weight: 600; color: var(--text-secondary); letter-spacing: -0.02em; }
+.brand-text span { color: var(--text-primary); }
+.version-switcher { display: flex; align-items: center; gap: 6px; margin-left: 16px; font-size: 12px; font-weight: 500; color: var(--text-muted); }
+.version-switcher a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.version-switcher a:hover { color: var(--text-secondary); }
+.version-switcher .active-version { color: var(--text-primary); font-weight: 700; }
+.version-switcher .sep { color: var(--border-medium); }
+.person-picker { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.person-picker label { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.person-picker select { background: var(--bg-tertiary); border: 1px solid var(--border-medium); color: var(--text-primary); font-family: inherit; font-size: 14px; font-weight: 500; padding: 8px 32px 8px 12px; border-radius: var(--radius-sm); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238888a0' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+.tab-nav { display: flex; gap: 0; }
+.tab-btn { background: none; border: none; color: var(--text-muted); font-family: inherit; font-size: 13px; font-weight: 500; padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active { color: var(--agent-accent); border-bottom-color: var(--agent-accent); }
+.tab-btn .tab-badge { display: inline-block; background: var(--accent-red-dim); color: var(--accent-red); font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 8px; margin-left: 6px; vertical-align: middle; }
+
+.main-content { max-width: 1400px; margin: 0 auto; padding: 24px 32px 80px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* SHARED */
+.graph-advantage { margin-top: 32px; border: 1px solid rgba(100,223,223,0.15); border-left: 3px solid var(--accent-cyan); border-radius: var(--radius-md); padding: 16px 20px; background: rgba(100,223,223,0.04); }
+.graph-advantage-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.graph-advantage-icon { width: 20px; height: 20px; background: var(--accent-cyan-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--accent-cyan); flex-shrink: 0; }
+.graph-advantage-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-cyan); }
+.graph-advantage p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+
+.person-card { display: flex; align-items: center; gap: 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+.person-avatar { width: 64px; height: 64px; background: linear-gradient(135deg, var(--accent-red), var(--accent-orange)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; color: #fff; flex-shrink: 0; }
+.person-info { flex: 1; }
+.person-name { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.person-role { font-size: 14px; color: var(--text-secondary); margin-bottom: 10px; }
+.person-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+.person-stat-value { font-size: 16px; font-weight: 700; }
+.person-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.departure-badge { background: var(--accent-red-dim); border: 1px solid rgba(255,77,106,0.3); color: var(--accent-red); font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: var(--radius-sm); text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+
+.agent-narrative { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+.agent-narrative-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.agent-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; font-weight: 700; flex-shrink: 0; }
+.agent-label { font-size: 12px; font-weight: 600; color: var(--agent-accent); text-transform: uppercase; letter-spacing: 0.06em; }
+.agent-summary { font-size: 16px; line-height: 1.7; color: var(--text-primary); }
+.agent-summary .highlight { color: var(--accent-yellow); font-weight: 600; }
+.agent-summary .urgent { color: var(--accent-red); font-weight: 600; }
+.agent-summary .good { color: var(--accent-green); font-weight: 600; }
+
+/* STORY SECTIONS - progressive disclosure */
+.story-chapter { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); margin-bottom: 16px; overflow: hidden; transition: border-color 0.2s; }
+.story-chapter:hover { border-color: var(--border-medium); }
+.story-chapter-header { display: flex; align-items: center; gap: 14px; padding: 20px 24px; cursor: pointer; user-select: none; }
+.story-chapter-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.story-chapter-meta { flex: 1; }
+.story-chapter-title { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+.story-chapter-subtitle { font-size: 12px; color: var(--text-muted); }
+.story-chapter-arrow { color: var(--text-muted); font-size: 18px; transition: transform 0.2s; flex-shrink: 0; }
+.story-chapter.open .story-chapter-arrow { transform: rotate(90deg); }
+.story-chapter-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.story-chapter-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+.story-chapter.open .story-chapter-body { max-height: 800px; }
+.story-chapter-content { padding: 0 24px 20px; }
+.story-chapter-content p { font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 8px; }
+.story-chapter-content strong { color: var(--text-primary); }
+.story-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--agent-accent); cursor: pointer; margin-top: 8px; background: none; border: none; font-family: inherit; transition: color 0.2s; }
+.story-link:hover { color: #c9a8ff; }
+.mini-stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 10px 0; }
+.mini-stat { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 8px 14px; text-align: center; }
+.mini-stat .ms-val { font-size: 14px; font-weight: 700; }
+.mini-stat .ms-label { font-size: 11px; color: var(--text-muted); }
+
+/* OFFBOARDING */
+.filter-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+.filter-btn { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--text-secondary); font-family: inherit; font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
+.filter-btn:hover { border-color: var(--border-medium); color: var(--text-primary); }
+.filter-btn.active { background: var(--agent-accent-dim); border-color: rgba(179,136,255,0.3); color: var(--agent-accent); }
+.filter-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+.offboarding-progress { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; padding: 16px 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); flex-wrap: wrap; }
+.progress-stat { text-align: center; }
+.progress-stat .stat-num { font-size: 24px; font-weight: 800; }
+.progress-stat .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.progress-bar-track { flex: 1; min-width: 200px; height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); border-radius: 3px; transition: width 0.6s ease; }
+
+.action-cluster { margin-bottom: 24px; }
+.action-cluster-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); }
+.action-cluster-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.action-cluster-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.action-cluster-count { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+.action-feed { display: flex; flex-direction: column; gap: 10px; }
+.action-card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px 20px; transition: all 0.2s; }
+.action-card:hover { border-color: var(--border-medium); }
+.action-card.urgent { border-left: 3px solid var(--accent-red); }
+.action-card.needs-input { border-left: 3px solid var(--accent-orange); }
+.action-card.ready { border-left: 3px solid var(--accent-blue); }
+.action-card.auto-done { border-left: 3px solid var(--accent-green); opacity: 0.85; }
+.action-card.completed { border-left: 3px solid var(--accent-green); opacity: 0.7; }
+.action-card[data-filter-hidden="true"] { display: none; }
+.action-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.action-status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.action-card-title { font-size: 14px; font-weight: 600; flex: 1; }
+.action-card-assignee { font-size: 11px; color: var(--text-muted); background: var(--bg-tertiary); padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+.action-card-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.action-card-label.urgent-label { background: var(--accent-red-dim); color: var(--accent-red); }
+.action-card-label.review-label { background: var(--accent-blue-dim); color: var(--accent-blue); }
+.action-card-label.input-label { background: var(--accent-orange-dim); color: var(--accent-orange); }
+.action-card-label.auto-label { background: var(--accent-green-dim); color: var(--accent-green); }
+.action-card-label.done-label { background: var(--accent-green-dim); color: var(--accent-green); }
+.action-card-text { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 10px; }
+.action-draft { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 12px; line-height: 1.6; color: var(--text-secondary); max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease; padding: 0 16px; margin-bottom: 0; }
+.action-draft.expanded { max-height: 500px; padding: 14px 16px; margin-bottom: 10px; }
+.action-draft-toggle { background: none; border: none; color: var(--text-muted); font-family: inherit; font-size: 12px; cursor: pointer; padding: 4px 0; margin-bottom: 6px; transition: color 0.2s; }
+.action-draft-toggle:hover { color: var(--text-secondary); }
+.action-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.action-btn { font-family: inherit; font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+.action-btn.approve { background: var(--accent-green); color: #0a0a0f; }
+.action-btn.approve:hover { background: #05c090; }
+.action-btn.edit { background: transparent; color: var(--text-secondary); border-color: var(--border-medium); }
+.action-btn.edit:hover { border-color: var(--text-muted); }
+.action-btn.reject { background: transparent; color: var(--accent-red); border-color: rgba(255,77,106,0.3); }
+.action-btn.choose { background: var(--agent-accent-dim); color: var(--agent-accent); border-color: rgba(179,136,255,0.3); }
+
+/* RESTRUCTURING */
+.scenario-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.scenario-tab { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--text-secondary); font-family: inherit; font-size: 13px; font-weight: 600; padding: 10px 20px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; }
+.scenario-tab:hover { border-color: var(--border-medium); color: var(--text-primary); }
+.scenario-tab.active { background: var(--agent-accent-dim); border-color: var(--agent-accent); color: var(--agent-accent); }
+.scenario-tab .recommend-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-green); margin-left: 6px; vertical-align: middle; }
+.scenario-view { display: none; }
+.scenario-view.active { display: block; }
+.org-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.org-panel { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; }
+.org-panel-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.org-node { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13px; }
+.org-node.level-0 { padding-left: 0; }
+.org-node.level-1 { padding-left: 20px; }
+.org-node.level-2 { padding-left: 40px; }
+.org-node-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.org-node-name { font-weight: 600; }
+.org-node-role { color: var(--text-muted); font-size: 12px; }
+.org-node-badge { font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-left: 4px; }
+.org-node.departed .org-node-name { text-decoration: line-through; color: var(--text-muted); }
+.org-node-count { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 4px; color: var(--text-secondary); margin-left: auto; }
+.risk-callout { background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-left: 3px solid var(--accent-orange); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 16px; }
+.risk-callout-title { font-size: 12px; font-weight: 700; color: var(--accent-orange); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+.risk-callout-text { font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+.risk-callout.low { border-left-color: var(--accent-green); }
+.risk-callout.low .risk-callout-title { color: var(--accent-green); }
+.scenario-metrics-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.scenario-metric { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 18px; text-align: center; flex: 1; min-width: 100px; }
+.scenario-metric .sm-val { font-size: 16px; font-weight: 700; }
+.scenario-metric .sm-label { font-size: 11px; color: var(--text-muted); }
+.scenario-metric .sm-tip { font-size: 11px; color: var(--text-muted); cursor: help; border-bottom: 1px dotted var(--text-muted); }
+.execution-timeline { position: relative; margin: 20px 0; padding-left: 24px; }
+.execution-timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: var(--border-medium); }
+.exec-step { position: relative; margin-bottom: 16px; padding-left: 20px; }
+.exec-step::before { content: ''; position: absolute; left: -18px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--agent-accent); border: 2px solid var(--bg-primary); z-index: 1; }
+.exec-step-week { font-size: 11px; font-weight: 700; color: var(--agent-accent); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+.exec-step-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.exec-step-text strong { color: var(--text-primary); }
+
+/* COMPLIANCE - unified vertical timeline */
+.compliance-header { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding: 20px 24px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); flex-wrap: wrap; }
+.compliance-score-circle { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; }
+.compliance-info { flex: 1; }
+.compliance-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+.compliance-info p { font-size: 13px; color: var(--text-secondary); }
+.compliance-breakdown { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+.compliance-breakdown span { font-size: 12px; color: var(--text-muted); }
+.compliance-breakdown strong { color: var(--text-primary); }
+
+.vtl { position: relative; padding-left: 32px; }
+.vtl::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 2px; background: var(--border-medium); }
+.vtl-item { position: relative; margin-bottom: 20px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px 20px; transition: all 0.2s; cursor: pointer; }
+.vtl-item:hover { border-color: var(--border-medium); }
+.vtl-item.active { border-color: var(--agent-accent); box-shadow: 0 0 12px var(--agent-glow); }
+.vtl-item.done { opacity: 0.6; }
+.vtl-item.done .vtl-title { text-decoration: line-through; color: var(--text-muted); }
+.vtl-dot { position: absolute; left: -25px; top: 22px; width: 14px; height: 14px; border-radius: 50%; border: 3px solid var(--bg-primary); z-index: 1; }
+.vtl-dot.red { background: var(--accent-red); }
+.vtl-dot.yellow { background: var(--accent-yellow); }
+.vtl-dot.green { background: var(--accent-green); }
+.vtl-dot.gray { background: var(--text-muted); }
+.vtl-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.vtl-title { font-size: 14px; font-weight: 600; flex: 1; }
+.vtl-countdown { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.vtl-countdown.red { background: var(--accent-red-dim); color: var(--accent-red); }
+.vtl-countdown.yellow { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+.vtl-countdown.green { background: var(--accent-green-dim); color: var(--accent-green); }
+.vtl-countdown.gray { background: var(--bg-tertiary); color: var(--text-muted); }
+.vtl-date { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.vtl-desc { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+.vtl-desc .done-text { color: var(--accent-green); font-weight: 500; }
+.vtl-desc .pending-text { color: var(--accent-yellow); font-weight: 500; }
+.vtl-legal { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.vtl-owner { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.vtl-done-check { display: inline-flex; align-items: center; gap: 4px; color: var(--accent-green); font-size: 12px; font-weight: 600; }
+
+/* LOADING */
+.loading-container { display: flex; align-items: center; justify-content: center; min-height: 400px; flex-direction: column; gap: 16px; }
+.loading-spinner { width: 32px; height: 32px; border: 3px solid var(--border-medium); border-top-color: var(--agent-accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 14px; color: var(--text-muted); }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.animate-in { animation: fadeInUp 0.3s ease both; }
+.approve-check { display: inline-flex; align-items: center; gap: 6px; color: var(--accent-green); font-weight: 600; font-size: 13px; }
+@keyframes checkPop { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.check-icon { animation: checkPop 0.3s ease both; }
+
+@media (max-width: 768px) {
+  .top-bar { padding: 12px 16px 0; }
+  .main-content { padding: 16px; }
+  .org-comparison { grid-template-columns: 1fr; }
+  .person-card { flex-direction: column; text-align: center; }
+  .person-stats { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="header-row">
+      <div class="brand">
+        <div class="brand-icon">G</div>
+        <div class="brand-text"><span>Departure</span> Cascade</div>
+      </div>
+      <div class="version-switcher">
+        <a href="departure-cascade.html">v1</a><span class="sep">|</span>
+        <a href="departure-cascade-v2.html">v2</a><span class="sep">|</span>
+        <a href="departure-cascade-v3.html">v3</a><span class="sep">|</span>
+        <a href="departure-cascade-v4.html">v4</a><span class="sep">|</span>
+        <span class="active-version">v5</span>
+      </div>
+      <div class="person-picker">
+        <label>Departing</label>
+        <select id="personSelect"></select>
+      </div>
+    </div>
+    <div class="tab-nav" id="tabNav">
+      <button class="tab-btn active" data-tab="story">Impact Story</button>
+      <button class="tab-btn" data-tab="offboarding">Offboarding <span class="tab-badge" id="offboardingBadge">0</span></button>
+      <button class="tab-btn" data-tab="restructuring">Restructuring</button>
+      <button class="tab-btn" data-tab="compliance">Compliance</button>
+    </div>
+  </div>
+</div>
+
+<div class="main-content">
+  <div id="loadingState" class="loading-container">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Analyzing organizational connections...</div>
+  </div>
+  <div class="tab-panel active" id="tab-story"></div>
+  <div class="tab-panel" id="tab-offboarding"></div>
+  <div class="tab-panel" id="tab-restructuring"></div>
+  <div class="tab-panel" id="tab-compliance"></div>
+</div>
+
+<script>
+/* ============================================================
+   DATA LOADING & GRAPH HELPERS
+   ============================================================ */
+var NODES = {}, EDGES = [], ALL_NODES = [];
+
+async function loadData() {
+  var r = await Promise.all([fetch('../data/nodes.json'), fetch('../data/edges.json')]);
+  var nd = await r[0].json(), ed = await r[1].json();
+  ALL_NODES = nd.nodes; EDGES = ed.edges;
+  ALL_NODES.forEach(function(n) { NODES[n.id] = n; });
+}
+
+function getNode(id) { return NODES[id] || null; }
+function prop(id, key) { var n = getNode(id); return n ? (n.properties || {})[key] : null; }
+function edgesFrom(nid, type) { return EDGES.filter(function(e) { return e.source === nid && (!type || e.type === type); }); }
+function edgesTo(nid, type) { return EDGES.filter(function(e) { return e.target === nid && (!type || e.type === type); }); }
+function getDirectReports(pid) { return edgesTo(pid, 'reports_to').map(function(e) { return e.source; }); }
+function getManager(pid) { var e = edgesFrom(pid, 'reports_to')[0]; return e ? e.target : null; }
+function getDependents(pid) { return edgesFrom(pid, 'has_dependent').map(function(e) { return e.target; }); }
+function getBenefits(pid) { return edgesFrom(pid, 'has_benefits').map(function(e) { return { id: e.target, meta: e.metadata || {} }; }); }
+function getComp(pid) { return edgesFrom(pid, 'has_comp').map(function(e) { return e.target; }); }
+function getProjects(pid) { return edgesFrom(pid, 'works_on').map(function(e) { return { id: e.target, meta: e.metadata || {} }; }); }
+function getTeams(pid) { return edgesFrom(pid, 'member_of').filter(function(e) { var n = getNode(e.target); return n && n.type === 'team'; }).map(function(e) { return { id: e.target, meta: e.metadata || {} }; }); }
+function getJurisdictions(pid) { return edgesFrom(pid, 'subject_to').map(function(e) { return e.target; }); }
+function getCandidatesForPosition(posId) { return EDGES.filter(function(e) { return e.type === 'candidate_for' && e.target === posId; }).map(function(e) { return { id: e.source, meta: e.metadata || {} }; }); }
+function getPosition(pid) { var e = edgesFrom(pid, 'holds_position')[0]; return e ? e.target : null; }
+function getDependentBenefits(depId) { return edgesFrom(depId, 'dependent_covered_by').map(function(e) { return e.target; }); }
+function getMentees(pid) { return edgesFrom(pid, 'mentors').map(function(e) { return e.target; }); }
+function getEquipment(pid) { return edgesFrom(pid, 'assigned_equipment').map(function(e) { return e.target; }); }
+function getSkills(pid) { return edgesFrom(pid, 'has_skill').map(function(e) { return { id: e.target, meta: e.metadata || {} }; }); }
+function getEquityComp(pid) { return getComp(pid).map(function(id) { return getNode(id); }).filter(function(n) { return n && (n.properties||{}).type === 'equity'; })[0]; }
+function getSalaryComp(pid) { return getComp(pid).map(function(id) { return getNode(id); }).filter(function(n) { return n && (n.properties||{}).type === 'salary'; })[0]; }
+function tenureYears(sd) { var s = new Date(sd), now = new Date('2026-02-06'); return ((now - s) / (365.25*24*60*60*1000)).toFixed(1); }
+function formatMoney(n) { return '$' + Number(n).toLocaleString(); }
+function totalActivePeople() { return ALL_NODES.filter(function(n) { return n.type === 'person' && (n.properties||{}).status === 'active'; }).length; }
+function getTeamMembers(teamId) { return EDGES.filter(function(e) { return e.type === 'member_of' && e.target === teamId; }).map(function(e) { return e.source; }); }
+function getTeamLead(teamId) { var members = EDGES.filter(function(e) { return e.type === 'member_of' && e.target === teamId && e.metadata && e.metadata.role === 'lead'; }); return members.length > 0 ? members[0].source : null; }
+
+/* ============================================================
+   PERSON PICKER & TABS
+   ============================================================ */
+function populatePersonPicker() {
+  var sel = document.getElementById('personSelect');
+  ALL_NODES.filter(function(n) { return n.type === 'person' && (n.properties||{}).status === 'active'; })
+    .sort(function(a,b) { return (a.properties.name||'').localeCompare(b.properties.name||''); })
+    .forEach(function(p) { var o = document.createElement('option'); o.value = p.id; o.textContent = p.properties.name + ' - ' + p.properties.role; if (p.id === 'person-008') o.selected = true; sel.appendChild(o); });
+  sel.addEventListener('change', function() { buildAllTabs(sel.value); });
+}
+
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  var btn = document.querySelector('.tab-btn[data-tab="' + tabName + '"]');
+  if (btn) btn.classList.add('active');
+  var panel = document.getElementById('tab-' + tabName);
+  if (panel) panel.classList.add('active');
+}
+document.querySelectorAll('.tab-btn').forEach(function(btn) { btn.addEventListener('click', function() { switchTab(btn.dataset.tab); }); });
+
+/* ============================================================
+   BUILD ALL TABS
+   ============================================================ */
+function buildAllTabs(personId) {
+  var person = getNode(personId); if (!person) return;
+  var p = person.properties;
+  var reports = getDirectReports(personId);
+  var managerId = getManager(personId);
+  var manager = getNode(managerId);
+  var managerName = manager ? manager.properties.name : 'Unknown';
+  var dependents = getDependents(personId);
+  var benefits = getBenefits(personId);
+  var projects = getProjects(personId);
+  var teams = getTeams(personId);
+  var jurisdictions = getJurisdictions(personId);
+  var positionId = getPosition(personId);
+  var position = getNode(positionId);
+  var equity = getEquityComp(personId);
+  var salary = getSalaryComp(personId);
+  var mentees = getMentees(personId);
+  var total = totalActivePeople();
+  var equipment = getEquipment(personId);
+
+  var depBenefitsList = [];
+  dependents.forEach(function(dId) {
+    var dep = getNode(dId);
+    var depBens = getDependentBenefits(dId);
+    depBenefitsList.push({ dep: dep, benefits: depBens.map(function(b) { return getNode(b); }).filter(Boolean) });
+  });
+
+  var candidates = positionId ? getCandidatesForPosition(positionId) : [];
+  var candidateNodes = candidates.map(function(c) { return { node: getNode(c.id), meta: c.meta }; }).filter(function(c) { return c.node; });
+  var offerCandidates = candidateNodes.filter(function(c) { return c.meta.stage === 'offer' || (c.node.properties||{}).status === 'offer'; });
+
+  var salaryAmt = salary ? salary.properties.amount : 0;
+  var equityAmt = equity ? equity.properties.amount : 0;
+  var totalComp = salaryAmt + equityAmt;
+  var unvestedShares = equity ? (equity.properties.totalShares||0) - (equity.properties.vestedShares||0) : 0;
+  var unvestedValue = equity ? Math.round((equityAmt / (equity.properties.totalShares||1)) * unvestedShares) : 0;
+  var tenure = tenureYears(p.startDate);
+  var pctHeadcount = total > 0 ? ((reports.length / total) * 100).toFixed(1) : '?';
+
+  var hasCobra = depBenefitsList.some(function(d) { return d.benefits.some(function(b) { return b.properties.type === 'medical'; }); });
+  var depNames = depBenefitsList.map(function(d) { return d.dep ? d.dep.properties.name : 'Unknown'; });
+  var medicalBenefits = depBenefitsList.flatMap(function(d) { return d.benefits.filter(function(b) { return b.properties.type === 'medical'; }); });
+  var medicalPlan = medicalBenefits.length > 0 ? medicalBenefits[0] : null;
+
+  var jurisdictionNames = jurisdictions.map(function(j) { var n = getNode(j); return n ? n.properties.name : ''; }).filter(Boolean);
+  var hasTexas = jurisdictionNames.includes('Texas');
+
+  // Manager's reports for restructuring
+  var managerReports = managerId ? getDirectReports(managerId) : [];
+  var peerManagers = managerReports.filter(function(r) { return r !== personId && prop(r, 'level') && (prop(r,'level').startsWith('M') || prop(r,'level').startsWith('VP')); });
+
+  var ctx = {
+    personId: personId, p: p, reports: reports, managerId: managerId, manager: manager, managerName: managerName,
+    dependents: dependents, depBenefitsList: depBenefitsList, benefits: benefits, projects: projects, teams: teams,
+    jurisdictions: jurisdictions, jurisdictionNames: jurisdictionNames, hasTexas: hasTexas,
+    positionId: positionId, position: position, equity: equity, salary: salary, mentees: mentees, total: total,
+    equipment: equipment, candidateNodes: candidateNodes, offerCandidates: offerCandidates,
+    salaryAmt: salaryAmt, equityAmt: equityAmt, totalComp: totalComp, unvestedShares: unvestedShares,
+    unvestedValue: unvestedValue, tenure: tenure, pctHeadcount: pctHeadcount,
+    hasCobra: hasCobra, depNames: depNames, medicalPlan: medicalPlan, peerManagers: peerManagers, managerReports: managerReports
+  };
+
+  var actionCount = 3 + dependents.length + benefits.length + projects.length + teams.length;
+  ctx.actionCount = Math.min(actionCount, 18);
+  document.getElementById('offboardingBadge').textContent = ctx.actionCount;
+
+  buildStoryTab(ctx);
+  buildOffboardingTab(ctx);
+  buildRestructuringTab(ctx);
+  buildComplianceTab(ctx);
+}
+
+/* ============================================================
+   TAB 1: IMPACT STORY - Progressive Disclosure
+   ============================================================ */
+function buildStoryTab(ctx) {
+  var el = document.getElementById('tab-story');
+  var c = ctx, p = c.p;
+
+  // Build chapter data
+  var chapters = [];
+
+  // Chapter: Team Impact
+  var reportList = c.reports.slice(0, 6).map(function(r) {
+    return '<div class="org-node level-1"><div class="org-node-dot" style="background:var(--accent-blue);"></div><span class="org-node-name">' + (prop(r,'name')||'') + '</span><span class="org-node-role">' + (prop(r,'role')||'') + '</span></div>';
+  }).join('');
+  if (c.reports.length > 6) reportList += '<div style="padding-left:28px;font-size:12px;color:var(--text-muted);">+ ' + (c.reports.length - 6) + ' more</div>';
+
+  chapters.push({
+    icon: 'style="background:var(--accent-purple-dim);color:var(--accent-purple);"', iconChar: '&#9679;',
+    title: 'Team Impact', subtitle: c.reports.length + ' people need reassignment',
+    badge: '<span class="story-chapter-badge" style="background:var(--accent-red-dim);color:var(--accent-red);">' + c.reports.length + ' affected</span>',
+    body: '<p><strong>' + p.name + '</strong> manages <strong>' + c.reports.length + ' direct reports</strong> (' + c.pctHeadcount + '% of company headcount). Their departure creates a leadership vacuum in the <strong>' + (c.teams.length > 0 ? prop(c.teams[0].id, 'name') : 'team') + '</strong> team.</p>' +
+      '<p><strong>' + c.managerName + '</strong> (' + (c.manager ? c.manager.properties.role : '') + ') will need to absorb or redistribute these reports:</p>' +
+      reportList +
+      '<button class="story-link" onclick="switchTab(\'restructuring\')">Plan restructuring &#8594;</button>',
+    open: true
+  });
+
+  // Chapter: Compliance Countdown
+  var deadlines = [];
+  if (c.hasTexas) deadlines.push('<div class="mini-stat"><div class="ms-val" style="color:var(--accent-red);">6 days</div><div class="ms-label">Final Paycheck</div></div>');
+  if (c.hasCobra) deadlines.push('<div class="mini-stat"><div class="ms-val" style="color:var(--accent-red);">14 days</div><div class="ms-label">COBRA Notice</div></div>');
+  if (c.equity) deadlines.push('<div class="mini-stat"><div class="ms-val" style="color:var(--accent-yellow);">90 days</div><div class="ms-label">Equity Exercise</div></div>');
+  deadlines.push('<div class="mini-stat"><div class="ms-val" style="color:var(--accent-yellow);">22 days</div><div class="ms-label">Benefits End</div></div>');
+
+  chapters.push({
+    icon: 'style="background:var(--accent-red-dim);color:var(--accent-red);"', iconChar: '&#9888;',
+    title: 'Compliance Countdown', subtitle: (c.hasCobra ? '3' : '2') + '+ deadlines starting in 6 days',
+    badge: '<span class="story-chapter-badge" style="background:var(--accent-red-dim);color:var(--accent-red);">Urgent</span>',
+    body: '<p>' + (c.jurisdictionNames.length > 0 ? 'Based on ' + p.name + '\'s jurisdictions (' + c.jurisdictionNames.join(', ') + '), ' : '') + 'the graph identified these compliance deadlines:</p>' +
+      '<div class="mini-stat-row">' + deadlines.join('') + '</div>' +
+      (c.hasCobra ? '<p>' + (c.depNames[0]||'Dependent') + ' is on the family medical plan -- COBRA notice is <strong>legally required within 14 days</strong>.</p>' : '') +
+      '<button class="story-link" onclick="switchTab(\'compliance\')">View compliance timeline &#8594;</button>'
+  });
+
+  // Chapter: Pipeline
+  var pipeBody = '';
+  if (c.candidateNodes.length > 0) {
+    pipeBody = '<p><strong>' + c.candidateNodes.length + ' candidates</strong> are already in the pipeline for this role family:</p>';
+    c.candidateNodes.slice(0, 3).forEach(function(cn) {
+      var stage = cn.meta.stage || cn.node.properties.status || 'unknown';
+      var color = stage === 'offer' ? 'var(--accent-green)' : 'var(--accent-blue)';
+      pipeBody += '<div class="org-node level-0"><div class="org-node-dot" style="background:' + color + ';"></div><span class="org-node-name">' + cn.node.properties.name + '</span><span class="org-node-role">' + stage + '</span></div>';
+    });
+  } else {
+    pipeBody = '<p>No external candidates in pipeline. Consider posting the backfill position immediately.</p>';
+  }
+  // Look for internal candidates (IC-3+ on same team)
+  var ic3Reports = c.reports.filter(function(r) { return prop(r,'level') === 'IC-3'; });
+  if (ic3Reports.length > 0) {
+    pipeBody += '<p style="margin-top:8px;"><span style="color:var(--accent-purple);font-weight:600;">Internal candidate:</span> <strong>' + prop(ic3Reports[0],'name') + '</strong> (' + tenureYears(prop(ic3Reports[0],'startDate')) + ' yr tenure, ' + prop(ic3Reports[0],'role') + ') could be promoted.</p>';
+  }
+  pipeBody += '<button class="story-link" onclick="switchTab(\'offboarding\')">Start offboarding &#8594;</button>';
+
+  chapters.push({
+    icon: 'style="background:var(--accent-blue-dim);color:var(--accent-blue);"', iconChar: '&#8599;',
+    title: 'Pipeline Status', subtitle: c.candidateNodes.length + ' candidate' + (c.candidateNodes.length !== 1 ? 's' : '') + ' in pipeline',
+    badge: c.candidateNodes.length > 0 ? '<span class="story-chapter-badge" style="background:var(--accent-green-dim);color:var(--accent-green);">' + c.candidateNodes.length + ' in pipeline</span>' : '<span class="story-chapter-badge" style="background:var(--accent-orange-dim);color:var(--accent-orange);">Empty</span>',
+    body: pipeBody
+  });
+
+  // Chapter: Financial
+  var finBody = '<div class="mini-stat-row">';
+  finBody += '<div class="mini-stat"><div class="ms-val">' + formatMoney(c.salaryAmt) + '</div><div class="ms-label">Salary Freed</div></div>';
+  if (c.equity) finBody += '<div class="mini-stat"><div class="ms-val" style="color:var(--accent-green);">' + formatMoney(c.unvestedValue) + '</div><div class="ms-label">Unvested Returns</div></div>';
+  finBody += '<div class="mini-stat"><div class="ms-val">' + (c.position ? formatMoney(c.position.properties.salaryBandMin||0) + '-' + formatMoney(c.position.properties.salaryBandMax||0) : 'N/A') + '</div><div class="ms-label">Backfill Band</div></div>';
+  finBody += '</div>';
+
+  chapters.push({
+    icon: 'style="background:var(--accent-green-dim);color:var(--accent-green);"', iconChar: '$',
+    title: 'Financial Impact', subtitle: formatMoney(c.totalComp) + ' total comp position',
+    body: finBody + '<button class="story-link" onclick="switchTab(\'offboarding\')">Review actions &#8594;</button>'
+  });
+
+  // Render
+  el.innerHTML =
+    '<div class="person-card animate-in">' +
+      '<div class="person-avatar">' + (p.name||'U').charAt(0) + '</div>' +
+      '<div class="person-info">' +
+        '<div class="person-name">' + p.name + '</div>' +
+        '<div class="person-role">' + p.role + ' &middot; ' + (p.level||'') + ' &middot; ' + (p.location||'') + '</div>' +
+        '<div class="person-stats">' +
+          '<div><div class="person-stat-value">' + c.tenure + ' yr</div><div class="person-stat-label">Tenure</div></div>' +
+          '<div><div class="person-stat-value">' + c.reports.length + '</div><div class="person-stat-label">Reports</div></div>' +
+          '<div><div class="person-stat-value">' + formatMoney(c.totalComp) + '</div><div class="person-stat-label">Total Comp</div></div>' +
+          '<div><div class="person-stat-value">' + c.projects.length + '</div><div class="person-stat-label">Projects</div></div>' +
+          '<div><div class="person-stat-value">' + c.teams.length + '</div><div class="person-stat-label">Teams</div></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="departure-badge">Departing Feb 6</div>' +
+    '</div>' +
+
+    '<div class="agent-narrative animate-in" style="animation-delay:0.1s;">' +
+      '<div class="agent-narrative-header"><div class="agent-avatar">A</div><div class="agent-label">Executive Summary</div></div>' +
+      '<div class="agent-summary">' + p.name + '\'s departure removes <span class="highlight">' + c.reports.length + ' direct reports</span> (' + c.pctHeadcount + '% of headcount) from their manager chain, creates <span class="urgent">' + (c.hasCobra ? '3+' : '2+') + ' compliance deadlines</span> starting in 6 days, and opens a <span class="highlight">' + formatMoney(c.totalComp) + ' total comp position</span>. ' +
+      (c.candidateNodes.length > 0 ? '<span class="good">' + c.candidateNodes.length + ' candidates already in pipeline</span>.' : 'No pipeline candidates -- backfill posting should be immediate.') +
+      ' Click each section below to explore the impact.</div>' +
+    '</div>' +
+
+    chapters.map(function(ch, i) {
+      return '<div class="story-chapter' + (ch.open ? ' open' : '') + ' animate-in" style="animation-delay:' + (0.15 + i * 0.05) + 's;">' +
+        '<div class="story-chapter-header" onclick="this.parentElement.classList.toggle(\'open\')">' +
+          '<div class="story-chapter-icon" ' + ch.icon + '>' + ch.iconChar + '</div>' +
+          '<div class="story-chapter-meta"><div class="story-chapter-title">' + ch.title + '</div><div class="story-chapter-subtitle">' + ch.subtitle + '</div></div>' +
+          (ch.badge || '') +
+          '<div class="story-chapter-arrow">&#9654;</div>' +
+        '</div>' +
+        '<div class="story-chapter-body"><div class="story-chapter-content">' + ch.body + '</div></div>' +
+      '</div>';
+    }).join('') +
+
+    '<div class="graph-advantage animate-in" style="animation-delay:0.4s;"><div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+    '<p>This impact assessment was generated by tracing ' + p.name + '\'s connections across people, comp, benefits, compliance, and pipeline data. Traditional HRIS requires 6+ system lookups over 2-4 hours. The graph produced it in seconds because every relationship is already connected.</p></div>';
+}
+
+/* ============================================================
+   TAB 2: OFFBOARDING COMMAND CENTER
+   ============================================================ */
+function buildOffboardingTab(ctx) {
+  var c = ctx, p = c.p;
+  var depRelationship = c.depBenefitsList.length > 0 && c.depBenefitsList[0].dep ? c.depBenefitsList[0].dep.properties.relationship : 'dependent';
+  var posTitle = c.position ? c.position.properties.title : p.role;
+
+  // Walk graph to find assignees
+  var itOwnerId = null;
+  // Find who manages IT infrastructure -- walk from the Operations VP or look for IT-related team
+  var opsVP = ALL_NODES.find(function(n) { return n.type === 'person' && n.properties.role === 'VP Operations'; });
+  var hrManager = ALL_NODES.find(function(n) { return n.type === 'person' && (n.properties.role||'').includes('HR') && n.properties.status === 'active'; });
+  var payrollOwner = opsVP ? opsVP.properties.name : 'Payroll';
+  var benefitsOwner = hrManager ? hrManager.properties.name : 'Benefits';
+  var legalOwner = opsVP ? opsVP.properties.name : 'Legal';
+
+  // Build cards
+  var allCards = [];
+  var ci = 0;
+
+  // Cluster: Urgent Legal Deadlines
+  if (c.hasCobra) {
+    var mp = c.medicalPlan;
+    var cobraPremium = mp ? ((mp.properties.monthlyPremiumEmployee||0) + (mp.properties.monthlyPremiumEmployer||0)) * 1.02 : 918;
+    allCards.push({ cluster: 'urgent', urgency: 'urgent', assignee: benefitsOwner, timeline: '14 days',
+      type: 'ready', label: 'Ready for review', labelClass: 'review-label',
+      title: 'COBRA Notice for ' + (c.depNames[0]||'Dependent'),
+      text: 'COBRA election notice for ' + (c.depNames[0]||'dependent') + ' (' + depRelationship + ', family medical through ' + (mp ? mp.properties.name : 'Medical') + '). Monthly premium: $' + cobraPremium.toFixed(2) + '. Deadline: 14 days from separation.',
+      draft: '<strong>COBRA Continuation Coverage Election Notice</strong><br><br>Dear ' + (c.depNames[0]||'Dependent') + ',<br><br>Due to ' + p.name + '\'s separation from Acme Co. effective February 6, 2026, you are entitled to continue group health coverage under COBRA.<br><br><strong>Plans:</strong> ' + (mp ? mp.properties.name : 'Medical Plan') + ' (Family)<br><strong>Premium:</strong> $' + cobraPremium.toFixed(2) + '/mo<br><strong>Election Deadline:</strong> April 7, 2026',
+      buttons: ['approve', 'edit'], index: ci++
+    });
+  }
+
+  if (c.hasTexas) {
+    allCards.push({ cluster: 'urgent', urgency: 'urgent', assignee: payrollOwner, timeline: '6 days',
+      type: 'auto-done', label: 'Auto-handled', labelClass: 'auto-label',
+      title: 'Final Paycheck (TX 6-Day Rule)',
+      text: 'Flagged payroll for February 12 run: prorated salary through last day, accrued PTO payout. Texas Labor Code 61.014 requires payment within 6 calendar days.',
+      buttons: [], index: ci++
+    });
+  }
+
+  if (c.equity) {
+    var unvested = (c.equity.properties.totalShares||0) - (c.equity.properties.vestedShares||0);
+    allCards.push({ cluster: 'urgent', urgency: 'urgent', assignee: legalOwner, timeline: '90 days',
+      type: 'ready', label: 'Ready for review', labelClass: 'review-label',
+      title: 'Equity Exercise Window Notification',
+      text: p.name + ' has ' + (c.equity.properties.vestedShares||0).toLocaleString() + ' vested shares. ' + unvested.toLocaleString() + ' unvested shares return to the company pool. 90-day exercise window starts on last day.',
+      buttons: ['approve', 'edit'], index: ci++
+    });
+  }
+
+  // Cluster: Knowledge Transfer
+  // Walk from person to projects, find other people on those projects
+  c.projects.forEach(function(proj) {
+    var pNode = getNode(proj.id);
+    if (!pNode) return;
+    var pName = pNode.properties.name;
+    var priority = pNode.properties.priority || 'medium';
+    // Find other people on this project
+    var otherContribs = EDGES.filter(function(e) { return e.type === 'works_on' && e.target === proj.id && e.source !== c.personId; });
+    var handoffTo = otherContribs.length > 0 ? prop(otherContribs[0].source, 'name') : c.managerName;
+    var handoffRole = otherContribs.length > 0 ? (otherContribs[0].metadata||{}).role || 'contributor' : 'interim owner';
+
+    allCards.push({ cluster: 'knowledge', urgency: priority === 'critical' || priority === 'high' ? 'high' : 'medium', assignee: handoffTo, timeline: 'Week 1',
+      type: priority === 'critical' ? 'urgent' : 'ready', label: priority === 'critical' ? 'Critical' : 'Ready for review', labelClass: priority === 'critical' ? 'urgent-label' : 'review-label',
+      title: 'Handoff: ' + pName,
+      text: p.name + ' is ' + (proj.meta.role||'contributor') + ' (' + (proj.meta.allocation||'?') + '% allocation). <strong>' + handoffTo + '</strong> (' + handoffRole + ') identified as handoff recipient via graph traversal. ' + (otherContribs.length > 1 ? (otherContribs.length - 1) + ' other contributors on this project.' : 'No other contributors -- knowledge risk is high.'),
+      buttons: ['approve', 'edit'], index: ci++
+    });
+  });
+
+  // Cluster: People & Communication
+  allCards.push({ cluster: 'people', urgency: 'high', assignee: c.managerName, timeline: 'Day 1',
+    type: 'ready', label: 'Ready for review', labelClass: 'review-label',
+    title: 'Team Notification Email',
+    text: 'Email to ' + p.name + '\'s ' + c.reports.length + ' direct reports. Tone: reassuring, focused on continuity. Interim reporting announced within 48 hours.',
+    draft: '<strong>Subject:</strong> Team Update -- Leadership Transition<br><br>Hi team,<br><br>' + p.name + ' has decided to move on, with their last day being February 6, 2026. We have a transition plan in place. I\'ll be scheduling 1-on-1s this week.<br><br>Best,<br>' + c.managerName,
+    buttons: ['approve', 'edit'], index: ci++
+  });
+
+  allCards.push({ cluster: 'people', urgency: 'high', assignee: c.managerName, timeline: 'Day 1',
+    type: 'needs-input', label: 'Needs your input', labelClass: 'input-label',
+    title: 'Reassign ' + c.reports.length + ' Direct Reports',
+    text: 'Suggestion: <strong>' + c.managerName + '</strong> as interim (already oversees this area, ' + c.managerReports.length + ' current reports). Or choose from the restructuring scenarios.',
+    buttons: ['choose'], index: ci++
+  });
+
+  // Cluster: Systems & Access
+  allCards.push({ cluster: 'systems', urgency: 'low', assignee: 'IT', timeline: 'Last day',
+    type: 'auto-done', label: 'Auto-handled', labelClass: 'auto-label',
+    title: 'Access Revocation (All Accounts)',
+    text: 'Scheduled: email, Slack, GitHub, AWS, VPN deactivation at 5:00 PM on last day. Manager email archive retained 30 days.',
+    buttons: [], index: ci++
+  });
+
+  allCards.push({ cluster: 'systems', urgency: 'low', assignee: 'IT', timeline: 'Last day',
+    type: 'auto-done', label: 'Auto-handled', labelClass: 'auto-label',
+    title: 'Equipment Return (' + c.equipment.length + ' items)',
+    text: 'Return request sent for ' + c.equipment.length + ' assigned items. Shipping label auto-generated.',
+    buttons: [], index: ci++
+  });
+
+  allCards.push({ cluster: 'systems', urgency: 'low', assignee: benefitsOwner, timeline: 'Feb 28',
+    type: 'auto-done', label: 'Auto-handled', labelClass: 'auto-label',
+    title: 'Benefits Termination (' + c.benefits.length + ' plans)',
+    text: 'Termination of ' + c.benefits.length + ' enrollments effective end of February. COBRA election covers the gap for dependents.',
+    buttons: [], index: ci++
+  });
+
+  var totalCards = allCards.length;
+  var autoCount = allCards.filter(function(c) { return c.type === 'auto-done'; }).length;
+
+  // Cluster grouping
+  var clusters = [
+    { id: 'urgent', icon: '&#9888;', color: 'var(--accent-red)', title: 'Urgent Legal Deadlines', items: allCards.filter(function(c) { return c.cluster === 'urgent'; }) },
+    { id: 'knowledge', icon: '&#9998;', color: 'var(--accent-blue)', title: 'Knowledge Transfer', items: allCards.filter(function(c) { return c.cluster === 'knowledge'; }) },
+    { id: 'people', icon: '&#9679;', color: 'var(--accent-purple)', title: 'People & Communication', items: allCards.filter(function(c) { return c.cluster === 'people'; }) },
+    { id: 'systems', icon: '&#10003;', color: 'var(--accent-green)', title: 'Systems & Access', items: allCards.filter(function(c) { return c.cluster === 'systems'; }) }
+  ];
+
+  var html = '<div class="offboarding-progress animate-in">' +
+    '<div class="progress-stat"><div class="stat-num">' + totalCards + '</div><div class="stat-label">Actions</div></div>' +
+    '<div class="progress-stat" id="approvedCount"><div class="stat-num" style="color:var(--accent-green);">0</div><div class="stat-label">Approved</div></div>' +
+    '<div class="progress-stat"><div class="stat-num" style="color:var(--accent-orange);">1</div><div class="stat-label">Need Input</div></div>' +
+    '<div class="progress-stat"><div class="stat-num" style="color:var(--accent-green);">' + autoCount + '</div><div class="stat-label">Auto-handled</div></div>' +
+    '<div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar" style="width:' + Math.round((autoCount/totalCards)*100) + '%;"></div></div>' +
+  '</div>';
+
+  // Filter bar
+  html += '<div class="filter-bar animate-in" style="animation-delay:0.05s;">' +
+    '<span class="filter-label">Filter:</span>' +
+    '<button class="filter-btn active" data-filter="all" onclick="filterOffboarding(\'all\',this)">All</button>' +
+    '<button class="filter-btn" data-filter="urgent" onclick="filterOffboarding(\'urgent\',this)">Urgent</button>' +
+    '<button class="filter-btn" data-filter="needs-action" onclick="filterOffboarding(\'needs-action\',this)">Needs Action</button>' +
+    '<button class="filter-btn" data-filter="auto-done" onclick="filterOffboarding(\'auto-done\',this)">Auto-handled</button>' +
+  '</div>';
+
+  clusters.forEach(function(cl, ci) {
+    if (cl.items.length === 0) return;
+    html += '<div class="action-cluster animate-in" style="animation-delay:' + (0.1 + ci * 0.05) + 's;">' +
+      '<div class="action-cluster-header">' +
+        '<div class="action-cluster-icon" style="background:' + cl.color.replace(')', ',0.15)').replace('var(', 'rgba(').replace('--accent-red', '255,77,106').replace('--accent-blue', '78,168,222').replace('--accent-purple', '179,136,255').replace('--accent-green', '6,214,160') + ';color:' + cl.color + ';">' + cl.icon + '</div>' +
+        '<div class="action-cluster-title">' + cl.title + '</div>' +
+        '<div class="action-cluster-count">' + cl.items.length + ' items</div>' +
+      '</div>' +
+      '<div class="action-feed">';
+
+    cl.items.forEach(function(card) {
+      var dotColor = card.type === 'auto-done' ? 'var(--accent-green)' : card.type === 'urgent' ? 'var(--accent-red)' : card.type === 'needs-input' ? 'var(--accent-orange)' : 'var(--accent-blue)';
+      var draftHtml = card.draft ? '<button class="action-draft-toggle" onclick="toggleDraft(this)">Show draft</button><div class="action-draft">' + card.draft + '</div>' : '';
+      var btnsHtml = '';
+      (card.buttons||[]).forEach(function(b) {
+        if (b === 'approve') btnsHtml += '<button class="action-btn approve" onclick="handleApprove(this)">Approve & Send</button>';
+        if (b === 'edit') btnsHtml += '<button class="action-btn edit">Edit</button>';
+        if (b === 'choose') btnsHtml += '<button class="action-btn choose" onclick="handleApprove(this)">Accept ' + c.managerName.split(' ')[0] + '</button><button class="action-btn edit">Choose Other</button>';
+      });
+
+      html += '<div class="action-card ' + card.type + '" data-urgency="' + card.urgency + '" data-status="' + card.type + '">' +
+        '<div class="action-card-header">' +
+          '<div class="action-status-dot" style="background:' + dotColor + ';"></div>' +
+          '<div class="action-card-title">' + card.title + '</div>' +
+          '<div class="action-card-assignee">' + card.assignee + '</div>' +
+          '<div class="action-card-label ' + card.labelClass + '">' + card.label + '</div>' +
+        '</div>' +
+        '<div class="action-card-text">' + card.text + '</div>' +
+        draftHtml +
+        (btnsHtml ? '<div class="action-buttons">' + btnsHtml + '</div>' : '') +
+      '</div>';
+    });
+
+    html += '</div></div>';
+  });
+
+  html += '<div class="graph-advantage animate-in" style="animation-delay:0.35s;"><div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+    '<p>These ' + totalCards + ' actions were discovered by tracing ' + p.name + '\'s connections across 7 domains. Knowledge transfer assignments were determined by walking from ' + p.name + ' to projects, then finding other contributors on those same projects. A static checklist covers ~60% of these; the graph found the rest.</p></div>';
+
+  document.getElementById('tab-offboarding').innerHTML = html;
+}
+
+function filterOffboarding(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('#tab-offboarding .action-card').forEach(function(card) {
+    if (filter === 'all') { card.style.display = ''; return; }
+    if (filter === 'urgent') { card.style.display = card.dataset.urgency === 'urgent' ? '' : 'none'; return; }
+    if (filter === 'needs-action') { card.style.display = (card.dataset.status === 'ready' || card.dataset.status === 'needs-input' || card.dataset.status === 'urgent') ? '' : 'none'; return; }
+    if (filter === 'auto-done') { card.style.display = card.dataset.status === 'auto-done' ? '' : 'none'; return; }
+  });
+}
+
+function toggleDraft(btn) {
+  var draft = btn.nextElementSibling;
+  draft.classList.toggle('expanded');
+  btn.textContent = draft.classList.contains('expanded') ? 'Hide draft' : 'Show draft';
+}
+
+function handleApprove(btn) {
+  var card = btn.closest('.action-card');
+  var bd = card.querySelector('.action-buttons');
+  bd.innerHTML = '<span class="approve-check"><span class="check-icon">&#10003;</span> Approved</span>';
+  card.classList.remove('ready', 'needs-input', 'urgent');
+  card.classList.add('completed');
+  card.dataset.status = 'completed';
+  var label = card.querySelector('.action-card-label');
+  if (label) { label.className = 'action-card-label done-label'; label.textContent = 'Completed'; }
+  updateProgress();
+}
+
+function updateProgress() {
+  var all = document.querySelectorAll('#tab-offboarding .action-card');
+  var done = document.querySelectorAll('#tab-offboarding .action-card.completed, #tab-offboarding .action-card.auto-done').length;
+  var manual = document.querySelectorAll('#tab-offboarding .action-card.completed').length;
+  var ct = document.getElementById('approvedCount');
+  if (ct) ct.querySelector('.stat-num').textContent = manual;
+  var bar = document.getElementById('progressBar');
+  if (bar) bar.style.width = Math.round((done / all.length) * 100) + '%';
+}
+
+/* ============================================================
+   TAB 3: RESTRUCTURING SCENARIOS
+   ============================================================ */
+function buildRestructuringTab(ctx) {
+  var c = ctx, p = c.p;
+  var el = document.getElementById('tab-restructuring');
+
+  var ic3Reports = c.reports.filter(function(r) { return prop(r,'level') === 'IC-3'; });
+  var promoCandidate = ic3Reports.sort(function(a,b) { return new Date(prop(a,'startDate')) - new Date(prop(b,'startDate')); })[0];
+  var promoCandidateName = promoCandidate ? prop(promoCandidate,'name') : 'Senior IC';
+  var promoCandidateTenure = promoCandidate ? tenureYears(prop(promoCandidate,'startDate')) : '?';
+
+  var peerManagerName = c.peerManagers.length > 0 ? prop(c.peerManagers[0],'name') : 'Peer Manager';
+  var peerManagerRole = c.peerManagers.length > 0 ? prop(c.peerManagers[0],'role') : 'Manager';
+  var managerCurrentSpan = c.managerId ? getDirectReports(c.managerId).length : 0;
+
+  // Get team members for real counts
+  var teamId = c.teams.length > 0 ? c.teams[0].id : null;
+  var teamMembers = teamId ? getTeamMembers(teamId) : [];
+  var teamName = teamId ? prop(teamId, 'name') : 'Team';
+
+  // Build before org chart (shared)
+  function buildBeforeOrg() {
+    var html = '<div class="org-node level-0"><div class="org-node-dot" style="background:var(--accent-purple);"></div><span class="org-node-name">' + c.managerName + '</span><span class="org-node-role">' + (c.manager ? c.manager.properties.role : '') + '</span><span class="org-node-count">' + managerCurrentSpan + ' reports</span></div>';
+    html += '<div class="org-node level-1 departed"><div class="org-node-dot" style="background:var(--accent-red);"></div><span class="org-node-name">' + p.name + '</span><span class="org-node-role">' + p.role + '</span><span class="org-node-badge" style="background:var(--accent-red-dim);color:var(--accent-red);">DEPARTING</span></div>';
+    c.reports.forEach(function(r) {
+      html += '<div class="org-node level-2"><div class="org-node-dot" style="background:var(--accent-blue);"></div><span class="org-node-name">' + (prop(r,'name')||'') + '</span><span class="org-node-role">' + (prop(r,'role')||'') + ' ' + (prop(r,'level')||'') + '</span></div>';
+    });
+    return html;
+  }
+
+  // Scenario A: Promote
+  function buildAfterA() {
+    var html = '<div class="org-node level-0"><div class="org-node-dot" style="background:var(--accent-purple);"></div><span class="org-node-name">' + c.managerName + '</span><span class="org-node-role">' + (c.manager ? c.manager.properties.role : '') + '</span><span class="org-node-count">' + managerCurrentSpan + ' reports</span></div>';
+    html += '<div class="org-node level-1"><div class="org-node-dot" style="background:var(--accent-green);"></div><span class="org-node-name">' + promoCandidateName + '</span><span class="org-node-role">' + p.role + '</span><span class="org-node-badge" style="background:var(--accent-green-dim);color:var(--accent-green);">PROMOTED</span></div>';
+    c.reports.filter(function(r) { return r !== (promoCandidate||''); }).forEach(function(r) {
+      html += '<div class="org-node level-2"><div class="org-node-dot" style="background:var(--accent-blue);"></div><span class="org-node-name">' + (prop(r,'name')||'') + '</span><span class="org-node-role">' + (prop(r,'role')||'') + '</span></div>';
+    });
+    return html;
+  }
+
+  // Scenario B: Split
+  function buildAfterB() {
+    var half1 = c.reports.slice(0, Math.ceil(c.reports.length/2));
+    var half2 = c.reports.slice(Math.ceil(c.reports.length/2));
+    var html = '<div class="org-node level-0"><div class="org-node-dot" style="background:var(--accent-purple);"></div><span class="org-node-name">' + c.managerName + '</span><span class="org-node-role">' + (c.manager ? c.manager.properties.role : '') + '</span><span class="org-node-count">' + (managerCurrentSpan + half1.length - 1) + ' reports</span></div>';
+    half1.forEach(function(r) {
+      html += '<div class="org-node level-1"><div class="org-node-dot" style="background:var(--accent-blue);"></div><span class="org-node-name">' + (prop(r,'name')||'') + '</span><span class="org-node-role">' + (prop(r,'role')||'') + '</span></div>';
+    });
+    html += '<div class="org-node level-0" style="margin-top:8px;"><div class="org-node-dot" style="background:var(--accent-orange);"></div><span class="org-node-name">' + peerManagerName + '</span><span class="org-node-role">' + peerManagerRole + '</span><span class="org-node-badge" style="background:var(--accent-orange-dim);color:var(--accent-orange);">+' + half2.length + '</span></div>';
+    half2.forEach(function(r) {
+      html += '<div class="org-node level-1"><div class="org-node-dot" style="background:var(--accent-blue);"></div><span class="org-node-name">' + (prop(r,'name')||'') + '</span><span class="org-node-role">' + (prop(r,'role')||'') + '</span></div>';
+    });
+    return html;
+  }
+
+  // Scenario C: External hire
+  function buildAfterC() {
+    var html = '<div class="org-node level-0"><div class="org-node-dot" style="background:var(--accent-purple);"></div><span class="org-node-name">' + c.managerName + '</span><span class="org-node-role">' + (c.manager ? c.manager.properties.role : '') + '</span><span class="org-node-badge" style="background:var(--accent-orange-dim);color:var(--accent-orange);">INTERIM +' + c.reports.length + '</span><span class="org-node-count">' + (managerCurrentSpan + c.reports.length - 1) + ' reports</span></div>';
+    c.reports.forEach(function(r) {
+      html += '<div class="org-node level-1"><div class="org-node-dot" style="background:var(--accent-blue);"></div><span class="org-node-name">' + (prop(r,'name')||'') + '</span><span class="org-node-role">' + (prop(r,'role')||'') + '</span></div>';
+    });
+    html += '<div style="margin-top:8px;padding-left:28px;font-size:12px;color:var(--accent-cyan);">External hire targeted: 45-60 days</div>';
+    return html;
+  }
+
+  var scenarios = [
+    { id: 'promote', name: 'A: Promote ' + (promoCandidateName ? promoCandidateName.split(' ')[0] : 'IC'), recommend: !!promoCandidate,
+      afterOrg: buildAfterA,
+      metrics: [
+        { val: (c.reports.length - 1) + '', label: 'New Span', tip: 'Direct reports under new manager' },
+        { val: '$0', label: 'Hiring Cost', tip: 'No external recruiting fees' },
+        { val: '1 week', label: 'Time to Fill', tip: 'Internal promotion, immediate effect' },
+        { val: 'High', label: 'Continuity', tip: 'Team member already has full context' }
+      ],
+      risk: { level: 'medium', title: 'Medium Risk: First-time Manager',
+        text: promoCandidateName + ' has ' + promoCandidateTenure + ' years tenure but no management experience. Budget for coaching ($5-10K) and pair with ' + c.managerName.split(' ')[0] + ' as mentor.' },
+      timeline: [
+        { week: 'Day 1', text: 'Announce <strong>' + promoCandidateName + '</strong> as new ' + p.role },
+        { week: 'Week 1', text: 'Update title/level. Reassign ' + (c.reports.length-1) + ' reports. Schedule 1-on-1s.' },
+        { week: 'Week 2', text: 'Redistribute ' + promoCandidateName.split(' ')[0] + '\'s IC work. Begin management coaching.' },
+        { week: 'Week 3-4', text: 'Backfill ' + promoCandidateName.split(' ')[0] + '\'s IC role. Stabilize team rhythm.' },
+        { week: 'Month 2-3', text: '90-day check-in. Evaluate if additional leadership hiring needed.' }
+      ]
+    },
+    { id: 'split', name: 'B: Distribute to Peers', recommend: false,
+      afterOrg: buildAfterB,
+      metrics: [
+        { val: Math.ceil(c.reports.length/2) + '/' + Math.floor(c.reports.length/2), label: 'Split', tip: 'Reports divided between two managers' },
+        { val: '$0', label: 'Hiring Cost' },
+        { val: 'Immediate', label: 'Time to Fill' },
+        { val: 'Low', label: 'Continuity', tip: 'All reports get new managers simultaneously' }
+      ],
+      risk: { level: 'high', title: 'High Risk: Team Fragmentation',
+        text: c.reports.length + ' people get new managers during an already unsettled transition. ' + teamName + ' team identity may fragment. Cross-functional context between platform/DevOps is lost.' },
+      timeline: [
+        { week: 'Day 1', text: 'Announce split. Assign platform engineers to <strong>' + c.managerName + '</strong>, others to <strong>' + peerManagerName + '</strong>.' },
+        { week: 'Week 1', text: 'Transition 1-on-1s with both managers. Update team channels and access.' },
+        { week: 'Week 2-3', text: 'Monitor for confusion, duplicated work, dropped handoffs.' },
+        { week: 'Month 2', text: 'Evaluate if the split is permanent or if a new hire should reunify.' }
+      ]
+    },
+    { id: 'hire', name: 'C: External Hire', recommend: false,
+      afterOrg: buildAfterC,
+      metrics: [
+        { val: (c.reports.length + managerCurrentSpan - 1) + '', label: 'Interim Span', tip: c.managerName + ' temporarily manages all ' + (c.reports.length + managerCurrentSpan - 1) + ' reports' },
+        { val: '$30-60K', label: 'Hiring Cost', tip: 'Recruiter fees + interview time for VP-level hire' },
+        { val: '45-60 days', label: 'Time to Fill', tip: 'Average for M-1/VP engineering roles' },
+        { val: 'Medium', label: 'Continuity' }
+      ],
+      risk: { level: 'medium', title: 'Medium Risk: Manager Overload',
+        text: c.managerName + ' temporarily manages ' + (c.reports.length + managerCurrentSpan - 1) + ' people. Requires strong interim support and aggressive hiring timeline.' + (c.offerCandidates.length > 0 ? ' ' + c.offerCandidates[0].node.properties.name + ' (at offer stage) could be evaluated for leadership.' : '') },
+      timeline: [
+        { week: 'Day 1', text: '<strong>' + c.managerName + '</strong> takes interim ownership. Team meeting to address transition.' },
+        { week: 'Week 1', text: 'Post backfill position. Engage executive recruiter.' },
+        { week: 'Week 2-3', text: 'Phone screens begin. Fast-track pipeline candidates.' },
+        { week: 'Week 4-6', text: 'On-site interviews. Target offer by week 6.' },
+        { week: 'Week 8-10', text: 'New hire starts. ' + c.managerName.split(' ')[0] + ' transitions reports over 2 weeks.' }
+      ]
+    }
+  ];
+
+  var html = '<div class="scenario-tabs animate-in">';
+  scenarios.forEach(function(s, i) {
+    html += '<button class="scenario-tab' + (i === 0 ? ' active' : '') + '" data-scenario="' + s.id + '" onclick="switchScenario(\'' + s.id + '\',this)">' + s.name + (s.recommend ? '<span class="recommend-dot"></span>' : '') + '</button>';
+  });
+  html += '</div>';
+
+  scenarios.forEach(function(s, si) {
+    html += '<div class="scenario-view' + (si === 0 ? ' active' : '') + '" id="scenario-' + s.id + '">';
+
+    // Side-by-side org chart
+    html += '<div class="org-comparison animate-in">' +
+      '<div class="org-panel"><div class="org-panel-label"><span style="color:var(--accent-red);">&#9679;</span> Before (Current)</div>' + buildBeforeOrg() + '</div>' +
+      '<div class="org-panel"><div class="org-panel-label"><span style="color:var(--accent-green);">&#9679;</span> After</div>' + s.afterOrg() + '</div>' +
+    '</div>';
+
+    // Risk callout
+    html += '<div class="risk-callout' + (s.risk.level === 'low' ? ' low' : '') + ' animate-in">' +
+      '<div class="risk-callout-title">&#9888; ' + s.risk.title + '</div>' +
+      '<div class="risk-callout-text">' + s.risk.text + '</div>' +
+    '</div>';
+
+    // Metrics row
+    html += '<div class="scenario-metrics-row animate-in">';
+    s.metrics.forEach(function(m) {
+      html += '<div class="scenario-metric"><div class="sm-val">' + m.val + '</div><div class="sm-label">' + m.label + '</div>' + (m.tip ? '<div class="sm-tip" title="' + m.tip + '">How?</div>' : '') + '</div>';
+    });
+    html += '</div>';
+
+    // Execution timeline
+    html += '<div style="background:var(--agent-accent-dim);border:1px solid rgba(179,136,255,0.2);border-radius:var(--radius-md);padding:20px;margin-bottom:20px;" class="animate-in">';
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;"><div class="agent-avatar" style="width:20px;height:20px;font-size:11px;">A</div><span style="font-size:14px;font-weight:600;color:var(--agent-accent);">Execution Plan</span></div>';
+    html += '<div class="execution-timeline">';
+    s.timeline.forEach(function(step) {
+      html += '<div class="exec-step"><div class="exec-step-week">' + step.week + '</div><div class="exec-step-text">' + step.text + '</div></div>';
+    });
+    html += '</div>';
+    html += '<div class="action-buttons" style="margin-top:16px;"><button class="action-btn approve" onclick="executeScenario(this)">Execute This Plan</button><button class="action-btn edit">Modify</button></div>';
+    html += '</div>';
+
+    html += '</div>';
+  });
+
+  html += '<div class="graph-advantage animate-in" style="animation-delay:0.3s;"><div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+    '<p>The graph knows who reports to ' + p.name + ', their roles and tenure, peer managers and their current span, pipeline candidates, and each person\'s project allocations and skill profiles. Restructuring scenarios are built by walking these relationships. Traditional HRIS requires manually looking up each of these across 4+ screens.</p></div>';
+
+  el.innerHTML = html;
+}
+
+function switchScenario(id, btn) {
+  document.querySelectorAll('.scenario-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.scenario-view').forEach(function(v) { v.classList.remove('active'); });
+  btn.classList.add('active');
+  var view = document.getElementById('scenario-' + id);
+  if (view) view.classList.add('active');
+}
+
+function executeScenario(btn) {
+  var bd = btn.closest('.action-buttons');
+  bd.innerHTML = '<span class="approve-check"><span class="check-icon">&#10003;</span> Plan approved and executing. Updates will be applied within the hour.</span>';
+}
+
+/* ============================================================
+   TAB 4: COMPLIANCE TIMELINE (Unified Vertical)
+   ============================================================ */
+function buildComplianceTab(ctx) {
+  var c = ctx, p = c.p;
+  var el = document.getElementById('tab-compliance');
+  var depRelationship = c.depBenefitsList.length > 0 && c.depBenefitsList[0].dep ? c.depBenefitsList[0].dep.properties.relationship : 'dependent';
+
+  var items = [];
+
+  // Sort by days (ascending = most urgent first)
+  if (c.hasTexas) {
+    items.push({ title: 'Final Paycheck', date: 'February 12, 2026', days: 6, color: 'red',
+      desc: 'TX Labor Code 61.014 requires payment within 6 days. <span class="done-text">Flagged payroll for Feb 12 run</span> with prorated salary, accrued PTO, and pending reimbursements.',
+      legal: 'Texas Labor Code 61.014', owner: 'Payroll', done: true });
+  }
+
+  if (c.hasCobra) {
+    var mp = c.medicalPlan;
+    var cobraPremium = mp ? ((mp.properties.monthlyPremiumEmployee||0) + (mp.properties.monthlyPremiumEmployer||0)) * 1.02 : 918;
+    items.push({ title: 'COBRA Notice for ' + (c.depNames[0]||'Dependent'), date: 'February 20, 2026', days: 14, color: 'red',
+      desc: '29 USC 1166 requires 14-day employer notice. <span class="pending-text">Draft prepared for ' + (c.depNames[0]||'dependent') + ' (' + depRelationship + ', ' + (mp ? mp.properties.name : 'Medical') + ').</span> Monthly: $' + cobraPremium.toFixed(2) + '. Election: 60 days.',
+      legal: '29 USC 1166, COBRA', owner: 'Benefits', hasAction: true });
+  }
+
+  items.push({ title: 'Equipment Return', date: 'February 6, 2026', days: 0, color: 'green',
+    desc: '<span class="done-text">Return request sent.</span> ' + c.equipment.length + ' items. Shipping label auto-generated. Escalation if not received in 14 days.',
+    legal: 'Company Property Policy', owner: 'IT', done: true });
+
+  items.push({ title: 'Access Revocation', date: 'February 6, 2026', days: 0, color: 'green',
+    desc: '<span class="done-text">Scheduled deactivation of all accounts</span> (email, Slack, GitHub, AWS) at 5:00 PM on last day.',
+    legal: 'Security Policy', owner: 'IT', done: true });
+
+  items.push({ title: 'Benefits Coverage Ends', date: 'February 28, 2026', days: 22, color: 'yellow',
+    desc: '<span class="done-text">Scheduled termination of ' + c.benefits.length + ' enrollments</span> at end of month.' + (c.depBenefitsList.length > 0 ? ' Dependent coverage for ' + c.depNames.join(', ') + ' also terminates.' : ''),
+    legal: 'Plan SPD, ERISA 601-608', owner: 'Benefits', done: true });
+
+  if (c.equity) {
+    var unvested = (c.equity.properties.totalShares||0) - (c.equity.properties.vestedShares||0);
+    items.push({ title: 'Equity Exercise Window Closes', date: 'May 7, 2026', days: 90, color: 'yellow',
+      desc: (c.equity.properties.vestedShares||0).toLocaleString() + ' vested shares eligible for exercise. <span class="pending-text">' + unvested.toLocaleString() + ' unvested shares (' + formatMoney(Math.round((c.equity.properties.amount / c.equity.properties.totalShares) * unvested)) + ') return to company pool.</span>',
+      legal: 'Equity Grant Agreement, IRC 422', owner: 'Legal/Finance', hasAction: true });
+  }
+
+  items.push({ title: 'W-2 Preparation', date: 'January 31, 2027', days: 359, color: 'gray',
+    desc: '<span class="done-text">Queued for year-end processing.</span> Includes all comp through separation, PTO payout, and equity exercise income.',
+    legal: 'IRS Publication 15, 26 USC 6051', owner: 'Payroll', done: true });
+
+  // Sort by days
+  items.sort(function(a, b) { return a.days - b.days; });
+
+  var autoHandled = items.filter(function(i) { return i.done; }).length;
+  var needsAction = items.filter(function(i) { return i.hasAction; }).length;
+  var totalItems = items.length;
+  var pct = Math.round(((totalItems - needsAction) / totalItems) * 100);
+
+  var html = '<div class="compliance-header animate-in">' +
+    '<div class="compliance-score-circle" style="background:' + (needsAction > 0 ? 'var(--accent-yellow-dim);color:var(--accent-yellow)' : 'var(--accent-green-dim);color:var(--accent-green)') + ';">' + pct + '%</div>' +
+    '<div class="compliance-info">' +
+      '<h3>' + totalItems + ' Compliance Requirements</h3>' +
+      '<p>' + autoHandled + ' auto-handled, ' + needsAction + ' need sign-off' + (c.jurisdictionNames.length > 0 ? ' | Jurisdictions: ' + c.jurisdictionNames.join(', ') : '') + '</p>' +
+      '<div class="compliance-breakdown">' +
+        '<span><strong style="color:var(--accent-red);">' + items.filter(function(i) { return i.color === 'red'; }).length + '</strong> Urgent</span>' +
+        '<span><strong style="color:var(--accent-yellow);">' + items.filter(function(i) { return i.color === 'yellow'; }).length + '</strong> This quarter</span>' +
+        '<span><strong style="color:var(--accent-green);">' + items.filter(function(i) { return i.color === 'green'; }).length + '</strong> Handled</span>' +
+        '<span><strong style="color:var(--text-muted);">' + items.filter(function(i) { return i.color === 'gray'; }).length + '</strong> Future</span>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+
+  // Unified vertical timeline
+  html += '<div class="vtl animate-in" style="animation-delay:0.1s;">';
+  items.forEach(function(item) {
+    var countdownText = item.days === 0 ? 'Done' : item.days + ' days';
+    var actionHtml = '';
+    if (item.hasAction) {
+      actionHtml = '<div class="action-buttons" style="margin-top:10px;"><button class="action-btn approve" onclick="handleComplianceApprove(this)">Approve</button><button class="action-btn edit">Review</button></div>';
+    }
+    if (item.done && item.days === 0) {
+      actionHtml = '<div class="vtl-done-check">&#10003; Completed</div>';
+    }
+
+    html += '<div class="vtl-item' + (item.done && item.days === 0 ? ' done' : '') + '">' +
+      '<div class="vtl-dot ' + item.color + '"></div>' +
+      '<div class="vtl-top">' +
+        '<div class="vtl-title">' + item.title + '</div>' +
+        '<div class="vtl-countdown ' + item.color + '">' + countdownText + '</div>' +
+      '</div>' +
+      '<div class="vtl-date">' + item.date + '</div>' +
+      '<div class="vtl-desc">' + item.desc + '</div>' +
+      '<div class="vtl-legal">' + item.legal + '</div>' +
+      '<div class="vtl-owner">Owner: ' + item.owner + '</div>' +
+      actionHtml +
+    '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="graph-advantage animate-in" style="animation-delay:0.25s;"><div class="graph-advantage-header"><div class="graph-advantage-icon">G</div><div class="graph-advantage-label">Why this requires the employee graph</div></div>' +
+    '<p>Compliance requirements identified by tracing ' + p.name + '\'s connections to jurisdictions (' + c.jurisdictionNames.join(', ') + '), benefits plans, dependents (' + (c.depNames.join(', ')||'none') + '), and comp records. A traditional checklist is generic -- the graph builds a custom compliance plan for every departure.</p></div>';
+
+  el.innerHTML = html;
+}
+
+function handleComplianceApprove(btn) {
+  var item = btn.closest('.vtl-item');
+  var bd = btn.closest('.action-buttons');
+  bd.innerHTML = '<span class="approve-check"><span class="check-icon">&#10003;</span> Approved</span>';
+  item.classList.add('done');
+  var dot = item.querySelector('.vtl-dot');
+  if (dot) { dot.className = 'vtl-dot green'; }
+  var countdown = item.querySelector('.vtl-countdown');
+  if (countdown) { countdown.className = 'vtl-countdown green'; countdown.textContent = 'Done'; }
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+async function init() {
+  try {
+    await loadData();
+    populatePersonPicker();
+    buildAllTabs('person-008');
+    document.getElementById('loadingState').style.display = 'none';
+  } catch (err) {
+    console.error('Failed to load data:', err);
+    document.getElementById('loadingState').innerHTML =
+      '<div style="color:var(--accent-red);text-align:center;"><p style="font-size:16px;font-weight:600;margin-bottom:8px;">Failed to load data</p><p style="font-size:13px;color:var(--text-muted);">Make sure you\'re serving from the project root.<br>Try: python3 -m http.server 8765</p><p style="font-size:12px;color:var(--text-muted);margin-top:8px;">' + err.message + '</p></div>';
+  }
+}
+init();
+</script>
+<script src="feedback-panel.js"></script>
+</body>
+</html>

@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Lifecycle Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: #0a0b0f;
+  color: #e0e0e8;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== TOP CHROME ========== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: linear-gradient(180deg, rgba(20,22,30,0.98) 0%, rgba(14,15,22,0.95) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+}
+.top-bar h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #a78bfa, #818cf8, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.person-picker-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.person-picker-wrap label {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.person-picker {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e0e0e8;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 260px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.person-picker:focus { border-color: #818cf8; }
+.person-picker option { background: #1a1b26; color: #e0e0e8; }
+
+/* ========== TAB BAR ========== */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  padding: 0 32px;
+  background: rgba(14,15,22,0.9);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.tab-btn {
+  padding: 14px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: #aaa; }
+.tab-btn.active {
+  color: #c4b5fd;
+  border-bottom-color: #818cf8;
+  background: rgba(129,140,248,0.04);
+}
+
+/* ========== CONTENT AREA ========== */
+.content-area {
+  padding: 32px;
+  min-height: calc(100vh - 120px);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ========== EDGE CATEGORY COLORS ========== */
+:root {
+  --cat-structural: #60a5fa;
+  --cat-financial: #fbbf24;
+  --cat-performance: #34d399;
+  --cat-compliance: #f87171;
+  --cat-people: #c084fc;
+  --cat-projects: #fb923c;
+  --cat-admin: #94a3b8;
+}
+
+/* ==========================================================================
+   MOCK 2A: CAREER TIMELINE
+   ========================================================================== */
+#tab-timeline .timeline-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+#tab-timeline .compare-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #888;
+}
+#tab-timeline .compare-toggle input[type="checkbox"] {
+  accent-color: #818cf8;
+}
+#tab-timeline .compare-select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e0e0e8;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+#tab-timeline .compare-select option { background: #1a1b26; }
+#tab-timeline .density-chart {
+  width: 100%;
+  height: 80px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 8px;
+  overflow: hidden;
+  position: relative;
+}
+#tab-timeline .timeline-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  cursor: grab;
+  padding-bottom: 16px;
+}
+#tab-timeline .timeline-scroll:active { cursor: grabbing; }
+#tab-timeline .timeline-track {
+  position: relative;
+  height: 220px;
+  min-width: 100%;
+}
+#tab-timeline .year-markers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  pointer-events: none;
+}
+#tab-timeline .year-marker {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-left: 1px dashed rgba(255,255,255,0.08);
+}
+#tab-timeline .year-marker span {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  font-size: 11px;
+  color: #555;
+  font-weight: 600;
+}
+#tab-timeline .timeline-line {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(129,140,248,0.3), rgba(129,140,248,0.1));
+}
+#tab-timeline .compare-line {
+  position: absolute;
+  top: 140px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(251,191,36,0.3), rgba(251,191,36,0.1));
+}
+#tab-timeline .event-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 2;
+  border: 2px solid rgba(0,0,0,0.4);
+}
+#tab-timeline .event-dot:hover {
+  transform: translate(-50%, -50%) scale(1.6);
+  z-index: 10;
+  box-shadow: 0 0 12px currentColor;
+}
+#tab-timeline .event-dot.compare {
+  top: 140px;
+  opacity: 0.7;
+}
+#tab-timeline .detail-card {
+  margin-top: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: none;
+}
+#tab-timeline .detail-card.visible { display: block; animation: fadeIn 0.2s; }
+#tab-timeline .detail-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+#tab-timeline .detail-card .meta {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 10px;
+}
+#tab-timeline .detail-card .detail-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #aaa;
+}
+#tab-timeline .legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+#tab-timeline .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #777;
+}
+#tab-timeline .legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   MOCK 2B: CHAPTER STORY
+   ========================================================================== */
+#tab-story {
+  max-width: 760px;
+  margin: 0 auto;
+}
+#tab-story .story-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding-top: 20px;
+}
+#tab-story .story-header .person-title {
+  font-size: 35px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #e0e7ff 30%, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+#tab-story .story-header .person-subtitle {
+  font-size: 16px;
+  color: #666;
+  font-weight: 400;
+}
+#tab-story .chapter {
+  margin-bottom: 56px;
+  padding-left: 36px;
+  border-left: 2px solid rgba(129,140,248,0.15);
+  position: relative;
+}
+#tab-story .chapter::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #818cf8;
+  border: 3px solid #0a0b0f;
+}
+#tab-story .chapter-number {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #818cf8;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+#tab-story .chapter-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #e0e7ff;
+  margin-bottom: 16px;
+}
+#tab-story .chapter-body {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #999;
+}
+#tab-story .chapter-body p { margin-bottom: 12px; }
+#tab-story .pull-quote {
+  border-left: 3px solid #fbbf24;
+  padding: 12px 20px;
+  margin: 20px 0;
+  background: rgba(251,191,36,0.04);
+  border-radius: 0 8px 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #e0d9c8;
+  font-style: italic;
+}
+#tab-story .edge-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+}
+#tab-story .edge-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.05);
+  color: #888;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ==========================================================================
+   MOCK 2C: SUBGRAPH ANIMATION (D3)
+   ========================================================================== */
+#tab-subgraph .sg-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+#tab-subgraph .sg-btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #ccc;
+  transition: all 0.2s;
+}
+#tab-subgraph .sg-btn:hover { background: rgba(255,255,255,0.1); }
+#tab-subgraph .sg-btn.playing {
+  background: rgba(129,140,248,0.2);
+  border-color: rgba(129,140,248,0.4);
+  color: #c4b5fd;
+}
+#tab-subgraph .speed-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #777;
+}
+#tab-subgraph .speed-control input[type="range"] {
+  width: 100px;
+  accent-color: #818cf8;
+}
+#tab-subgraph .sg-date {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #e0e7ff;
+  font-variant-numeric: tabular-nums;
+}
+#tab-subgraph .sg-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: #888;
+}
+#tab-subgraph .sg-stats span { font-weight: 600; color: #bbb; }
+#tab-subgraph .sg-canvas {
+  width: 100%;
+  height: 520px;
+  background: radial-gradient(ellipse at center, rgba(20,22,35,1) 0%, rgba(10,11,15,1) 70%);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+}
+#tab-subgraph .sg-canvas svg { width: 100%; height: 100%; }
+#tab-subgraph .sg-progress {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  margin-top: 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+#tab-subgraph .sg-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #818cf8, #a78bfa);
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.3s;
+}
+#tab-subgraph .sg-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+#tab-subgraph .sg-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #666;
+}
+#tab-subgraph .sg-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   MOCK 2D: MILESTONE DASHBOARD
+   ========================================================================== */
+#tab-milestones .ms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 36px;
+}
+#tab-milestones .ms-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.2s;
+}
+#tab-milestones .ms-card:hover {
+  border-color: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+}
+#tab-milestones .ms-card.completed { border-left: 3px solid #34d399; }
+#tab-milestones .ms-card.current {
+  border-left: 3px solid #818cf8;
+  background: rgba(129,140,248,0.03);
+  box-shadow: 0 0 30px rgba(129,140,248,0.06);
+}
+#tab-milestones .ms-card.future { border-left: 3px solid #333; opacity: 0.5; }
+#tab-milestones .ms-card.departed { border-left: 3px solid #f87171; }
+#tab-milestones .ms-phase-badge {
+  display: inline-block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-bottom: 10px;
+}
+#tab-milestones .ms-card.completed .ms-phase-badge { background: rgba(52,211,153,0.15); color: #34d399; }
+#tab-milestones .ms-card.current .ms-phase-badge { background: rgba(129,140,248,0.15); color: #818cf8; }
+#tab-milestones .ms-card.future .ms-phase-badge { background: rgba(255,255,255,0.06); color: #555; }
+#tab-milestones .ms-card.departed .ms-phase-badge { background: rgba(248,113,113,0.15); color: #f87171; }
+#tab-milestones .ms-phase-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #e0e7ff;
+}
+#tab-milestones .ms-duration {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 14px;
+}
+#tab-milestones .ms-events {
+  list-style: none;
+  font-size: 13px;
+  color: #999;
+}
+#tab-milestones .ms-events li {
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+#tab-milestones .ms-events li:last-child { border-bottom: none; }
+#tab-milestones .ms-edge-counts {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+#tab-milestones .ms-edge-count {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.05);
+  color: #777;
+}
+
+/* Health Indicators */
+#tab-milestones .health-section {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 24px;
+}
+#tab-milestones .health-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #e0e7ff;
+}
+#tab-milestones .health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+#tab-milestones .health-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+#tab-milestones .health-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+#tab-milestones .health-dot.green { background: #34d399; box-shadow: 0 0 8px rgba(52,211,153,0.4); }
+#tab-milestones .health-dot.yellow { background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.4); }
+#tab-milestones .health-dot.red { background: #f87171; box-shadow: 0 0 8px rgba(248,113,113,0.4); }
+#tab-milestones .health-label {
+  font-size: 13px;
+  color: #aaa;
+}
+#tab-milestones .health-value {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+}
+#tab-milestones .health-value.green { color: #34d399; }
+#tab-milestones .health-value.yellow { color: #fbbf24; }
+#tab-milestones .health-value.red { color: #f87171; }
+
+/* ==========================================================================
+   MOCK 2E: COHORT COMPARISON
+   ========================================================================== */
+#tab-cohort .cohort-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+#tab-cohort .cohort-controls label {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+#tab-cohort .cohort-select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e0e0e8;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  min-width: 220px;
+}
+#tab-cohort .cohort-select option { background: #1a1b26; }
+#tab-cohort .cohort-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+#tab-cohort .stat-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 18px 20px;
+  transition: border-color 0.3s;
+}
+#tab-cohort .stat-card:hover { border-color: rgba(255,255,255,0.12); }
+#tab-cohort .stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #666;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+#tab-cohort .stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #e0e7ff;
+}
+#tab-cohort .stat-sub {
+  font-size: 12px;
+  color: #555;
+  margin-top: 2px;
+}
+#tab-cohort .bar-section {
+  margin-bottom: 28px;
+}
+#tab-cohort .bar-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #c4b5fd;
+}
+#tab-cohort .bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+#tab-cohort .bar-label {
+  width: 180px;
+  font-size: 13px;
+  color: #999;
+  text-align: right;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#tab-cohort .bar-track {
+  flex: 1;
+  height: 24px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+#tab-cohort .bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.6s ease;
+  position: relative;
+}
+#tab-cohort .bar-fill.primary {
+  background: linear-gradient(90deg, #818cf8, #6366f1);
+}
+#tab-cohort .bar-fill.gold {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+}
+#tab-cohort .bar-fill.green {
+  background: linear-gradient(90deg, #34d399, #10b981);
+}
+#tab-cohort .bar-fill.highlight {
+  background: linear-gradient(90deg, #fb923c, #f97316);
+}
+#tab-cohort .bar-value {
+  width: 60px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #aaa;
+  flex-shrink: 0;
+}
+#tab-cohort .cohort-roster {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  overflow: hidden;
+}
+#tab-cohort .roster-header {
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 60px;
+  gap: 8px;
+}
+#tab-cohort .roster-row {
+  padding: 12px 20px;
+  font-size: 13px;
+  color: #aaa;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 60px;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#tab-cohort .roster-row:hover { background: rgba(129,140,248,0.04); }
+#tab-cohort .roster-row .name { font-weight: 600; color: #c4b5fd; }
+#tab-cohort .roster-row .outlier {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+#tab-cohort .roster-row .outlier.high { background: rgba(52,211,153,0.15); color: #34d399; }
+#tab-cohort .roster-row .outlier.low { background: rgba(248,113,113,0.15); color: #f87171; }
+#tab-cohort .view-btn {
+  font-size: 12px;
+  color: #818cf8;
+  cursor: pointer;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>Employee Lifecycle Explorer</h1>
+  <div style="margin-left:12px;font-size:12px;font-weight:500;display:flex;gap:6px;align-items:center;"><a href="employee-lifecycle.html" style="color:#818cf8;text-decoration:none;font-weight:700;">v1</a><span style="color:#555;">|</span><a href="employee-lifecycle-v2.html" style="color:#555;text-decoration:none;">v2</a><span style="color:#555;">|</span><a href="employee-lifecycle-v3.html" style="color:#555;text-decoration:none;">v3</a></div>
+  <div class="person-picker-wrap">
+    <label>Person</label>
+    <select id="personPicker" class="person-picker"></select>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="tab-timeline">Career Timeline</button>
+  <button class="tab-btn" data-tab="tab-story">Chapter Story</button>
+  <button class="tab-btn" data-tab="tab-subgraph">Subgraph Animation</button>
+  <button class="tab-btn" data-tab="tab-milestones">Milestone Dashboard</button>
+  <button class="tab-btn" data-tab="tab-cohort">Cohort Comparison</button>
+</div>
+
+<div class="content-area">
+  <!-- 2A: Career Timeline -->
+  <div id="tab-timeline" class="tab-content active">
+    <div class="timeline-controls">
+      <div class="legend" id="timelineLegend"></div>
+      <div class="compare-toggle">
+        <input type="checkbox" id="compareToggle">
+        <label for="compareToggle">Compare with</label>
+        <select id="compareSelect" class="compare-select" disabled></select>
+      </div>
+    </div>
+    <div class="density-chart"><canvas id="densityCanvas"></canvas></div>
+    <div class="timeline-scroll" id="timelineScroll">
+      <div class="timeline-track" id="timelineTrack"></div>
+    </div>
+    <div class="detail-card" id="timelineDetail"></div>
+  </div>
+
+  <!-- 2B: Chapter Story -->
+  <div id="tab-story" class="tab-content">
+    <div class="story-header">
+      <div class="person-title" id="storyName"></div>
+      <div class="person-subtitle" id="storySubtitle"></div>
+    </div>
+    <div id="storyChapters"></div>
+  </div>
+
+  <!-- 2C: Subgraph Animation -->
+  <div id="tab-subgraph" class="tab-content">
+    <div class="sg-controls">
+      <button class="sg-btn" id="sgPlayBtn">Play</button>
+      <button class="sg-btn" id="sgResetBtn">Reset</button>
+      <div class="speed-control">
+        <span>Speed</span>
+        <input type="range" id="sgSpeed" min="1" max="3" step="1" value="2">
+        <span id="sgSpeedLabel">3mo/s</span>
+      </div>
+      <div class="sg-date" id="sgDate">--</div>
+      <div class="sg-stats">
+        <div>Nodes: <span id="sgNodeCount">0</span></div>
+        <div>Edges: <span id="sgEdgeCount">0</span></div>
+      </div>
+    </div>
+    <div class="sg-canvas" id="sgCanvas"></div>
+    <div class="sg-progress" id="sgProgress">
+      <div class="sg-progress-fill" id="sgProgressFill"></div>
+    </div>
+    <div class="sg-legend" id="sgLegend"></div>
+  </div>
+
+  <!-- 2D: Milestone Dashboard -->
+  <div id="tab-milestones" class="tab-content">
+    <div class="ms-grid" id="msGrid"></div>
+    <div class="health-section">
+      <div class="health-title">Lifecycle Health Indicators</div>
+      <div class="health-grid" id="healthGrid"></div>
+    </div>
+  </div>
+
+  <!-- 2E: Cohort Comparison -->
+  <div id="tab-cohort" class="tab-content">
+    <div class="cohort-controls">
+      <label>Cohort</label>
+      <select id="cohortSelect" class="cohort-select"></select>
+    </div>
+    <div class="cohort-stats" id="cohortStats"></div>
+    <div class="bar-section" id="cohortBars"></div>
+    <div class="cohort-roster" id="cohortRoster"></div>
+  </div>
+</div>
+
+<script>
+// ========================================================================
+// DATA LOADING & HELPERS
+// ========================================================================
+let allNodes = [], allEdges = [], nodeMap = {}, personNodes = [];
+
+const EDGE_CATEGORIES = {
+  structural: { label: 'Structural', color: '#60a5fa', types: ['member_of', 'holds_position', 'located_at', 'in_department', 'in_division'] },
+  financial: { label: 'Financial', color: '#fbbf24', types: ['has_comp', 'has_benefits', 'submitted_expense', 'included_in', 'has_garnishment'] },
+  performance: { label: 'Performance', color: '#34d399', types: ['has_review', 'recognized', 'has_skill'] },
+  compliance: { label: 'Compliance', color: '#f87171', types: ['signed', 'entitled_to', 'subject_to', 'governed_by', 'has_background_check', 'has_leave_designation', 'investigation_subject'] },
+  people: { label: 'People', color: '#c084fc', types: ['reports_to', 'mentors', 'buddy_of', 'manages_contractor', 'has_dependent', 'dependent_covered_by', 'interviewed_by', 'referred_by'] },
+  projects: { label: 'Projects', color: '#fb923c', types: ['works_on', 'assigned_equipment', 'approves', 'requested_by', 'contracts_for'] },
+  admin: { label: 'Admin', color: '#94a3b8', types: ['has_time_off', 'responded_to', 'onboarding_step', 'candidate_for', 'has_interview', 'converted_from', 'life_event', 'has_cobra_event', 'has_certification'] }
+};
+
+function getEdgeCategory(edgeType) {
+  for (const [cat, def] of Object.entries(EDGE_CATEGORIES)) {
+    if (def.types.includes(edgeType)) return cat;
+  }
+  return 'admin';
+}
+
+function getEdgeCategoryColor(edgeType) {
+  return EDGE_CATEGORIES[getEdgeCategory(edgeType)]?.color || '#94a3b8';
+}
+
+function edgeToEventName(edge) {
+  const map = {
+    converted_from: 'Hired (from candidate)',
+    holds_position: 'Role Assignment',
+    member_of: 'Joined Team',
+    reports_to: 'Reporting Change',
+    has_comp: 'Compensation',
+    has_benefits: 'Benefits Enrollment',
+    has_review: 'Performance Review',
+    has_time_off: 'Time Off',
+    recognized: 'Recognition',
+    mentors: 'Mentoring Started',
+    signed: 'Document Signed',
+    assigned_equipment: 'Equipment Assigned',
+    works_on: 'Project Assignment',
+    has_dependent: 'Dependent Added',
+    responded_to: 'Survey Response',
+    submitted_expense: 'Expense Submitted',
+    entitled_to: 'Policy Applied',
+    in_department: 'Department Assignment',
+    in_division: 'Division Assignment',
+    located_at: 'Location Assignment',
+    has_skill: 'Skill Added',
+    included_in: 'Payroll Included',
+    subject_to: 'Jurisdiction Applied',
+    has_background_check: 'Background Check',
+    buddy_of: 'Onboarding Buddy',
+    referred_by: 'Referral',
+    interviewed_by: 'Conducted Interview',
+    candidate_for: 'Candidacy',
+    has_interview: 'Interview',
+    governed_by: 'Governance',
+    approves: 'Approval',
+    requested_by: 'Request Submitted',
+    contracts_for: 'Contract',
+    manages_contractor: 'Contractor Management',
+    onboarding_step: 'Onboarding Step',
+    dependent_covered_by: 'Dependent Coverage',
+    has_garnishment: 'Garnishment',
+    investigation_subject: 'Investigation',
+    has_leave_designation: 'Leave Designation',
+    life_event: 'Life Event',
+    has_cobra_event: 'COBRA Event',
+    has_certification: 'Certification',
+    converted_from: 'Hired'
+  };
+  return map[edge.type] || edge.type.replace(/_/g, ' ');
+}
+
+function getEdgeDetail(edge) {
+  const targetNode = nodeMap[edge.target];
+  const sourceNode = nodeMap[edge.source];
+  let detail = '';
+  if (targetNode) {
+    const p = targetNode.properties;
+    switch (targetNode.type) {
+      case 'comp':
+        detail = `${p.type}: $${(p.amount||0).toLocaleString()} ${p.currency||''} (${p.notes||''})`;
+        break;
+      case 'review':
+        detail = `${p.type} review — Rating: ${p.rating||p.status||'pending'} — ${p.summary||''}`;
+        break;
+      case 'benefits':
+        detail = `${p.name} (${p.type}) — $${p.monthlyPremiumEmployee||0}/mo employee`;
+        break;
+      case 'position':
+        detail = `${p.title} (${p.level}) — ${p.department||''} — Band: $${(p.salaryBandMin||0).toLocaleString()}-$${(p.salaryBandMax||0).toLocaleString()}`;
+        break;
+      case 'team':
+        detail = `${p.name} (${p.teamType}) — ${p.description||''}`;
+        break;
+      case 'project':
+        detail = `${p.name} — ${p.status} — ${p.description||''}`;
+        break;
+      case 'time_off':
+        detail = `${p.type}: ${p.startDate} to ${p.endDate} (${p.hours}h) — ${p.status}`;
+        break;
+      case 'document':
+        detail = `${p.type}: ${p.title} — ${p.status}`;
+        break;
+      case 'equipment':
+        detail = `${p.type}: ${p.name} — ${p.status}`;
+        break;
+      case 'expense':
+        detail = `${p.category}: $${(p.amount||0).toLocaleString()} — ${p.description||''}`;
+        break;
+      case 'survey_response':
+        detail = `${p.surveyType} — Score: ${p.score} — ${p.comment||''}`;
+        break;
+      case 'policy':
+        detail = `${p.name} (${p.type}) — ${p.summary||''}`;
+        break;
+      case 'dependent':
+        detail = `${p.name} (${p.relationship}) — Coverage: ${p.coverageStatus}`;
+        break;
+      case 'location':
+        detail = `${p.name} — ${p.city}, ${p.state}`;
+        break;
+      case 'department':
+        detail = `Department: ${p.name}`;
+        break;
+      case 'division':
+        detail = `Division: ${p.name}`;
+        break;
+      case 'candidate':
+        detail = `Converted from candidate: ${p.name} — Applied: ${p.appliedDate}`;
+        break;
+      case 'person':
+        detail = `${p.name} (${p.role})`;
+        break;
+      default:
+        detail = JSON.stringify(p).slice(0, 150);
+    }
+  }
+  if (edge.type === 'reports_to') {
+    // source reports to target
+    const src = sourceNode, tgt = targetNode;
+    if (src && tgt) {
+      const srcP = src.properties, tgtP = tgt.properties;
+      detail = `${srcP.name} reports to ${tgtP.name} (${tgtP.role})`;
+    }
+  }
+  if (edge.type === 'recognized') {
+    const m = edge.metadata || {};
+    detail = `${m.type||'peer'} recognition — "${m.message||''}"`;
+  }
+  if (edge.type === 'mentors') {
+    const tgt = targetNode;
+    if (tgt) detail = `Mentoring ${tgt.properties.name} (${tgt.properties.role})`;
+  }
+  return detail;
+}
+
+function getPersonEdges(personId) {
+  return allEdges.filter(e => e.source === personId || e.target === personId);
+}
+
+function getPersonTimeline(personId) {
+  const edges = getPersonEdges(personId);
+  const person = nodeMap[personId];
+  const startDate = person?.properties?.startDate;
+  return edges.map(e => {
+    let ts = e.timestamp;
+    if (!ts && startDate) ts = startDate + 'T00:00:00Z';
+    return { ...e, _ts: ts ? new Date(ts) : null };
+  }).filter(e => e._ts).sort((a, b) => a._ts - b._ts);
+}
+
+function getPersonPhase(person, edges) {
+  const p = person.properties;
+  if (p.status === 'terminated') return 'departed';
+  const start = new Date(p.startDate);
+  const now = new Date('2026-02-06');
+  const days = (now - start) / (1000 * 60 * 60 * 24);
+  if (p.status === 'onboarding' || p.status === 'preparing') return 'onboarding';
+  if (days <= 90) return 'probation';
+  if (days <= 365) return 'established';
+  if (days <= 730) return 'growth';
+  return 'senior';
+}
+
+function getCohortMetrics(personIds) {
+  const now = new Date('2026-02-06');
+  let totalTenure = 0, total90Edges = 0, totalCurrentEdges = 0;
+  let recogIn90 = 0, compChangeY1 = 0;
+  let totalRating = 0, ratingCount = 0;
+  let active = 0;
+  const results = [];
+  for (const pid of personIds) {
+    const person = nodeMap[pid];
+    if (!person) continue;
+    const p = person.properties;
+    const start = new Date(p.startDate);
+    const tenure = (now - start) / (1000 * 60 * 60 * 24 * 30);
+    totalTenure += tenure;
+    if (p.status === 'active' || p.status === 'onboarding' || p.status === 'preparing' || p.status === 'on_leave') active++;
+    const timeline = getPersonTimeline(pid);
+    const edges90 = timeline.filter(e => (e._ts - start) / (1000*60*60*24) <= 90);
+    total90Edges += edges90.length;
+    totalCurrentEdges += timeline.length;
+    const recog90 = edges90.some(e => e.type === 'recognized');
+    if (recog90) recogIn90++;
+    const y1edges = timeline.filter(e => (e._ts - start) / (1000*60*60*24) <= 365);
+    const compChange = y1edges.filter(e => e.type === 'has_comp').length > 1;
+    if (compChange) compChangeY1++;
+    const reviews = timeline.filter(e => e.type === 'has_review');
+    for (const r of reviews) {
+      const rn = nodeMap[r.target];
+      if (rn && rn.properties.rating) {
+        const ratingMap = { exceeds: 4, meets: 3, developing: 2, below: 1 };
+        const val = ratingMap[rn.properties.rating];
+        if (val) { totalRating += val; ratingCount++; }
+      }
+    }
+    results.push({
+      id: pid, name: p.name, role: p.role, status: p.status,
+      tenure: Math.round(tenure),
+      edgeCount: timeline.length,
+      edge90: edges90.length
+    });
+  }
+  const n = personIds.length || 1;
+  return {
+    people: results,
+    avgTenure: Math.round(totalTenure / n),
+    avgEdge90: Math.round(total90Edges / n * 10) / 10,
+    avgEdgeCurrent: Math.round(totalCurrentEdges / n * 10) / 10,
+    recogIn90Pct: Math.round(recogIn90 / n * 100),
+    compChangeY1Pct: Math.round(compChangeY1 / n * 100),
+    avgRating: ratingCount > 0 ? Math.round(totalRating / ratingCount * 10) / 10 : null,
+    retentionPct: Math.round(active / n * 100),
+    count: n
+  };
+}
+
+// ========================================================================
+// INIT
+// ========================================================================
+async function init() {
+  const [nodesResp, edgesResp] = await Promise.all([
+    fetch('../data/nodes.json').then(r => r.json()),
+    fetch('../data/edges.json').then(r => r.json())
+  ]);
+  allNodes = nodesResp.nodes;
+  allEdges = edgesResp.edges;
+  allNodes.forEach(n => nodeMap[n.id] = n);
+  personNodes = allNodes.filter(n => n.type === 'person').sort((a, b) =>
+    a.properties.name.localeCompare(b.properties.name)
+  );
+
+  // Populate person pickers
+  const picker = document.getElementById('personPicker');
+  const compareSelect = document.getElementById('compareSelect');
+  personNodes.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `${p.properties.name} — ${p.properties.role}${p.properties.status === 'terminated' ? ' (terminated)' : ''}`;
+    picker.appendChild(opt);
+    compareSelect.appendChild(opt.cloneNode(true));
+  });
+  picker.value = 'person-008';
+  compareSelect.value = 'person-001';
+
+  picker.addEventListener('change', () => renderCurrentTab());
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      renderCurrentTab();
+    });
+  });
+
+  // Compare toggle
+  document.getElementById('compareToggle').addEventListener('change', e => {
+    document.getElementById('compareSelect').disabled = !e.target.checked;
+    renderTimeline();
+  });
+  document.getElementById('compareSelect').addEventListener('change', () => renderTimeline());
+
+  renderCurrentTab();
+}
+
+function renderCurrentTab() {
+  const activeTab = document.querySelector('.tab-btn.active').dataset.tab;
+  switch (activeTab) {
+    case 'tab-timeline': renderTimeline(); break;
+    case 'tab-story': renderStory(); break;
+    case 'tab-subgraph': renderSubgraph(); break;
+    case 'tab-milestones': renderMilestones(); break;
+    case 'tab-cohort': renderCohort(); break;
+  }
+}
+
+function getSelectedPersonId() {
+  return document.getElementById('personPicker').value;
+}
+
+// ========================================================================
+// 2A: CAREER TIMELINE
+// ========================================================================
+function renderTimeline() {
+  const personId = getSelectedPersonId();
+  const person = nodeMap[personId];
+  const timeline = getPersonTimeline(personId);
+  const comparing = document.getElementById('compareToggle').checked;
+  const compareId = document.getElementById('compareSelect').value;
+  const compareTimeline = comparing ? getPersonTimeline(compareId) : [];
+
+  // Legend
+  const legendEl = document.getElementById('timelineLegend');
+  legendEl.innerHTML = Object.entries(EDGE_CATEGORIES).map(([k, v]) =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${v.color}"></div>${v.label}</div>`
+  ).join('');
+
+  // Determine time range
+  const allDates = [...timeline.map(e => e._ts), ...compareTimeline.map(e => e._ts)].filter(Boolean);
+  if (allDates.length === 0) return;
+  const minDate = new Date(Math.min(...allDates));
+  const maxDate = new Date(Math.max(...allDates));
+  minDate.setMonth(minDate.getMonth() - 1);
+  maxDate.setMonth(maxDate.getMonth() + 1);
+  const range = maxDate - minDate;
+
+  // Track width: 80px per month
+  const months = range / (1000 * 60 * 60 * 24 * 30);
+  const trackWidth = Math.max(800, months * 80);
+  const track = document.getElementById('timelineTrack');
+  track.style.width = trackWidth + 'px';
+
+  function dateToX(d) {
+    return ((d - minDate) / range) * trackWidth;
+  }
+
+  // Build track HTML
+  let html = '';
+  // Year markers
+  const startYear = minDate.getFullYear();
+  const endYear = maxDate.getFullYear();
+  for (let y = startYear; y <= endYear; y++) {
+    for (let m = 0; m < 12; m += 3) {
+      const d = new Date(y, m, 1);
+      if (d >= minDate && d <= maxDate) {
+        const x = dateToX(d);
+        const label = m === 0 ? y : `Q${Math.floor(m/3)+1}`;
+        html += `<div class="year-marker" style="left:${x}px"><span>${label}</span></div>`;
+      }
+    }
+  }
+
+  // Main line
+  html += `<div class="timeline-line"></div>`;
+  if (comparing) html += `<div class="compare-line"></div>`;
+
+  // Event dots
+  timeline.forEach((e, i) => {
+    const x = dateToX(e._ts);
+    const color = getEdgeCategoryColor(e.type);
+    html += `<div class="event-dot" style="left:${x}px;top:90px;background:${color};color:${color}" data-idx="${i}" title="${edgeToEventName(e)} — ${e._ts.toLocaleDateString()}"></div>`;
+  });
+
+  if (comparing) {
+    compareTimeline.forEach((e, i) => {
+      const x = dateToX(e._ts);
+      const color = getEdgeCategoryColor(e.type);
+      html += `<div class="event-dot compare" style="left:${x}px;background:${color};color:${color}" data-cidx="${i}" title="${edgeToEventName(e)} — ${e._ts.toLocaleDateString()}"></div>`;
+    });
+  }
+
+  track.innerHTML = html;
+
+  // Density canvas
+  const canvas = document.getElementById('densityCanvas');
+  const container = canvas.parentElement;
+  canvas.width = container.clientWidth;
+  canvas.height = 80;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Build cumulative edge count over time
+  const buckets = 100;
+  const bucketWidth = range / buckets;
+  const counts = new Array(buckets).fill(0);
+  const compareCounts = new Array(buckets).fill(0);
+  let cumulative = 0;
+  let compareCumulative = 0;
+  // Sort all events into buckets
+  for (let i = 0; i < buckets; i++) {
+    const bucketStart = new Date(minDate.getTime() + i * bucketWidth);
+    const bucketEnd = new Date(minDate.getTime() + (i + 1) * bucketWidth);
+    cumulative += timeline.filter(e => e._ts >= bucketStart && e._ts < bucketEnd).length;
+    counts[i] = cumulative;
+    if (comparing) {
+      compareCumulative += compareTimeline.filter(e => e._ts >= bucketStart && e._ts < bucketEnd).length;
+      compareCounts[i] = compareCumulative;
+    }
+  }
+
+  const maxCount = Math.max(...counts, ...(comparing ? compareCounts : [0]), 1);
+  const w = canvas.width / buckets;
+
+  // Draw area
+  ctx.beginPath();
+  ctx.moveTo(0, 80);
+  for (let i = 0; i < buckets; i++) {
+    ctx.lineTo(i * w + w / 2, 80 - (counts[i] / maxCount) * 65);
+  }
+  ctx.lineTo(canvas.width, 80);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(129,140,248,0.12)';
+  ctx.fill();
+
+  ctx.beginPath();
+  for (let i = 0; i < buckets; i++) {
+    const x = i * w + w / 2;
+    const y = 80 - (counts[i] / maxCount) * 65;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.strokeStyle = 'rgba(129,140,248,0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  if (comparing) {
+    ctx.beginPath();
+    ctx.moveTo(0, 80);
+    for (let i = 0; i < buckets; i++) {
+      ctx.lineTo(i * w + w / 2, 80 - (compareCounts[i] / maxCount) * 65);
+    }
+    ctx.lineTo(canvas.width, 80);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(251,191,36,0.08)';
+    ctx.fill();
+    ctx.beginPath();
+    for (let i = 0; i < buckets; i++) {
+      const x = i * w + w / 2;
+      const y = 80 - (compareCounts[i] / maxCount) * 65;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(251,191,36,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  // Click events on dots
+  track.querySelectorAll('.event-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = dot.dataset.idx;
+      const cidx = dot.dataset.cidx;
+      const detailEl = document.getElementById('timelineDetail');
+      let e;
+      if (idx !== undefined) e = timeline[idx];
+      else if (cidx !== undefined) e = compareTimeline[cidx];
+      if (!e) return;
+      detailEl.innerHTML = `
+        <h3>${edgeToEventName(e)}</h3>
+        <div class="meta">${e._ts.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} &mdash; ${e.type}</div>
+        <div class="detail-body">${getEdgeDetail(e)}</div>
+      `;
+      detailEl.classList.add('visible');
+    });
+  });
+
+  // Scroll drag
+  const scroll = document.getElementById('timelineScroll');
+  let isDown = false, startX, scrollLeft;
+  scroll.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - scroll.offsetLeft; scrollLeft = scroll.scrollLeft; });
+  scroll.addEventListener('mouseleave', () => isDown = false);
+  scroll.addEventListener('mouseup', () => isDown = false);
+  scroll.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - scroll.offsetLeft;
+    scroll.scrollLeft = scrollLeft - (x - startX);
+  });
+}
+
+// ========================================================================
+// 2B: CHAPTER STORY
+// ========================================================================
+function renderStory() {
+  const personId = getSelectedPersonId();
+  const person = nodeMap[personId];
+  const p = person.properties;
+  const timeline = getPersonTimeline(personId);
+  const allPersonEdges = getPersonEdges(personId);
+  const startDate = new Date(p.startDate);
+  const now = new Date('2026-02-06');
+  const tenureDays = (now - startDate) / (1000 * 60 * 60 * 24);
+
+  document.getElementById('storyName').textContent = p.name;
+  const tenureMonths = Math.round(tenureDays / 30);
+  const tenureYears = Math.round(tenureDays / 365 * 10) / 10;
+  document.getElementById('storySubtitle').textContent = `${p.role} — ${p.location || 'Unknown'} — ${tenureYears > 1 ? tenureYears + ' years' : tenureMonths + ' months'} at Acme Co`;
+
+  // Check for converted_from edge
+  const convertedEdge = allPersonEdges.find(e => e.type === 'converted_from' && e.source === personId);
+  const candidateNode = convertedEdge ? nodeMap[convertedEdge.target] : null;
+
+  // Edges in first week (Day One)
+  const day1 = timeline.filter(e => (e._ts - startDate) / (1000*60*60*24) <= 7);
+  // Edges in first 90 days
+  const first90 = timeline.filter(e => {
+    const days = (e._ts - startDate) / (1000*60*60*24);
+    return days > 7 && days <= 90;
+  });
+  // Growth: 90 days to 1 year
+  const growth = timeline.filter(e => {
+    const days = (e._ts - startDate) / (1000*60*60*24);
+    return days > 90 && days <= 730;
+  });
+  // Impact: recognition, mentoring, leadership
+  const impactTypes = ['recognized', 'mentors', 'buddy_of', 'interviewed_by'];
+  const impact = timeline.filter(e => impactTypes.includes(e.type));
+  // Reporting relationships where person is the target (people report TO them)
+  const directReports = allPersonEdges.filter(e => e.type === 'reports_to' && e.target === personId);
+  // Current state: most recent edges
+  const recent = timeline.slice(-10);
+  // Terminated?
+  const isTerminated = p.status === 'terminated';
+
+  let chaptersHtml = '';
+  let chapterNum = 0;
+
+  // Chapter: The Candidate
+  if (candidateNode) {
+    chapterNum++;
+    const cp = candidateNode.properties;
+    const interviews = allEdges.filter(e => e.type === 'has_interview' && e.source === candidateNode.id);
+    chaptersHtml += buildChapter(chapterNum, 'The Candidate', `
+      <p>${p.name} entered the pipeline as a candidate for <strong>${cp.appliedRole}</strong>, applying on ${cp.appliedDate} via ${cp.source || 'direct application'}.</p>
+      ${cp.stageHistory ? `<p>Pipeline stages: ${cp.stageHistory.map(s => s.stage).join(' &rarr; ')}</p>` : ''}
+      ${interviews.length > 0 ? `<p>${interviews.length} interview${interviews.length > 1 ? 's' : ''} conducted before conversion.</p>` : ''}
+      <div class="pull-quote">From candidate ${candidateNode.id} to employee ${personId} &mdash; the graph preserves the entire pre-hire journey.</div>
+    `, [convertedEdge, ...interviews].filter(Boolean));
+  }
+
+  // Chapter: Day One
+  if (day1.length > 0) {
+    chapterNum++;
+    const posEdge = day1.find(e => e.type === 'holds_position');
+    const posNode = posEdge ? nodeMap[posEdge.target] : null;
+    const teamEdges = day1.filter(e => e.type === 'member_of');
+    const mgrEdge = day1.find(e => e.type === 'reports_to' && e.source === personId);
+    const mgrNode = mgrEdge ? nodeMap[mgrEdge.target] : null;
+    const compEdges = day1.filter(e => e.type === 'has_comp');
+    const docEdges = day1.filter(e => e.type === 'signed');
+
+    chaptersHtml += buildChapter(chapterNum, 'Day One', `
+      <p>On <strong>${startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</strong>, ${p.name} began their journey at Acme Co.</p>
+      ${posNode ? `<p>Assigned to the <strong>${posNode.properties.title}</strong> position (${posNode.properties.level}) in ${posNode.properties.department || 'Engineering'}.</p>` : ''}
+      ${teamEdges.length > 0 ? `<p>Joined ${teamEdges.map(e => '<strong>' + (nodeMap[e.target]?.properties?.name || e.target) + '</strong>').join(', ')}.</p>` : ''}
+      ${mgrNode ? `<p>Reporting to <strong>${mgrNode.properties.name}</strong> (${mgrNode.properties.role}).</p>` : ''}
+      ${compEdges.length > 0 ? `<div class="pull-quote">${compEdges.map(e => {
+        const cn = nodeMap[e.target];
+        return cn ? `Starting ${cn.properties.type}: $${(cn.properties.amount||0).toLocaleString()}` : '';
+      }).filter(Boolean).join(' | ')}</div>` : ''}
+      ${docEdges.length > 0 ? `<p>Signed ${docEdges.length} document${docEdges.length > 1 ? 's' : ''}: ${docEdges.map(e => nodeMap[e.target]?.properties?.title || e.target).join(', ')}.</p>` : ''}
+      <p><strong>${day1.length} graph edges</strong> created on day one &mdash; the foundation of ${p.name}'s organizational identity.</p>
+    `, day1);
+  }
+
+  // Chapter: Finding Their Footing
+  if (first90.length > 0) {
+    chapterNum++;
+    const reviewEdges = first90.filter(e => e.type === 'has_review');
+    const recogEdges = first90.filter(e => e.type === 'recognized');
+    const skillEdges = first90.filter(e => e.type === 'has_skill');
+    const benefitEdges = first90.filter(e => e.type === 'has_benefits');
+
+    chaptersHtml += buildChapter(chapterNum, 'Finding Their Footing', `
+      <p>The first 90 days saw ${first90.length} new connections form in the graph.</p>
+      ${reviewEdges.length > 0 ? `<p>Received ${reviewEdges.length} review${reviewEdges.length > 1 ? 's' : ''} during probation: ${reviewEdges.map(e => {
+        const rn = nodeMap[e.target];
+        return rn ? `${rn.properties.type} (${rn.properties.rating || rn.properties.status})` : '';
+      }).filter(Boolean).join(', ')}.</p>` : ''}
+      ${recogEdges.length > 0 ? `<div class="pull-quote">First recognition within 90 days &mdash; a positive signal for long-term retention.</div>` : ''}
+      ${skillEdges.length > 0 ? `<p>Skills validated: ${skillEdges.map(e => nodeMap[e.target]?.properties?.name || e.target).join(', ')}.</p>` : ''}
+      ${benefitEdges.length > 0 ? `<p>Enrolled in ${benefitEdges.length} benefit plan${benefitEdges.length > 1 ? 's' : ''}.</p>` : ''}
+    `, first90);
+  }
+
+  // Chapter: Growth
+  if (growth.length > 0) {
+    chapterNum++;
+    const projEdges = growth.filter(e => e.type === 'works_on');
+    const compEdges = growth.filter(e => e.type === 'has_comp');
+    const teamEdges = growth.filter(e => e.type === 'member_of');
+    const skillEdges = growth.filter(e => e.type === 'has_skill');
+
+    chaptersHtml += buildChapter(chapterNum, 'Growth', `
+      <p>Between 90 days and 2 years, ${p.name} accumulated ${growth.length} new graph edges &mdash; the career was deepening.</p>
+      ${projEdges.length > 0 ? `<p>Took on ${projEdges.length} project${projEdges.length > 1 ? 's' : ''}: ${projEdges.map(e => '<strong>' + (nodeMap[e.target]?.properties?.name || e.target) + '</strong>').join(', ')}.</p>` : ''}
+      ${compEdges.length > 0 ? `<p>${compEdges.length} compensation event${compEdges.length > 1 ? 's' : ''}: ${compEdges.map(e => {
+        const cn = nodeMap[e.target];
+        return cn ? `${cn.properties.type} $${(cn.properties.amount||0).toLocaleString()}` : '';
+      }).filter(Boolean).join(', ')}.</p>` : ''}
+      ${teamEdges.length > 0 ? `<p>Joined ${teamEdges.length} additional team${teamEdges.length > 1 ? 's' : ''}: ${teamEdges.map(e => nodeMap[e.target]?.properties?.name || e.target).join(', ')}.</p>` : ''}
+      ${skillEdges.length > 0 ? `<p>New skills: ${skillEdges.map(e => nodeMap[e.target]?.properties?.name || e.target).join(', ')}.</p>` : ''}
+    `, growth);
+  }
+
+  // Chapter: Impact
+  if (impact.length > 0 || directReports.length > 0) {
+    chapterNum++;
+    chaptersHtml += buildChapter(chapterNum, 'Impact', `
+      ${directReports.length > 0 ? `<p><strong>${directReports.length} direct report${directReports.length > 1 ? 's' : ''}</strong> &mdash; ${p.name} is a people manager, responsible for: ${directReports.map(e => nodeMap[e.source]?.properties?.name || e.source).join(', ')}.</p>` : ''}
+      ${impact.filter(e => e.type === 'recognized').length > 0 ? `
+        <div class="pull-quote">${(() => {
+          const recog = impact.find(e => e.type === 'recognized' && e.metadata?.message);
+          return recog ? `"${recog.metadata.message}" &mdash; ${nodeMap[recog.source === personId ? recog.target : recog.source]?.properties?.name || 'a colleague'}` : 'Recognized by peers for meaningful contributions.';
+        })()}</div>` : ''}
+      ${impact.filter(e => e.type === 'mentors').length > 0 ? `<p>Active mentor to ${impact.filter(e => e.type === 'mentors').map(e => '<strong>' + (nodeMap[e.target]?.properties?.name || e.target) + '</strong>').join(', ')}.</p>` : ''}
+      ${impact.filter(e => e.type === 'interviewed_by').length > 0 ? `<p>Conducted ${impact.filter(e => e.type === 'interviewed_by').length} interview${impact.filter(e => e.type === 'interviewed_by').length > 1 ? 's' : ''} for incoming candidates &mdash; shaping the future team.</p>` : ''}
+    `, [...impact, ...directReports]);
+  }
+
+  // Chapter: Current State
+  {
+    chapterNum++;
+    const currentComp = timeline.filter(e => e.type === 'has_comp').pop();
+    const currentCompNode = currentComp ? nodeMap[currentComp.target] : null;
+    const currentTeams = allPersonEdges.filter(e => e.type === 'member_of' && e.source === personId);
+    const currentPos = allPersonEdges.find(e => e.type === 'holds_position' && e.source === personId);
+    const currentPosNode = currentPos ? nodeMap[currentPos.target] : null;
+
+    chaptersHtml += buildChapter(chapterNum, isTerminated ? 'At Departure' : 'Current State', `
+      <p><strong>${p.role}</strong> (${p.level || 'unknown level'}) &mdash; ${p.status}${isTerminated ? `, departed ${p.endDate}` : ''}.</p>
+      ${currentPosNode ? `<p>Position: ${currentPosNode.properties.title} (${currentPosNode.properties.level}), ${currentPosNode.properties.department || ''}.</p>` : ''}
+      ${currentCompNode ? `<p>Most recent comp: ${currentCompNode.properties.type} $${(currentCompNode.properties.amount||0).toLocaleString()} effective ${currentCompNode.properties.effectiveDate}.</p>` : ''}
+      ${currentTeams.length > 0 ? `<p>Member of: ${currentTeams.map(e => nodeMap[e.target]?.properties?.name || e.target).join(', ')}.</p>` : ''}
+      <p><strong>${allPersonEdges.length} total graph edges</strong> define ${p.name}'s complete organizational identity. ${timeline.length} of those are timestamped lifecycle events.</p>
+      ${p.bio ? `<div class="pull-quote">${p.bio}</div>` : ''}
+    `, recent);
+  }
+
+  // Epilogue if terminated
+  if (isTerminated) {
+    chapterNum++;
+    const cobraEdges = allPersonEdges.filter(e => e.type === 'has_cobra_event');
+    chaptersHtml += buildChapter(chapterNum, 'Moving On', `
+      <p>${p.name} departed Acme Co on <strong>${p.endDate}</strong>.</p>
+      ${cobraEdges.length > 0 ? `<p>COBRA benefits continuation initiated.</p>` : ''}
+      <p>The graph retains the complete history &mdash; every edge, every connection, every contribution. The organizational memory persists even after departure.</p>
+      <div class="pull-quote">In a traditional HRIS, a terminated employee becomes a flat record. In the graph, their impact remains visible through every edge they created.</div>
+    `, cobraEdges, true);
+  }
+
+  document.getElementById('storyChapters').innerHTML = chaptersHtml;
+}
+
+function buildChapter(num, title, bodyHtml, edges, isEpilogue = false) {
+  const edgeTags = edges ? edges.slice(0, 12).map(e =>
+    `<span class="edge-tag" style="border-color:${getEdgeCategoryColor(e.type)}44;color:${getEdgeCategoryColor(e.type)}">${e.type}</span>`
+  ).join('') : '';
+  const more = edges && edges.length > 12 ? `<span class="edge-tag">+${edges.length - 12} more</span>` : '';
+  return `
+    <div class="chapter">
+      <div class="chapter-number">${isEpilogue ? 'Epilogue' : 'Chapter ' + num}</div>
+      <div class="chapter-title">${title}</div>
+      <div class="chapter-body">${bodyHtml}</div>
+      ${edgeTags ? `<div class="edge-tags">${edgeTags}${more}</div>` : ''}
+    </div>
+  `;
+}
+
+// ========================================================================
+// 2C: SUBGRAPH ANIMATION (D3)
+// ========================================================================
+let sgAnimation = null;
+
+function renderSubgraph() {
+  // Cleanup previous
+  if (sgAnimation) { sgAnimation.stop(); sgAnimation = null; }
+
+  const personId = getSelectedPersonId();
+  const person = nodeMap[personId];
+  const timeline = getPersonTimeline(personId);
+  // Also include no-timestamp edges, assign them to startDate
+  const allPersonEdgesRaw = getPersonEdges(personId);
+  const startDate = new Date(person.properties.startDate);
+  const allAnimEdges = allPersonEdgesRaw.map(e => {
+    let ts = e.timestamp ? new Date(e.timestamp) : new Date(startDate);
+    return { ...e, _ts: ts };
+  }).sort((a, b) => a._ts - b._ts);
+
+  if (allAnimEdges.length === 0) return;
+
+  const minDate = new Date(Math.min(...allAnimEdges.map(e => e._ts)));
+  const maxDate = new Date(Math.max(...allAnimEdges.map(e => e._ts)));
+  const totalMs = maxDate - minDate;
+
+  // Build legend
+  const legendEl = document.getElementById('sgLegend');
+  legendEl.innerHTML = Object.entries(EDGE_CATEGORIES).map(([k, v]) =>
+    `<div class="sg-legend-item"><div class="sg-legend-dot" style="background:${v.color}"></div>${v.label}</div>`
+  ).join('');
+
+  // Setup D3
+  const container = document.getElementById('sgCanvas');
+  container.innerHTML = '';
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  const svg = d3.select(container).append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+  // Defs for glow
+  const defs = svg.append('defs');
+  const filter = defs.append('filter').attr('id', 'glow');
+  filter.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'coloredBlur');
+  const feMerge = filter.append('feMerge');
+  feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+  feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
+  const linkGroup = svg.append('g');
+  const nodeGroup = svg.append('g');
+
+  const simulation = d3.forceSimulation()
+    .force('link', d3.forceLink().id(d => d.id).distance(80))
+    .force('charge', d3.forceManyBody().strength(-120))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide(20))
+    .on('tick', ticked);
+
+  let visibleNodes = new Map();
+  let visibleEdges = [];
+  let currentEdgeIdx = 0;
+  let playing = false;
+  let animFrame = null;
+  let lastTimestamp = 0;
+
+  const speedMap = { 1: 30 * 24 * 3600 * 1000, 2: 90 * 24 * 3600 * 1000, 3: 180 * 24 * 3600 * 1000 };
+  const speedLabels = { 1: '1mo/s', 2: '3mo/s', 3: '6mo/s' };
+  let currentAnimDate = new Date(minDate);
+
+  function getSpeed() {
+    return speedMap[document.getElementById('sgSpeed').value] || speedMap[2];
+  }
+  document.getElementById('sgSpeed').addEventListener('input', () => {
+    document.getElementById('sgSpeedLabel').textContent = speedLabels[document.getElementById('sgSpeed').value];
+  });
+
+  // Add center node
+  visibleNodes.set(personId, {
+    id: personId,
+    label: person.properties.name,
+    type: 'person',
+    color: '#c084fc',
+    r: 16
+  });
+
+  function addEdge(edge) {
+    const sourceId = edge.source;
+    const targetId = edge.target;
+    const color = getEdgeCategoryColor(edge.type);
+
+    [sourceId, targetId].forEach(nid => {
+      if (!visibleNodes.has(nid)) {
+        const node = nodeMap[nid];
+        visibleNodes.set(nid, {
+          id: nid,
+          label: node ? (node.properties.name || node.properties.title || node.type) : nid,
+          type: node?.type || 'unknown',
+          color: color,
+          r: nid === personId ? 16 : 8
+        });
+      }
+    });
+
+    visibleEdges.push({
+      source: sourceId,
+      target: targetId,
+      color: color,
+      type: edge.type
+    });
+  }
+
+  function updateGraph() {
+    const nodes = Array.from(visibleNodes.values());
+    const edges = [...visibleEdges];
+
+    simulation.nodes(nodes);
+    simulation.force('link').links(edges);
+
+    const links = linkGroup.selectAll('line').data(edges, (d, i) => i);
+    links.enter().append('line')
+      .attr('stroke', d => d.color)
+      .attr('stroke-width', 1.5)
+      .attr('stroke-opacity', 0.4);
+    links.exit().remove();
+
+    const nodesSel = nodeGroup.selectAll('g.node').data(nodes, d => d.id);
+    const enter = nodesSel.enter().append('g').attr('class', 'node');
+    enter.append('circle')
+      .attr('r', d => d.r)
+      .attr('fill', d => d.color)
+      .attr('fill-opacity', 0.7)
+      .attr('stroke', d => d.color)
+      .attr('stroke-width', 1.5)
+      .attr('stroke-opacity', 0.3)
+      .style('filter', 'url(#glow)');
+    enter.append('text')
+      .attr('text-anchor', 'middle')
+      .attr('dy', d => d.r + 14)
+      .attr('fill', '#666')
+      .attr('font-size', d => d.id === personId ? '11px' : '9px')
+      .attr('font-family', 'Inter, sans-serif')
+      .text(d => d.label.length > 18 ? d.label.slice(0, 16) + '..' : d.label);
+    nodesSel.exit().remove();
+
+    // Drag
+    enter.call(d3.drag()
+      .on('start', (event, d) => { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+      .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y; })
+      .on('end', (event, d) => { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+    );
+
+    simulation.alpha(0.3).restart();
+
+    document.getElementById('sgNodeCount').textContent = nodes.length;
+    document.getElementById('sgEdgeCount').textContent = edges.length;
+  }
+
+  function ticked() {
+    linkGroup.selectAll('line')
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+    nodeGroup.selectAll('g.node')
+      .attr('transform', d => `translate(${d.x},${d.y})`);
+  }
+
+  function updateDateDisplay() {
+    document.getElementById('sgDate').textContent = currentAnimDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+    const progress = totalMs > 0 ? ((currentAnimDate - minDate) / totalMs) * 100 : 0;
+    document.getElementById('sgProgressFill').style.width = Math.min(100, progress) + '%';
+  }
+
+  function animate(timestamp) {
+    if (!playing) return;
+    if (!lastTimestamp) lastTimestamp = timestamp;
+    const delta = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+
+    const msPerFrame = getSpeed() / 60;
+    currentAnimDate = new Date(currentAnimDate.getTime() + msPerFrame);
+
+    let added = false;
+    while (currentEdgeIdx < allAnimEdges.length && allAnimEdges[currentEdgeIdx]._ts <= currentAnimDate) {
+      addEdge(allAnimEdges[currentEdgeIdx]);
+      currentEdgeIdx++;
+      added = true;
+    }
+    if (added) updateGraph();
+    updateDateDisplay();
+
+    if (currentEdgeIdx >= allAnimEdges.length) {
+      playing = false;
+      document.getElementById('sgPlayBtn').textContent = 'Play';
+      document.getElementById('sgPlayBtn').classList.remove('playing');
+      return;
+    }
+    animFrame = requestAnimationFrame(animate);
+  }
+
+  document.getElementById('sgPlayBtn').onclick = () => {
+    playing = !playing;
+    const btn = document.getElementById('sgPlayBtn');
+    if (playing) {
+      btn.textContent = 'Pause';
+      btn.classList.add('playing');
+      lastTimestamp = 0;
+      animFrame = requestAnimationFrame(animate);
+    } else {
+      btn.textContent = 'Play';
+      btn.classList.remove('playing');
+      if (animFrame) cancelAnimationFrame(animFrame);
+    }
+  };
+
+  document.getElementById('sgResetBtn').onclick = () => {
+    playing = false;
+    if (animFrame) cancelAnimationFrame(animFrame);
+    document.getElementById('sgPlayBtn').textContent = 'Play';
+    document.getElementById('sgPlayBtn').classList.remove('playing');
+    currentEdgeIdx = 0;
+    currentAnimDate = new Date(minDate);
+    visibleNodes = new Map();
+    visibleEdges = [];
+    visibleNodes.set(personId, {
+      id: personId,
+      label: person.properties.name,
+      type: 'person',
+      color: '#c084fc',
+      r: 16
+    });
+    linkGroup.selectAll('line').remove();
+    nodeGroup.selectAll('g.node').remove();
+    updateGraph();
+    updateDateDisplay();
+  };
+
+  // Progress bar click
+  document.getElementById('sgProgress').addEventListener('click', (ev) => {
+    const rect = ev.currentTarget.getBoundingClientRect();
+    const pct = (ev.clientX - rect.left) / rect.width;
+    const targetDate = new Date(minDate.getTime() + pct * totalMs);
+    // Reset and fast-forward
+    visibleNodes = new Map();
+    visibleEdges = [];
+    visibleNodes.set(personId, {
+      id: personId,
+      label: person.properties.name,
+      type: 'person',
+      color: '#c084fc',
+      r: 16
+    });
+    currentEdgeIdx = 0;
+    while (currentEdgeIdx < allAnimEdges.length && allAnimEdges[currentEdgeIdx]._ts <= targetDate) {
+      addEdge(allAnimEdges[currentEdgeIdx]);
+      currentEdgeIdx++;
+    }
+    currentAnimDate = targetDate;
+    linkGroup.selectAll('line').remove();
+    nodeGroup.selectAll('g.node').remove();
+    updateGraph();
+    updateDateDisplay();
+  });
+
+  // Initial render
+  updateGraph();
+  updateDateDisplay();
+
+  sgAnimation = {
+    stop: () => {
+      playing = false;
+      if (animFrame) cancelAnimationFrame(animFrame);
+      simulation.stop();
+    }
+  };
+}
+
+// ========================================================================
+// 2D: MILESTONE DASHBOARD
+// ========================================================================
+function renderMilestones() {
+  const personId = getSelectedPersonId();
+  const person = nodeMap[personId];
+  const p = person.properties;
+  const timeline = getPersonTimeline(personId);
+  const allPersonEdgesRaw = getPersonEdges(personId);
+  const startDate = new Date(p.startDate);
+  const now = new Date('2026-02-06');
+  const tenureDays = (now - startDate) / (1000 * 60 * 60 * 24);
+  const isTerminated = p.status === 'terminated';
+  const endDate = isTerminated && p.endDate ? new Date(p.endDate) : now;
+
+  const phases = [
+    { key: 'candidate', name: 'Candidate', start: -Infinity, end: 0, desc: 'Pre-hire pipeline' },
+    { key: 'onboarding', name: 'Onboarding', start: 0, end: 7, desc: 'First week' },
+    { key: 'probation', name: 'Probation', start: 7, end: 90, desc: '0-90 days' },
+    { key: 'established', name: 'Established', start: 90, end: 365, desc: '90 days - 1 year' },
+    { key: 'growth', name: 'Growth', start: 365, end: 730, desc: '1-2 years' },
+    { key: 'senior', name: 'Senior', start: 730, end: Infinity, desc: '2+ years' }
+  ];
+  if (isTerminated) {
+    phases.push({ key: 'departure', name: 'Departure', start: -1, end: -1, desc: `Departed ${p.endDate}` });
+  }
+
+  // Classify edges into phases
+  const phaseEdges = {};
+  phases.forEach(ph => phaseEdges[ph.key] = []);
+
+  // Check for candidate edges
+  const convertedEdge = allPersonEdgesRaw.find(e => e.type === 'converted_from');
+  if (convertedEdge) {
+    phaseEdges['candidate'].push(convertedEdge);
+    // Get candidate interviews
+    const candidateId = convertedEdge.target;
+    const candEdges = allEdges.filter(e => e.source === candidateId || e.target === candidateId);
+    phaseEdges['candidate'].push(...candEdges);
+  }
+
+  timeline.forEach(e => {
+    const days = (e._ts - startDate) / (1000 * 60 * 60 * 24);
+    let placed = false;
+    for (const ph of phases) {
+      if (ph.key === 'candidate' || ph.key === 'departure') continue;
+      if (days >= ph.start && days < ph.end) {
+        phaseEdges[ph.key].push(e);
+        placed = true;
+        break;
+      }
+    }
+    if (!placed && phases.find(ph => ph.key === 'senior')) {
+      phaseEdges['senior'].push(e);
+    }
+  });
+
+  // COBRA / termination edges
+  if (isTerminated) {
+    const termEdges = allPersonEdgesRaw.filter(e => e.type === 'has_cobra_event');
+    phaseEdges['departure'].push(...termEdges);
+  }
+
+  // Determine current phase
+  const currentPhase = getPersonPhase(person, timeline);
+
+  const gridEl = document.getElementById('msGrid');
+  let html = '';
+
+  phases.forEach(ph => {
+    const edges = phaseEdges[ph.key];
+    let status = 'future';
+    if (ph.key === 'departure') {
+      status = 'departed';
+    } else if (ph.key === 'candidate') {
+      status = edges.length > 0 ? 'completed' : 'future';
+    } else {
+      const phaseDays = ph.end === Infinity ? Infinity : ph.end;
+      if (tenureDays >= phaseDays) status = 'completed';
+      else if (tenureDays >= ph.start) status = 'current';
+      else status = 'future';
+    }
+
+    // Compute duration
+    let duration = '';
+    if (ph.key === 'candidate' && edges.length > 0) {
+      duration = 'Pre-hire';
+    } else if (ph.key === 'departure') {
+      duration = p.endDate || '';
+    } else if (status !== 'future') {
+      const phStartDate = new Date(startDate.getTime() + ph.start * 24 * 3600 * 1000);
+      const phEndDate = ph.end === Infinity ? endDate : new Date(Math.min(startDate.getTime() + ph.end * 24 * 3600 * 1000, endDate.getTime()));
+      const d = Math.round((phEndDate - phStartDate) / (1000 * 60 * 60 * 24));
+      duration = `${d} days`;
+    }
+
+    // Edge counts by type
+    const typeCounts = {};
+    edges.forEach(e => {
+      const cat = getEdgeCategory(e.type);
+      typeCounts[cat] = (typeCounts[cat] || 0) + 1;
+    });
+
+    // Key events
+    const keyEvents = [];
+    edges.forEach(e => {
+      if (['holds_position', 'has_review', 'has_comp', 'recognized', 'mentors', 'works_on', 'member_of', 'converted_from'].includes(e.type)) {
+        const target = nodeMap[e.target];
+        let label = edgeToEventName(e);
+        if (target) {
+          if (target.type === 'position') label = `Role: ${target.properties.title}`;
+          else if (target.type === 'review') label = `Review: ${target.properties.rating || target.properties.type}`;
+          else if (target.type === 'comp') label = `${target.properties.type}: $${(target.properties.amount||0).toLocaleString()}`;
+          else if (target.type === 'project') label = `Project: ${target.properties.name}`;
+          else if (target.type === 'team') label = `Team: ${target.properties.name}`;
+        }
+        keyEvents.push(label);
+      }
+    });
+
+    html += `
+      <div class="ms-card ${status}">
+        <div class="ms-phase-badge">${status === 'current' ? 'Current' : status === 'completed' ? 'Complete' : status === 'departed' ? 'Departed' : 'Future'}</div>
+        <div class="ms-phase-name">${ph.name}</div>
+        <div class="ms-duration">${ph.desc} ${duration ? '&mdash; ' + duration : ''}</div>
+        ${keyEvents.length > 0 ? `<ul class="ms-events">${keyEvents.slice(0, 5).map(e => `<li>${e}</li>`).join('')}${keyEvents.length > 5 ? `<li>+${keyEvents.length - 5} more</li>` : ''}</ul>` : '<ul class="ms-events"><li style="color:#444">No key events</li></ul>'}
+        <div class="ms-edge-counts">
+          ${Object.entries(typeCounts).map(([cat, count]) =>
+            `<span class="ms-edge-count" style="color:${EDGE_CATEGORIES[cat]?.color||'#888'}">${EDGE_CATEGORIES[cat]?.label||cat}: ${count}</span>`
+          ).join('')}
+          ${edges.length > 0 ? `<span class="ms-edge-count">${edges.length} total</span>` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  gridEl.innerHTML = html;
+
+  // Health indicators
+  const healthEl = document.getElementById('healthGrid');
+  const indicators = [];
+
+  // First review within 90 days
+  const first90Reviews = timeline.filter(e => e.type === 'has_review' && (e._ts - startDate) / (1000*60*60*24) <= 90);
+  indicators.push({
+    label: 'First review within 90 days',
+    status: first90Reviews.length > 0 ? 'green' : (tenureDays < 90 ? 'yellow' : 'red'),
+    value: first90Reviews.length > 0 ? 'Yes' : (tenureDays < 90 ? 'Pending' : 'No')
+  });
+
+  // Recognition in first quarter
+  const first90Recog = timeline.filter(e => e.type === 'recognized' && (e._ts - startDate) / (1000*60*60*24) <= 90);
+  indicators.push({
+    label: 'Recognition in first quarter',
+    status: first90Recog.length > 0 ? 'green' : (tenureDays < 90 ? 'yellow' : 'red'),
+    value: first90Recog.length > 0 ? 'Yes' : (tenureDays < 90 ? 'Pending' : 'No')
+  });
+
+  // Comp adjustment in year 1
+  const compEdges = timeline.filter(e => e.type === 'has_comp');
+  const y1Comp = compEdges.filter(e => (e._ts - startDate) / (1000*60*60*24) <= 365 && (e._ts - startDate) / (1000*60*60*24) > 30);
+  indicators.push({
+    label: 'Comp adjustment in year 1',
+    status: y1Comp.length > 0 ? 'green' : (tenureDays < 365 ? 'yellow' : 'red'),
+    value: y1Comp.length > 0 ? 'Yes' : (tenureDays < 365 ? 'Pending' : 'No')
+  });
+
+  // Manager stability
+  const mgrEdges = timeline.filter(e => e.type === 'reports_to' && e.source === personId);
+  indicators.push({
+    label: 'Manager stability (6+ months same mgr)',
+    status: mgrEdges.length <= 1 ? 'green' : (mgrEdges.length <= 2 ? 'yellow' : 'red'),
+    value: mgrEdges.length <= 1 ? 'Stable' : `${mgrEdges.length} changes`
+  });
+
+  // Multi-team engagement
+  const teamEdges = allPersonEdgesRaw.filter(e => e.type === 'member_of' && e.source === personId);
+  indicators.push({
+    label: 'Multi-team engagement',
+    status: teamEdges.length >= 2 ? 'green' : 'yellow',
+    value: `${teamEdges.length} team${teamEdges.length !== 1 ? 's' : ''}`
+  });
+
+  // Project assignment
+  const projEdges = timeline.filter(e => e.type === 'works_on');
+  indicators.push({
+    label: 'Active project assignments',
+    status: projEdges.length >= 1 ? 'green' : 'yellow',
+    value: `${projEdges.length} project${projEdges.length !== 1 ? 's' : ''}`
+  });
+
+  // Survey response
+  const surveyEdges = timeline.filter(e => e.type === 'responded_to');
+  indicators.push({
+    label: 'Survey participation',
+    status: surveyEdges.length >= 1 ? 'green' : 'red',
+    value: surveyEdges.length >= 1 ? `${surveyEdges.length} responses` : 'None'
+  });
+
+  healthEl.innerHTML = indicators.map(ind => `
+    <div class="health-item">
+      <div class="health-dot ${ind.status}"></div>
+      <div class="health-label">${ind.label}</div>
+      <div class="health-value ${ind.status}">${ind.value}</div>
+    </div>
+  `).join('');
+}
+
+// ========================================================================
+// 2E: COHORT COMPARISON
+// ========================================================================
+function renderCohort() {
+  // Build cohort selector options
+  const selectEl = document.getElementById('cohortSelect');
+  const currentVal = selectEl.value;
+  selectEl.innerHTML = '';
+
+  // All hires
+  const opt1 = document.createElement('option');
+  opt1.value = 'all';
+  opt1.textContent = 'All Hires';
+  selectEl.appendChild(opt1);
+
+  // By department
+  const departments = allNodes.filter(n => n.type === 'department');
+  departments.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = 'dept:' + d.id;
+    opt.textContent = 'Dept: ' + d.properties.name;
+    selectEl.appendChild(opt);
+  });
+
+  // By start year
+  const years = new Set();
+  personNodes.forEach(p => {
+    const y = new Date(p.properties.startDate).getFullYear();
+    years.add(y);
+  });
+  Array.from(years).sort().forEach(y => {
+    const opt = document.createElement('option');
+    opt.value = 'year:' + y;
+    opt.textContent = 'Start Year: ' + y;
+    selectEl.appendChild(opt);
+  });
+
+  // By manager
+  const managers = new Map();
+  allEdges.filter(e => e.type === 'reports_to').forEach(e => {
+    const mgr = nodeMap[e.target];
+    if (mgr && mgr.type === 'person') {
+      if (!managers.has(e.target)) managers.set(e.target, { name: mgr.properties.name, count: 0 });
+      managers.get(e.target).count++;
+    }
+  });
+  Array.from(managers.entries())
+    .filter(([id, m]) => m.count >= 2)
+    .sort((a, b) => b[1].count - a[1].count)
+    .forEach(([id, m]) => {
+      const opt = document.createElement('option');
+      opt.value = 'mgr:' + id;
+      opt.textContent = `Reports of ${m.name} (${m.count})`;
+      selectEl.appendChild(opt);
+    });
+
+  if (currentVal) selectEl.value = currentVal;
+  if (!selectEl.value) selectEl.value = 'all';
+
+  selectEl.onchange = () => renderCohortContent();
+  renderCohortContent();
+}
+
+function renderCohortContent() {
+  const val = document.getElementById('cohortSelect').value;
+  let cohortIds = [];
+
+  if (val === 'all') {
+    cohortIds = personNodes.map(n => n.id);
+  } else if (val.startsWith('dept:')) {
+    const deptId = val.split(':')[1];
+    const deptEdges = allEdges.filter(e => e.type === 'in_department' && e.target === deptId);
+    cohortIds = deptEdges.map(e => e.source);
+  } else if (val.startsWith('year:')) {
+    const year = parseInt(val.split(':')[1]);
+    cohortIds = personNodes.filter(p => new Date(p.properties.startDate).getFullYear() === year).map(n => n.id);
+  } else if (val.startsWith('mgr:')) {
+    const mgrId = val.split(':')[1];
+    const reportEdges = allEdges.filter(e => e.type === 'reports_to' && e.target === mgrId);
+    cohortIds = reportEdges.map(e => e.source);
+  }
+
+  const metrics = getCohortMetrics(cohortIds);
+
+  // Stats
+  const statsEl = document.getElementById('cohortStats');
+  statsEl.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Cohort Size</div>
+      <div class="stat-value">${metrics.count}</div>
+      <div class="stat-sub">employees</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Tenure</div>
+      <div class="stat-value">${metrics.avgTenure}</div>
+      <div class="stat-sub">months</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Retention Rate</div>
+      <div class="stat-value">${metrics.retentionPct}%</div>
+      <div class="stat-sub">still active</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Edge Count</div>
+      <div class="stat-value">${metrics.avgEdgeCurrent}</div>
+      <div class="stat-sub">current total</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg 90-Day Edges</div>
+      <div class="stat-value">${metrics.avgEdge90}</div>
+      <div class="stat-sub">first 90 days</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Recog. in 90 Days</div>
+      <div class="stat-value">${metrics.recogIn90Pct}%</div>
+      <div class="stat-sub">of cohort</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Comp Change Year 1</div>
+      <div class="stat-value">${metrics.compChangeY1Pct}%</div>
+      <div class="stat-sub">of cohort</div>
+    </div>
+    ${metrics.avgRating ? `
+    <div class="stat-card">
+      <div class="stat-label">Avg Review Rating</div>
+      <div class="stat-value">${metrics.avgRating}</div>
+      <div class="stat-sub">out of 4.0</div>
+    </div>` : ''}
+  `;
+
+  // Bar charts - tenure distribution
+  const barsEl = document.getElementById('cohortBars');
+  const sortedByEdges = [...metrics.people].sort((a, b) => b.edgeCount - a.edgeCount);
+  const maxEdges = Math.max(...metrics.people.map(p => p.edgeCount), 1);
+  const maxTenure = Math.max(...metrics.people.map(p => p.tenure), 1);
+
+  // Only show top 20 for bars
+  const topPeople = sortedByEdges.slice(0, 20);
+
+  barsEl.innerHTML = `
+    <div class="bar-section-title">Graph Density by Person (Total Edges)</div>
+    ${topPeople.map(p => {
+      const pct = (p.edgeCount / maxEdges) * 100;
+      const isOutlier = p.edgeCount > metrics.avgEdgeCurrent * 1.5;
+      return `<div class="bar-row">
+        <div class="bar-label">${p.name}</div>
+        <div class="bar-track">
+          <div class="bar-fill ${isOutlier ? 'highlight' : 'primary'}" style="width:${pct}%"></div>
+        </div>
+        <div class="bar-value">${p.edgeCount}</div>
+      </div>`;
+    }).join('')}
+    ${sortedByEdges.length > 20 ? `<div style="font-size: 12px;color:#555;margin-top:8px;text-align:center">Showing top 20 of ${sortedByEdges.length}</div>` : ''}
+  `;
+
+  // Roster
+  const rosterEl = document.getElementById('cohortRoster');
+  const avgEdge = metrics.avgEdgeCurrent;
+  rosterEl.innerHTML = `
+    <div class="roster-header">
+      <div>Name</div>
+      <div>Role</div>
+      <div>Tenure</div>
+      <div>Edges</div>
+      <div>Status</div>
+      <div></div>
+    </div>
+    ${metrics.people.sort((a, b) => a.name.localeCompare(b.name)).map(p => {
+      const isHigh = p.edgeCount > avgEdge * 1.4;
+      const isLow = p.edgeCount < avgEdge * 0.5;
+      return `<div class="roster-row" data-person="${p.id}">
+        <div class="name">${p.name}</div>
+        <div>${p.role}</div>
+        <div>${p.tenure}mo</div>
+        <div>${p.edgeCount} ${isHigh ? '<span class="outlier high">High</span>' : ''}${isLow ? '<span class="outlier low">Low</span>' : ''}</div>
+        <div>${p.status}</div>
+        <div><button class="view-btn" data-person="${p.id}">View</button></div>
+      </div>`;
+    }).join('')}
+  `;
+
+  // Click to jump to person
+  rosterEl.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const pid = btn.dataset.person;
+      document.getElementById('personPicker').value = pid;
+      // Switch to timeline tab
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelector('[data-tab="tab-timeline"]').classList.add('active');
+      document.getElementById('tab-timeline').classList.add('active');
+      renderTimeline();
+    });
+  });
+}
+
+// ========================================================================
+// BOOT
+// ========================================================================
+init().catch(err => {
+  document.body.innerHTML = `<div style="padding:40px;color:#f87171;">Failed to load data: ${err.message}<br>Make sure to serve from the project root: python3 -m http.server 8765</div>`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V4 Mock Feedback</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #e0e0e8; line-height: 1.6; padding: 2rem 1rem; }
+.container { max-width: 860px; margin: 0 auto; }
+
+/* Header */
+header { text-align: center; margin-bottom: 2.5rem; }
+header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 0.25rem; }
+header p { color: #888; font-size: 14px; }
+.header-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; padding: 0.75rem 1rem; background: #12121a; border-radius: 10px; border: 1px solid #1e1e2e; }
+.progress { font-size: 14px; color: #a0a0b0; }
+.progress strong { color: #8b5cf6; }
+.save-status { font-size: 12px; color: #555; }
+.header-actions { display: flex; gap: 0.5rem; }
+.btn { padding: 0.45rem 1rem; border-radius: 8px; border: 1px solid #2a2a3a; background: #1a1a28; color: #c0c0d0; font-size: 13px; font-family: inherit; cursor: pointer; transition: all 0.15s; }
+.btn:hover { background: #22222e; border-color: #8b5cf6; color: #fff; }
+.btn-export { background: #8b5cf6; border-color: #8b5cf6; color: #fff; }
+.btn-export:hover { background: #7c4fe0; }
+.btn-danger { border-color: #3a1a1a; }
+.btn-danger:hover { background: #2a1010; border-color: #ef4444; color: #ef4444; }
+
+/* Groups */
+.group { margin-bottom: 2rem; }
+.group-header { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 0.6rem 1rem; background: #12121a; border: 1px solid #1e1e2e; border-radius: 10px; user-select: none; transition: background 0.15s; }
+.group-header:hover { background: #16161f; }
+.group-chevron { font-size: 11px; color: #555; transition: transform 0.2s; width: 1rem; text-align: center; }
+.group-header.collapsed .group-chevron { transform: rotate(-90deg); }
+.group-title { font-size: 16px; font-weight: 600; color: #fff; flex: 1; }
+.group-badge { font-size: 11px; color: #888; background: #1a1a28; padding: 0.15rem 0.6rem; border-radius: 100px; }
+.group-items { margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.group-header.collapsed + .group-items { display: none; }
+
+/* Mock card */
+.mock-card { background: #12121a; border: 1px solid #1e1e2e; border-radius: 12px; padding: 1.25rem 1.5rem; transition: border-color 0.2s; }
+.mock-card.reviewed { border-color: #1a3a1a; }
+.mock-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; cursor: pointer; user-select: none; }
+.mock-number { font-size: 11px; font-weight: 600; color: #555; background: #1a1a28; width: 1.6rem; height: 1.6rem; display: flex; align-items: center; justify-content: center; border-radius: 6px; flex-shrink: 0; }
+.mock-card.reviewed .mock-number { background: #0f2a0f; color: #4ade80; }
+.mock-name { font-size: 16px; font-weight: 600; color: #e0e0f0; flex: 1; }
+.mock-check { color: #333; font-size: 16px; }
+.mock-card.reviewed .mock-check { color: #4ade80; }
+.mock-body { display: none; }
+.mock-card.open .mock-body { display: block; }
+
+/* Fields */
+.field-row { display: flex; gap: 1.25rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+.field { flex: 1; min-width: 180px; }
+.field label { display: block; font-size: 12px; font-weight: 500; color: #888; margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* Stars */
+.stars { display: flex; gap: 0.2rem; }
+.star { font-size: 22px; cursor: pointer; color: #2a2a3a; transition: color 0.1s; line-height: 1; }
+.star.hovered, .star.active { color: #facc15; }
+
+/* Select & textarea */
+select, textarea { width: 100%; background: #0e0e16; border: 1px solid #1e1e2e; border-radius: 8px; color: #d0d0e0; font-family: inherit; font-size: 14px; padding: 0.5rem 0.65rem; transition: border-color 0.15s; resize: vertical; }
+select:focus, textarea:focus { outline: none; border-color: #8b5cf6; }
+textarea { min-height: 56px; }
+.field-texts { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.field-full { width: 100%; }
+
+/* Toast */
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #1a1a28; border: 1px solid #8b5cf6; color: #e0e0f0; padding: 0.65rem 1.2rem; border-radius: 10px; font-size: 14px; opacity: 0; transform: translateY(10px); transition: all 0.25s; pointer-events: none; z-index: 100; }
+.toast.show { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .mock-card { padding: 1rem; }
+  .field-row { flex-direction: column; gap: 0.75rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>V4 Mock Feedback</h1>
+    <p>18 mocks across 3 scenarios &mdash; rate, judge, and annotate each one.</p>
+    <div class="header-bar">
+      <div>
+        <div class="progress"><strong id="reviewedCount">0</strong> of 18 reviewed</div>
+        <div class="save-status" id="saveStatus">Not yet saved</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-export" onclick="exportMarkdown()">Export .md</button>
+        <button class="btn" onclick="copyMarkdown()">Copy to clipboard</button>
+        <button class="btn btn-danger" onclick="clearAll()">Clear all</button>
+      </div>
+    </div>
+  </header>
+  <main id="app"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const MOCKS = [
+  { group: "Departure Cascade", file: "departure-cascade-v4.html", items: [
+    { id: 1, name: "Impact Story", note: "lead tab" },
+    { id: 2, name: "Offboarding Command Center" },
+    { id: 3, name: "Restructuring Scenarios" },
+    { id: 4, name: "Compliance Timeline" }
+  ]},
+  { group: "Employee Lifecycle", file: "employee-lifecycle-v4.html", items: [
+    { id: 5, name: "Manager Coach" },
+    { id: 6, name: "Onboarding Autopilot" },
+    { id: 7, name: "Career Conversation: Underperformer", note: "sub-tab" },
+    { id: 8, name: "Career Conversation: High Performer", note: "sub-tab" },
+    { id: 9, name: "Career Conversation: Returning from Leave", note: "sub-tab" },
+    { id: 10, name: "Monday Briefing" }
+  ]},
+  { group: "Pattern Intelligence", file: "pattern-intelligence-v4.html", items: [
+    { id: 11, name: "Org Health Pulse", note: "lead tab" },
+    { id: 12, name: "Hiring Co-Pilot: Candidate Cards", note: "sub-tab" },
+    { id: 13, name: "Hiring Co-Pilot: Pipeline Funnel", note: "sub-tab" },
+    { id: 14, name: "Hiring Co-Pilot: Interview Debrief", note: "sub-tab" },
+    { id: 15, name: "Interview Intelligence" },
+    { id: 16, name: "Change Simulator: Sandbox", note: "sub-tab" },
+    { id: 17, name: "Change Simulator: Scenario Prompts", note: "sub-tab" },
+    { id: 18, name: "Change Simulator: Story Mode", note: "sub-tab" }
+  ]}
+];
+
+const VERDICTS = ["", "Build Deeper", "Fix UX & Keep", "Good As-Is", "Merge Into Another", "Cut"];
+const PRIORITIES = ["", "Low", "Medium", "High", "Must-Have"];
+const STORAGE_KEY = "v4-mock-feedback";
+
+let data = {};
+let saveTimer = null;
+
+function load() {
+  try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { data = {}; }
+}
+
+function save() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    document.getElementById("saveStatus").textContent = "Saved " + new Date().toLocaleTimeString();
+    updateProgress();
+  }, 400);
+}
+
+function get(id) {
+  if (!data[id]) data[id] = { rating: 0, verdict: "", works: "", doesnt: "", change: "", priority: "" };
+  return data[id];
+}
+
+function updateProgress() {
+  let count = 0;
+  MOCKS.forEach(g => g.items.forEach(m => { if (get(m.id).rating > 0) count++; }));
+  document.getElementById("reviewedCount").textContent = count;
+  // Update card states
+  document.querySelectorAll(".mock-card").forEach(card => {
+    const id = parseInt(card.dataset.id);
+    card.classList.toggle("reviewed", get(id).rating > 0);
+  });
+  // Update group badges
+  MOCKS.forEach(g => {
+    const el = document.querySelector(`[data-group="${g.group}"] .group-badge`);
+    if (!el) return;
+    const done = g.items.filter(m => get(m.id).rating > 0).length;
+    el.textContent = `${done}/${g.items.length}`;
+  });
+}
+
+function renderStars(id) {
+  const d = get(id);
+  return Array.from({length: 5}, (_, i) => {
+    const n = i + 1;
+    const cls = n <= d.rating ? "star active" : "star";
+    return `<span class="${cls}" data-mock="${id}" data-val="${n}" onmouseenter="hoverStar(this)" onmouseleave="unhoverStar(this)" onclick="setStar(${id},${n})">&#9733;</span>`;
+  }).join("");
+}
+
+function hoverStar(el) {
+  const val = parseInt(el.dataset.val);
+  el.closest(".stars").querySelectorAll(".star").forEach(s => {
+    s.classList.toggle("hovered", parseInt(s.dataset.val) <= val);
+  });
+}
+
+function unhoverStar(el) {
+  el.closest(".stars").querySelectorAll(".star").forEach(s => s.classList.remove("hovered"));
+}
+
+function setStar(id, val) {
+  const d = get(id);
+  d.rating = d.rating === val ? 0 : val;
+  const container = document.querySelector(`.mock-card[data-id="${id}"] .stars`);
+  container.innerHTML = renderStars(id);
+  save();
+}
+
+function onInput(id, field, el) {
+  get(id)[field] = el.value;
+  save();
+}
+
+function toggleCard(el) {
+  el.closest(".mock-card").classList.toggle("open");
+}
+
+function toggleGroup(el) {
+  el.classList.toggle("collapsed");
+  const items = el.nextElementSibling;
+  items.style.display = el.classList.contains("collapsed") ? "none" : "flex";
+}
+
+function render() {
+  const app = document.getElementById("app");
+  app.innerHTML = MOCKS.map(g => {
+    const done = g.items.filter(m => get(m.id).rating > 0).length;
+    return `
+    <div class="group" data-group="${g.group}">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <span class="group-chevron">&#9660;</span>
+        <span class="group-title">${g.group}</span>
+        <span class="group-badge">${done}/${g.items.length}</span>
+      </div>
+      <div class="group-items">
+        ${g.items.map(m => {
+          const d = get(m.id);
+          const reviewed = d.rating > 0;
+          return `
+          <div class="mock-card ${reviewed ? "reviewed" : ""}" data-id="${m.id}">
+            <div class="mock-top" onclick="toggleCard(this)">
+              <span class="mock-number">${m.id}</span>
+              <span class="mock-name">${m.name}${m.note ? ` <span style="color:#555;font-weight:400;font-size: 13px">(${m.note})</span>` : ""}</span>
+              <span class="mock-check">${reviewed ? "&#10003;" : "&#9675;"}</span>
+            </div>
+            <div class="mock-body">
+              <div class="field-row">
+                <div class="field">
+                  <label>Rating</label>
+                  <div class="stars">${renderStars(m.id)}</div>
+                </div>
+                <div class="field">
+                  <label>Verdict</label>
+                  <select onchange="onInput(${m.id},'verdict',this)">
+                    ${VERDICTS.map(v => `<option value="${v}" ${d.verdict===v?"selected":""}>${v||"-- Select --"}</option>`).join("")}
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Priority</label>
+                  <select onchange="onInput(${m.id},'priority',this)">
+                    ${PRIORITIES.map(p => `<option value="${p}" ${d.priority===p?"selected":""}>${p||"-- Select --"}</option>`).join("")}
+                  </select>
+                </div>
+              </div>
+              <div class="field-texts">
+                <div class="field-full">
+                  <label>What works</label>
+                  <textarea oninput="onInput(${m.id},'works',this)">${d.works||""}</textarea>
+                </div>
+                <div class="field-full">
+                  <label>What doesn't work</label>
+                  <textarea oninput="onInput(${m.id},'doesnt',this)">${d.doesnt||""}</textarea>
+                </div>
+                <div class="field-full">
+                  <label>What I'd change</label>
+                  <textarea oninput="onInput(${m.id},'change',this)">${d.change||""}</textarea>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`;
+  }).join("");
+  updateProgress();
+}
+
+function starStr(n) {
+  return "\u2605".repeat(n) + "\u2606".repeat(5 - n);
+}
+
+function buildMarkdown() {
+  let md = "# V4 Mock Feedback\n";
+  MOCKS.forEach(g => {
+    md += `\n## ${g.group}\n`;
+    g.items.forEach(m => {
+      const d = get(m.id);
+      const has = d.rating > 0 || d.verdict || d.works || d.doesnt || d.change || d.priority;
+      md += `\n### ${m.id}. ${m.name}\n`;
+      if (!has) { md += "_Not reviewed_\n"; return; }
+      if (d.rating) md += `- **Rating**: ${starStr(d.rating)} (${d.rating}/5)\n`;
+      if (d.verdict) md += `- **Verdict**: ${d.verdict}\n`;
+      if (d.priority) md += `- **Priority**: ${d.priority}\n`;
+      if (d.works) md += `- **What works**: ${d.works}\n`;
+      if (d.doesnt) md += `- **What doesn't**: ${d.doesnt}\n`;
+      if (d.change) md += `- **What I'd change**: ${d.change}\n`;
+    });
+  });
+  return md;
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function copyMarkdown() {
+  navigator.clipboard.writeText(buildMarkdown()).then(() => showToast("Copied to clipboard"));
+}
+
+function exportMarkdown() {
+  const md = buildMarkdown();
+  const blob = new Blob([md], { type: "text/markdown" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "v4-mock-feedback.md";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast("Downloaded v4-mock-feedback.md");
+}
+
+function clearAll() {
+  if (!confirm("Clear all feedback? This cannot be undone.")) return;
+  data = {};
+  localStorage.removeItem(STORAGE_KEY);
+  render();
+  document.getElementById("saveStatus").textContent = "Cleared";
+  showToast("All feedback cleared");
+}
+
+load();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifecycle Pattern Intelligence v3 | Acme Co</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base: #0a0b0f;
+  --bg-surface: #111318;
+  --bg-elevated: #181a22;
+  --bg-overlay: rgba(255,255,255,0.04);
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.12);
+  --text-primary: #f0f0f5;
+  --text-secondary: #8b8fa3;
+  --text-tertiary: #5a5e72;
+  --accent-green: #34d399;
+  --accent-green-dim: rgba(52,211,153,0.15);
+  --accent-yellow: #fbbf24;
+  --accent-yellow-dim: rgba(251,191,36,0.15);
+  --accent-red: #f87171;
+  --accent-red-dim: rgba(248,113,113,0.15);
+  --accent-blue: #60a5fa;
+  --accent-blue-dim: rgba(96,165,250,0.15);
+  --accent-purple: #a78bfa;
+  --accent-purple-dim: rgba(167,139,250,0.15);
+  --accent-cyan: #22d3ee;
+  --accent-cyan-dim: rgba(34,211,238,0.15);
+  --accent-orange: #fb923c;
+  --accent-orange-dim: rgba(251,146,60,0.15);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOP BAR + TABS */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+}
+.version-switcher {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.version-switcher a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+.version-switcher a:hover { color: var(--text-secondary); background: var(--bg-overlay); }
+.version-switcher a.current { color: var(--text-primary); font-weight: 600; background: var(--bg-elevated); }
+.version-switcher .sep { color: var(--text-tertiary); }
+.page-title { font-size: 14px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.03em; }
+
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  padding: 8px 24px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: var(--bg-base);
+  overflow-x: auto;
+}
+.tab-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  transition: all 0.2s ease;
+  position: relative;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text-secondary); background: var(--bg-overlay); }
+.tab-btn.active { color: var(--text-primary); background: var(--bg-surface); }
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+  border-radius: 2px 2px 0 0;
+}
+.tab-content { display: none; padding: 24px; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* LOADING */
+.loading-state { display: flex; align-items: center; justify-content: center; height: 60vh; flex-direction: column; gap: 16px; }
+.loading-spinner { width: 40px; height: 40px; border: 3px solid var(--border-subtle); border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* AGENT BANNER */
+.agent-banner {
+  background: linear-gradient(135deg, rgba(96,165,250,0.08), rgba(167,139,250,0.08));
+  border: 1px solid rgba(96,165,250,0.2);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.agent-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+  color: white;
+  font-weight: 700;
+}
+.agent-text { flex: 1; }
+.agent-text .agent-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-blue);
+  margin-bottom: 6px;
+}
+.agent-text p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.agent-text p strong { color: var(--text-primary); font-weight: 600; }
+
+/* GRAPH ADVANTAGE */
+.graph-advantage {
+  background: linear-gradient(135deg, rgba(52,211,153,0.06), rgba(34,211,238,0.06));
+  border: 1px solid rgba(52,211,153,0.2);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-top: 24px;
+}
+.graph-advantage-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.graph-advantage-header .icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(52,211,153,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-green);
+  font-size: 14px;
+  font-weight: 700;
+}
+.graph-advantage-header h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-green);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.graph-advantage p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* CARDS */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--border-medium); }
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.card-header-left { display: flex; align-items: center; gap: 12px; }
+.card-header-left .avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+.card-header-left h3 { font-size: 16px; font-weight: 600; }
+.card-header-left .subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+/* BADGES */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.badge.green { background: var(--accent-green-dim); color: var(--accent-green); }
+.badge.yellow { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+.badge.red { background: var(--accent-red-dim); color: var(--accent-red); }
+.badge.blue { background: var(--accent-blue-dim); color: var(--accent-blue); }
+.badge.purple { background: var(--accent-purple-dim); color: var(--accent-purple); }
+.badge.orange { background: var(--accent-orange-dim); color: var(--accent-orange); }
+.badge.cyan { background: var(--accent-cyan-dim); color: var(--accent-cyan); }
+.badge.neutral { background: var(--bg-elevated); color: var(--text-secondary); }
+
+/* SIGNALS TABLE */
+.signal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+.signal-table th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.signal-table td {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.signal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.signal-dot.green { background: var(--accent-green); }
+.signal-dot.yellow { background: var(--accent-yellow); }
+.signal-dot.red { background: var(--accent-red); }
+
+/* ACTION BUTTONS */
+.action-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.action-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.action-btn:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); }
+.action-btn.primary {
+  background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(167,139,250,0.2));
+  border-color: rgba(96,165,250,0.3);
+  color: var(--accent-blue);
+}
+.action-btn.primary:hover {
+  background: linear-gradient(135deg, rgba(96,165,250,0.3), rgba(167,139,250,0.3));
+}
+.action-btn.done {
+  background: var(--accent-green-dim);
+  border-color: rgba(52,211,153,0.3);
+  color: var(--accent-green);
+  pointer-events: none;
+}
+
+/* AGENT INSIGHT */
+.agent-insight {
+  background: linear-gradient(135deg, rgba(96,165,250,0.06), rgba(167,139,250,0.06));
+  border-left: 3px solid var(--accent-blue);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 16px;
+  margin: 12px 0;
+}
+.agent-insight p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.agent-insight .label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+/* SECTION HEADERS */
+.section-header {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.section-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+/* PANEL GRID */
+.panel-grid {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.panel-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.panel-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.panel-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* KPI ROW */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.kpi-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* HBAR CHART */
+.hbar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.hbar-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-width: 130px;
+  text-align: right;
+}
+.hbar-track {
+  flex: 1;
+  height: 24px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.hbar-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.6s ease;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.hbar-value {
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-width: 50px;
+}
+
+/* COLLAPSIBLE */
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 12px 0;
+  user-select: none;
+}
+.collapsible-header .arrow {
+  transition: transform 0.2s;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+.collapsible-header.open .arrow { transform: rotate(90deg); }
+.collapsible-header h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.collapsible-body { display: none; padding-bottom: 12px; }
+.collapsible-body.open { display: block; }
+
+/* RECOMMENDATION CARDS */
+.rec-list { list-style: none; }
+.rec-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.rec-list li:last-child { border-bottom: none; }
+.rec-bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.rec-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* SCENARIO BUILDER */
+.scenario-builder { margin-bottom: 24px; }
+.scenario-select {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  cursor: pointer;
+  width: 100%;
+  max-width: 400px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b8fa3' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.scenario-inputs {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.scenario-inputs select {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b8fa3' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+
+/* ORG TREE */
+.org-tree { font-size: 13px; }
+.org-tree-node {
+  padding: 6px 12px;
+  border-left: 2px solid var(--border-medium);
+  margin-left: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.org-tree-node.highlight {
+  border-left-color: var(--accent-blue);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+.org-tree-root {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+/* SIDE BY SIDE */
+.side-by-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.side-panel-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+/* PRINT STYLES */
+.print-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+  justify-content: flex-end;
+}
+
+/* HEALTH DOMAINS */
+.health-domain {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+.health-domain-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.health-domain-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.health-domain-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+.health-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.health-metric:last-child { border-bottom: none; }
+.health-metric-label { font-size: 13px; color: var(--text-secondary); }
+.health-metric-value { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+
+/* KEY ACTIONS */
+.key-actions { margin-top: 24px; }
+.key-action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+.key-action-item:hover { border-color: var(--border-medium); }
+.key-action-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-blue-dim);
+  color: var(--accent-blue);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.key-action-text { font-size: 13px; color: var(--text-secondary); flex: 1; }
+
+/* PULSE ANIMATION */
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.pulse { animation: pulse 2s ease-in-out infinite; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .panel-grid.cols-2, .panel-grid.cols-3, .panel-grid.cols-4 { grid-template-columns: 1fr; }
+  .side-by-side { grid-template-columns: 1fr; }
+}
+
+@media print {
+  body { background: white; color: #111; }
+  .top-bar, .tab-bar, .print-row, .action-btn { display: none; }
+  .tab-content { display: block !important; padding: 16px; }
+  .card, .panel, .health-domain, .agent-banner, .graph-advantage, .agent-insight {
+    border-color: #ddd;
+    background: white;
+    break-inside: avoid;
+  }
+  .graph-advantage { background: #f0fdf4; }
+  .agent-banner { background: #f0f7ff; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="page-title">Lifecycle Pattern Intelligence</div>
+  <div class="version-switcher">
+    <a href="pattern-intelligence.html">v1</a>
+    <span class="sep">|</span>
+    <a href="pattern-intelligence-v2.html">v2</a>
+    <span class="sep">|</span>
+    <a href="pattern-intelligence-v3.html" class="current">v3</a>
+  </div>
+</div>
+
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" data-tab="hiring">Hiring Co-Pilot</button>
+  <button class="tab-btn" data-tab="retention">Retention Agent</button>
+  <button class="tab-btn" data-tab="orghealth">Org Health Advisor</button>
+  <button class="tab-btn" data-tab="interview">Interview Intelligence</button>
+  <button class="tab-btn" data-tab="simulator">Change Simulator</button>
+</div>
+
+<div id="loadingState" class="loading-state">
+  <div class="loading-spinner"></div>
+  <div style="color: var(--text-secondary); font-size: 14px;">Loading employee graph data...</div>
+</div>
+
+<!-- ============================================================
+     MOCK A: HIRING CO-PILOT
+     ============================================================ -->
+<div class="tab-content active" id="tab-hiring" style="display:none;">
+  <div class="agent-banner">
+    <div class="agent-avatar">AI</div>
+    <div class="agent-text">
+      <div class="agent-label">Hiring Co-Pilot</div>
+      <p id="hiringAgentSummary">Loading...</p>
+    </div>
+  </div>
+
+  <div class="section-header">Active Pipeline</div>
+  <div class="section-sub" id="hiringPipelineSub">Evaluating candidates...</div>
+
+  <div id="candidateCards"></div>
+
+  <div class="card" style="margin-top: 24px;">
+    <div class="panel-title">Hiring Patterns I've Learned From Your Data</div>
+    <div id="hiringPatterns"></div>
+  </div>
+
+  <div class="graph-advantage">
+    <div class="graph-advantage-header">
+      <div class="icon">G</div>
+      <h4>Graph Advantage</h4>
+    </div>
+    <p>The graph connects each candidate's profile to the outcomes of every employee hired through similar channels, at similar comp levels, for similar roles. It traces: candidate &rarr; position &rarr; hired employees in same position &rarr; their reviews, tenure, and promotions. Traditional ATS tracks pipeline metrics. The graph connects hiring decisions to long-term outcomes across every dimension simultaneously.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     MOCK B: PROACTIVE RETENTION AGENT
+     ============================================================ -->
+<div class="tab-content" id="tab-retention" style="display:none;">
+  <div class="agent-banner">
+    <div class="agent-avatar">AI</div>
+    <div class="agent-text">
+      <div class="agent-label">Proactive Retention Agent</div>
+      <p id="retentionAgentSummary">Loading...</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <span class="arrow">&#9654;</span>
+      <h4>Learning From Departures</h4>
+      <span class="badge orange" style="margin-left: 8px;" id="departureCount">2 analyzed</span>
+    </div>
+    <div class="collapsible-body" id="departureAnalysis"></div>
+  </div>
+
+  <div class="section-header" style="margin-top: 24px;">People Needing Attention</div>
+  <div class="section-sub" id="retentionSub">Scanning active employees...</div>
+  <div id="retentionCards"></div>
+
+  <div class="card" style="margin-top: 24px;">
+    <div class="panel-title">Org-Wide Pulse (Aggregated)</div>
+    <div id="orgPulse"></div>
+  </div>
+
+  <div class="graph-advantage">
+    <div class="graph-advantage-header">
+      <div class="icon">G</div>
+      <h4>Graph Advantage</h4>
+    </div>
+    <p>The graph traces each departed employee's full relationship history &mdash; reviews, compensation changes, recognition, team membership, survey responses &mdash; and identifies patterns that preceded their departure. Then it scans active employees for the same patterns across all those domains simultaneously. A traditional HRIS would require manually cross-referencing 5+ reports. The graph does it continuously and automatically.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     MOCK C: ORG HEALTH ADVISOR
+     ============================================================ -->
+<div class="tab-content" id="tab-orghealth" style="display:none;">
+  <div class="agent-banner">
+    <div class="agent-avatar">AI</div>
+    <div class="agent-text">
+      <div class="agent-label">Org Health Advisor</div>
+      <p><strong>Quarterly Org Health Review &mdash; Q1 2026</strong><br>
+      Generated by HR Intelligence, March 6, 2026</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="panel-title">Executive Summary</div>
+    <p id="execSummary" style="font-size: 14px; color: var(--text-secondary); line-height: 1.7;"></p>
+  </div>
+
+  <div class="panel-grid cols-2" id="healthDomains" style="margin-top: 20px;"></div>
+
+  <div class="key-actions" id="keyActions">
+    <div class="section-header">Key Actions</div>
+    <div class="section-sub">Agent-recommended next steps, ordered by impact</div>
+    <div id="keyActionsList"></div>
+  </div>
+
+  <div class="print-row">
+    <button class="action-btn" onclick="window.print()">Print Report</button>
+    <button class="action-btn primary" onclick="alert('Share link copied to clipboard')">Share Report</button>
+  </div>
+
+  <div class="graph-advantage">
+    <div class="graph-advantage-header">
+      <div class="icon">G</div>
+      <h4>Graph Advantage</h4>
+    </div>
+    <p>This report synthesizes data across every HRIS domain &mdash; people, teams, comp, benefits, reviews, recognition, pipeline, compliance &mdash; into a coherent health picture with actionable recommendations. Traditional HRIS requires pulling 8+ separate reports and manually identifying cross-domain patterns. The graph's connected data model produces this analysis automatically every quarter.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     MOCK D: INTERVIEW INTELLIGENCE
+     ============================================================ -->
+<div class="tab-content" id="tab-interview" style="display:none;">
+  <div class="agent-banner">
+    <div class="agent-avatar">AI</div>
+    <div class="agent-text">
+      <div class="agent-label">Interview Intelligence</div>
+      <p id="interviewAgentSummary">Analyzing interview-to-outcome connections...</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="panel-title">Key Finding</div>
+    <p id="interviewKeyFinding" style="font-size: 16px; font-weight: 600; color: var(--text-primary);"></p>
+    <p id="interviewKeyFindingSub" style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;"></p>
+  </div>
+
+  <div class="panel-grid cols-2" style="margin-top: 20px;">
+    <div class="panel" id="scoreVsReview"></div>
+    <div class="panel" id="interviewerCalibration"></div>
+  </div>
+
+  <div class="panel-grid cols-2">
+    <div class="panel" id="sourceQuality"></div>
+    <div class="panel" id="pipelineVelocity"></div>
+  </div>
+
+  <div class="card" style="margin-top: 8px;">
+    <div class="panel-title">Recommendations</div>
+    <ul class="rec-list" id="interviewRecs"></ul>
+  </div>
+
+  <div class="graph-advantage">
+    <div class="graph-advantage-header">
+      <div class="icon">G</div>
+      <h4>Graph Advantage</h4>
+    </div>
+    <p>The graph uniquely connects pre-hire data (interview scores, source, pipeline speed) to post-hire outcomes (review ratings, tenure, promotions) through the candidate &rarr; person conversion relationship. Traditional ATS and HRIS are separate systems &mdash; even if both are from the same vendor, they rarely cross-reference interview scores with performance reviews. The graph makes this connection native.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     MOCK E: CHANGE IMPACT SIMULATOR
+     ============================================================ -->
+<div class="tab-content" id="tab-simulator" style="display:none;">
+  <div class="agent-banner">
+    <div class="agent-avatar">AI</div>
+    <div class="agent-text">
+      <div class="agent-label">Change Impact Simulator</div>
+      <p>I can help you think through organizational changes before committing. Select a scenario below and I'll show you the full cascade of effects.</p>
+    </div>
+  </div>
+
+  <div class="card scenario-builder">
+    <div class="panel-title">Scenario Builder</div>
+    <label style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em;">What kind of change?</label>
+    <select class="scenario-select" id="scenarioType" onchange="updateScenario()">
+      <option value="move_team">Move a team to a different department</option>
+      <option value="change_report">Change a reporting line</option>
+      <option value="add_headcount">Add headcount</option>
+    </select>
+    <div class="scenario-inputs" id="scenarioInputs"></div>
+  </div>
+
+  <div id="simulationResults" style="display: none;">
+    <div class="card">
+      <div class="panel-title">Simulated Impact</div>
+      <div id="impactSummary"></div>
+    </div>
+
+    <div class="side-by-side" style="margin-top: 16px;">
+      <div class="panel">
+        <div class="side-panel-label">Before</div>
+        <div id="beforeTree"></div>
+      </div>
+      <div class="panel">
+        <div class="side-panel-label">After</div>
+        <div id="afterTree"></div>
+      </div>
+    </div>
+
+    <div class="agent-insight">
+      <div class="label">Agent Assessment</div>
+      <p id="simAssessment"></p>
+    </div>
+
+    <div class="action-row">
+      <button class="action-btn" onclick="alert('Scenario saved')">Save Scenario</button>
+      <button class="action-btn" onclick="alert('Compare mode')">Compare Scenarios</button>
+      <button class="action-btn primary" onclick="alert('This would proceed with the change')">Proceed with Change</button>
+      <button class="action-btn" onclick="document.getElementById('simulationResults').style.display='none'">Discard</button>
+    </div>
+  </div>
+
+  <div class="graph-advantage" style="margin-top: 24px;">
+    <div class="graph-advantage-header">
+      <div class="icon">G</div>
+      <h4>Graph Advantage</h4>
+    </div>
+    <p>The graph can simulate structural changes and instantly calculate cascading effects across reporting chains, department budgets, compliance jurisdictions, and team compositions. Moving one person doesn't just change their manager &mdash; it may affect tax withholding, benefits cost allocation, team headcount thresholds, and approval chains. Traditional HRIS treats these as separate manual updates across multiple modules. The graph shows you the full cascade before you commit.</p>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   DATA LOADING
+   ================================================================ */
+let G = { nodes: [], edges: [], byId: {}, byType: {} };
+
+async function loadData() {
+  try {
+    const [nodesResp, edgesResp] = await Promise.all([
+      fetch('../data/nodes.json'),
+      fetch('../data/edges.json')
+    ]);
+    const nodesData = await nodesResp.json();
+    const edgesData = await edgesResp.json();
+    G.nodes = nodesData.nodes;
+    G.edges = edgesData.edges;
+    G.nodes.forEach(n => {
+      G.byId[n.id] = n;
+      if (!G.byType[n.type]) G.byType[n.type] = [];
+      G.byType[n.type].push(n);
+    });
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('tab-hiring').style.display = 'block';
+    renderAll();
+  } catch (e) {
+    document.getElementById('loadingState').innerHTML =
+      '<div style="color: var(--accent-red);">Failed to load data. Serve from project root: python3 -m http.server 8765</div>';
+  }
+}
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+function edgesFrom(nodeId, type) {
+  return G.edges.filter(e => e.source === nodeId && (!type || e.type === type));
+}
+function edgesTo(nodeId, type) {
+  return G.edges.filter(e => e.target === nodeId && (!type || e.type === type));
+}
+function edgesOfType(type) {
+  return G.edges.filter(e => e.type === type);
+}
+function node(id) { return G.byId[id]; }
+function nodesByType(type) { return G.byType[type] || []; }
+function prop(n, key) { return n && n.properties ? n.properties[key] : undefined; }
+function daysBetween(d1, d2) {
+  return Math.round((new Date(d2) - new Date(d1)) / (1000 * 60 * 60 * 24));
+}
+function formatDate(d) {
+  if (!d) return 'N/A';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+function initials(name) {
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+}
+function getDept(personId) {
+  const e = edgesFrom(personId, 'in_department')[0];
+  return e ? node(e.target) : null;
+}
+function getTeams(personId) {
+  return edgesFrom(personId, 'member_of').map(e => node(e.target)).filter(Boolean);
+}
+function getManager(personId) {
+  const e = edgesFrom(personId, 'reports_to')[0];
+  return e ? node(e.target) : null;
+}
+function getDirectReports(personId) {
+  return edgesTo(personId, 'reports_to').map(e => node(e.source)).filter(Boolean);
+}
+function getCompRecords(personId) {
+  return edgesFrom(personId, 'has_comp').map(e => node(e.target)).filter(Boolean);
+}
+function getReviews(personId) {
+  return edgesFrom(personId, 'has_review').map(e => node(e.target)).filter(Boolean);
+}
+function getRecognitions(personId) {
+  return edgesTo(personId, 'recognized');
+}
+function getRecognitionsGiven(personId) {
+  return edgesFrom(personId, 'recognized');
+}
+function getSurveys(personId) {
+  return edgesFrom(personId, 'responded_to').map(e => node(e.target)).filter(Boolean);
+}
+function getPosition(personId) {
+  const e = edgesFrom(personId, 'holds_position')[0];
+  return e ? node(e.target) : null;
+}
+
+const COLORS = ['#60a5fa','#a78bfa','#34d399','#fbbf24','#f87171','#22d3ee','#fb923c','#ec4899'];
+function colorFor(i) { return COLORS[i % COLORS.length]; }
+
+/* ================================================================
+   TAB SWITCHING
+   ================================================================ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(tc => {
+      tc.classList.remove('active');
+      tc.style.display = 'none';
+    });
+    const target = document.getElementById('tab-' + btn.dataset.tab);
+    target.classList.add('active');
+    target.style.display = 'block';
+  });
+});
+
+/* ================================================================
+   RENDER ALL MOCKS
+   ================================================================ */
+function renderAll() {
+  try { renderHiringCoPilot(); } catch(e) { console.error('renderHiringCoPilot:', e); }
+  try { renderRetentionAgent(); } catch(e) { console.error('renderRetentionAgent:', e); }
+  try { renderOrgHealth(); } catch(e) { console.error('renderOrgHealth:', e); }
+  try { renderInterviewIntel(); } catch(e) { console.error('renderInterviewIntel:', e); }
+  try { renderSimulator(); } catch(e) { console.error('renderSimulator:', e); }
+}
+
+/* ================================================================
+   MOCK A: HIRING CO-PILOT
+   ================================================================ */
+function renderHiringCoPilot() {
+  const candidates = nodesByType('candidate');
+  const activeCandidates = candidates.filter(c =>
+    !['rejected','withdrawn'].includes(prop(c,'status'))
+  );
+
+  document.getElementById('hiringAgentSummary').innerHTML =
+    `<strong>Active Pipeline &mdash; ${activeCandidates.length} candidates.</strong> I've analyzed each against Acme's hiring patterns, comparing their profiles to outcomes of every employee hired through similar channels and into similar roles.`;
+  document.getElementById('hiringPipelineSub').textContent =
+    `${activeCandidates.length} candidates evaluated against ${nodesByType('person').filter(p=>prop(p,'status')==='active').length} current employee profiles`;
+
+  // Get people with reviews and sources for pattern analysis
+  const people = nodesByType('person').filter(p => prop(p,'status') === 'active');
+  const terminated = nodesByType('person').filter(p => prop(p,'status') === 'terminated');
+  const reviews = nodesByType('review');
+
+  // Get position for Senior Engineer to find band
+  const srEngPos = nodesByType('position').find(p =>
+    prop(p,'title') === 'Senior Engineer' && prop(p,'level') === 'IC-4'
+  );
+  const srEngBandMin = srEngPos ? prop(srEngPos, 'salaryBandMin') : 150000;
+  const srEngBandMax = srEngPos ? prop(srEngPos, 'salaryBandMax') : 195000;
+  const bandMid = Math.round((srEngBandMin + srEngBandMax) / 2);
+
+  // Compute referral stats
+  const referredByEdges = edgesOfType('referred_by');
+  const referralCandidates = candidates.filter(c => prop(c,'source') === 'referral');
+
+  // Build candidate cards
+  let cardsHTML = '';
+  activeCandidates.forEach((c, idx) => {
+    const name = prop(c, 'name');
+    const role = prop(c, 'appliedRole');
+    const source = prop(c, 'source');
+    const status = prop(c, 'status');
+    const expectedComp = prop(c, 'expectedComp');
+    const applied = prop(c, 'appliedDate');
+    const stages = prop(c, 'stageHistory') || [];
+    const notes = prop(c, 'notes') || '';
+    const daysInPipeline = daysBetween(applied, '2026-02-06');
+
+    // Get interviews for this candidate
+    const interviews = edgesFrom(c.id, 'has_interview').map(e => node(e.target)).filter(Boolean);
+    const interviewScores = interviews.map(i => prop(i, 'score')).filter(Boolean);
+
+    // Determine badge color
+    let badgeClass = 'blue';
+    if (status === 'offer') badgeClass = 'green';
+    else if (status === 'accepted') badgeClass = 'green';
+    else if (status === 'unresponsive') badgeClass = 'red';
+
+    // Generate agent assessment
+    let assessment = '';
+    if (c.id === 'candidate-003') {
+      assessment = `Maya Patel has 3 interviewers unanimously rating "strong hire" &mdash; the first candidate this cycle where all interviewers agree. Expected comp of $${(expectedComp/1000).toFixed(0)}k is ${expectedComp > bandMid ? '$' + Math.round((expectedComp - srEngBandMax)/1000) + 'k above' : 'within'} the ${role} band ($${(srEngBandMin/1000).toFixed(0)}k&ndash;$${(srEngBandMax/1000).toFixed(0)}k). Market data supports $180k. At Acme, candidates with unanimous "strong hire" scores average 3.1 years tenure and 87% receive "meets" or "exceeds" on first annual review.`;
+    } else if (c.id === 'candidate-001') {
+      assessment = `Aisha Obi is a referral from Mike Torres (they worked together at Stripe). Referral hires at Acme stay 40% longer than other sources. Strong technical interview (strong hire) with a 2-year employment gap she addressed transparently. Employees with similar profiles &mdash; referral source, senior level, strong interview &mdash; average 2.8 years tenure at Acme.`;
+    } else if (c.id === 'candidate-004') {
+      assessment = `Sarah Kim has 4/4 positive interviews and references complete. Pipeline is moving fast &mdash; ${daysInPipeline} days total. Historical pattern: candidates who complete all stages in under 40 days have 85% acceptance rates. Ready for offer decision.`;
+    } else if (c.id === 'candidate-002') {
+      assessment = `Chris Wong has conflicting feedback: portfolio review rated "strong hire" but design exercise rated "no hire" for weak interaction design. Split decisions historically correlate with shorter tenure (18 months avg). I'd recommend an additional design exercise focused on interaction patterns before proceeding.`;
+    } else if (c.id === 'candidate-006') {
+      assessment = `Emily Tran (Engineering Manager, referral) has final round Monday with VP Engineering and two leads. Engineering Manager roles take 23% longer to fill than IC roles at Acme. Strong referral source is a positive signal.`;
+    } else if (c.id === 'candidate-005') {
+      assessment = `Marcus Johnson has accepted the offer with a Feb 24 start date. Onboarding has been activated with 11 pre-hire items queued. His pipeline moved quickly &mdash; ${daysInPipeline} days from application to acceptance. Historically, fast-pipeline hires ramp 15% quicker.`;
+    } else if (c.id === 'candidate-007') {
+      assessment = `Tanya Brooks has been unresponsive for 48+ hours after phone screen. Pattern match: candidates who go unresponsive at this stage have a 70% drop-off rate. I've sent a follow-up reminder. If no response by Friday, I'd recommend closing the loop.`;
+    } else if (c.id === 'candidate-008') {
+      assessment = `James Liu (candidate) has an onsite rescheduled to Monday due to interviewer PTO conflict. Rescheduled onsites have a 12% higher withdrawal rate. I recommend confirming his interest with a brief check-in.`;
+    }
+
+    // Signal breakdown
+    const sourceSignal = source === 'referral' ? 'green' : source === 'linkedin' ? 'yellow' : 'yellow';
+    const compSignal = !expectedComp ? 'yellow' : (expectedComp <= bandMid + 5000 ? 'green' : (expectedComp > srEngBandMax ? 'red' : 'yellow'));
+    const interviewSignal = interviewScores.includes('no_hire') ? 'red' : interviewScores.filter(s => s === 'strong_hire').length >= 2 ? 'green' : interviewScores.length > 0 ? 'yellow' : 'neutral';
+    const velocitySignal = daysInPipeline < 30 ? 'green' : daysInPipeline < 50 ? 'yellow' : 'red';
+
+    cardsHTML += `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-left">
+          <div class="avatar" style="background: ${colorFor(idx)}">${initials(name)}</div>
+          <div>
+            <h3>${name}</h3>
+            <div class="subtitle">${role} &middot; via ${source} &middot; ${daysInPipeline} days in pipeline</div>
+          </div>
+        </div>
+        <span class="badge ${badgeClass}">${status.replace('_',' ')}</span>
+      </div>
+      <div class="agent-insight">
+        <div class="label">Agent Assessment</div>
+        <p>${assessment}</p>
+      </div>
+      <table class="signal-table">
+        <thead><tr><th>Signal</th><th>Status</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Source</td><td><span class="signal-dot ${sourceSignal}"></span></td><td>${source}${source === 'referral' ? ' (strongest predictor of tenure)' : ''}</td></tr>
+          <tr><td>Comp Alignment</td><td><span class="signal-dot ${compSignal}"></span></td><td>${expectedComp ? '$' + (expectedComp/1000).toFixed(0) + 'k expected' + (role === 'Senior Engineer' ? ' (band: $' + (srEngBandMin/1000) + 'k-$' + (srEngBandMax/1000) + 'k)' : '') : 'Not specified'}</td></tr>
+          <tr><td>Interview Scores</td><td><span class="signal-dot ${interviewSignal}"></span></td><td>${interviewScores.length > 0 ? interviewScores.join(', ') : 'Pending'}</td></tr>
+          <tr><td>Pipeline Velocity</td><td><span class="signal-dot ${velocitySignal}"></span></td><td>${daysInPipeline} days (${stages.length} stages completed)</td></tr>
+        </tbody>
+      </table>
+      <div class="action-row">
+        ${status === 'offer' ? '<button class="action-btn primary" onclick="handleAction(this, \'Offer extended\')">Extend Offer</button>' : ''}
+        ${status === 'interviewing' ? '<button class="action-btn primary" onclick="handleAction(this, \'Advanced to next stage\')">Advance to Next Stage</button>' : ''}
+        ${status === 'interviewing' ? '<button class="action-btn" onclick="handleAction(this, \'Interview scheduled\')">Schedule Interview</button>' : ''}
+        ${status === 'accepted' ? '<button class="action-btn primary" onclick="handleAction(this, \'Onboarding opened\')">View Onboarding</button>' : ''}
+        ${status === 'unresponsive' ? '<button class="action-btn" onclick="handleAction(this, \'Reminder sent\')">Send Reminder</button>' : ''}
+        <button class="action-btn" onclick="handleAction(this, 'Compared')">Compare to Team</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('candidateCards').innerHTML = cardsHTML;
+
+  // Hiring patterns
+  const patternsHTML = `
+    <ul class="rec-list">
+      <li><div class="rec-bullet" style="background: var(--accent-green);"></div><div class="rec-text"><strong>Referral hires stay 40% longer</strong> than LinkedIn-sourced hires. Acme has ${referralCandidates.length} referral candidates currently in pipeline out of ${activeCandidates.length} total.</div></li>
+      <li><div class="rec-bullet" style="background: var(--accent-blue);"></div><div class="rec-text"><strong>Candidates who complete all stages in under 35 days</strong> have an 85% acceptance rate vs. 62% for those taking longer. Average time currently: ${Math.round(activeCandidates.reduce((s,c) => s + daysBetween(prop(c,'appliedDate'), '2026-02-06'), 0) / activeCandidates.length)} days.</div></li>
+      <li><div class="rec-bullet" style="background: var(--accent-purple);"></div><div class="rec-text"><strong>Interview scores of "strong hire"</strong> correlate with "exceeds" reviews 73% of the time. Unanimous "strong hire" panels predict even better &mdash; 87% first-year "meets" or above.</div></li>
+      <li><div class="rec-bullet" style="background: var(--accent-yellow);"></div><div class="rec-text"><strong>Candidates above band midpoint</strong> ($${(bandMid/1000).toFixed(0)}k for Senior Engineer) show 15% shorter tenure historically. Consider negotiating within band or justifying with market data.</div></li>
+    </ul>`;
+  document.getElementById('hiringPatterns').innerHTML = patternsHTML;
+}
+
+/* ================================================================
+   MOCK B: PROACTIVE RETENTION AGENT
+   ================================================================ */
+function renderRetentionAgent() {
+  const people = nodesByType('person');
+  const active = people.filter(p => prop(p,'status') === 'active');
+  const terminated = people.filter(p => prop(p,'status') === 'terminated');
+
+  // Analyze terminated employees
+  const departedAnalysis = terminated.map(t => {
+    const name = prop(t, 'name');
+    const startDate = prop(t, 'startDate');
+    const endDate = prop(t, 'endDate');
+    const tenure = daysBetween(startDate, endDate);
+    const recs = getRecognitions(t.id);
+    const reviews = getReviews(t.id);
+    const comps = getCompRecords(t.id);
+    return { id: t.id, name, startDate, endDate, tenure, recs: recs.length, reviews: reviews.length, comps: comps.length };
+  });
+
+  document.getElementById('retentionAgentSummary').innerHTML =
+    `I'm monitoring <strong>${active.length} active employees</strong>. <strong>3 need attention.</strong> ${terminated.length} departed employees informed my analysis.`;
+
+  // Departure analysis
+  let departureHTML = `
+    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+      I analyzed <strong>${terminated.map(t=>prop(t,'name')).join('</strong> and <strong>')}</strong> and identified common patterns before their departures:
+    </p>
+    <ul class="rec-list">
+      <li><div class="rec-bullet" style="background: var(--accent-red);"></div><div class="rec-text"><strong>No recognition in final 6+ months.</strong> Both departed employees received zero peer or manager recognition in their last 6 months. Average active employee receives recognition every 45 days.</div></li>
+      <li><div class="rec-bullet" style="background: var(--accent-red);"></div><div class="rec-text"><strong>No comp change in 12+ months.</strong> Neither received a salary adjustment in the 12 months before departure, while their peers averaged one adjustment every 10 months.</div></li>
+      <li><div class="rec-bullet" style="background: var(--accent-red);"></div><div class="rec-text"><strong>No performance review completed.</strong> Neither had a completed annual review on file. They were in the 13% of employees without timely reviews.</div></li>
+    </ul>
+    <div class="agent-insight" style="margin-top: 12px;">
+      <div class="label">Pattern Confidence</div>
+      <p>These patterns predict attention risk 60 days before it becomes a retention crisis. I scan all active employees against these signals continuously.</p>
+    </div>`;
+  document.getElementById('departureAnalysis').innerHTML = departureHTML;
+
+  // Find flagged employees (people with patterns similar to departed)
+  // Use real data: find people with no recent recognition and stale comp
+  const recognitionEdges = edgesOfType('recognized');
+  const compNodes = nodesByType('comp').filter(c => prop(c,'type') === 'salary');
+
+  // Build a set of people who received recognition
+  const recognizedPeople = new Set(recognitionEdges.map(e => e.target));
+
+  // Find people with oldest comp and no recognition
+  const flagCandidates = active.map(p => {
+    const comps = getCompRecords(p.id).filter(c => prop(c,'type') === 'salary');
+    const latestComp = comps.reduce((latest, c) => {
+      const d = prop(c, 'effectiveDate');
+      return d > latest ? d : latest;
+    }, '2020-01-01');
+    const daysSinceComp = daysBetween(latestComp, '2026-02-06');
+    const hasRecognition = recognizedPeople.has(p.id);
+    const reviews = getReviews(p.id);
+    const hasRecentReview = reviews.some(r => {
+      const cd = prop(r, 'completedDate');
+      return cd && daysBetween(cd, '2026-02-06') < 365;
+    });
+    const position = getPosition(p.id);
+    const bandMid = position ? Math.round((prop(position,'salaryBandMin') + prop(position,'salaryBandMax'))/2) : null;
+    const currentSalary = comps.length > 0 ? Math.max(...comps.map(c=>prop(c,'amount'))) : null;
+    const bandPosition = bandMid && currentSalary ? Math.round((currentSalary / bandMid) * 100) : null;
+
+    return {
+      person: p,
+      daysSinceComp,
+      hasRecognition,
+      hasRecentReview,
+      bandPosition,
+      currentSalary,
+      score: (daysSinceComp > 365 ? 2 : 0) + (!hasRecognition ? 2 : 0) + (!hasRecentReview ? 1 : 0)
+    };
+  }).filter(c => c.score >= 3 && prop(c.person,'level') !== 'C-1' && prop(c.person,'level') !== 'VP')
+    .sort((a,b) => b.score - a.score)
+    .slice(0, 3);
+
+  let retentionHTML = '';
+  flagCandidates.forEach((fc, idx) => {
+    const p = fc.person;
+    const name = prop(p, 'name');
+    const role = prop(p, 'role');
+    const dept = getDept(p.id);
+    const deptName = dept ? prop(dept, 'name') : 'Unknown';
+    const tenure = daysBetween(prop(p,'startDate'), '2026-02-06');
+    const tenureYears = (tenure / 365).toFixed(1);
+
+    let whyFlagged = '';
+    if (!fc.hasRecognition) {
+      whyFlagged += `No recognition on record. `;
+    }
+    if (fc.daysSinceComp > 365) {
+      whyFlagged += `Last comp adjustment was ${Math.round(fc.daysSinceComp/30)} months ago. `;
+    }
+    if (!fc.hasRecentReview) {
+      whyFlagged += `No performance review completed in the past 12 months. `;
+    }
+    whyFlagged += `This matches the pattern we saw with ${terminated.map(t=>prop(t,'name')).join(' and ')} before their departures.`;
+
+    retentionHTML += `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-left">
+          <div class="avatar" style="background: ${colorFor(idx + 3)}">${initials(name)}</div>
+          <div>
+            <h3>${name}</h3>
+            <div class="subtitle">${role} &middot; ${deptName} &middot; ${tenureYears} years</div>
+          </div>
+        </div>
+        <span class="badge yellow">Needs attention</span>
+      </div>
+      <div class="agent-insight">
+        <div class="label">Why I flagged them</div>
+        <p>${whyFlagged}</p>
+      </div>
+      <div style="margin-top: 12px;">
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">What I'd Recommend</div>
+        <ul class="rec-list">
+          <li><div class="rec-bullet"></div><div class="rec-text">Schedule a career check-in within 2 weeks</div></li>
+          ${fc.daysSinceComp > 365 ? `<li><div class="rec-bullet"></div><div class="rec-text">Review comp band position${fc.bandPosition ? ' &mdash; currently at ' + fc.bandPosition + '% of midpoint' : ''}</div></li>` : ''}
+          ${!fc.hasRecognition ? `<li><div class="rec-bullet"></div><div class="rec-text">Consider recognition for their ongoing contributions</div></li>` : ''}
+          ${!fc.hasRecentReview ? `<li><div class="rec-bullet"></div><div class="rec-text">Prioritize overdue performance review</div></li>` : ''}
+        </ul>
+      </div>
+      <div class="action-row">
+        <button class="action-btn primary" onclick="handleAction(this, 'Check-in scheduled')">Schedule Check-in</button>
+        <button class="action-btn" onclick="handleAction(this, 'Recognition drafted')">Draft Recognition</button>
+        <button class="action-btn" onclick="handleAction(this, 'Flagged for comp review')">Flag for Comp Review</button>
+        <button class="action-btn" onclick="handleAction(this, 'Dismissed')">Dismiss &mdash; I Know About This</button>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('retentionSub').textContent =
+    `${flagCandidates.length} employees match pre-departure patterns`;
+  document.getElementById('retentionCards').innerHTML = retentionHTML;
+
+  // Org-wide pulse
+  const surveys = nodesByType('survey_response');
+  const enpsSurveys = surveys.filter(s => prop(s,'surveyType') === 'enps');
+  const wellbeingSurveys = surveys.filter(s => prop(s,'surveyType') === 'wellbeing');
+
+  // eNPS calculation
+  const promoters = enpsSurveys.filter(s => prop(s,'sentiment') === 'promoter').length;
+  const detractors = enpsSurveys.filter(s => prop(s,'sentiment') === 'detractor').length;
+  const neutrals = enpsSurveys.filter(s => prop(s,'sentiment') === 'neutral').length;
+  const enps = enpsSurveys.length > 0 ? Math.round(((promoters - detractors) / enpsSurveys.length) * 100) : 0;
+
+  // Survey by department
+  const surveyByDept = {};
+  surveys.forEach(s => {
+    const respEdge = edgesTo(s.id, 'responded_to')[0];
+    if (!respEdge) return;
+    const person = node(respEdge.source);
+    if (!person) return;
+    const dept = getDept(person.id);
+    const deptName = dept ? prop(dept, 'name') : 'Unknown';
+    if (!surveyByDept[deptName]) surveyByDept[deptName] = { scores: [], count: 0 };
+    surveyByDept[deptName].scores.push(prop(s, 'score') || 0);
+    surveyByDept[deptName].count++;
+  });
+
+  // Recognition by department
+  const recByDept = {};
+  recognitionEdges.forEach(e => {
+    const person = node(e.source);
+    if (!person) return;
+    const dept = getDept(person.id);
+    const deptName = dept ? prop(dept, 'name') : 'Unknown';
+    recByDept[deptName] = (recByDept[deptName] || 0) + 1;
+  });
+
+  // Review coverage
+  const reviewEdges = edgesOfType('has_review');
+  const peopleWithReviews = new Set(reviewEdges.map(e => e.source));
+  const reviewCoverage = Math.round((peopleWithReviews.size / active.length) * 100);
+
+  let pulseHTML = `
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">eNPS Score</div>
+        <div class="kpi-value" style="color: ${enps > 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${enps > 0 ? '+' : ''}${enps}</div>
+        <div class="kpi-sub">${promoters} promoters, ${neutrals} neutral, ${detractors} detractors</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Wellbeing Average</div>
+        <div class="kpi-value">${wellbeingSurveys.length > 0 ? (wellbeingSurveys.reduce((s,w) => s + (prop(w,'score')||0), 0) / wellbeingSurveys.length).toFixed(1) : 'N/A'}</div>
+        <div class="kpi-sub">out of 5.0 (${wellbeingSurveys.length} responses)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Review Coverage</div>
+        <div class="kpi-value">${reviewCoverage}%</div>
+        <div class="kpi-sub">${peopleWithReviews.size} of ${active.length} employees reviewed</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 16px;">
+      <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px;">Survey Sentiment by Department (team averages)</div>
+      ${Object.entries(surveyByDept).sort((a,b) => {
+        const avgA = a[1].scores.reduce((s,v)=>s+v,0)/a[1].scores.length;
+        const avgB = b[1].scores.reduce((s,v)=>s+v,0)/b[1].scores.length;
+        return avgB - avgA;
+      }).map(([dept, data]) => {
+        const avg = data.scores.reduce((s,v)=>s+v,0)/data.scores.length;
+        const pct = (avg / 10) * 100;
+        const color = avg >= 7 ? 'var(--accent-green)' : avg >= 5 ? 'var(--accent-yellow)' : 'var(--accent-red)';
+        return `<div class="hbar-row">
+          <div class="hbar-label">${dept}</div>
+          <div class="hbar-track"><div class="hbar-fill" style="width: ${pct}%; background: ${color};">${avg.toFixed(1)}</div></div>
+          <div class="hbar-value">${data.count} resp.</div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div>
+      <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px;">Recognition Distribution by Department</div>
+      ${Object.entries(recByDept).sort((a,b) => b[1] - a[1]).map(([dept, count]) => {
+        const maxRec = Math.max(...Object.values(recByDept));
+        const pct = (count / maxRec) * 100;
+        return `<div class="hbar-row">
+          <div class="hbar-label">${dept}</div>
+          <div class="hbar-track"><div class="hbar-fill" style="width: ${pct}%; background: var(--accent-purple);">${count}</div></div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  document.getElementById('orgPulse').innerHTML = pulseHTML;
+}
+
+/* ================================================================
+   MOCK C: ORG HEALTH ADVISOR
+   ================================================================ */
+function renderOrgHealth() {
+  const people = nodesByType('person');
+  const active = people.filter(p => prop(p,'status') === 'active');
+  const terminated = people.filter(p => prop(p,'status') === 'terminated');
+  const candidates = nodesByType('candidate');
+  const activeCandidates = candidates.filter(c => !['rejected','withdrawn'].includes(prop(c,'status')));
+  const reviews = nodesByType('review');
+  const completedReviews = reviews.filter(r => prop(r,'status') === 'completed');
+  const recognitionEdges = edgesOfType('recognized');
+  const surveys = nodesByType('survey_response');
+  const enpsSurveys = surveys.filter(s => prop(s,'surveyType') === 'enps');
+  const positions = nodesByType('position').filter(p => prop(p, 'isOpen'));
+
+  const retentionRate = ((active.length / (active.length + terminated.length)) * 100).toFixed(1);
+  const promoters = enpsSurveys.filter(s => prop(s,'sentiment') === 'promoter').length;
+  const detractors = enpsSurveys.filter(s => prop(s,'sentiment') === 'detractor').length;
+  const enps = enpsSurveys.length > 0 ? Math.round(((promoters - detractors) / enpsSurveys.length) * 100) : 0;
+
+  // Review coverage
+  const reviewEdges = edgesOfType('has_review');
+  const peopleWithReviews = new Set(reviewEdges.map(e => e.source));
+  const overdueReviews = active.length - peopleWithReviews.size;
+
+  // Recognition by department
+  const recByDept = {};
+  recognitionEdges.forEach(e => {
+    const person = node(e.source);
+    if (!person) return;
+    const dept = getDept(person.id);
+    const deptName = dept ? prop(dept, 'name') : 'Unknown';
+    recByDept[deptName] = (recByDept[deptName] || 0) + 1;
+  });
+  const maxRecDept = Object.entries(recByDept).sort((a,b)=>b[1]-a[1])[0];
+  const minRecDept = Object.entries(recByDept).sort((a,b)=>a[1]-b[1])[0];
+
+  // Comp analysis
+  const compNodes = nodesByType('comp').filter(c => prop(c,'type') === 'salary');
+  let belowMid = 0, atMid = 0, aboveMid = 0;
+  active.forEach(p => {
+    const comps = getCompRecords(p.id).filter(c => prop(c,'type') === 'salary');
+    if (comps.length === 0) return;
+    const salary = Math.max(...comps.map(c => prop(c,'amount')));
+    const pos = getPosition(p.id);
+    if (!pos) return;
+    const bandMin = prop(pos, 'salaryBandMin');
+    const bandMax = prop(pos, 'salaryBandMax');
+    if (!bandMin || !bandMax) return;
+    const mid = (bandMin + bandMax) / 2;
+    if (salary < mid * 0.95) belowMid++;
+    else if (salary > mid * 1.05) aboveMid++;
+    else atMid++;
+  });
+
+  // Benefits enrollment
+  const benefitsEdges = edgesOfType('has_benefits');
+  const enrolledPeople = new Set(benefitsEdges.map(e => e.source));
+
+  // Open positions
+  const openPositions = positions.length;
+  const avgDaysInPipeline = activeCandidates.length > 0 ?
+    Math.round(activeCandidates.reduce((s,c) => s + daysBetween(prop(c,'appliedDate'), '2026-02-06'), 0) / activeCandidates.length) : 0;
+
+  document.getElementById('execSummary').innerHTML =
+    `Acme's ${people.length}-person organization is broadly healthy with <strong>${retentionRate}% retention</strong> over the past quarter. However, I've identified three areas needing attention: (1) recognition distribution is uneven &mdash; ${maxRecDept ? maxRecDept[0] : 'Engineering'} gives ${maxRecDept ? maxRecDept[1] : 0}x more recognitions than other departments, (2) <strong>${overdueReviews} employees</strong> are overdue for annual reviews, and (3) our hiring pipeline has ${activeCandidates.length} candidates but average time-to-fill is ${avgDaysInPipeline} days. Our eNPS is <strong>${enps > 0 ? '+' : ''}${enps}</strong>, driven by strong promoter sentiment in Engineering and Design.`;
+
+  // Health domains
+  let domainsHTML = `
+    <div class="health-domain">
+      <div class="health-domain-header">
+        <div class="health-domain-icon" style="background: var(--accent-green-dim); color: var(--accent-green);">R</div>
+        <div class="health-domain-title">Retention & Engagement</div>
+      </div>
+      <div class="health-metric"><div class="health-metric-label">Retention Rate</div><div class="health-metric-value" style="color: var(--accent-green);">${retentionRate}%</div></div>
+      <div class="health-metric"><div class="health-metric-label">Departures (last 90 days)</div><div class="health-metric-value">${terminated.length}</div></div>
+      <div class="health-metric"><div class="health-metric-label">eNPS</div><div class="health-metric-value" style="color: ${enps > 0 ? 'var(--accent-green)' : 'var(--accent-red)'};">${enps > 0 ? '+' : ''}${enps}</div></div>
+      <div class="health-metric"><div class="health-metric-label">Employees flagged for attention</div><div class="health-metric-value" style="color: var(--accent-yellow);">3</div></div>
+      <div class="agent-insight" style="margin-top: 12px;">
+        <div class="label">Agent Recommendation</div>
+        <p>Schedule check-ins for the 3 flagged employees within 2 weeks. Their patterns match pre-departure signals from Jason Cooper and Patrick O'Malley.</p>
+      </div>
+    </div>
+
+    <div class="health-domain">
+      <div class="health-domain-header">
+        <div class="health-domain-icon" style="background: var(--accent-blue-dim); color: var(--accent-blue);">G</div>
+        <div class="health-domain-title">Growth & Development</div>
+      </div>
+      <div class="health-metric"><div class="health-metric-label">Review Completion</div><div class="health-metric-value">${completedReviews.length} completed</div></div>
+      <div class="health-metric"><div class="health-metric-label">Overdue Reviews</div><div class="health-metric-value" style="color: var(--accent-yellow);">${overdueReviews}</div></div>
+      <div class="health-metric"><div class="health-metric-label">Total Recognitions</div><div class="health-metric-value">${recognitionEdges.length}</div></div>
+      <div class="health-metric"><div class="health-metric-label">Recognition Gap</div><div class="health-metric-value">${minRecDept ? minRecDept[0] + ' (lowest)' : 'N/A'}</div></div>
+      <div class="agent-insight" style="margin-top: 12px;">
+        <div class="label">Agent Recommendation</div>
+        <p>${overdueReviews} overdue reviews &mdash; I've drafted reminders for all managers with outstanding reviews.</p>
+      </div>
+    </div>
+
+    <div class="health-domain">
+      <div class="health-domain-header">
+        <div class="health-domain-icon" style="background: var(--accent-purple-dim); color: var(--accent-purple);">H</div>
+        <div class="health-domain-title">Hiring & Pipeline</div>
+      </div>
+      <div class="health-metric"><div class="health-metric-label">Open Positions</div><div class="health-metric-value">${openPositions}</div></div>
+      <div class="health-metric"><div class="health-metric-label">Active Candidates</div><div class="health-metric-value">${activeCandidates.length}</div></div>
+      <div class="health-metric"><div class="health-metric-label">Avg. Time in Pipeline</div><div class="health-metric-value">${avgDaysInPipeline} days</div></div>
+      <div class="health-metric"><div class="health-metric-label">Referral Candidates</div><div class="health-metric-value">${candidates.filter(c=>prop(c,'source')==='referral').length} of ${activeCandidates.length}</div></div>
+      <div class="agent-insight" style="margin-top: 12px;">
+        <div class="label">Agent Recommendation</div>
+        <p>Increase referral program promotion &mdash; referral hires stay 40% longer. Consider accelerating pipeline for the ${activeCandidates.filter(c=>prop(c,'status')==='interviewing').length} candidates currently interviewing.</p>
+      </div>
+    </div>
+
+    <div class="health-domain">
+      <div class="health-domain-header">
+        <div class="health-domain-icon" style="background: var(--accent-orange-dim); color: var(--accent-orange);">C</div>
+        <div class="health-domain-title">Compensation & Benefits</div>
+      </div>
+      <div class="health-metric"><div class="health-metric-label">Below Band Midpoint</div><div class="health-metric-value" style="color: var(--accent-yellow);">${belowMid} employees</div></div>
+      <div class="health-metric"><div class="health-metric-label">At Band Midpoint</div><div class="health-metric-value">${atMid} employees</div></div>
+      <div class="health-metric"><div class="health-metric-label">Above Band Midpoint</div><div class="health-metric-value">${aboveMid} employees</div></div>
+      <div class="health-metric"><div class="health-metric-label">Benefits Enrollment</div><div class="health-metric-value">${enrolledPeople.size} of ${active.length} enrolled</div></div>
+      <div class="agent-insight" style="margin-top: 12px;">
+        <div class="label">Agent Recommendation</div>
+        <p>${belowMid} employees below band midpoint &mdash; flag for next comp cycle, prioritizing those also lacking recognition or recent reviews.</p>
+      </div>
+    </div>`;
+
+  document.getElementById('healthDomains').innerHTML = domainsHTML;
+
+  // Key actions
+  let actionsHTML = `
+    <div class="key-action-item">
+      <div class="key-action-num">1</div>
+      <div class="key-action-text"><strong>Send ${overdueReviews > 15 ? overdueReviews : '15'} overdue review reminders</strong> &mdash; I've drafted personalized reminders for each manager.</div>
+      <button class="action-btn primary" onclick="handleAction(this, 'Reminders sent')">Approve & Send</button>
+    </div>
+    <div class="key-action-item">
+      <div class="key-action-num">2</div>
+      <div class="key-action-text"><strong>Launch recognition initiative</strong> for under-recognized departments. ${minRecDept ? minRecDept[0] : 'Operations'} has the lowest recognition activity.</div>
+      <button class="action-btn" onclick="handleAction(this, 'Draft reviewed')">Review Draft</button>
+    </div>
+    <div class="key-action-item">
+      <div class="key-action-num">3</div>
+      <div class="key-action-text"><strong>Schedule career check-ins</strong> for 3 employees flagged by the Retention Agent.</div>
+      <button class="action-btn" onclick="handleAction(this, 'Check-ins scheduled')">Schedule All</button>
+    </div>
+    <div class="key-action-item">
+      <div class="key-action-num">4</div>
+      <div class="key-action-text"><strong>Review pipeline velocity</strong> with recruiting team &mdash; average ${avgDaysInPipeline} days is above the 30-day target.</div>
+      <button class="action-btn" onclick="handleAction(this, 'Meeting scheduled')">Discuss</button>
+    </div>`;
+  document.getElementById('keyActionsList').innerHTML = actionsHTML;
+}
+
+/* ================================================================
+   MOCK D: INTERVIEW INTELLIGENCE
+   ================================================================ */
+function renderInterviewIntel() {
+  const interviews = nodesByType('interview');
+  const candidates = nodesByType('candidate');
+  const reviews = nodesByType('review');
+
+  // Interview score distribution
+  const scoreCounts = {};
+  interviews.forEach(i => {
+    const s = prop(i, 'score');
+    if (s) scoreCounts[s] = (scoreCounts[s] || 0) + 1;
+  });
+
+  // Review ratings
+  const ratingCounts = {};
+  reviews.forEach(r => {
+    const rt = prop(r, 'rating');
+    if (rt) ratingCounts[rt] = (ratingCounts[rt] || 0) + 1;
+  });
+
+  // Source analysis
+  const sourceCounts = {};
+  candidates.forEach(c => {
+    const s = prop(c, 'source');
+    if (s) sourceCounts[s] = (sourceCounts[s] || 0) + 1;
+  });
+
+  // Interview type analysis
+  const typeScores = {};
+  interviews.forEach(i => {
+    const t = prop(i, 'type');
+    const s = prop(i, 'score');
+    if (!typeScores[t]) typeScores[t] = { total: 0, strong: 0, hire: 0, no: 0 };
+    typeScores[t].total++;
+    if (s === 'strong_hire') typeScores[t].strong++;
+    else if (s === 'hire' || s === 'lean_hire') typeScores[t].hire++;
+    else if (s === 'no_hire') typeScores[t].no++;
+  });
+
+  document.getElementById('interviewAgentSummary').innerHTML =
+    `I've analyzed <strong>${interviews.length} interviews</strong> across <strong>${candidates.length} candidates</strong> and connected pre-hire signals to post-hire outcomes for employees with completed reviews.`;
+
+  document.getElementById('interviewKeyFinding').textContent =
+    'Your interview process is moderately predictive, with technical panels showing the strongest signal.';
+  document.getElementById('interviewKeyFindingSub').textContent =
+    `${scoreCounts['strong_hire'] || 0} of ${interviews.filter(i=>prop(i,'score')).length} scored interviews resulted in "strong hire" ratings. Candidates with unanimous strong-hire panels are 2.3x more likely to receive "exceeds" on their first review.`;
+
+  // Score vs Review
+  const strongHireCount = scoreCounts['strong_hire'] || 0;
+  const hireCount = (scoreCounts['hire'] || 0) + (scoreCounts['lean_hire'] || 0);
+  const noHireCount = scoreCounts['no_hire'] || 0;
+  const exceedsCount = ratingCounts['exceeds'] || 0;
+  const meetsCount = ratingCounts['meets'] || 0;
+
+  document.getElementById('scoreVsReview').innerHTML = `
+    <div class="panel-title">Interview Scores vs. Review Ratings</div>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+      Candidates scored "strong hire" are <strong>2.3x more likely</strong> to receive "exceeds" on their first annual review.
+    </p>
+    <div style="margin-bottom: 12px;">
+      <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 6px;">Interview Score Distribution</div>
+      <div class="hbar-row">
+        <div class="hbar-label">Strong Hire</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width: ${(strongHireCount/interviews.length)*100}%; background: var(--accent-green);">${strongHireCount}</div></div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-label">Hire / Lean Hire</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width: ${(hireCount/interviews.length)*100}%; background: var(--accent-blue);">${hireCount}</div></div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-label">No Hire</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width: ${(noHireCount/interviews.length)*100}%; background: var(--accent-red);">${noHireCount}</div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 6px;">Post-Hire Review Ratings</div>
+      <div class="hbar-row">
+        <div class="hbar-label">Exceeds</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width: ${reviews.length > 0 ? (exceedsCount/reviews.length)*100 : 0}%; background: var(--accent-green);">${exceedsCount}</div></div>
+      </div>
+      <div class="hbar-row">
+        <div class="hbar-label">Meets</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width: ${reviews.length > 0 ? (meetsCount/reviews.length)*100 : 0}%; background: var(--accent-blue);">${meetsCount}</div></div>
+      </div>
+    </div>
+    <div class="agent-insight" style="margin-top: 12px;">
+      <div class="label">Insight</div>
+      <p>"Strong hire" interview scores correlate with "exceeds" reviews 73% of the time. The connection is strongest for technical interviews.</p>
+    </div>`;
+
+  // Interviewer calibration
+  document.getElementById('interviewerCalibration').innerHTML = `
+    <div class="panel-title">Interview Panel Calibration</div>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+      Your interviewers are <strong>well calibrated</strong> overall, with one notable exception.
+    </p>
+    ${Object.entries(typeScores).filter(([t]) => ['technical','behavioral','portfolio_review','design_exercise','phone_screen'].includes(t)).map(([type, data]) => {
+      const positiveRate = data.total > 0 ? Math.round(((data.strong + data.hire) / data.total) * 100) : 0;
+      const color = positiveRate > 80 ? 'var(--accent-green)' : positiveRate > 50 ? 'var(--accent-yellow)' : 'var(--accent-red)';
+      return `<div class="hbar-row">
+        <div class="hbar-label">${type.replace('_', ' ')}</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width: ${positiveRate}%; background: ${color};">${positiveRate}% positive</div></div>
+        <div class="hbar-value">${data.total} total</div>
+      </div>`;
+    }).join('')}
+    <div class="agent-insight" style="margin-top: 12px;">
+      <div class="label">Insight</div>
+      <p>Technical interview scores are the most predictive of post-hire success for engineering roles. Behavioral panels have high pass rates (${typeScores['behavioral'] ? Math.round(((typeScores['behavioral'].strong + typeScores['behavioral'].hire) / typeScores['behavioral'].total) * 100) : 0}%) but weaker correlation with long-term outcomes. Design exercises show the widest score variance, suggesting calibration work is needed there.</p>
+    </div>`;
+
+  // Source quality
+  const sourceData = {};
+  candidates.forEach(c => {
+    const s = prop(c, 'source') || 'unknown';
+    if (!sourceData[s]) sourceData[s] = { count: 0, accepted: 0 };
+    sourceData[s].count++;
+    if (['accepted','offer'].includes(prop(c,'status'))) sourceData[s].accepted++;
+  });
+
+  document.getElementById('sourceQuality').innerHTML = `
+    <div class="panel-title">Source Quality Analysis</div>
+    <table class="signal-table">
+      <thead><tr><th>Source</th><th>Candidates</th><th>Conversion</th><th>Signal</th></tr></thead>
+      <tbody>
+        ${Object.entries(sourceData).map(([source, data]) => {
+          const convRate = data.count > 0 ? Math.round((data.accepted / data.count) * 100) : 0;
+          const signal = source === 'referral' ? 'green' : convRate > 20 ? 'yellow' : 'yellow';
+          return `<tr>
+            <td>${source}</td>
+            <td>${data.count}</td>
+            <td>${convRate}%</td>
+            <td><span class="signal-dot ${signal}"></span></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    <div class="agent-insight" style="margin-top: 12px;">
+      <div class="label">Insight</div>
+      <p>Referral hires outperform other sources on every metric: faster pipeline, higher acceptance rate, longer tenure, and better first-year review ratings. Investing in the referral program yields the highest ROI per hire.</p>
+    </div>`;
+
+  // Pipeline velocity
+  const stageVelocity = {};
+  candidates.forEach(c => {
+    const stages = prop(c, 'stageHistory') || [];
+    stages.forEach(s => {
+      if (s.enteredDate && s.exitedDate) {
+        const days = daysBetween(s.enteredDate, s.exitedDate);
+        if (!stageVelocity[s.stage]) stageVelocity[s.stage] = [];
+        stageVelocity[s.stage].push(days);
+      }
+    });
+  });
+
+  document.getElementById('pipelineVelocity').innerHTML = `
+    <div class="panel-title">Pipeline Velocity by Stage</div>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+      Candidates who move through stages faster have higher acceptance rates.
+    </p>
+    ${Object.entries(stageVelocity).map(([stage, days]) => {
+      const avg = days.reduce((s,d)=>s+d,0) / days.length;
+      const maxDays = 14;
+      const pct = Math.min((avg / maxDays) * 100, 100);
+      const color = avg <= 3 ? 'var(--accent-green)' : avg <= 5 ? 'var(--accent-yellow)' : 'var(--accent-orange)';
+      return `<div class="hbar-row">
+        <div class="hbar-label">${stage}</div>
+        <div class="hbar-track"><div class="hbar-fill" style="width: ${pct}%; background: ${color};">${avg.toFixed(1)}d avg</div></div>
+      </div>`;
+    }).join('')}
+    <div class="agent-insight" style="margin-top: 12px;">
+      <div class="label">Insight</div>
+      <p>Candidates who complete all stages in under 3 weeks accept 30% more often. Your screening stage is fast (1-3 days), but interviewing can stretch to 10+ days. Consider scheduling interviews within 5 days of screening completion.</p>
+    </div>`;
+
+  // Recommendations
+  document.getElementById('interviewRecs').innerHTML = `
+    <li><div class="rec-bullet" style="background: var(--accent-green);"></div><div class="rec-text"><strong>Weight technical interview scores more heavily</strong> for engineering roles &mdash; they're the strongest predictor of first-year performance.</div></li>
+    <li><div class="rec-bullet" style="background: var(--accent-blue);"></div><div class="rec-text"><strong>Invest in the referral program</strong> &mdash; referral hires produce the best outcomes across tenure, reviews, and time-to-productivity.</div></li>
+    <li><div class="rec-bullet" style="background: var(--accent-purple);"></div><div class="rec-text"><strong>Reduce time between interview stages</strong> &mdash; candidates accept 30% more often when the full pipeline completes in under 3 weeks.</div></li>
+    <li><div class="rec-bullet" style="background: var(--accent-yellow);"></div><div class="rec-text"><strong>Calibrate design exercise scoring</strong> &mdash; the widest score variance is in design exercises, suggesting interviewers may be evaluating different things.</div></li>
+    <li><div class="rec-bullet" style="background: var(--accent-orange);"></div><div class="rec-text"><strong>Track split-decision outcomes</strong> &mdash; candidates with conflicting interview scores show 18-month average tenure vs. 2.8 years for unanimous hires. Build a decision framework for split verdicts.</div></li>`;
+}
+
+/* ================================================================
+   MOCK E: CHANGE IMPACT SIMULATOR
+   ================================================================ */
+function renderSimulator() {
+  updateScenario();
+}
+
+function updateScenario() {
+  const type = document.getElementById('scenarioType').value;
+  const inputsEl = document.getElementById('scenarioInputs');
+
+  const teams = nodesByType('team').filter(t => prop(t,'teamType') === 'team');
+  const departments = nodesByType('department');
+  const people = nodesByType('person').filter(p => prop(p,'status') === 'active');
+  const managers = people.filter(p => {
+    const reports = getDirectReports(p.id);
+    return reports.length > 0;
+  });
+
+  if (type === 'move_team') {
+    inputsEl.innerHTML = `
+      <div>
+        <label style="font-size: 11px; color: var(--text-tertiary); display: block; margin-bottom: 4px;">Select Team</label>
+        <select id="simTeam" onchange="runSimulation()">
+          <option value="">Choose a team...</option>
+          ${teams.map(t => `<option value="${t.id}">${prop(t,'name')}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size: 11px; color: var(--text-tertiary); display: block; margin-bottom: 4px;">Move to Department</label>
+        <select id="simDept" onchange="runSimulation()">
+          <option value="">Choose a department...</option>
+          ${departments.map(d => `<option value="${d.id}">${prop(d,'name')}</option>`).join('')}
+        </select>
+      </div>`;
+  } else if (type === 'change_report') {
+    inputsEl.innerHTML = `
+      <div>
+        <label style="font-size: 11px; color: var(--text-tertiary); display: block; margin-bottom: 4px;">Select Person</label>
+        <select id="simPerson" onchange="runSimulation()">
+          <option value="">Choose a person...</option>
+          ${managers.map(p => `<option value="${p.id}">${prop(p,'name')} (${prop(p,'role')})</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size: 11px; color: var(--text-tertiary); display: block; margin-bottom: 4px;">New Manager</label>
+        <select id="simNewMgr" onchange="runSimulation()">
+          <option value="">Choose new manager...</option>
+          ${managers.map(p => `<option value="${p.id}">${prop(p,'name')} (${prop(p,'role')})</option>`).join('')}
+        </select>
+      </div>`;
+  } else if (type === 'add_headcount') {
+    inputsEl.innerHTML = `
+      <div>
+        <label style="font-size: 11px; color: var(--text-tertiary); display: block; margin-bottom: 4px;">Department</label>
+        <select id="simHcDept" onchange="runSimulation()">
+          <option value="">Choose a department...</option>
+          ${departments.map(d => `<option value="${d.id}">${prop(d,'name')}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size: 11px; color: var(--text-tertiary); display: block; margin-bottom: 4px;">Number of Positions</label>
+        <select id="simHcCount" onchange="runSimulation()">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+        </select>
+      </div>`;
+  }
+
+  document.getElementById('simulationResults').style.display = 'none';
+}
+
+function runSimulation() {
+  const type = document.getElementById('scenarioType').value;
+  const resultsEl = document.getElementById('simulationResults');
+
+  if (type === 'move_team') {
+    const teamId = document.getElementById('simTeam')?.value;
+    const deptId = document.getElementById('simDept')?.value;
+    if (!teamId || !deptId) return;
+
+    const team = node(teamId);
+    const newDept = node(deptId);
+    const teamName = prop(team, 'name');
+    const newDeptName = prop(newDept, 'name');
+
+    // Find team members
+    const members = edgesTo(teamId, 'member_of').map(e => node(e.source)).filter(Boolean);
+    const memberNames = members.map(m => prop(m, 'name'));
+    const memberCount = members.length;
+
+    // Find current department of team members
+    const currentDepts = {};
+    members.forEach(m => {
+      const d = getDept(m.id);
+      if (d) {
+        const dn = prop(d, 'name');
+        currentDepts[dn] = (currentDepts[dn] || 0) + 1;
+      }
+    });
+    const fromDept = Object.keys(currentDepts)[0] || 'Unknown';
+    const fromDeptNode = nodesByType('department').find(d => prop(d,'name') === fromDept);
+
+    // Department headcounts
+    const fromDeptCount = fromDeptNode ? edgesTo(fromDeptNode.id, 'in_department').length : 0;
+    const toDeptCount = edgesTo(deptId, 'in_department').length;
+
+    // Find managers affected
+    const managersAffected = new Set();
+    members.forEach(m => {
+      const mgr = getManager(m.id);
+      if (mgr) managersAffected.add(prop(mgr, 'name'));
+    });
+
+    document.getElementById('impactSummary').innerHTML = `
+      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7;">
+        If you move <strong>${teamName}</strong> from ${fromDept} to ${newDeptName}:
+      </p>
+      <ul class="rec-list" style="margin-top: 12px;">
+        <li><div class="rec-bullet" style="background: var(--accent-blue);"></div><div class="rec-text"><strong>${memberCount} people affected:</strong> ${memberNames.slice(0, 5).join(', ')}${memberNames.length > 5 ? ' and ' + (memberNames.length - 5) + ' others' : ''}</div></li>
+        <li><div class="rec-bullet" style="background: var(--accent-purple);"></div><div class="rec-text"><strong>Department headcount changes:</strong> ${fromDept} ${fromDeptCount} &rarr; ${fromDeptCount - memberCount}, ${newDeptName} ${toDeptCount} &rarr; ${toDeptCount + memberCount}</div></li>
+        <li><div class="rec-bullet" style="background: var(--accent-yellow);"></div><div class="rec-text"><strong>Managers affected:</strong> ${[...managersAffected].join(', ') || 'None identified'}</div></li>
+        <li><div class="rec-bullet" style="background: var(--accent-green);"></div><div class="rec-text"><strong>Benefits:</strong> No impact (company-wide, not department-specific)</div></li>
+        <li><div class="rec-bullet" style="background: var(--accent-green);"></div><div class="rec-text"><strong>Compliance:</strong> No location changes, no tax withholding impact</div></li>
+      </ul>`;
+
+    document.getElementById('beforeTree').innerHTML = buildOrgTree(fromDept, teamName, memberCount, 'before');
+    document.getElementById('afterTree').innerHTML = buildOrgTree(newDeptName, teamName, memberCount, 'after');
+
+    document.getElementById('simAssessment').innerHTML =
+      `This change is <strong>low-risk</strong>. No compliance implications. The ${teamName} team's ${memberCount} members would shift from ${fromDept} to ${newDeptName}, reducing ${fromDept} headcount by ${Math.round((memberCount/fromDeptCount)*100)}%. Main consideration: ensure ${[...managersAffected].join(' and ')} ${managersAffected.size > 1 ? 'are' : 'is'} informed before announcing, as this affects their span of control. I recommend 1:1s with affected managers before any org-wide communication.`;
+
+    resultsEl.style.display = 'block';
+  } else if (type === 'change_report') {
+    const personId = document.getElementById('simPerson')?.value;
+    const newMgrId = document.getElementById('simNewMgr')?.value;
+    if (!personId || !newMgrId || personId === newMgrId) return;
+
+    const person = node(personId);
+    const newMgr = node(newMgrId);
+    const currentMgr = getManager(personId);
+    const reports = getDirectReports(personId);
+
+    document.getElementById('impactSummary').innerHTML = `
+      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7;">
+        If <strong>${prop(person,'name')}</strong> reports to <strong>${prop(newMgr,'name')}</strong> instead of ${currentMgr ? prop(currentMgr,'name') : 'current manager'}:
+      </p>
+      <ul class="rec-list" style="margin-top: 12px;">
+        <li><div class="rec-bullet" style="background: var(--accent-blue);"></div><div class="rec-text"><strong>${prop(person,'name')}'s ${reports.length} direct reports</strong> would remain unchanged (they still report to ${prop(person,'name')})</div></li>
+        <li><div class="rec-bullet" style="background: var(--accent-purple);"></div><div class="rec-text"><strong>${prop(newMgr,'name')}'s span of control</strong> increases by 1 (${prop(person,'name')} + their ${reports.length} indirect reports)</div></li>
+        ${currentMgr ? `<li><div class="rec-bullet" style="background: var(--accent-yellow);"></div><div class="rec-text"><strong>${prop(currentMgr,'name')}'s span of control</strong> decreases by ${1 + reports.length}</div></li>` : ''}
+        <li><div class="rec-bullet" style="background: var(--accent-green);"></div><div class="rec-text"><strong>Approval chains:</strong> All pending requests from ${prop(person,'name')} would route to ${prop(newMgr,'name')} instead</div></li>
+      </ul>`;
+
+    document.getElementById('beforeTree').innerHTML = `
+      <div class="org-tree">
+        ${currentMgr ? `<div class="org-tree-root">${prop(currentMgr,'name')} (${prop(currentMgr,'role')})</div>` : ''}
+        <div class="org-tree-node highlight">${prop(person,'name')} (${prop(person,'role')})</div>
+        ${reports.slice(0,4).map(r => `<div class="org-tree-node" style="margin-left: 32px;">${prop(r,'name')}</div>`).join('')}
+        ${reports.length > 4 ? `<div class="org-tree-node" style="margin-left: 32px; color: var(--text-tertiary);">+${reports.length - 4} more</div>` : ''}
+      </div>`;
+
+    document.getElementById('afterTree').innerHTML = `
+      <div class="org-tree">
+        <div class="org-tree-root">${prop(newMgr,'name')} (${prop(newMgr,'role')})</div>
+        <div class="org-tree-node highlight">${prop(person,'name')} (${prop(person,'role')})</div>
+        ${reports.slice(0,4).map(r => `<div class="org-tree-node" style="margin-left: 32px;">${prop(r,'name')}</div>`).join('')}
+        ${reports.length > 4 ? `<div class="org-tree-node" style="margin-left: 32px; color: var(--text-tertiary);">+${reports.length - 4} more</div>` : ''}
+      </div>`;
+
+    document.getElementById('simAssessment').innerHTML =
+      `This is a <strong>moderate-impact</strong> change. ${prop(person,'name')} brings ${reports.length} direct reports, so ${prop(newMgr,'name')}'s effective span of control grows significantly. I recommend confirming ${prop(newMgr,'name')} has capacity before proceeding. No compliance or benefits implications.`;
+
+    resultsEl.style.display = 'block';
+  } else if (type === 'add_headcount') {
+    const deptId = document.getElementById('simHcDept')?.value;
+    const count = parseInt(document.getElementById('simHcCount')?.value || '1');
+    if (!deptId) return;
+
+    const dept = node(deptId);
+    const deptName = prop(dept, 'name');
+    const currentCount = edgesTo(deptId, 'in_department').length;
+
+    // Find average salary for department
+    const deptPeople = edgesTo(deptId, 'in_department').map(e => node(e.source)).filter(Boolean);
+    let totalSalary = 0, salaryCount = 0;
+    deptPeople.forEach(p => {
+      const comps = getCompRecords(p.id).filter(c => prop(c,'type') === 'salary');
+      if (comps.length > 0) {
+        totalSalary += Math.max(...comps.map(c => prop(c,'amount')));
+        salaryCount++;
+      }
+    });
+    const avgSalary = salaryCount > 0 ? Math.round(totalSalary / salaryCount) : 120000;
+    const additionalCost = avgSalary * count;
+
+    document.getElementById('impactSummary').innerHTML = `
+      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7;">
+        If you add <strong>${count} position${count > 1 ? 's' : ''}</strong> to <strong>${deptName}</strong>:
+      </p>
+      <ul class="rec-list" style="margin-top: 12px;">
+        <li><div class="rec-bullet" style="background: var(--accent-blue);"></div><div class="rec-text"><strong>Department headcount:</strong> ${currentCount} &rarr; ${currentCount + count} (${Math.round((count/currentCount)*100)}% increase)</div></li>
+        <li><div class="rec-bullet" style="background: var(--accent-purple);"></div><div class="rec-text"><strong>Estimated annual cost:</strong> $${(additionalCost/1000).toFixed(0)}k (based on ${deptName} average salary of $${(avgSalary/1000).toFixed(0)}k)</div></li>
+        <li><div class="rec-bullet" style="background: var(--accent-yellow);"></div><div class="rec-text"><strong>Benefits cost:</strong> ~$${(count * 800).toFixed(0)}/mo employer contribution (medical + dental + vision)</div></li>
+        <li><div class="rec-bullet" style="background: var(--accent-green);"></div><div class="rec-text"><strong>Equipment budget:</strong> ~$${(count * 3500).toFixed(0)} one-time (laptop + monitor + peripherals)</div></li>
+        <li><div class="rec-bullet" style="background: var(--accent-cyan);"></div><div class="rec-text"><strong>Time to fill:</strong> Estimated ${deptName === 'Engineering' ? '45' : '30'} days based on ${deptName} pipeline history</div></li>
+      </ul>`;
+
+    document.getElementById('beforeTree').innerHTML = `
+      <div class="org-tree">
+        <div class="org-tree-root">${deptName}</div>
+        <div class="org-tree-node">${currentCount} employees</div>
+        <div class="org-tree-node">Avg salary: $${(avgSalary/1000).toFixed(0)}k</div>
+      </div>`;
+
+    document.getElementById('afterTree').innerHTML = `
+      <div class="org-tree">
+        <div class="org-tree-root">${deptName}</div>
+        <div class="org-tree-node highlight">${currentCount + count} employees (+${count})</div>
+        <div class="org-tree-node">Additional cost: $${(additionalCost/1000).toFixed(0)}k/yr</div>
+      </div>`;
+
+    document.getElementById('simAssessment').innerHTML =
+      `Adding ${count} headcount to ${deptName} is <strong>straightforward</strong>. Total annual cost impact is approximately <strong>$${(additionalCost/1000).toFixed(0)}k</strong> in salary plus ~$${(count * 800 * 12 / 1000).toFixed(0)}k in benefits. I recommend opening the position requisition and targeting referral sources first &mdash; they produce the highest-quality hires. Current pipeline has ${nodesByType('candidate').filter(c=>!['rejected','withdrawn'].includes(prop(c,'status'))).length} active candidates that may be suitable.`;
+
+    resultsEl.style.display = 'block';
+  }
+}
+
+function buildOrgTree(deptName, teamName, memberCount, mode) {
+  const departments = nodesByType('department');
+  const dept = departments.find(d => prop(d,'name') === deptName);
+  const deptCount = dept ? edgesTo(dept.id, 'in_department').length : 0;
+
+  return `
+    <div class="org-tree">
+      <div class="org-tree-root">${deptName}</div>
+      <div class="org-tree-node">${mode === 'after' ? deptCount + memberCount : deptCount} employees</div>
+      ${mode === 'after' ? `<div class="org-tree-node highlight">${teamName} (+${memberCount})</div>` : ''}
+    </div>`;
+}
+
+/* ================================================================
+   SHARED INTERACTIONS
+   ================================================================ */
+function handleAction(btn, doneText) {
+  btn.classList.add('done');
+  btn.textContent = doneText;
+  btn.style.pointerEvents = 'none';
+}
+
+function toggleCollapsible(header) {
+  header.classList.toggle('open');
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+/* ================================================================
+   INIT
+   ================================================================ */
+loadData();
+</script>
+</body>
+</html>
