@@ -11,9 +11,9 @@ body { background: #0a0a0f; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .app { display: flex; flex-direction: column; height: 100vh; }
 header { padding: 16px 24px; border-bottom: 1px solid #2a2a3e; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
 header h1 { font-size: 20px; font-weight: 600; color: #fff; }
-header .subtitle { color: #888; font-size: 13px; }
+header .subtitle { color: #888; font-size: 15px; }
 .nav-tabs { display: flex; gap: 2px; padding: 0 24px; border-bottom: 1px solid #2a2a3e; flex-shrink: 0; background: #0e0e18; }
-.nav-tab { padding: 10px 18px; font-size: 13px; cursor: pointer; color: #888; border-bottom: 2px solid transparent; transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none; }
+.nav-tab { padding: 10px 18px; font-size: 15px; cursor: pointer; color: #888; border-bottom: 2px solid transparent; transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none; }
 .nav-tab:hover { color: #ccc; }
 .nav-tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
 .main { flex: 1; overflow: auto; }
@@ -23,20 +23,20 @@ header .subtitle { color: #888; font-size: 13px; }
 .scenario-card { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 10px; padding: 20px; cursor: pointer; transition: all 0.2s; }
 .scenario-card:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 20px rgba(59,130,246,0.15); }
 .scenario-card h3 { font-size: 16px; color: #fff; margin-bottom: 8px; }
-.scenario-card .desc { font-size: 13px; color: #999; line-height: 1.5; margin-bottom: 12px; }
+.scenario-card .desc { font-size: 15px; color: #999; line-height: 1.5; margin-bottom: 12px; }
 .scenario-card .affected { display: flex; flex-wrap: wrap; gap: 6px; }
-.scenario-card .tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #1e293b; color: #94a3b8; }
+.scenario-card .tag { font-size: 12px; padding: 3px 8px; border-radius: 4px; background: #1e293b; color: #94a3b8; }
 .scenario-card .tag.people { background: #1e3a5f; color: #60a5fa; }
 .scenario-card .tag.teams { background: #2d1f3d; color: #a78bfa; }
-.scenario-card .count { font-size: 12px; color: #666; margin-top: 10px; }
-.back-btn { background: #1a1a2e; border: 1px solid #2a2a3e; color: #94a3b8; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; margin: 16px 24px; display: inline-flex; align-items: center; gap: 6px; }
+.scenario-card .count { font-size: 13px; color: #666; margin-top: 10px; }
+.back-btn { background: #1a1a2e; border: 1px solid #2a2a3e; color: #94a3b8; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 15px; margin: 16px 24px; display: inline-flex; align-items: center; gap: 6px; }
 .back-btn:hover { border-color: #3b82f6; color: #fff; }
 
 /* Effect Cascade */
 .cascade-view { padding: 24px; }
 .cascade-header { margin-bottom: 20px; }
 .cascade-header h2 { font-size: 22px; color: #fff; margin-bottom: 4px; }
-.cascade-header p { color: #888; font-size: 14px; }
+.cascade-header p { color: #888; font-size: 15px; }
 .order-section { margin-bottom: 28px; }
 .order-label { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #1a1a2e; }
 .order-dot { width: 10px; height: 10px; border-radius: 50%; }
@@ -44,27 +44,27 @@ header .subtitle { color: #888; font-size: 13px; }
 .order-dot.second { background: #f59e0b; }
 .order-dot.third { background: #a855f7; }
 .order-label h3 { font-size: 16px; font-weight: 600; }
-.order-label .hop { font-size: 12px; color: #666; }
+.order-label .hop { font-size: 13px; color: #666; }
 .effect-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
 .effect-card { background: #1a1a2e; border-radius: 8px; padding: 14px; border-left: 3px solid transparent; }
 .effect-card.first { border-left-color: #3b82f6; }
 .effect-card.second { border-left-color: #f59e0b; }
 .effect-card.third { border-left-color: #a855f7; }
-.effect-card .title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 6px; }
-.effect-card .detail { font-size: 12px; color: #999; line-height: 1.5; }
+.effect-card .title { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+.effect-card .detail { font-size: 13px; color: #999; line-height: 1.5; }
 .effect-card .detail strong { color: #ccc; font-weight: 500; }
 .effect-card .names { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
-.effect-card .name-tag { font-size: 11px; padding: 2px 6px; border-radius: 3px; background: #0f172a; color: #94a3b8; }
+.effect-card .name-tag { font-size: 12px; padding: 2px 6px; border-radius: 3px; background: #0f172a; color: #94a3b8; }
 
 /* Graph Viz */
 .graph-container { position: relative; height: calc(100vh - 120px); }
 .graph-svg { width: 100%; height: 100%; }
 .graph-controls { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
-.graph-btn { background: #1a1a2e; border: 1px solid #2a2a3e; color: #e0e0e0; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+.graph-btn { background: #1a1a2e; border: 1px solid #2a2a3e; color: #e0e0e0; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; }
 .graph-btn:hover { border-color: #3b82f6; }
 .graph-btn.active { background: #1e3a5f; border-color: #3b82f6; }
 .graph-legend { position: absolute; bottom: 16px; left: 16px; background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 8px; padding: 12px; }
-.legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 11px; color: #999; }
+.legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 12px; color: #999; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
 
 /* Flowchart */
@@ -76,20 +76,20 @@ header .subtitle { color: #888; font-size: 13px; }
 .view.active { display: block; }
 .section-intro { padding: 24px 24px 0; }
 .section-intro h2 { font-size: 20px; color: #fff; margin-bottom: 6px; }
-.section-intro p { color: #888; font-size: 13px; }
+.section-intro p { color: #888; font-size: 15px; }
 </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <h1>Change Simulator <span style="font-size:14px;font-weight:400;color:#888;margin-left:4px">v5</span></h1>
-    <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#555">
+    <h1>Change Simulator <span style="font-size:15px;font-weight:400;color:#888;margin-left:4px">v5</span></h1>
+    <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:#555">
       <a href="pattern-intelligence.html" style="color:#555;text-decoration:none">v1</a><span style="color:rgba(255,255,255,0.1)">|</span>
       <a href="pattern-intelligence-v2.html" style="color:#555;text-decoration:none">v2</a><span style="color:rgba(255,255,255,0.1)">|</span>
       <a href="pattern-intelligence-v3.html" style="color:#555;text-decoration:none">v3</a><span style="color:rgba(255,255,255,0.1)">|</span>
       <a href="pattern-intelligence-v4.html" style="color:#555;text-decoration:none">v4</a><span style="color:rgba(255,255,255,0.1)">|</span>
       <span style="color:#e0e0e0;font-weight:700">v5</span>
-      <span style="color:#555;font-size:11px;margin-left:4px">(was Pattern Intelligence)</span>
+      <span style="color:#555;font-size:12px;margin-left:4px">(was Pattern Intelligence)</span>
     </div>
     <span class="subtitle">Model org changes. See every ripple across the graph.</span>
   </header>

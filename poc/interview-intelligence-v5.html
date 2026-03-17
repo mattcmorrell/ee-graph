@@ -41,8 +41,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 .page-header { padding: 24px 32px 0; max-width: 1400px; margin: 0 auto; }
 .page-header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
 .page-header h1 span { color: var(--purple); }
-.page-header .subtitle { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
-.graph-proof { display: inline-flex; align-items: center; gap: 6px; background: var(--purple-dim); color: var(--purple); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 8px; letter-spacing: 0.5px; }
+.page-header .subtitle { color: var(--text-secondary); font-size: 15px; margin-top: 4px; }
+.graph-proof { display: inline-flex; align-items: center; gap: 6px; background: var(--purple-dim); color: var(--purple); font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 8px; letter-spacing: 0.5px; }
 .graph-proof svg { width: 14px; height: 14px; }
 .container { max-width: 1400px; margin: 0 auto; padding: 20px 32px 80px; }
 
@@ -50,19 +50,19 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 .hero-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 .hero-card { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 24px; position: relative; overflow: hidden; }
 .hero-card.primary { grid-column: 1 / 3; }
-.hero-card .label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 8px; }
+.hero-card .label { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 8px; }
 .hero-card .big-number { font-size: 64px; font-weight: 900; letter-spacing: -2px; line-height: 1; }
 .hero-card .big-number.green { color: var(--green); }
 .hero-card .big-number.blue { color: var(--blue); }
 .hero-card .big-number.purple { color: var(--purple); }
-.hero-card .context { color: var(--text-secondary); font-size: 13px; margin-top: 8px; line-height: 1.5; }
+.hero-card .context { color: var(--text-secondary); font-size: 15px; margin-top: 8px; line-height: 1.5; }
 .hero-card .context strong { color: var(--text-primary); }
-.hero-card .graph-path { font-size: 11px; color: var(--text-muted); margin-top: 12px; font-family: 'SF Mono', monospace; padding: 6px 10px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); }
+.hero-card .graph-path { font-size: 12px; color: var(--text-muted); margin-top: 12px; font-family: 'SF Mono', monospace; padding: 6px 10px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); }
 .hero-card .graph-path span { color: var(--purple); }
 
 /* Section headers */
 .section-header { font-size: 18px; font-weight: 700; margin: 32px 0 16px; display: flex; align-items: center; gap: 10px; }
-.section-header .num { background: var(--purple-dim); color: var(--purple); font-size: 12px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.section-header .num { background: var(--purple-dim); color: var(--purple); font-size: 13px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
 /* Cards grid */
 .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
@@ -70,8 +70,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 .card:hover { border-color: rgba(167,139,250,0.3); }
 .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
 .card-name { font-size: 16px; font-weight: 700; }
-.card-role { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-.card-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.card-role { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.card-badge { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
 .badge-green { background: var(--green-dim); color: var(--green); }
 .badge-blue { background: var(--blue-dim); color: var(--blue); }
 .badge-amber { background: var(--amber-dim); color: var(--amber); }
@@ -79,7 +79,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 .badge-purple { background: var(--purple-dim); color: var(--purple); }
 
 /* Stat rows inside cards */
-.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px; }
+.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 15px; }
 .stat-row:last-child { border-bottom: none; }
 .stat-label { color: var(--text-secondary); }
 .stat-value { font-weight: 600; }
@@ -95,12 +95,12 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 
 /* Calibration matrix */
 .matrix-container { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 24px; overflow-x: auto; }
-.matrix { width: 100%; border-collapse: collapse; font-size: 13px; }
-.matrix th { text-align: left; padding: 8px 12px; font-weight: 600; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-strong); }
+.matrix { width: 100%; border-collapse: collapse; font-size: 15px; }
+.matrix th { text-align: left; padding: 8px 12px; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-strong); }
 .matrix td { padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); }
 .matrix .name-cell { font-weight: 600; min-width: 140px; }
 .matrix .score-cell { text-align: center; min-width: 60px; }
-.matrix .score-cell .dot { display: inline-block; width: 28px; height: 28px; border-radius: 50%; line-height: 28px; font-size: 11px; font-weight: 700; }
+.matrix .score-cell .dot { display: inline-block; width: 28px; height: 28px; border-radius: 50%; line-height: 28px; font-size: 12px; font-weight: 700; }
 .dot-match { background: var(--green-dim); color: var(--green); }
 .dot-close { background: var(--blue-dim); color: var(--blue); }
 .dot-miss { background: var(--red-dim); color: var(--red); }
@@ -110,34 +110,34 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 /* Pipeline flow */
 .pipeline { display: flex; align-items: stretch; gap: 3px; margin: 16px 0; }
 .pipeline-stage { flex: 1; background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 16px 12px; text-align: center; position: relative; }
-.pipeline-stage .stage-name { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.pipeline-stage .stage-name { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
 .pipeline-stage .stage-count { font-size: 28px; font-weight: 800; margin: 6px 0; }
-.pipeline-stage .stage-pct { font-size: 12px; color: var(--text-secondary); }
+.pipeline-stage .stage-pct { font-size: 13px; color: var(--text-secondary); }
 .pipeline-stage .arrow-right { position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; z-index: 1; }
 
 /* Interview type effectiveness */
-.type-row { display: grid; grid-template-columns: 140px 1fr 80px; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); font-size: 14px; }
+.type-row { display: grid; grid-template-columns: 140px 1fr 80px; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); font-size: 15px; }
 .type-row:last-child { border-bottom: none; }
 .type-name { font-weight: 600; }
 .type-bar-container { display: flex; align-items: center; gap: 8px; }
 .type-bar { height: 24px; border-radius: 4px; display: flex; overflow: hidden; flex: 1; }
-.type-bar .seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.8); min-width: 20px; }
+.type-bar .seg { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: rgba(0,0,0,0.8); min-width: 20px; }
 .type-prediction { font-weight: 700; text-align: right; }
 
 /* Detail panels */
 .detail-panel { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius); margin-top: 8px; overflow: hidden; display: none; }
 .detail-panel.open { display: block; }
-.detail-row { display: grid; grid-template-columns: 140px 1fr 100px 100px 120px; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 13px; }
-.detail-row.header { font-weight: 600; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(255,255,255,0.02); }
-.expand-btn { background: none; border: 1px solid var(--border-strong); color: var(--text-secondary); padding: 4px 12px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; font-family: inherit; transition: all 0.2s; }
+.detail-row { display: grid; grid-template-columns: 140px 1fr 100px 100px 120px; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 15px; }
+.detail-row.header { font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(255,255,255,0.02); }
+.expand-btn { background: none; border: 1px solid var(--border-strong); color: var(--text-secondary); padding: 4px 12px; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; font-family: inherit; transition: all 0.2s; }
 .expand-btn:hover { border-color: var(--purple); color: var(--purple); }
 
 /* Outcome connection card */
 .outcome-card { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; }
 .outcome-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
-.flow-node { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-.flow-arrow { color: var(--text-muted); font-size: 14px; }
-.outcome-insight { background: rgba(167,139,250,0.06); border-left: 3px solid var(--purple); padding: 12px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-top: 12px; }
+.flow-node { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.flow-arrow { color: var(--text-muted); font-size: 15px; }
+.outcome-insight { background: rgba(167,139,250,0.06); border-left: 3px solid var(--purple); padding: 12px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 15px; line-height: 1.6; color: var(--text-secondary); margin-top: 12px; }
 .outcome-insight strong { color: var(--text-primary); }
 
 /* Loading */
@@ -146,7 +146,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Tooltip */
-.tooltip { position: fixed; background: #1e1e2e; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: var(--text-primary); pointer-events: none; z-index: 1000; max-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); display: none; }
+.tooltip { position: fixed; background: #1e1e2e; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 13px; color: var(--text-primary); pointer-events: none; z-index: 1000; max-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); display: none; }
 
 /* Responsive */
 @media (max-width: 900px) {
@@ -160,14 +160,14 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-pri
 <body>
 
 <div class="page-header">
-  <h1>Interview <span>Intelligence</span> <span style="font-size:14px;font-weight:400;color:#888;margin-left:4px">v5</span></h1>
-  <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#555;margin-top:4px">
+  <h1>Interview <span>Intelligence</span> <span style="font-size:15px;font-weight:400;color:#888;margin-left:4px">v5</span></h1>
+  <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:#555;margin-top:4px">
     <a href="pattern-intelligence.html" style="color:#555;text-decoration:none">v1</a><span style="color:rgba(255,255,255,0.1)">|</span>
     <a href="pattern-intelligence-v2.html" style="color:#555;text-decoration:none">v2</a><span style="color:rgba(255,255,255,0.1)">|</span>
     <a href="pattern-intelligence-v3.html" style="color:#555;text-decoration:none">v3</a><span style="color:rgba(255,255,255,0.1)">|</span>
     <a href="pattern-intelligence-v4.html" style="color:#555;text-decoration:none">v4</a><span style="color:rgba(255,255,255,0.1)">|</span>
     <span style="color:#e0e0e0;font-weight:700">v5</span>
-    <span style="color:#555;font-size:11px;margin-left:4px">(was Pattern Intelligence)</span>
+    <span style="color:#555;font-size:12px;margin-left:4px">(was Pattern Intelligence)</span>
   </div>
   <div class="subtitle">Graph-powered interviewer assessment and hiring outcome prediction</div>
   <div class="graph-proof">
@@ -450,7 +450,7 @@ function render(analysis) {
     });
 
     html += `</div>
-        <span style="font-size:12px;color:var(--text-secondary);min-width:40px;text-align:right;">${stats.withScore} total</span>
+        <span style="font-size:13px;color:var(--text-secondary);min-width:40px;text-align:right;">${stats.withScore} total</span>
       </div>
       <div class="type-prediction" style="color:${shRate >= 70 ? 'var(--green)' : shRate >= 40 ? 'var(--blue)' : 'var(--amber)'};">${shRate.toFixed(0)}% SH</div>
     </div>`;
@@ -459,7 +459,7 @@ function render(analysis) {
   html += `</div>`;
 
   // === SECTION 2: INTERVIEWER PROFILES ===
-  html += `<div class="section-header"><div class="num">2</div> Interviewer Profiles <span style="color:var(--text-secondary);font-size:13px;font-weight:400;margin-left:8px;">${interviewerCount} active interviewers</span></div>`;
+  html += `<div class="section-header"><div class="num">2</div> Interviewer Profiles <span style="color:var(--text-secondary);font-size:15px;font-weight:400;margin-left:8px;">${interviewerCount} active interviewers</span></div>`;
   html += `<div class="cards-grid">`;
 
   const interviewerProfiles = Object.entries(interviewerMap).sort((a, b) => b[1].interviews.length - a[1].interviews.length);
@@ -501,7 +501,7 @@ function render(analysis) {
     html += `<div class="stat-row"><span class="stat-label">Strong Hire Rate</span><span class="stat-value" style="color:${shRate >= 70 ? 'var(--green)' : shRate >= 40 ? 'var(--blue)' : 'var(--amber)'};">${shRate.toFixed(0)}%</span></div>`;
 
     // Score breakdown
-    html += `<div class="stat-row"><span class="stat-label">Score Breakdown</span><span class="stat-value" style="font-size:12px;">`;
+    html += `<div class="stat-row"><span class="stat-label">Score Breakdown</span><span class="stat-value" style="font-size:13px;">`;
     SCORE_ORDER.forEach((s, i) => {
       const count = profile.scores[s] || 0;
       if (count > 0) {
@@ -554,9 +554,9 @@ function render(analysis) {
       html += `<div class="detail-row">
         <div style="font-weight:600;">${cName}</div>
         <div>${typeName}</div>
-        <div><span class="card-badge ${SCORE_CLASSES[iv.score] || 'badge-purple'}" style="font-size:11px;">${iv.score ? SCORE_LABELS[iv.score] : 'Pending'}</span></div>
+        <div><span class="card-badge ${SCORE_CLASSES[iv.score] || 'badge-purple'}" style="font-size:12px;">${iv.score ? SCORE_LABELS[iv.score] : 'Pending'}</span></div>
         <div style="color:var(--text-secondary);">${iv.date || '—'}</div>
-        <div style="color:${outcomeColor};font-size:12px;font-weight:600;">${outcomeStr}</div>
+        <div style="color:${outcomeColor};font-size:13px;font-weight:600;">${outcomeStr}</div>
       </div>`;
     });
 
@@ -568,7 +568,7 @@ function render(analysis) {
 
   // === SECTION 3: CALIBRATION MATRIX ===
   html += `<div class="section-header"><div class="num">3</div> Interviewer Calibration Matrix</div>`;
-  html += `<div style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">How each interviewer's scores compare to actual post-hire outcomes. A green dot means the interview prediction matched the performance review. Red means a mismatch.</div>`;
+  html += `<div style="color:var(--text-secondary);font-size:15px;margin-bottom:12px;">How each interviewer's scores compare to actual post-hire outcomes. A green dot means the interview prediction matched the performance review. Red means a mismatch.</div>`;
   html += `<div class="matrix-container">`;
   html += `<table class="matrix">
     <thead><tr>
@@ -648,11 +648,11 @@ function render(analysis) {
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div>
           <div style="font-weight:700;">${name}</div>
-          <div style="font-size:12px;color:var(--text-secondary);">${total} outcome${total !== 1 ? 's' : ''} tracked</div>
+          <div style="font-size:13px;color:var(--text-secondary);">${total} outcome${total !== 1 ? 's' : ''} tracked</div>
         </div>
         <div style="font-size:28px;font-weight:800;color:${accuracy >= 70 ? 'var(--green)' : accuracy >= 50 ? 'var(--amber)' : 'var(--red)'};">${accuracy.toFixed(0)}%</div>
       </div>
-      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">
+      <div style="font-size:13px;color:var(--text-secondary);margin-top:6px;">
         <span style="color:var(--green);">${matches} match${matches !== 1 ? 'es' : ''}</span> ·
         <span style="color:var(--red);">${misses} miss${misses !== 1 ? 'es' : ''}</span>
       </div>
@@ -662,7 +662,7 @@ function render(analysis) {
 
   // === SECTION 4: INTERVIEW-TO-OUTCOME PIPELINE ===
   html += `<div class="section-header"><div class="num">4</div> Interview-to-Outcome Pipeline</div>`;
-  html += `<div style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">Full graph traversal: Interview Score → Hire Decision → Performance Review. Every connection is a real edge walk.</div>`;
+  html += `<div style="color:var(--text-secondary);font-size:15px;margin-bottom:12px;">Full graph traversal: Interview Score → Hire Decision → Performance Review. Every connection is a real edge walk.</div>`;
 
   // Pipeline stages
   const totalInterviewed = candidateOutcomes.filter(c => c.interviewers.length > 0).length;
@@ -719,7 +719,7 @@ function render(analysis) {
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
         <div>
           <div style="font-weight:700;font-size:16px;">${cName}</div>
-          <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Applied: ${cRole} · Status: ${(cStatus || '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">Applied: ${cRole} · Status: ${(cStatus || '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
         </div>
         <div class="card-badge ${SCORE_CLASSES[bestScore] || 'badge-purple'}">${bestScore ? SCORE_LABELS[bestScore] : 'Pending'}</div>
       </div>`;
@@ -784,7 +784,7 @@ function render(analysis) {
         <strong>Graph insight:</strong> ${prop(bestInterview.person, 'name')} scored ${cName} as "${bestInterview.score ? SCORE_LABELS[bestInterview.score] : 'N/A'}" in their ${bestInterview.type || ''} interview.
         After hiring, ${prop(c.hiredPerson, 'name')}'s latest review: <strong>${rating ? RATING_LABELS[rating] : 'pending'}</strong>.
         ${rating === 'exceeds' || rating === 'meets' ? 'Interview prediction validated.' : rating ? 'Interview prediction did not match outcome — calibration flag.' : ''}
-        <div style="margin-top:6px;font-size:11px;color:var(--text-muted);font-family:monospace;">
+        <div style="margin-top:6px;font-size:12px;color:var(--text-muted);font-family:monospace;">
           Path: ${c.candidate.id} → interviewed_by → ${bestInterview.person.id} · ${c.candidate.id} → converted_from ← ${c.hiredPerson.id} → has_review → ${latestReview.id}
         </div>
       </div>`;
@@ -796,7 +796,7 @@ function render(analysis) {
 
   // === SECTION 5: INTERVIEW TYPE EFFECTIVENESS ===
   html += `<div class="section-header"><div class="num">5</div> Interview Type Effectiveness</div>`;
-  html += `<div style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">Which interview types are most predictive of actual performance? Compares interview-type strong-hire rates against post-hire review outcomes.</div>`;
+  html += `<div style="color:var(--text-secondary);font-size:15px;margin-bottom:16px;">Which interview types are most predictive of actual performance? Compares interview-type strong-hire rates against post-hire review outcomes.</div>`;
 
   // For each interview type, compute: how often does a strong_hire in that type lead to a good outcome?
   const typeEffectiveness = {};
@@ -859,11 +859,11 @@ function render(analysis) {
         <span class="stat-label">Predictive Accuracy</span>
         <span class="stat-value" style="color:${predictiveRate >= 70 ? 'var(--green)' : 'var(--amber)'};">${predictiveRate.toFixed(0)}%</span>
       </div>`;
-      html += `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">
+      html += `<div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
         Of ${eff.strongHireTotal} "strong hire" in ${typeName}, ${eff.strongHireGood} led to "meets" or "exceeds" reviews
       </div>`;
     } else {
-      html += `<div style="font-size:11px;color:var(--text-muted);margin-top:8px;padding:6px;background:rgba(255,255,255,0.02);border-radius:4px;">
+      html += `<div style="font-size:12px;color:var(--text-muted);margin-top:8px;padding:6px;background:rgba(255,255,255,0.02);border-radius:4px;">
         Predictive accuracy: awaiting more hire → review data to measure
       </div>`;
     }
@@ -881,7 +881,7 @@ function render(analysis) {
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
         <div>
           <div style="font-weight:700;font-size:16px;">${prop(jamesLiu.person, 'name')} — Engineering Lead</div>
-          <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Bio: "${prop(jamesLiu.person, 'bio')}"</div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">Bio: "${prop(jamesLiu.person, 'bio')}"</div>
         </div>
         <div class="card-badge badge-amber">Harsh Rater</div>
       </div>
@@ -892,7 +892,7 @@ function render(analysis) {
         <br><br>
         <strong>Current impact:</strong> James gave Chris Wong a "no hire" on their design exercise, while Ana Kim gave the same candidate a "strong hire" on portfolio review.
         The graph reveals this is James's pattern — his design exercise bar may be miscalibrated.
-        <div style="margin-top:8px;font-size:11px;color:var(--text-muted);font-family:monospace;">
+        <div style="margin-top:8px;font-size:12px;color:var(--text-muted);font-family:monospace;">
           Path: candidate-002 → interviewed_by → person-041 (no_hire) vs candidate-002 → interviewed_by → person-007 (strong_hire)
         </div>
       </div>
@@ -901,8 +901,8 @@ function render(analysis) {
 
   // === FOOTER: Data provenance ===
   html += `<div style="margin-top:48px;padding:20px;background:rgba(255,255,255,0.02);border-radius:var(--radius);border:1px solid var(--border-subtle);">
-    <div style="font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Graph Data Provenance</div>
-    <div style="font-size:12px;color:var(--text-muted);line-height:1.8;">
+    <div style="font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Graph Data Provenance</div>
+    <div style="font-size:13px;color:var(--text-muted);line-height:1.8;">
       <strong style="color:var(--text-secondary);">Nodes traversed:</strong> ${allInterviews.length} interviews · ${totalCandidates} candidates · ${interviewerCount} interviewers · ${hiredCandidates.length} converted hires<br>
       <strong style="color:var(--text-secondary);">Edges walked:</strong> interviewed_by · has_interview · candidate_for · converted_from · has_review · responded_to<br>
       <strong style="color:var(--text-secondary);">Key traversal:</strong> candidate → has_interview → interview (score) → interviewed_by → person → then: candidate → converted_from ← person → has_review → review<br>
@@ -941,8 +941,8 @@ async function init() {
   } catch (err) {
     document.getElementById('loading').innerHTML = `
       <div style="color:var(--red);">Failed to load graph data</div>
-      <div style="font-size:13px;color:var(--text-muted);margin-top:8px;">${err.message}</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Serve from project root: python3 -m http.server 8765</div>
+      <div style="font-size:15px;color:var(--text-muted);margin-top:8px;">${err.message}</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Serve from project root: python3 -m http.server 8765</div>
     `;
   }
 }

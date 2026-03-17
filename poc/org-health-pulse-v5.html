@@ -10,11 +10,11 @@ body { background: #0a0a0f; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
 h1 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
 h2 { font-size: 18px; font-weight: 600; margin-bottom: 12px; color: #e0e0e0; }
-h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #ccc; }
-.subtitle { color: #888; font-size: 13px; margin-bottom: 24px; }
+h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #ccc; }
+.subtitle { color: #888; font-size: 15px; margin-bottom: 24px; }
 .card { background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+.badge { font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
 .badge-green { background: rgba(16,185,129,0.15); color: #10b981; }
 .badge-amber { background: rgba(245,158,11,0.15); color: #f59e0b; }
 .badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
@@ -29,62 +29,62 @@ h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #ccc; }
 .summary-sentence .highlight-good { color: #10b981; font-weight: 600; }
 .summary-sentence .highlight-warn { color: #f59e0b; font-weight: 600; }
 .summary-sentence .highlight-bad { color: #ef4444; font-weight: 600; }
-.summary-sentence .ai-tag { display: inline-block; font-size: 11px; background: rgba(168,85,247,0.15); color: #a855f7; padding: 2px 8px; border-radius: 10px; margin-right: 8px; vertical-align: middle; }
+.summary-sentence .ai-tag { display: inline-block; font-size: 12px; background: rgba(168,85,247,0.15); color: #a855f7; padding: 2px 8px; border-radius: 10px; margin-right: 8px; vertical-align: middle; }
 
 /* Heat map */
 .heatmap-grid { display: grid; gap: 2px; }
-.heatmap-cell { padding: 8px 6px; text-align: center; font-size: 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; position: relative; }
+.heatmap-cell { padding: 8px 6px; text-align: center; font-size: 13px; border-radius: 6px; cursor: pointer; transition: all 0.2s; position: relative; }
 .heatmap-cell:hover { transform: scale(1.05); z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
-.heatmap-header { font-weight: 600; color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 6px; text-align: center; }
-.heatmap-row-label { font-weight: 500; color: #ccc; font-size: 13px; padding: 8px 6px; display: flex; align-items: center; }
+.heatmap-header { font-weight: 600; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 6px; text-align: center; }
+.heatmap-row-label { font-weight: 500; color: #ccc; font-size: 15px; padding: 8px 6px; display: flex; align-items: center; }
 
 /* eNPS chart */
 .enps-score { font-size: 48px; font-weight: 700; text-align: center; margin: 8px 0; }
 .enps-bar { display: flex; border-radius: 8px; overflow: hidden; height: 32px; margin: 12px 0; }
-.enps-bar-segment { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; transition: width 0.5s ease; }
+.enps-bar-segment { display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff; transition: width 0.5s ease; }
 .enps-legend { display: flex; gap: 20px; justify-content: center; margin-top: 8px; }
-.enps-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #999; }
+.enps-legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #999; }
 .enps-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
 .dept-enps-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #2a2a3e; }
 .dept-enps-row:last-child { border-bottom: none; }
-.dept-enps-label { width: 120px; font-size: 13px; color: #ccc; flex-shrink: 0; }
+.dept-enps-label { width: 120px; font-size: 15px; color: #ccc; flex-shrink: 0; }
 .dept-enps-bar-wrap { flex: 1; }
 .dept-enps-bar { height: 20px; display: flex; border-radius: 4px; overflow: hidden; }
-.dept-enps-score { width: 50px; text-align: right; font-size: 14px; font-weight: 600; flex-shrink: 0; }
+.dept-enps-score { width: 50px; text-align: right; font-size: 15px; font-weight: 600; flex-shrink: 0; }
 
 /* Trend charts */
 .trend-chart { position: relative; height: 160px; margin: 12px 0 4px; }
 .trend-chart svg { width: 100%; height: 100%; }
-.trend-label { font-size: 11px; color: #888; text-align: center; margin-top: 4px; }
+.trend-label { font-size: 12px; color: #888; text-align: center; margin-top: 4px; }
 .trend-value { font-size: 28px; font-weight: 700; }
-.trend-delta { font-size: 13px; margin-left: 8px; }
+.trend-delta { font-size: 15px; margin-left: 8px; }
 .trend-delta.up { color: #10b981; }
 .trend-delta.down { color: #ef4444; }
-.no-data-note { font-size: 12px; color: #666; font-style: italic; text-align: center; padding: 20px; }
+.no-data-note { font-size: 13px; color: #666; font-style: italic; text-align: center; padding: 20px; }
 
 /* Watchlist */
 .watchlist-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: background 0.2s; border: 1px solid transparent; }
 .watchlist-item:hover { background: rgba(255,255,255,0.03); border-color: #2a2a3e; }
 .watchlist-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
 .watchlist-content { flex: 1; }
-.watchlist-title { font-size: 13px; font-weight: 500; color: #e0e0e0; }
-.watchlist-detail { font-size: 12px; color: #888; margin-top: 2px; }
-.watchlist-action { font-size: 11px; color: #3b82f6; margin-top: 4px; cursor: pointer; }
+.watchlist-title { font-size: 15px; font-weight: 500; color: #e0e0e0; }
+.watchlist-detail { font-size: 13px; color: #888; margin-top: 2px; }
+.watchlist-action { font-size: 12px; color: #3b82f6; margin-top: 4px; cursor: pointer; }
 .watchlist-action:hover { text-decoration: underline; }
-.watchlist-urgency { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+.watchlist-urgency { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
 
 /* Benchmark */
 .benchmark-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1a1a2e; }
 .benchmark-row:last-child { border-bottom: none; }
-.benchmark-metric { width: 130px; font-size: 13px; color: #ccc; flex-shrink: 0; }
+.benchmark-metric { width: 130px; font-size: 15px; color: #ccc; flex-shrink: 0; }
 .benchmark-bar-wrap { flex: 1; position: relative; height: 24px; }
 .benchmark-bar-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #2a2a3e; border-radius: 4px; }
 .benchmark-bar-fill { position: absolute; top: 0; left: 0; bottom: 0; border-radius: 4px; transition: width 0.5s; }
 .benchmark-marker { position: absolute; top: -4px; bottom: -4px; width: 3px; border-radius: 2px; background: #888; }
-.benchmark-marker-label { position: absolute; top: -18px; font-size: 11px; color: #888; white-space: nowrap; transform: translateX(-50%); }
-.benchmark-values { width: 90px; text-align: right; font-size: 13px; flex-shrink: 0; }
+.benchmark-marker-label { position: absolute; top: -18px; font-size: 12px; color: #888; white-space: nowrap; transform: translateX(-50%); }
+.benchmark-values { width: 90px; text-align: right; font-size: 15px; flex-shrink: 0; }
 .benchmark-yours { font-weight: 600; }
-.benchmark-theirs { color: #888; font-size: 11px; }
+.benchmark-theirs { color: #888; font-size: 12px; }
 
 /* Drill-down panel */
 .drilldown-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
@@ -94,18 +94,18 @@ h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #ccc; }
 .drilldown-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: #888; font-size: 20px; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
 .drilldown-close:hover { background: rgba(255,255,255,0.05); color: #e0e0e0; }
 .drilldown-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; padding-right: 40px; }
-.drilldown-subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+.drilldown-subtitle { font-size: 15px; color: #888; margin-bottom: 20px; }
 .drilldown-section { margin-bottom: 20px; }
-.drilldown-section h4 { font-size: 13px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-.drilldown-stat { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1a1a2e; font-size: 13px; }
+.drilldown-section h4 { font-size: 15px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.drilldown-stat { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1a1a2e; font-size: 15px; }
 .drilldown-stat:last-child { border-bottom: none; }
 .drilldown-stat-label { color: #999; }
 .drilldown-stat-value { font-weight: 500; }
-.drilldown-comment { padding: 10px 12px; background: #1a1a2e; border-radius: 8px; margin-bottom: 8px; font-size: 13px; color: #bbb; border-left: 3px solid #3b82f6; }
-.drilldown-anon-note { font-size: 11px; color: #666; font-style: italic; margin-bottom: 12px; }
+.drilldown-comment { padding: 10px 12px; background: #1a1a2e; border-radius: 8px; margin-bottom: 8px; font-size: 15px; color: #bbb; border-left: 3px solid #3b82f6; }
+.drilldown-anon-note { font-size: 12px; color: #666; font-style: italic; margin-bottom: 12px; }
 
 /* Beta tag */
-.beta-tag { display: inline-block; font-size: 11px; font-weight: 700; background: rgba(245,158,11,0.15); color: #f59e0b; padding: 2px 6px; border-radius: 4px; margin-left: 8px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+.beta-tag { display: inline-block; font-size: 12px; font-weight: 700; background: rgba(245,158,11,0.15); color: #f59e0b; padding: 2px 6px; border-radius: 4px; margin-left: 8px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
 
 /* Loading state */
 .loading { text-align: center; padding: 40px; color: #666; }
@@ -115,25 +115,25 @@ h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #ccc; }
 /* Header */
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
 .page-header-right { text-align: right; }
-.last-updated { font-size: 11px; color: #666; }
+.last-updated { font-size: 12px; color: #666; }
 .header-stats { display: flex; gap: 24px; margin-top: 8px; }
 .header-stat { text-align: center; }
 .header-stat-value { font-size: 20px; font-weight: 700; }
-.header-stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.header-stat-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="page-header">
     <div>
-      <h1>Org Health Pulse <span style="font-size:14px;font-weight:400;color:#888;margin-left:8px">v5</span></h1>
-      <div style="display:flex;align-items:center;gap:6px;margin-left:16px;font-size:12px;font-weight:500;color:#555">
+      <h1>Org Health Pulse <span style="font-size:15px;font-weight:400;color:#888;margin-left:8px">v5</span></h1>
+      <div style="display:flex;align-items:center;gap:6px;margin-left:16px;font-size:13px;font-weight:500;color:#555">
         <a href="pattern-intelligence.html" style="color:#555;text-decoration:none">v1</a><span style="color:rgba(255,255,255,0.1)">|</span>
         <a href="pattern-intelligence-v2.html" style="color:#555;text-decoration:none">v2</a><span style="color:rgba(255,255,255,0.1)">|</span>
         <a href="pattern-intelligence-v3.html" style="color:#555;text-decoration:none">v3</a><span style="color:rgba(255,255,255,0.1)">|</span>
         <a href="pattern-intelligence-v4.html" style="color:#555;text-decoration:none">v4</a><span style="color:rgba(255,255,255,0.1)">|</span>
         <span style="color:#e0e0e0;font-weight:700">v5</span>
-        <span style="color:#555;font-size:11px;margin-left:4px">(was Pattern Intelligence)</span>
+        <span style="color:#555;font-size:12px;margin-left:4px">(was Pattern Intelligence)</span>
       </div>
       <div class="subtitle">Acme Co — 148 employees across 6 departments</div>
     </div>
@@ -151,7 +151,7 @@ h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #ccc; }
     <div class="card">
       <div class="card-header">
         <h2>Department Health Map</h2>
-        <span class="badge badge-blue" style="font-size:11px; cursor:help" title="Click any cell to drill into team-level details">Click to drill in</span>
+        <span class="badge badge-blue" style="font-size:12px; cursor:help" title="Click any cell to drill into team-level details">Click to drill in</span>
       </div>
       <div id="heatmapContainer"><div class="loading"><div class="loading-spinner"></div></div></div>
     </div>
@@ -495,7 +495,7 @@ function buildHeatmap(departments, deptPersons, enpsSurveys, wellbeingSurveys, a
         }
       } else if (metric === 'Headcount') {
         color = { bg: 'rgba(59,130,246,0.15)', text: '#93c5fd' };
-        display = md.value + (md.newHires > 0 ? ` <span style="font-size:11px;color:#10b981">+${md.newHires}</span>` : '');
+        display = md.value + (md.newHires > 0 ? ` <span style="font-size:12px;color:#10b981">+${md.newHires}</span>` : '');
         tooltip = `${md.newHires} new in 90d`;
       } else if (metric === 'Time Off') {
         const v = md.value;
@@ -573,7 +573,7 @@ function drillHeatmap(deptName, metric) {
         deptSurveys.push(s);
       }
     });
-    if (deptSurveys.length === 0) html += `<div style="color:#666; font-size:13px;">No comments for this department.</div>`;
+    if (deptSurveys.length === 0) html += `<div style="color:#666; font-size:15px;">No comments for this department.</div>`;
     deptSurveys.forEach(s => {
       const sentimentColor = s.properties.sentiment === 'promoter' ? '#10b981' : s.properties.sentiment === 'detractor' ? '#ef4444' : '#f59e0b';
       html += `<div class="drilldown-comment" style="border-left-color:${sentimentColor}">"${s.properties.comment}"</div>`;
@@ -621,7 +621,7 @@ function drillHeatmap(deptName, metric) {
         }
       });
     });
-    if (!found) html += `<div style="color:#666; font-size:13px;">No recent reviews in this department.</div>`;
+    if (!found) html += `<div style="color:#666; font-size:15px;">No recent reviews in this department.</div>`;
     html += `</div>`;
   }
 
@@ -639,7 +639,7 @@ function buildEnps(enpsSurveys, promoters, neutrals, detractors, total, enpsScor
 
   let html = `
     <div class="enps-score" style="color:${enpsScore >= 30 ? '#10b981' : enpsScore >= 0 ? '#f59e0b' : '#ef4444'}">${enpsScore > 0 ? '+' : ''}${enpsScore}</div>
-    <div style="text-align:center; font-size:12px; color:#888; margin-bottom:12px">Score = %Promoters - %Detractors</div>
+    <div style="text-align:center; font-size:13px; color:#888; margin-bottom:12px">Score = %Promoters - %Detractors</div>
     <div class="enps-bar">
       <div class="enps-bar-segment" style="width:${pPct}%; background:#10b981">${promoters}</div>
       <div class="enps-bar-segment" style="width:${nPct}%; background:#f59e0b">${neutrals}</div>
@@ -752,7 +752,7 @@ function buildTrends(persons, departments, deptPersons, enpsSurveys, allSurveys)
     const score = enpsSurveys.length > 0 ? Math.round(((p - d) / enpsSurveys.length) * 100) : 0;
     html += `<div style="text-align:center; padding:20px 0">`;
     html += `<div class="trend-value" style="color:${score >= 30 ? '#10b981' : '#f59e0b'}; font-size:36px">${score > 0 ? '+' : ''}${score}</div>`;
-    html += `<div style="font-size:12px; color:#888; margin-top:4px">Single survey round</div>`;
+    html += `<div style="font-size:13px; color:#888; margin-top:4px">Single survey round</div>`;
     html += `</div>`;
     html += `<div class="no-data-note">Trends require 2+ survey rounds.</div>`;
   } else {
@@ -816,7 +816,7 @@ function buildTrends(persons, departments, deptPersons, enpsSurveys, allSurveys)
     const avgWB = wbAll.length > 0 ? (wbAll.reduce((a, s) => a + s.properties.score, 0) / wbAll.length) : 0;
     html += `<div style="text-align:center; padding:20px 0">`;
     html += `<div class="trend-value" style="color:${avgWB >= 3.5 ? '#10b981' : avgWB >= 2.5 ? '#f59e0b' : '#ef4444'}; font-size:36px">${avgWB.toFixed(1)}<span style="font-size:16px; color:#888">/5</span></div>`;
-    html += `<div style="font-size:12px; color:#888; margin-top:4px">${wbAll.length} responses</div>`;
+    html += `<div style="font-size:13px; color:#888; margin-top:4px">${wbAll.length} responses</div>`;
     html += `</div>`;
     html += `<div class="no-data-note">Trends require 2+ survey rounds.</div>`;
   }
@@ -886,7 +886,7 @@ function buildLineChart(labels, values, color, height, baseMin) {
   const showLabels = labels.length <= 6 ? labels : [labels[0], labels[Math.floor(labels.length / 2)], labels[labels.length - 1]];
   const showIndices = labels.length <= 6 ? labels.map((_, i) => i) : [0, Math.floor(labels.length / 2), labels.length - 1];
   showIndices.forEach(i => {
-    svg += `<span style="font-size:11px; color:#666">${labels[i]}</span>`;
+    svg += `<span style="font-size:12px; color:#666">${labels[i]}</span>`;
   });
   svg += `</div>`;
   return svg;
@@ -898,7 +898,7 @@ function buildBarChart(labels, values, color) {
   values.forEach((v, i) => {
     const pct = (v / max) * 100;
     html += `<div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%;">`;
-    html += `<div style="font-size:11px; color:#888; margin-bottom:4px">${typeof v === 'number' && v % 1 !== 0 ? v.toFixed(1) : v}</div>`;
+    html += `<div style="font-size:12px; color:#888; margin-bottom:4px">${typeof v === 'number' && v % 1 !== 0 ? v.toFixed(1) : v}</div>`;
     html += `<div style="flex:1; width:100%; display:flex; align-items:flex-end;">`;
     html += `<div style="width:100%; height:${pct}%; background:${color}; border-radius:4px 4px 0 0; min-height:2px; opacity:0.7;"></div>`;
     html += `</div></div>`;
@@ -906,7 +906,7 @@ function buildBarChart(labels, values, color) {
   html += `</div>`;
   html += `<div style="display:flex; gap:4px; padding:0 4px;">`;
   labels.forEach(l => {
-    html += `<div style="flex:1; text-align:center; font-size:11px; color:#666; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${l}</div>`;
+    html += `<div style="flex:1; text-align:center; font-size:12px; color:#666; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${l}</div>`;
   });
   html += `</div>`;
   return html;
@@ -1055,7 +1055,7 @@ function drillWatchlistInvestigation(inv) {
   if (inv.properties.outcome) html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Outcome</span><span class="drilldown-stat-value">${inv.properties.outcome}</span></div>`;
   html += `</div>`;
   html += `<div class="drilldown-section"><h4>Recommended Actions</h4>`;
-  html += `<div style="font-size:13px; color:#bbb; line-height:1.8">`;
+  html += `<div style="font-size:15px; color:#bbb; line-height:1.8">`;
   html += `1. Ensure investigator has been assigned<br>`;
   html += `2. Review timeline — ${daysBetween(inv.properties.reportedDate, CURRENT_DATE)} days since report<br>`;
   html += `3. Check for retaliation protections<br>`;
@@ -1074,7 +1074,7 @@ function drillWatchlistCert(cert, completedIds) {
   html += `<div class="drilldown-stat"><span class="drilldown-stat-label">Days left</span><span class="drilldown-stat-value">${daysBetween(CURRENT_DATE, cert.properties.requiredBy)}</span></div>`;
   html += `</div>`;
   html += `<div class="drilldown-section"><h4>Recommended Actions</h4>`;
-  html += `<div style="font-size:13px; color:#bbb; line-height:1.8">`;
+  html += `<div style="font-size:15px; color:#bbb; line-height:1.8">`;
   html += `1. Send bulk reminder to incomplete employees<br>`;
   html += `2. Notify department managers<br>`;
   html += `3. Schedule follow-up in 7 days`;
@@ -1136,7 +1136,7 @@ function drillWatchlistWellbeing(survey) {
   if (survey.properties.comment) html += `<div class="drilldown-comment" style="border-left-color:#ef4444; margin-top:12px">"${survey.properties.comment}"</div>`;
   html += `</div>`;
   html += `<div class="drilldown-section"><h4>Recommended Actions</h4>`;
-  html += `<div style="font-size:13px; color:#bbb; line-height:1.8">`;
+  html += `<div style="font-size:15px; color:#bbb; line-height:1.8">`;
   html += `1. Review workload distribution across the affected team<br>`;
   html += `2. Check project allocation for overloaded individuals<br>`;
   html += `3. Consider 1:1 check-ins with team leads<br>`;
@@ -1176,7 +1176,7 @@ function drillWatchlistTimeOff(to, person) {
         });
         html += `<div class="drilldown-stat"><span class="drilldown-stat-label">${t.properties.name}</span><span class="drilldown-stat-value">${memberEdges.length} members</span></div>`;
         if (otherOnLeave.length > 0) {
-          html += `<div style="font-size:12px; color:#f59e0b; padding:4px 0;">Overlapping leave: ${otherOnLeave.join(', ')}</div>`;
+          html += `<div style="font-size:13px; color:#f59e0b; padding:4px 0;">Overlapping leave: ${otherOnLeave.join(', ')}</div>`;
         }
       });
       html += `</div>`;
@@ -1202,7 +1202,7 @@ function buildBenchmarks(enpsScore, persons, reviews) {
     activePersons.reduce((sum, p) => sum + daysBetween(p.properties.startDate, CURRENT_DATE), 0) / activePersons.length / 365 : 0;
   benchmarks[1].yours = parseFloat(avgTenure.toFixed(1));
 
-  let html = `<div style="font-size:12px; color:#666; margin-bottom:16px; font-style:italic">Benchmarks from similar-sized tech companies (100-200 employees). Data sources coming Q2 2026.</div>`;
+  let html = `<div style="font-size:13px; color:#666; margin-bottom:16px; font-style:italic">Benchmarks from similar-sized tech companies (100-200 employees). Data sources coming Q2 2026.</div>`;
 
   benchmarks.forEach(b => {
     const yoursNorm = b.max > 0 ? Math.min(1, Math.max(0, b.yours / b.max)) : 0;
