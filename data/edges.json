@@ -2337,7 +2337,7 @@
         "recognitionId": "recognition-002",
         "type": "manager",
         "trigger": "workload_absorption",
-        "message": "Raj, I want to call out something I should have said sooner \u2014 you've been holding the line on the API refactor while picking up the observability dashboard and CI/CD work without missing a beat. That kind of reliability is what keeps this team moving. Thank you.",
+        "message": "Roger, I want to call out something I should have said sooner \u2014 you've been holding the line on the API refactor while picking up the observability dashboard and CI/CD work without missing a beat. That kind of reliability is what keeps this team moving. Thank you.",
         "signalSource": "graph_prompted",
         "points": 50,
         "channel": "dm"

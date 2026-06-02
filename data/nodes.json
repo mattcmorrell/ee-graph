@@ -172,7 +172,7 @@
       "id": "person-008",
       "type": "person",
       "properties": {
-        "name": "Raj Patel",
+        "name": "Roger Patel",
         "email": "raj.patel@acmeco.com",
         "role": "Engineering Lead",
         "level": "M-1",
@@ -6152,7 +6152,7 @@
         "amount": 185000,
         "currency": "USD",
         "effectiveDate": "2022-11-07",
-        "notes": "Raj Patel \u2014 Senior Engineer"
+        "notes": "Roger Patel \u2014 Senior Engineer"
       }
     },
     {
@@ -6531,9 +6531,9 @@
         "status": "completed",
         "completedDate": "2025-12-15",
         "rating": "exceeds",
-        "summary": "Raj Patel annual review. High output across 4 projects. Reliability and technical depth recognized.",
+        "summary": "Roger Patel annual review. High output across 4 projects. Reliability and technical depth recognized.",
         "selfAssessment": "I'm proud of what I've delivered but I'm being honest \u2014 the workload isn't sustainable long-term. I need either more support or a clearer path to the next level so I can focus.",
-        "managerAssessment": "Raj Patel delivered exceptional results this cycle. They're the kind of person other teams request by name. We risk losing them if we don't act on the promotion case."
+        "managerAssessment": "Roger Patel delivered exceptional results this cycle. They're the kind of person other teams request by name. We risk losing them if we don't act on the promotion case."
       }
     },
     {
@@ -6667,7 +6667,7 @@
         "endDate": "2026-02-10",
         "hours": 8,
         "status": "approved",
-        "notes": "Raj Patel \u2014 apartment closing. Half day turned into full day."
+        "notes": "Roger Patel \u2014 apartment closing. Half day turned into full day."
       }
     },
     {
@@ -6891,7 +6891,7 @@
         "status": "approved",
         "submittedDate": "2026-01-15",
         "decidedDate": "2026-01-17",
-        "details": "Raj Patel \u2014 AWS re:Invent conference expenses. $2,340 total.",
+        "details": "Roger Patel \u2014 AWS re:Invent conference expenses. $2,340 total.",
         "amount": 2340
       }
     },
@@ -6990,7 +6990,7 @@
         "status": "approved",
         "submittedDate": "2026-01-27",
         "decidedDate": "2026-01-28",
-        "details": "Raj Patel requesting personal day Feb 10. Approved by Lisa Huang."
+        "details": "Roger Patel requesting personal day Feb 10. Approved by Lisa Huang."
       }
     },
     {
@@ -7288,7 +7288,7 @@
         "currency": "USD",
         "date": "2025-12-10",
         "status": "reimbursed",
-        "description": "Raj Patel \u2014 AWS re:Invent flight + hotel (2 nights)"
+        "description": "Roger Patel \u2014 AWS re:Invent flight + hotel (2 nights)"
       }
     },
     {
@@ -7300,7 +7300,7 @@
         "currency": "USD",
         "date": "2025-12-10",
         "status": "reimbursed",
-        "description": "Raj Patel \u2014 AWS re:Invent conference registration"
+        "description": "Roger Patel \u2014 AWS re:Invent conference registration"
       }
     },
     {
@@ -8133,7 +8133,7 @@
         "amount": 40000,
         "currency": "USD",
         "effectiveDate": "2022-11-07",
-        "notes": "Raj Patel \u2014 Senior Engineer grant",
+        "notes": "Roger Patel \u2014 Senior Engineer grant",
         "vestingSchedule": "4yr/1yr cliff",
         "totalShares": 20000,
         "vestedShares": 15000,
@@ -8160,7 +8160,7 @@
       "type": "document",
       "properties": {
         "type": "i9",
-        "title": "I-9 Employment Eligibility \u2014 Raj Patel",
+        "title": "I-9 Employment Eligibility \u2014 Roger Patel",
         "status": "signed",
         "createdDate": "2022-11-07",
         "signedDate": "2022-11-07",
@@ -10150,7 +10150,7 @@
         "terminationReason": "voluntary",
         "terminationDetail": "Burnout. Cited unsustainable workload after Marcus Cole's departure. No backfill for 4 months.",
         "regrettable": true,
-        "bio": "Strong IC-2 who absorbed too much after Marcus left. Workload went from 2 projects to 4 overnight. Manager (Raj) flagged it but headcount wasn't approved for months. Classic preventable loss.",
+        "bio": "Strong IC-2 who absorbed too much after Marcus left. Workload went from 2 projects to 4 overnight. Manager (Roger) flagged it but headcount wasn't approved for months. Classic preventable loss.",
         "location": "location-002",
         "gender": "female",
         "race": "asian",
@@ -13179,7 +13179,7 @@
         "completedDate": "2024-12-17",
         "rating": "exceeds",
         "selfAssessment": "I'm proud of what I've delivered but I'm being honest \u2014 the workload isn't sustainable long-term. I need either more support or a clearer path to the next level so I can focus.",
-        "managerAssessment": "Raj Patel is indispensable to the team's success. They've absorbed extra work without complaint but I can see the strain. Promotion and comp adjustment are overdue."
+        "managerAssessment": "Roger Patel is indispensable to the team's success. They've absorbed extra work without complaint but I can see the strain. Promotion and comp adjustment are overdue."
       }
     },
     {
@@ -13192,7 +13192,7 @@
         "completedDate": "2025-12-20",
         "rating": "exceeds",
         "selfAssessment": "This has been an incredible first year. I'm learning faster than I expected thanks to having two great mentors. The deployment tooling work gave me real ownership and I can see how my Go skills are sharpening. I'm eager to take on more and I think I'm ready for a bigger workstream.",
-        "managerAssessment": "Derek Lin's growth in his first year has been remarkable. He went from needing guidance on every PR to owning the deployment pipeline refactor end to end. His mentors (Mike Torres and Raj Patel) both report he's ahead of where most IC-2s are at this stage. I want to put him on a promotion track for the next cycle."
+        "managerAssessment": "Derek Lin's growth in his first year has been remarkable. He went from needing guidance on every PR to owning the deployment pipeline refactor end to end. His mentors (Mike Torres and Roger Patel) both report he's ahead of where most IC-2s are at this stage. I want to put him on a promotion track for the next cycle."
       }
     },
     {
